@@ -2,6 +2,15 @@
 
 React component library for the Meridian Editor
 
+## Questions
+
+* What components do we need?
+
+## Components
+
+`<Map>`
+`<MapMarker>`
+
 ## Stack
 
 ### React Native

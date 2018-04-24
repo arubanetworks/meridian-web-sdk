@@ -2,6 +2,10 @@
 
 React component library for the Meridian Editor
 
+## Requirements Document
+
+* [Web SDK](https://meridianapps.atlassian.net/wiki/spaces/RD/pages/209649668/Web+SDK)
+
 ## Questions
 
 * What components do we need?
@@ -24,6 +28,8 @@ React component library for the Meridian Editor
   * [native.directory](https://native.directory/)
   * [react-native-languages](https://github.com/react-community/react-native-languages)
   * [react-native-maps](https://github.com/react-community/react-native-maps)
+* [react-native-examples](https://github.com/ethantran/react-native-examples)
+* [react-native-svg](https://github.com/react-native-community/react-native-svg)
 * [ReactXP](https://microsoft.github.io/reactxp/)
   * [ReactXP - First Look](https://medium.com/react-native-training/reactxp-first-look-d3dd1d08febd)
 * [react-navtive-web](https://github.com/necolas/react-native-web)

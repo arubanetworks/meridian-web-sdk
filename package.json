@@ -30,8 +30,10 @@
     "react-art": "16.3.2",
     "react-dom": "16.3.2",
     "react-native": "0.54.0",
+    "react-native-svg": "6.3.1",
+    "react-native-svg-web": "1.0.1",
     "react-native-web": "0.6.0",
-    "svg.js": "^2.6.4",
-    "svg.panzoom.js": "^1.2.0"
+    "svg.js": "2.6.4",
+    "svg.panzoom.js": "1.2.0"
   }
 }

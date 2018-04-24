@@ -1,31 +1,22 @@
 import React from "react";
-import { StyleSheet, Text, View, Platform } from "react-native";
-import Hello from "./components/Hello";
+import { StyleSheet, View } from "react-native";
+import Map from "./components/Map";
 
 export default class App extends React.Component {
   render() {
     return (
-      <View id="sobeawrapper" style={styles.wrapper}>
-        <View id="superbro" style={styles.container}>
-          <Hello />
-          <Text>Duck Eggs for Everyone!</Text>
-          <Text>Meridian Web Components</Text>
-          <Text>Platform: {`${Platform.OS}, right?`}</Text>
-        </View>
+      <View style={styles.container}>
+        <Map />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    backgroundColor: "yellow",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
   container: {
+    padding: 20,
     backgroundColor: "#fff",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "flex-start",
   },
 });

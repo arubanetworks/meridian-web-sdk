@@ -41,6 +41,8 @@ const imageLoaderConfig = {
 
 module.exports = {
   // your web-specific entry file
+  // main: ["babel-polyfill", "./index.web.js"],
+
   entry: {
     main: "./index.web.js",
   },

@@ -1,0 +1,20 @@
+input {
+  border-radius: 0.125em;
+  font-size: 24px;
+  font-family: inherit;
+  padding: 0.5em;
+  border: 2px solid #ccc;
+  background: #fff;
+  color: #000;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input:focus {
+  outline: 0;
+  border-color: #000;
+}
+
+:host {
+  display: inline-block;
+}

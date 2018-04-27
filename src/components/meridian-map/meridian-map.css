@@ -1,0 +1,15 @@
+.map {
+  position: relative;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  color: #000;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.tag {
+  transition: cx 300ms, cy 300ms;
+  fill: #e04111;
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-width: 4px;
+}

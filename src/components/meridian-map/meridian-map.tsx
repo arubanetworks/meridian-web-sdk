@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { Component, Prop, State } from "@stencil/core";
+// import { userInfo } from "os";
 const { MeridianWebModels } = global as any;
 
 const api = MeridianWebModels.create({
@@ -30,6 +31,7 @@ export class MeridianMap {
   @State() connection: any;
 
   async componentDidLoad() {
+    console.info("component loaded");
     this.connection = api.floor.listen({
       locationId: this.locationId,
       id: this.floorId,
@@ -38,7 +40,7 @@ export class MeridianMap {
         const { x, y } = data.calculations.default.location;
         const tag = { mac, x, y };
         this.tags = { ...this.tags, [mac]: tag };
-        // console.log(tag);
+        console.log(tag);
       }
     });
     setTimeout(() => {
@@ -57,32 +59,16 @@ export class MeridianMap {
     });
   }
 
-  onButtonClick = () => {
-    alert("You clicked the map button!");
-  };
-
   render() {
     // TODO: How do we avoid hard coding the viewbox here since that information
     // is contained within the SVG referenced by the SVG URL
     if (this.svgUrl) {
       return (
         <div>
-          <meridian-button onClick={this.onButtonClick}>
-            Map clicking time!
-          </meridian-button>
-          <p>
-            <meridian-icon /> currentText = {this.currentText}
-          </p>
-          <meridian-textbox
-            value={this.currentText}
-            onUpdate={text => {
-              console.log(text);
-              this.currentText = text;
-            }}
-          />
-          <div style={{ paddingTop: "10px" }} />
+          <meridian-map-marker />
+          <p>Sup Bro?</p>
           <svg class="map" viewBox="0 0 1700 2200">
-            <image xlinkHref={this.svgUrl} />
+            <image width="1700" height="2200" xlinkHref={this.svgUrl} />
             {this.renderTags()}
           </svg>
         </div>

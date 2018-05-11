@@ -27,6 +27,39 @@ declare global {
 declare global {
 
   namespace StencilComponents {
+    interface MeridianMapMarker {
+
+    }
+  }
+
+  interface HTMLMeridianMapMarkerElement extends StencilComponents.MeridianMapMarker, HTMLStencilElement {}
+
+  var HTMLMeridianMapMarkerElement: {
+    prototype: HTMLMeridianMapMarkerElement;
+    new (): HTMLMeridianMapMarkerElement;
+  };
+  interface HTMLElementTagNameMap {
+    'meridian-map-marker': HTMLMeridianMapMarkerElement;
+  }
+  interface ElementTagNameMap {
+    'meridian-map-marker': HTMLMeridianMapMarkerElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'meridian-map-marker': JSXElements.MeridianMapMarkerAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface MeridianMapMarkerAttributes extends HTMLAttributes {
+
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
     interface MeridianButton {
 
     }

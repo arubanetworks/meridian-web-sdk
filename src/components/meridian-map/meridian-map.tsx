@@ -66,7 +66,6 @@ export class MeridianMap {
       return (
         <div>
           <meridian-map-marker />
-          <p>Sup Bro?</p>
           <svg class="map" viewBox="0 0 1700 2200">
             <image width="1700" height="2200" xlinkHref={this.svgUrl} />
             {this.renderTags()}

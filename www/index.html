@@ -1,7 +1,4 @@
-<!DOCTYPE html>
-<html dir="ltr" lang="en" style="padding: 10px; font-family: sans-serif">
-
-<head>
+<!DOCTYPE html><html dir="ltr" lang="en" style="padding: 10px; font-family: sans-serif"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Stencil Component Starter</title>
@@ -12,39 +9,11 @@
 
 <body style="max-width: 600px; margin: 0 auto;">
 
-  <my-component first="Stencil" last="'Don't call me a framework' JS"></my-component>
-
-  <div style="margin-top: 10px"></div>
-
-  <meridian-button id="useless-button">
-    Click me!
-  </meridian-button>
-
-  <div style="margin-top: 10px"></div>
 
   <meridian-map location-id="5468665088573440" floor-id="5653104741580800"></meridian-map>
 
-  <script>
-    document.getElementById("useless-button").onclick = event => {
-      console.log("useless button was clicked!");
-      console.log(event);
-    };
-  </script>
-
-
-  <script>
-    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-      // auto-unregister service worker during dev mode
-      navigator.serviceWorker.getRegistration().then(function (registration) {
-        if (registration) {
-          registration.unregister().then(function () { location.reload(true) });
-        }
-      });
-    }
-  </script>
 
 
 
-</body>
 
-</html>
+</body></html>

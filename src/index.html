@@ -1,39 +1,22 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en" style="padding: 10px; font-family: sans-serif">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Stencil Component Starter</title>
-  <script src="http://localhost:3002/models.js"></script>
+  <script src="https://storage.googleapis.com/meridian-web-models/0.1.0/models.js"></script>
   <script src="/build/mycomponent.js"></script>
 
 </head>
+
 <body style="max-width: 600px; margin: 0 auto;">
 
-  <my-component
-    first="Stencil"
-    last="'Don't call me a framework' JS"
-  ></my-component>
 
-  <div style="margin-top: 10px"></div>
+  <meridian-map location-id="5468665088573440" floor-id="5653104741580800"></meridian-map>
 
-  <meridian-button id="useless-button">
-    Click me!
-  </meridian-button>
 
-  <div style="margin-top: 10px"></div>
-
-  <meridian-map
-    location-id="5468665088573440"
-    floor-id="5653104741580800"
-  ></meridian-map>
-
-  <script>
-    document.getElementById("useless-button").onclick = event => {
-      console.log("useless button was clicked!");
-      console.log(event);
-    };
-  </script>
 
 </body>
+
 </html>

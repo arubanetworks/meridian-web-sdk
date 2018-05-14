@@ -11,8 +11,7 @@ exports.config = {
       type: "www",
       serviceWorker: false
     }
-  ],
-  globalStyle: "src/global/style.scss"
+  ]
 };
 
 exports.devServer = {

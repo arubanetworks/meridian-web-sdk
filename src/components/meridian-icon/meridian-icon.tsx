@@ -8,12 +8,8 @@ import { Component, Prop, State } from "@stencil/core";
 export class MeridianIcon {
   render() {
     return (
-      <svg width="36" height="36" style={{ border: "2px solid" }}>
-        {/* <use
-          fill="red"
-          xlinkHref="/assets/icons.svg#src/components/icons/Icon/svgs/_tag_2TW9-"
-        /> */}
-        <use fill="magenta" xlinkHref="/assets/tag.svg#tag" />
+      <svg width="16" height="16">
+        <use fill="black" xlinkHref="/assets/tag.svg#tag" />
       </svg>
     );
   }

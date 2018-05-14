@@ -1,7 +1,4 @@
-const sass = require("@stencil/sass");
-
 exports.config = {
-  plugins: [sass()],
   namespace: "mycomponent",
   outputTargets: [
     {

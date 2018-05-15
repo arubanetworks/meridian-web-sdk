@@ -2,7 +2,7 @@ import { Component, Prop, State } from "@stencil/core";
 
 @Component({
   tag: "meridian-textbox",
-  styleUrl: "meridian-textbox.css",
+  styleUrl: "textbox.css",
   shadow: true
 })
 export class MeridianButton {

@@ -1,14 +1,14 @@
 import _ from "lodash";
-import { Component, Prop, State } from "@stencil/core";
-// import { userInfo } from "os";
+import { Component, Prop, State, Element } from "@stencil/core";
+
 const { MeridianWebModels } = global as any;
+const { SVG, panZoom } = global as any;
+const seconds = s => s * 1000;
 
 const api = MeridianWebModels.create({
   environment: "staging",
   token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
 });
-
-const seconds = s => s * 1000;
 
 interface Tag {
   mac: string;
@@ -18,10 +18,12 @@ interface Tag {
 
 @Component({
   tag: "meridian-map",
-  styleUrl: "meridian-map.css",
+  styleUrl: "map.css",
   shadow: true
 })
 export class MeridianMap {
+  @Element() el: HTMLElement;
+
   @Prop() locationId: string;
   @Prop() floorId: string;
 
@@ -31,7 +33,6 @@ export class MeridianMap {
   @State() connection: any;
 
   async componentDidLoad() {
-    console.info("component loaded");
     this.connection = api.floor.listen({
       locationId: this.locationId,
       id: this.floorId,
@@ -40,14 +41,22 @@ export class MeridianMap {
         const { x, y } = data.calculations.default.location;
         const tag = { mac, x, y };
         this.tags = { ...this.tags, [mac]: tag };
-        console.log(tag);
       }
     });
     setTimeout(() => {
       this.connection.close();
     }, seconds(60));
+
     const { data } = await api.floor.get(this.locationId, this.floorId);
     this.svgUrl = data.svg_url;
+
+    setTimeout(() => {
+      console.info("component loaded");
+      var element = this.el.shadowRoot.querySelector(".map .svg_parent");
+      console.info("element", element);
+      var foo = SVG.adopt(element);
+      foo.panZoom({ zoomMin: 0.25, zoomMax: 20 });
+    }, seconds(1));
   }
 
   renderTags() {
@@ -55,23 +64,34 @@ export class MeridianMap {
     return _.keys(tags).map(mac => {
       const t = tags[mac];
       const { x, y } = tags[mac];
-      return <circle class="tag" cx={x} cy={y} r="10" />;
+      // return <circle class="tag" cx={x} cy={y} r="10" />;
+      return (
+        <use
+          fill="black"
+          width="23"
+          height="23"
+          x={x}
+          y={y}
+          xlinkHref="/assets/tag.svg#tag"
+        />
+      );
     });
   }
 
   render() {
-    // TODO: How do we avoid hard coding the viewbox here since that information
-    // is contained within the SVG referenced by the SVG URL
     if (this.svgUrl) {
       return (
-        <div>
-          <meridian-map-marker />
-          <meridian-icon />
-          <svg class="map" viewBox="0 0 1700 2200">
-            <image width="1700" height="2200" xlinkHref={this.svgUrl} />
+        <svg class="map" viewBox="0 0 1700 2200">
+          <g class="svg_parent">
+            <image
+              id="svg_map_image"
+              width="1700"
+              height="2200"
+              xlinkHref={this.svgUrl}
+            />
             {this.renderTags()}
-          </svg>
-        </div>
+          </g>
+        </svg>
       );
     }
     return (

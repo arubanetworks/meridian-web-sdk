@@ -27,39 +27,6 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface MeridianMapMarker {
-
-    }
-  }
-
-  interface HTMLMeridianMapMarkerElement extends StencilComponents.MeridianMapMarker, HTMLStencilElement {}
-
-  var HTMLMeridianMapMarkerElement: {
-    prototype: HTMLMeridianMapMarkerElement;
-    new (): HTMLMeridianMapMarkerElement;
-  };
-  interface HTMLElementTagNameMap {
-    'meridian-map-marker': HTMLMeridianMapMarkerElement;
-  }
-  interface ElementTagNameMap {
-    'meridian-map-marker': HTMLMeridianMapMarkerElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'meridian-map-marker': JSXElements.MeridianMapMarkerAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface MeridianMapMarkerAttributes extends HTMLAttributes {
-
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
     interface MeridianButton {
 
     }
@@ -93,30 +60,63 @@ declare global {
 declare global {
 
   namespace StencilComponents {
-    interface MeridianIcon {
+    interface MeridianMapIcon {
 
     }
   }
 
-  interface HTMLMeridianIconElement extends StencilComponents.MeridianIcon, HTMLStencilElement {}
+  interface HTMLMeridianMapIconElement extends StencilComponents.MeridianMapIcon, HTMLStencilElement {}
 
-  var HTMLMeridianIconElement: {
-    prototype: HTMLMeridianIconElement;
-    new (): HTMLMeridianIconElement;
+  var HTMLMeridianMapIconElement: {
+    prototype: HTMLMeridianMapIconElement;
+    new (): HTMLMeridianMapIconElement;
   };
   interface HTMLElementTagNameMap {
-    'meridian-icon': HTMLMeridianIconElement;
+    'meridian-map-icon': HTMLMeridianMapIconElement;
   }
   interface ElementTagNameMap {
-    'meridian-icon': HTMLMeridianIconElement;
+    'meridian-map-icon': HTMLMeridianMapIconElement;
   }
   namespace JSX {
     interface IntrinsicElements {
-      'meridian-icon': JSXElements.MeridianIconAttributes;
+      'meridian-map-icon': JSXElements.MeridianMapIconAttributes;
     }
   }
   namespace JSXElements {
-    export interface MeridianIconAttributes extends HTMLAttributes {
+    export interface MeridianMapIconAttributes extends HTMLAttributes {
+
+    }
+  }
+}
+
+
+declare global {
+
+  namespace StencilComponents {
+    interface MeridianMapMarker {
+
+    }
+  }
+
+  interface HTMLMeridianMapMarkerElement extends StencilComponents.MeridianMapMarker, HTMLStencilElement {}
+
+  var HTMLMeridianMapMarkerElement: {
+    prototype: HTMLMeridianMapMarkerElement;
+    new (): HTMLMeridianMapMarkerElement;
+  };
+  interface HTMLElementTagNameMap {
+    'meridian-map-marker': HTMLMeridianMapMarkerElement;
+  }
+  interface ElementTagNameMap {
+    'meridian-map-marker': HTMLMeridianMapMarkerElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      'meridian-map-marker': JSXElements.MeridianMapMarkerAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface MeridianMapMarkerAttributes extends HTMLAttributes {
 
     }
   }
@@ -188,41 +188,6 @@ declare global {
     export interface MeridianTextboxAttributes extends HTMLAttributes {
       'onUpdate'?: (value: string) => void;
       'value'?: string;
-    }
-  }
-}
-
-
-declare global {
-
-  namespace StencilComponents {
-    interface MyComponent {
-      'first': string;
-      'last': string;
-    }
-  }
-
-  interface HTMLMyComponentElement extends StencilComponents.MyComponent, HTMLStencilElement {}
-
-  var HTMLMyComponentElement: {
-    prototype: HTMLMyComponentElement;
-    new (): HTMLMyComponentElement;
-  };
-  interface HTMLElementTagNameMap {
-    'my-component': HTMLMyComponentElement;
-  }
-  interface ElementTagNameMap {
-    'my-component': HTMLMyComponentElement;
-  }
-  namespace JSX {
-    interface IntrinsicElements {
-      'my-component': JSXElements.MyComponentAttributes;
-    }
-  }
-  namespace JSXElements {
-    export interface MyComponentAttributes extends HTMLAttributes {
-      'first'?: string;
-      'last'?: string;
     }
   }
 }

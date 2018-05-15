@@ -2,23 +2,24 @@
   "name": "my-component",
   "version": "0.0.1",
   "description": "Stencil Component Starter",
-  "main": "dist/mycomponent.js",
+  "main": "dist/meridiancomponents.js",
   "types": "dist/types/components.d.ts",
   "collection": "dist/collection/collection-manifest.json",
-  "files": [
-    "dist/"
-  ],
-  "browser": "dist/mycomponent.js",
+  "files": ["dist/"],
+  "browser": "dist/meridiancomponents.js",
   "scripts": {
     "build": "stencil build",
-    "dev": "sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
+    "dev":
+      "sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
     "serve": "stencil-dev-server",
     "start": "npm run dev",
     "test": "jest --no-cache",
     "test.watch": "jest --watch --no-cache"
   },
   "dependencies": {
-    "lodash": "^4.17.10"
+    "lodash": "4.17.10",
+    "svg.js": "2.6.4",
+    "svg.panzoom.js": "1.2.0"
   },
   "devDependencies": {
     "@stencil/core": "0.8.1",
@@ -41,15 +42,10 @@
   "homepage": "https://github.com/ionic-team/stencil",
   "jest": {
     "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/@stencil/core/testing/jest.preprocessor.js"
+      "^.+\\.(ts|tsx)$":
+        "<rootDir>/node_modules/@stencil/core/testing/jest.preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json",
-      "jsx"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js", "json", "jsx"]
   }
 }

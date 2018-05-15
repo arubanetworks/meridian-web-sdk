@@ -18,7 +18,7 @@ interface Tag {
 
 @Component({
   tag: "meridian-map",
-  styleUrl: "meridian-map.css",
+  styleUrl: "map.css",
   shadow: true
 })
 export class MeridianMap {
@@ -64,7 +64,17 @@ export class MeridianMap {
     return _.keys(tags).map(mac => {
       const t = tags[mac];
       const { x, y } = tags[mac];
-      return <circle class="tag" cx={x} cy={y} r="10" />;
+      // return <circle class="tag" cx={x} cy={y} r="10" />;
+      return (
+        <use
+          fill="black"
+          width="23"
+          height="23"
+          x={x}
+          y={y}
+          xlinkHref="/assets/tag.svg#tag"
+        />
+      );
     });
   }
 

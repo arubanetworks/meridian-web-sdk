@@ -18,7 +18,9 @@
     "test.watch": "jest --watch --no-cache"
   },
   "dependencies": {
-    "lodash": "^4.17.10"
+    "lodash": "4.17.10",
+    "svg.js": "2.6.4",
+    "svg.panzoom.js": "1.2.0"
   },
   "devDependencies": {
     "@stencil/core": "0.8.1",

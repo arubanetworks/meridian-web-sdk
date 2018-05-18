@@ -16,6 +16,12 @@ interface Tag {
   y: number;
 }
 
+function handleTagClick() {
+  let text: HTMLElement = this;
+  text = this.getElementsByTagName("text");
+  text[0].setAttribute("display", "block");
+}
+
 @Component({
   tag: "meridian-map",
   styleUrl: "map.css",
@@ -81,25 +87,25 @@ export class MeridianMap {
     // foo.panZoom({ zoomMin: 0.25, zoomMax: 20 });
   }
 
-  renderTagInfo() {
-    alert("tag info");
-  }
-
   renderTags() {
     const tags = this.tags;
     return _.keys(tags).map(mac => {
       const t = tags[mac];
-      const { x, y } = tags[mac];
+      const { x, y } = t;
       return (
-        <use
-          fill="black"
-          width="23"
-          height="23"
-          x={x}
-          y={y}
-          onClick={this.renderTagInfo}
-          xlinkHref="/assets/tag.svg#tag"
-        />
+        <g onClick={handleTagClick}>
+          <text class="tag-tooltip" display="none" x={x} y={y}>
+            My
+          </text>
+          <use
+            fill="black"
+            width="23"
+            height="23"
+            x={x}
+            y={y}
+            xlinkHref="/assets/tag.svg#tag"
+          />
+        </g>
       );
     });
   }

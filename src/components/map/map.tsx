@@ -27,17 +27,49 @@ export class MeridianMap {
   @Prop() locationId: string;
   @Prop() floorId: string;
 
-  @State() loaded: boolean;
   @State() currentText: string = "";
   @State() svgUrl: string = "";
   @State() tags: Record<string, Tag> = {};
-  @State() connection: any;
+  @State() connection: any = null;
   @State() connectionStatus: string = "Not Connected";
 
-  closeConnection() {
-    console.info("calling close");
+  componentDidUpdate() {
+    console.log("Component did update");
+  }
+
+  async componentDidLoad() {
+    console.info("Component did load");
+    const { data } = await api.floor.get(this.locationId, this.floorId);
+    this.svgUrl = data.svg_url;
+    this.connectionOpen();
+    this.initMapControls();
+  }
+
+  connectionClose() {
     this.connection.close();
-    this.connectionStatus = "Closed";
+  }
+
+  connectionOpen() {
+    this.connection = api.floor.listen({
+      locationId: this.locationId,
+      id: this.floorId,
+      onUpdate: data => {
+        this.connectionStatus = "Connected";
+        const { mac } = data;
+        const { x, y } = data.calculations.default.location;
+        const tag = { mac, x, y };
+        this.tags = { ...this.tags, [mac]: tag };
+      },
+      onClose: data => {
+        console.info("closing connection");
+        this.connection = null;
+        this.connectionStatus = "Closed";
+      }
+    });
+
+    setTimeout(() => {
+      this.connectionClose();
+    }, seconds(60));
   }
 
   initMapControls() {
@@ -49,33 +81,8 @@ export class MeridianMap {
     // foo.panZoom({ zoomMin: 0.25, zoomMax: 20 });
   }
 
-  componentDidUpdate() {
-    console.log("Component did update");
-  }
-
-  async componentDidLoad() {
-    console.info("Component did load");
-
-    const { data } = await api.floor.get(this.locationId, this.floorId);
-    this.svgUrl = data.svg_url;
-    this.loaded = true;
-
-    this.connection = api.floor.listen({
-      locationId: this.locationId,
-      id: this.floorId,
-      onUpdate: data => {
-        this.connectionStatus = "Connected";
-        const { mac } = data;
-        const { x, y } = data.calculations.default.location;
-        const tag = { mac, x, y };
-        this.tags = { ...this.tags, [mac]: tag };
-      }
-    });
-    setTimeout(() => {
-      this.closeConnection();
-    }, seconds(60));
-
-    this.initMapControls();
+  renderTagInfo() {
+    alert("tag info");
   }
 
   renderTags() {
@@ -90,19 +97,32 @@ export class MeridianMap {
           height="23"
           x={x}
           y={y}
+          onClick={this.renderTagInfo}
           xlinkHref="/assets/tag.svg#tag"
         />
       );
     });
   }
 
+  renderConnectionToggle() {
+    if (!this.connection) {
+      return (
+        <button onClick={() => this.connectionOpen()}>
+          Open Connection (refresh data)
+        </button>
+      );
+    } else {
+      return (
+        <button onClick={() => this.connectionClose()}>Close Connection</button>
+      );
+    }
+  }
+
   render() {
     return (
       <div>
         <p>
-          <button onClick={() => this.closeConnection()}>
-            Close Connection
-          </button>
+          {this.renderConnectionToggle()}
           <span> Status: {this.connectionStatus}</span>
         </p>
         <div>

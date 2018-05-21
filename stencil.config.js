@@ -8,7 +8,8 @@ exports.config = {
       type: "www",
       serviceWorker: false
     }
-  ]
+  ],
+  enableCache: false
 };
 
 exports.devServer = {

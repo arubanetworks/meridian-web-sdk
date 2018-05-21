@@ -8,12 +8,5 @@
 }
 
 .tag {
-  transition: cx 300ms, cy 300ms;
-  fill: #e04111;
-  stroke: rgba(0, 0, 0, 0.2);
-  stroke-width: 4px;
-}
-
-:root .tag-tooltip {
-  font-size: 10px;
+  pointer-events: bounding-box;
 }

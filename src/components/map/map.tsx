@@ -1,14 +1,9 @@
 import _ from "lodash";
 import { Component, Prop, State, Element } from "@stencil/core";
 
-const { MeridianWebModels } = global as any;
+const { MeridianWebApi } = global as any;
 const { SVG, panZoom } = global as any;
 const seconds = s => s * 1000;
-
-const api = MeridianWebModels.create({
-  environment: "staging",
-  token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
-});
 
 interface Tag {
   mac: string;
@@ -18,8 +13,7 @@ interface Tag {
 
 function handleTagClick() {
   let text: HTMLElement = this;
-  text = this.getElementsByTagName("text");
-  text[0].setAttribute("display", "block");
+  console.info("clicking the tag");
 }
 
 @Component({
@@ -45,7 +39,10 @@ export class MeridianMap {
 
   async componentDidLoad() {
     console.info("Component did load");
-    const { data } = await api.floor.get(this.locationId, this.floorId);
+    const { data } = await MeridianWebApi.floor.get(
+      this.locationId,
+      this.floorId
+    );
     this.svgUrl = data.svg_url;
     this.connectionOpen();
     this.initMapControls();
@@ -56,7 +53,7 @@ export class MeridianMap {
   }
 
   connectionOpen() {
-    this.connection = api.floor.listen({
+    this.connection = MeridianWebApi.floor.listen({
       locationId: this.locationId,
       id: this.floorId,
       onUpdate: data => {
@@ -93,19 +90,18 @@ export class MeridianMap {
       const t = tags[mac];
       const { x, y } = t;
       return (
-        <g onClick={handleTagClick}>
-          <text class="tag-tooltip" display="none" x={x} y={y}>
-            My
-          </text>
-          <use
-            fill="black"
-            width="23"
-            height="23"
-            x={x}
-            y={y}
-            xlinkHref="/assets/tag.svg#tag"
-          />
-        </g>
+        <use
+          onClick={handleTagClick}
+          className="tag"
+          cursor="pointer"
+          pointer-events="all"
+          fill="black"
+          width="123"
+          height="123"
+          x={x}
+          y={y}
+          xlinkHref="/assets/tag.svg#tag"
+        />
       );
     });
   }

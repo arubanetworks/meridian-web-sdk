@@ -29,7 +29,7 @@ MeridianWebComponents.init({
     token: "<TOKEN>"
   })
 });
-MeridianWebComponents.createMap(domTarget, {
+MeridianWebComponents.renderMap(domTarget, {
   locationId: "...",
   floorId: "..."
 });
@@ -49,7 +49,7 @@ MeridianWebComponents.init({
     token: "<TOKEN>"
   })
 });
-MeridianWebComponents.createMap(domTarget, {
+MeridianWebComponents.renderMap(domTarget, {
   locationId: "...",
   floorId: "..."
 });

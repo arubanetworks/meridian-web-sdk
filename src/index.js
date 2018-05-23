@@ -11,6 +11,6 @@ export function init({ api }) {
   context.api = api;
 }
 
-export function createMap(element, options) {
+export function renderMap(element, options) {
   render(<Map api={context.api} {...options} />, element);
 }

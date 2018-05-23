@@ -1,6 +1,17 @@
 import { h, Component } from "preact";
-
 import Button from "./Button";
+import { css } from "emotion";
+import svg from "svg.js";
+import panzoom from "svg.panzoom.js";
+
+const className = css({
+  label: "meridian-map",
+  position: "relative",
+  border: "1px solid #ccc",
+  background: "#fafafa",
+  color: "#000",
+  fontWeight: "bold"
+});
 
 export default class Map extends Component {
   state = {
@@ -10,7 +21,6 @@ export default class Map extends Component {
   };
 
   async componentDidMount() {
-    console.trace();
     const { locationId, floorId, api } = this.props;
     console.info("Component did load");
     const { data } = await api.floor.get(locationId, floorId);
@@ -20,6 +30,7 @@ export default class Map extends Component {
       },
       () => {
         this.connectionOpen();
+        this.initPanZoom();
       }
     );
   }
@@ -78,6 +89,14 @@ export default class Map extends Component {
     });
   }
 
+  initPanZoom() {
+    console.info("initalizing pan/zoom");
+    const map = svg.get("map");
+    console.info(map);
+    map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
+    map.zoom(1, { x: 1396.6849688435675, y: 1591.5310946482457 });
+  }
+
   renderConnectionToggle() {
     const { connection } = this.state;
     if (!connection) {
@@ -102,8 +121,8 @@ export default class Map extends Component {
           <span> Status: {connectionStatus}</span>
         </p>
         <div>
-          <svg class="map" viewBox="0 0 1700 2200">
-            <g class="svg_parent">
+          <svg id="map" className={className} viewBox="0 0 1700 2200">
+            <g id="svg_parent">
               <image
                 id="svg_map_image"
                 width="1700"

@@ -6,3 +6,4 @@
   obviously won't necessarily exist on a customer site
 * Is there a better way we can use Webpack Bundle Analyzer so it doesn't hold up the rest of the
   build waiting for us to hit Control-C
+* Look into create-emotion and defaults

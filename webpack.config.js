@@ -2,8 +2,9 @@
 
 const path = require("path");
 const webpack = require("webpack");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
-module.exports = {
+module.exports = env => ({
   module: {
     rules: [
       {
@@ -31,5 +32,6 @@ module.exports = {
     overlay: true,
     port: 3011,
     stats: "errors-only"
-  }
-};
+  },
+  plugins: env === "production" ? [new BundleAnalyzerPlugin()] : []
+});

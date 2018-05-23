@@ -1,5 +1,7 @@
 import { h, Component } from "preact";
 
+import Button from "./Button";
+
 export default class Map extends Component {
   state = {
     tags: {},
@@ -80,13 +82,13 @@ export default class Map extends Component {
     const { connection } = this.state;
     if (!connection) {
       return (
-        <button onClick={() => this.connectionOpen()}>
+        <Button onClick={() => this.connectionOpen()}>
           Open Connection (refresh data)
-        </button>
+        </Button>
       );
     } else {
       return (
-        <button onClick={() => this.connectionClose()}>Close Connection</button>
+        <Button onClick={() => this.connectionClose()}>Close Connection</Button>
       );
     }
   }

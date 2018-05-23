@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --watch",
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/arubanetworks/meridian-web-components#readme",
   "dependencies": {
-    "preact": "^8.2.9"
+    "lodash": "^4.17.10",
+    "preact": "^8.2.9",
+    "svg.js": "^2.6.4",
+    "svg.panzoom.js": "^1.2.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",

@@ -1,51 +1,47 @@
 {
-  "name": "my-component",
-  "version": "0.0.1",
-  "description": "Stencil Component Starter",
-  "main": "dist/meridiancomponents.js",
-  "types": "dist/types/components.d.ts",
-  "collection": "dist/collection/collection-manifest.json",
-  "files": ["dist/"],
-  "browser": "dist/meridiancomponents.js",
+  "name": "meridian-web-components",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.js",
   "scripts": {
-    "build": "stencil build",
-    "dev":
-      "sd concurrent \"stencil build --dev --watch\" \"stencil-dev-server\" ",
-    "serve": "stencil-dev-server",
-    "start": "npm run dev",
-    "test": "jest --no-cache",
-    "test.watch": "jest --watch --no-cache"
+    "start": "webpack-dev-server --watch -d",
+    "build": "webpack -p --mode production --env production",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arubanetworks/meridian-web-components.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arubanetworks/meridian-web-components/issues"
+  },
+  "homepage": "https://github.com/arubanetworks/meridian-web-components#readme",
   "dependencies": {
+    "create-emotion": "^9.1.3",
     "lodash": "4.17.10",
+    "preact": "8.2.9",
+    "prop-types": "^15.6.1",
     "svg.js": "2.6.4",
     "svg.panzoom.js": "1.2.0"
   },
   "devDependencies": {
-    "@stencil/core": "0.8.1",
-    "@stencil/dev-server": "latest",
-    "@stencil/utils": "latest",
-    "@types/jest": "^21.1.1",
-    "@types/lodash": "^4.14.108",
-    "jest": "^21.2.1",
-    "prettier": "^1.12.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ionic-team/stencil-component-starter.git"
-  },
-  "author": "Ionic Team",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/ionic-team/stencil"
-  },
-  "homepage": "https://github.com/ionic-team/stencil",
-  "jest": {
-    "transform": {
-      "^.+\\.(ts|tsx)$":
-        "<rootDir>/node_modules/@stencil/core/testing/jest.preprocessor.js"
-    },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json", "jsx"]
+    "babel-eslint": "8.2.3",
+    "babel-loader": "7.1.4",
+    "babel-plugin-transform-async-to-generator": "6.24.1",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-plugin-transform-react-jsx": "6.24.1",
+    "babel-plugin-transform-runtime": "6.23.0",
+    "babel-preset-env": "1.7.0",
+    "eslint": "4.19.1",
+    "eslint-plugin-babel": "^5.1.0",
+    "eslint-plugin-react": "7.8.2",
+    "webpack": "4.8.3",
+    "webpack-bundle-analyzer": "2.13.1",
+    "webpack-cli": "2.1.4",
+    "webpack-dev-server": "3.1.4"
   }
 }

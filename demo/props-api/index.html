@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body style="max-width: 600px; margin: 0 auto;">
+  <p>Map Below</p>
+  <div id="meridian-map"></div>
+
+  <script src="https://storage.googleapis.com/meridian-web-models/0.1.0/models.js"></script>
+  <script src="/mwc.js"></script>
+  <script>
+    MeridianWebComponents.renderMap(document.getElementById("meridian-map"), {
+      api: MeridianWebModels.create({
+        environment: "staging",
+        token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
+      }),
+      locationId: "5468665088573440",
+      floorId: "5653104741580800",
+    });
+  </script>
+</body>
+
+</html>

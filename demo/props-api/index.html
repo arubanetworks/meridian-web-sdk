@@ -6,9 +6,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Page Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+  </style>
 </head>
 
-<body style="max-width: 600px; margin: 0 auto;">
+<body>
   <p>Map Below</p>
   <div id="meridian-map"></div>
 
@@ -22,6 +29,10 @@
       }),
       locationId: "5468665088573440",
       floorId: "5653104741580800",
+      zoom: false,
+      search: true,
+      tags: "all",
+      // tags: ["A0E6F83804BB"],
     });
   </script>
 </body>

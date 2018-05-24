@@ -27,9 +27,14 @@ const zoomControls = css({
 export default class Map extends Component {
   static propTypes = {
     zoom: PropTypes.bool,
-    locationId: PropTypes.string,
-    floorId: PropTypes.string,
-    api: PropTypes.object
+    locationId: PropTypes.string.isRequired,
+    floorId: PropTypes.string.isRequired,
+    api: PropTypes.object,
+    // Either "all" or an array of IDs (all caps MAC address no colons)
+    tags: PropTypes.oneOfType([
+      PropTypes.oneOf(["all"]),
+      PropTypes.arrayOf(PropTypes.string)
+    ])
   };
 
   static defaultProps = {
@@ -37,38 +42,43 @@ export default class Map extends Component {
   };
 
   state = {
-    tags: {},
+    tagsById: {},
     svgUrl: null,
     connectionStatus: "Not connected"
   };
 
   async componentDidMount() {
-    const { locationId, floorId, api } = this.props;
+    const { locationId, floorId, api, tags } = this.props;
     const { data } = await api.floor.get(locationId, floorId);
     this.setState(
       {
         svgUrl: data.svg_url
       },
       () => {
-        this.connectionOpen();
-        this.initMap();
+        if (tags) {
+          this.connectionOpen();
+        }
+        this.initPanZoom();
       }
     );
   }
 
   connectionOpen() {
-    const { floorId, locationId, api } = this.props;
+    const { floorId, locationId, api, tags } = this.props;
     const connection = api.floor.listen({
       locationId: locationId,
       id: floorId,
       onUpdate: data => {
         const { mac } = data;
-        const { x, y } = data.calculations.default.location;
-        const tag = { mac, x, y };
-        this.setState(prevState => ({
-          connectionStatus: "Connected",
-          tags: { ...prevState.tags, [mac]: tag }
-        }));
+        if (tags === "all" || tags.includes(mac)) {
+          const { name, image_url: imageUrl } = data.editor_data;
+          const { x, y } = data.calculations.default.location;
+          const tag = { name, imageUrl, mac, x, y };
+          this.setState(prevState => ({
+            connectionStatus: "Connected",
+            tagsById: { ...prevState.tagsById, [mac]: tag }
+          }));
+        }
       },
       onClose: () => {
         this.setState({
@@ -78,9 +88,6 @@ export default class Map extends Component {
       }
     });
     this.setState({ connection, connectionStatus: "Connected" });
-    setTimeout(() => {
-      this.connectionClose();
-    }, 60 * 1000);
   }
 
   connectionClose() {
@@ -88,9 +95,9 @@ export default class Map extends Component {
   }
 
   renderTags() {
-    const { tags } = this.state;
-    return Object.keys(tags).map(mac => {
-      const t = tags[mac];
+    const { tagsById } = this.state;
+    return Object.keys(tagsById).map(mac => {
+      const t = tagsById[mac];
       const { x, y } = t;
       return (
         <use

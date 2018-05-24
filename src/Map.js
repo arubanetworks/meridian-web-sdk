@@ -58,7 +58,7 @@ export default class Map extends Component {
         });
       }
     });
-    this.setState({ connection });
+    this.setState({ connection, connectionStatus: "Connected" });
     setTimeout(() => {
       this.connectionClose();
     }, 60 * 1000);

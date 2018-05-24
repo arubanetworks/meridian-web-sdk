@@ -58,7 +58,7 @@ export default class Map extends Component {
         if (tags) {
           this.connectionOpen();
         }
-        this.initPanZoom();
+        this.initMap();
       }
     );
   }
@@ -117,9 +117,7 @@ export default class Map extends Component {
   }
 
   initMap() {
-    console.info(this.mapSvg);
     const map = svg.adopt(this.mapSvg);
-    console.info(map);
     map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
     // map.zoom(1, { x: 1396.6849688435675, y: 1591.5310946482457 });
   }

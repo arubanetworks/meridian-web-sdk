@@ -1,11 +1,12 @@
 import { h, Component } from "preact";
-import Button from "./Button";
-import { css } from "emotion";
 import svg from "svg.js";
 import panzoom from "svg.panzoom.js";
 
+import Button from "./Button";
+import { css } from "./style";
+
 const className = css({
-  label: "meridian-map",
+  label: "map",
   position: "relative",
   border: "1px solid #ccc",
   background: "#fafafa",

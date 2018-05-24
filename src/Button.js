@@ -1,16 +1,30 @@
 import { h } from "preact";
-import { css } from "emotion";
 
-import theme from "./theme";
+import { mixins, theme, css } from "./style";
 
 const className = css({
+  label: "button",
+
   border: "0",
   padding: "0.25em 0.5em",
-  borderRadius: "0.25em",
+  ...mixins.rounded,
+  // borderRadius: "0.25em",
   background: theme.brandBlue,
   color: theme.white,
   fontFamily: theme.fontFamily,
-  fontSize: theme.fontSize
+  fontSize: theme.fontSize,
+
+  "&:focus": {
+    outline: "0",
+    boxShadow: `
+      0 0 0 2px white,
+      0 0 0 4px black
+    `
+  },
+
+  "&:hover": {
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.3)"
+  }
 });
 
 const Button = ({ children, onClick }) => (

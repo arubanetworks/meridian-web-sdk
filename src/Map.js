@@ -17,9 +17,7 @@ const mapSvg = css({
 
 const zoomControls = css({
   position: "absolute",
-  top: 20,
   zIndex: 1,
-  top: "right",
   right: 10,
   top: 10
 });

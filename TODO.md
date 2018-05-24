@@ -1,7 +1,3 @@
-* How do developers want to specify which tags to show on a map (if any)?
-  * Probably a `getTags` function passed to the `renderMap`
-  * And we could potentially also have a `tagIds` array we use as a fallback
-  * If there's not `tagIds` and no `getTags` just don't render any (or show all?)
 * Show drawer with tag info on click
 * Pan and zoom
   * Show controls

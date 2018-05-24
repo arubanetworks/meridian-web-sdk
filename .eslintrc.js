@@ -12,5 +12,10 @@ module.exports = {
     "consistent-return": "error",
     "react/sort-comp": "error",
     "no-unused-vars": "error"
+  },
+  settings: {
+    react: {
+      pragma: "h"
+    }
   }
 };

@@ -1,4 +1,5 @@
 import { h } from "preact";
+import PropTypes from "prop-types";
 
 import { mixins, theme, css } from "./style";
 
@@ -32,5 +33,10 @@ const Button = ({ children, onClick }) => (
     {children}
   </button>
 );
+
+Button.propTypes = {
+  children: PropTypes.any,
+  onClick: PropTypes.func
+};
 
 export default Button;

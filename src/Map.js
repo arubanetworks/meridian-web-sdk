@@ -1,6 +1,7 @@
 import { h, Component } from "preact";
+import PropTypes from "prop-types";
 import svg from "svg.js";
-import panzoom from "svg.panzoom.js";
+import "svg.panzoom.js";
 
 import Button from "./Button";
 import { css } from "./style";
@@ -15,6 +16,12 @@ const className = css({
 });
 
 export default class Map extends Component {
+  static propTypes = {
+    locationId: PropTypes.string,
+    floorId: PropTypes.string,
+    api: PropTypes.object
+  };
+
   state = {
     tags: {},
     svgUrl: null,
@@ -23,7 +30,6 @@ export default class Map extends Component {
 
   async componentDidMount() {
     const { locationId, floorId, api } = this.props;
-    console.info("Component did load");
     const { data } = await api.floor.get(locationId, floorId);
     this.setState(
       {
@@ -38,7 +44,6 @@ export default class Map extends Component {
 
   connectionOpen() {
     const { floorId, locationId, api } = this.props;
-    const { tags } = this.state;
     const connection = api.floor.listen({
       locationId: locationId,
       id: floorId,
@@ -51,8 +56,7 @@ export default class Map extends Component {
           tags: { ...prevState.tags, [mac]: tag }
         }));
       },
-      onClose: data => {
-        console.info("closing connection");
+      onClose: () => {
         this.setState({
           connection: null,
           connectionStatus: "Closed"
@@ -76,9 +80,10 @@ export default class Map extends Component {
       const { x, y } = t;
       return (
         <use
+          key={mac}
           className="tag"
           cursor="pointer"
-          pointer-events="bounding-box"
+          pointerEvents="bounding-box"
           fill="black"
           width="23"
           height="23"
@@ -91,9 +96,7 @@ export default class Map extends Component {
   }
 
   initPanZoom() {
-    console.info("initalizing pan/zoom");
     const map = svg.get("map");
-    console.info(map);
     map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
     map.zoom(1, { x: 1396.6849688435675, y: 1591.5310946482457 });
   }

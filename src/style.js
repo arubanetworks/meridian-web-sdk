@@ -25,7 +25,7 @@ const context = typeof global !== "undefined" ? global : {};
 export const {
   // flush,
   // hydrate,
-  // cx,
+  cx,
   // merge,
   // getRegisteredStyles,
   // injectGlobal,

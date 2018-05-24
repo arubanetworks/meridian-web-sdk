@@ -28,7 +28,7 @@ const className = css({
   }
 });
 
-const Button = ({ children, onClick }) => (
+const Button = ({ children, onClick = () => {} }) => (
   <button className={className} onClick={onClick}>
     {children}
   </button>

@@ -51,7 +51,7 @@ export default class Map extends Component {
       },
       () => {
         this.connectionOpen();
-        this.initPanZoom();
+        this.initMap();
       }
     );
   }
@@ -109,8 +109,10 @@ export default class Map extends Component {
     });
   }
 
-  initPanZoom() {
-    const map = svg.get("map");
+  initMap() {
+    console.info(this.mapSvg);
+    const map = svg.adopt(this.mapSvg);
+    console.info(map);
     map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
     // map.zoom(1, { x: 1396.6849688435675, y: 1591.5310946482457 });
   }
@@ -152,14 +154,13 @@ export default class Map extends Component {
         </p>
         <div style={{ position: "relative" }}>
           {this.renderZoomControls()}
-          <svg id="map" className={mapSvg} viewBox="0 0 1700 2200">
+          <svg
+            ref={el => (this.mapSvg = el)}
+            className={mapSvg}
+            viewBox="0 0 1700 2200"
+          >
             <g id="svg_parent">
-              <image
-                id="svg_map_image"
-                width="1700"
-                height="2200"
-                xlinkHref={svgUrl}
-              />
+              <image width="1700" height="2200" xlinkHref={svgUrl} />
               {this.renderTags()}
             </g>
           </svg>

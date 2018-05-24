@@ -6,7 +6,7 @@ import "svg.panzoom.js";
 import Button from "./Button";
 import { css } from "./style";
 
-const className = css({
+const mapSvg = css({
   label: "map",
   position: "relative",
   border: "1px solid #ccc",
@@ -15,11 +15,25 @@ const className = css({
   fontWeight: "bold"
 });
 
+const zoomControls = css({
+  position: "absolute",
+  top: 20,
+  zIndex: 1,
+  top: "right",
+  right: 10,
+  top: 10
+});
+
 export default class Map extends Component {
   static propTypes = {
+    zoom: PropTypes.bool,
     locationId: PropTypes.string,
     floorId: PropTypes.string,
     api: PropTypes.object
+  };
+
+  static defaultProps = {
+    zoom: true
   };
 
   state = {
@@ -98,7 +112,19 @@ export default class Map extends Component {
   initPanZoom() {
     const map = svg.get("map");
     map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
-    map.zoom(1, { x: 1396.6849688435675, y: 1591.5310946482457 });
+    // map.zoom(1, { x: 1396.6849688435675, y: 1591.5310946482457 });
+  }
+
+  renderZoomControls() {
+    if (this.props.zoom) {
+      return (
+        <div className={zoomControls}>
+          <button>_</button>
+          <br />
+          <button>+</button>
+        </div>
+      );
+    }
   }
 
   renderConnectionToggle() {
@@ -124,8 +150,9 @@ export default class Map extends Component {
           {this.renderConnectionToggle()}
           <span> Status: {connectionStatus}</span>
         </p>
-        <div>
-          <svg id="map" className={className} viewBox="0 0 1700 2200">
+        <div style={{ position: "relative" }}>
+          {this.renderZoomControls()}
+          <svg id="map" className={mapSvg} viewBox="0 0 1700 2200">
             <g id="svg_parent">
               <image
                 id="svg_map_image"

@@ -4,23 +4,17 @@ import svg from "svg.js";
 import "svg.panzoom.js";
 
 import Button from "./Button";
+import ZoomButtons from "./ZoomButtons";
 import Tag from "./Tag";
 import { css } from "./style";
 
-const mapSvg = css({
+const cssMapSvg = css({
   label: "map",
   position: "relative",
   border: "1px solid #ccc",
   background: "#fafafa",
   color: "#000",
   fontWeight: "bold"
-});
-
-const zoomControls = css({
-  position: "absolute",
-  zIndex: 1,
-  right: 10,
-  top: 10
 });
 
 export default class Map extends Component {
@@ -112,20 +106,14 @@ export default class Map extends Component {
   }
 
   initMap() {
-    const map = svg.adopt(this.mapSvg);
-    map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
-    // map.zoom(1, { x: 1396.6849688435675, y: 1591.5310946482457 });
+    console.info("the map is like totally initialized and ready");
   }
 
   renderZoomControls() {
-    if (this.props.zoom) {
-      return (
-        <div className={zoomControls}>
-          <button>_</button>
-          <br />
-          <button>+</button>
-        </div>
-      );
+    if (this.props.zoom && this.mapSvg) {
+      const map = svg.adopt(this.mapSvg);
+      map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
+      return <ZoomButtons map={map} />;
     }
   }
 
@@ -146,6 +134,7 @@ export default class Map extends Component {
 
   render() {
     const { svgUrl, connectionStatus } = this.state;
+    // console.info(this);
     return (
       <div>
         <p>
@@ -156,7 +145,7 @@ export default class Map extends Component {
           {this.renderZoomControls()}
           <svg
             ref={el => (this.mapSvg = el)}
-            className={mapSvg}
+            className={cssMapSvg}
             viewBox="0 0 1700 2200"
           >
             <g id="svg_parent">

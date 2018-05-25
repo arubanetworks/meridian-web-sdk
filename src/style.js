@@ -7,12 +7,16 @@ export const theme = {
   fontSize: "16px",
   white: "#fff",
   brandOrange: "#ff8300",
-  brandBlue: "#004876"
+  brandBlue: "#004876",
+  borderColor: "#e0e0e1",
 };
 
 export const mixins = {
   rounded: {
     borderRadius: "0.25em"
+  },
+  paddingMedium: {
+    padding: "20px"
   }
 };
 

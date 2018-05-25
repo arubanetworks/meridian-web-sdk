@@ -5,6 +5,7 @@ import "svg.panzoom.js";
 
 import Button from "./Button";
 import ZoomButtons from "./ZoomButtons";
+import Drawer from "./Drawer";
 import Tag from "./Tag";
 import { css } from "./style";
 
@@ -33,11 +34,11 @@ export default class Map extends Component {
   static defaultProps = {
     zoom: true
   };
-
   state = {
     tagsById: {},
     svgUrl: null,
-    connectionStatus: "Not connected"
+    connectionStatus: "Not connected",
+    selectedItem: {},
   };
 
   async componentDidMount() {
@@ -86,7 +87,11 @@ export default class Map extends Component {
   connectionClose() {
     this.state.connection.close();
   }
-
+  mapRef(ref) {
+    if (ref) {
+      this.map = ref;
+    }
+  }
   renderTags() {
     const { tagsById } = this.state;
     return Object.keys(tagsById).map(mac => {
@@ -97,9 +102,7 @@ export default class Map extends Component {
           id={mac}
           x={x}
           y={y}
-          onClick={() => {
-            console.info("Duck Eggs!");
-          }}
+          onClick={() => this.setState({ selectedItem: t })}
         />
       );
     });
@@ -108,7 +111,12 @@ export default class Map extends Component {
   initMap() {
     console.info("the map is like totally initialized and ready");
   }
-
+  onMapClick(e) {
+    console.log("onMapClick", this.map, e.target, this.map.isEqualNode(e.target));
+    if (this.map.isEqualNode(e.target)) {
+      this.setState({ selectedItem: {} });
+    }
+  }
   renderZoomControls() {
     if (this.props.zoom && this.mapSvg) {
       const map = svg.adopt(this.mapSvg);
@@ -131,7 +139,15 @@ export default class Map extends Component {
       );
     }
   }
-
+  renderSelectedItem() {
+    const { selectedItem } = this.state;
+    if (Object.keys(selectedItem).length > 0) {
+      return (
+        <Drawer>{selectedItem.name}</Drawer>
+      );
+    }
+    return null;
+  }
   render() {
     const { svgUrl, connectionStatus } = this.state;
     // console.info(this);
@@ -141,7 +157,8 @@ export default class Map extends Component {
           {this.renderConnectionToggle()}
           <span> Status: {connectionStatus}</span>
         </p>
-        <div style={{ position: "relative" }}>
+        {this.renderSelectedItem()}
+        <div  style={{ position: "relative" }} >
           {this.renderZoomControls()}
           <svg
             ref={el => (this.mapSvg = el)}
@@ -149,7 +166,7 @@ export default class Map extends Component {
             viewBox="0 0 1700 2200"
           >
             <g id="svg_parent">
-              <image width="1700" height="2200" xlinkHref={svgUrl} />
+              <image width="1700" height="2200" ref={this.mapRef.bind(this)} xlinkHref={svgUrl} onClick={this.onMapClick.bind(this)} />
               {this.renderTags()}
             </g>
           </svg>

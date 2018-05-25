@@ -118,23 +118,26 @@ export default class Map extends Component {
   }
 
   renderConnectionToggle() {
-    const { connection } = this.state;
-    if (!connection) {
-      return (
-        <Button onClick={() => this.connectionOpen()}>
-          Open Connection (refresh data)
-        </Button>
-      );
-    } else {
-      return (
-        <Button onClick={() => this.connectionClose()}>Close Connection</Button>
-      );
+    if (this.props.tags) {
+      const { connection } = this.state;
+      if (!connection) {
+        return (
+          <Button onClick={() => this.connectionOpen()}>
+            Open Connection (refresh data)
+          </Button>
+        );
+      } else {
+        return (
+          <Button onClick={() => this.connectionClose()}>
+            Close Connection
+          </Button>
+        );
+      }
     }
   }
 
   render() {
     const { svgUrl, connectionStatus } = this.state;
-    // console.info(this);
     return (
       <div>
         <p>

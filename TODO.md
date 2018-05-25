@@ -1,4 +1,5 @@
 * Show drawer with tag info on click
+* If single tag ID is passed, zoom into the tag
 * Pan and zoom
   * Show controls
   * Add option to hide controls

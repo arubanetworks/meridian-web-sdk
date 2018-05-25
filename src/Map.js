@@ -4,6 +4,7 @@ import svg from "svg.js";
 import "svg.panzoom.js";
 
 import Button from "./Button";
+import Tag from "./Tag";
 import { css } from "./style";
 
 const mapSvg = css({
@@ -98,17 +99,13 @@ export default class Map extends Component {
       const t = tagsById[mac];
       const { x, y } = t;
       return (
-        <use
-          key={mac}
-          className="tag"
-          cursor="pointer"
-          pointerEvents="bounding-box"
-          fill="black"
-          width="23"
-          height="23"
+        <Tag
+          id={mac}
           x={x}
           y={y}
-          xlinkHref="/assets/tag.svg#tag"
+          onClick={() => {
+            console.info("Duck Eggs!");
+          }}
         />
       );
     });

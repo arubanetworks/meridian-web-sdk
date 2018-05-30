@@ -37,7 +37,7 @@ const ZoomButton = ({ map, dir }) => {
   if (dir === "in") {
     return (
       <button
-        className={cssZoomButton}
+        className={`${cssZoomButton} zoom-button`}
         onClick={() => {
           zoomIn(map);
         }}
@@ -48,7 +48,7 @@ const ZoomButton = ({ map, dir }) => {
   } else {
     return (
       <button
-        className={cssZoomButton}
+        className={`${cssZoomButton} zoom-button`}
         onClick={() => {
           zoomOut(map);
         }}

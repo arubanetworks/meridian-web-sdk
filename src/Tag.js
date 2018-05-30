@@ -1,7 +1,24 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
-const Tag = ({ x, y, id, onClick = () => {} }) => {
+const Tag = ({ x, y, id, data, onClick = () => {} }) => {
+  const imageUrl = data.image_url;
+  if (imageUrl) {
+    return (
+      <image
+        width="23"
+        height="23"
+        x={x}
+        y={y}
+        preserveAspectRatio="xMidYMid slice"
+        cursor="pointer"
+        pointerEvents="bounding-box"
+        xlinkHref={imageUrl}
+        onClick={onClick}
+        style={{ clipPath: "circle()" }}
+      />
+    );
+  }
   return (
     <svg
       width="36"
@@ -31,9 +48,10 @@ C27,22.96,22.96,27,18,27z"
 };
 
 Tag.PropTypes = {
+  id: PropTypes.string.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
-  id: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
   onClick: PropTypes.func
 };
 

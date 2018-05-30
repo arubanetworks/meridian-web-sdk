@@ -6,7 +6,7 @@ import "svg.panzoom.js";
 import Button from "./Button";
 import ZoomButtons from "./ZoomButtons";
 import Drawer from "./Drawer";
-import Tag from "./Tag";
+import MapMarker from "./MapMarker";
 import { css } from "./style";
 
 const cssMapSvg = css({
@@ -32,7 +32,6 @@ export default class Map extends Component {
       ])
     })
   };
-
   static defaultProps = {
     zoom: true,
     show: {}
@@ -40,7 +39,8 @@ export default class Map extends Component {
   state = {
     tagsById: {},
     svgUrl: null,
-    connectionStatus: "Not connected",
+    socketConnection: null,
+    socketConnectionStatus: "Not connected",
     selectedItem: {}
   };
 
@@ -53,16 +53,16 @@ export default class Map extends Component {
       },
       () => {
         if (show.tags) {
-          this.connectionOpen();
+          this.socketConnectionOpen();
         }
         this.initMap();
       }
     );
   }
 
-  connectionOpen() {
+  socketConnectionOpen() {
     const { floorId, locationId, api, show } = this.props;
-    const connection = api.floor.listen({
+    const socketConnection = api.floor.listen({
       locationId: locationId,
       id: floorId,
       onUpdate: data => {
@@ -70,42 +70,49 @@ export default class Map extends Component {
         if (show.tags === "all" || show.tags.includes(mac)) {
           const { name, image_url: imageUrl } = data.editor_data;
           const { x, y } = data.calculations.default.location;
-          const tag = { name, imageUrl, mac, x, y };
+          const tag = { name, mac, x, y, data: data.editor_data };
           this.setState(prevState => ({
-            connectionStatus: "Connected",
+            socketConnectionStatus: "Connected",
             tagsById: { ...prevState.tagsById, [mac]: tag }
           }));
         }
       },
       onClose: () => {
         this.setState({
-          connection: null,
-          connectionStatus: "Closed"
+          socketConnection: null,
+          socketConnectionStatus: "Closed"
         });
       }
     });
-    this.setState({ connection, connectionStatus: "Connected" });
+    this.setState({ socketConnection, socketConnectionStatus: "Connected" });
   }
 
-  connectionClose() {
-    this.state.connection.close();
+  socketConnectionClose() {
+    this.state.socketConnection.close();
   }
+
   mapRef(ref) {
     if (ref) {
       this.map = ref;
     }
   }
+
   renderTags() {
     const { tagsById } = this.state;
     return Object.keys(tagsById).map(mac => {
       const t = tagsById[mac];
-      const { x, y } = t;
+      const { x, y, name, data } = t;
       return (
-        <Tag
-          id={mac}
+        <MapMarker
+          kind="tag"
+          mac={mac}
           x={x}
           y={y}
-          onClick={() => this.setState({ selectedItem: t })}
+          name={name} // to show title on hover?
+          data={data} // all of the server data
+          onClick={() => {
+            this.setState({ selectedItem: t });
+          }}
         />
       );
     });
@@ -114,6 +121,7 @@ export default class Map extends Component {
   initMap() {
     console.info("the map is like totally initialized and ready");
   }
+
   onMapClick(e) {
     console.log(
       "onMapClick",
@@ -125,6 +133,7 @@ export default class Map extends Component {
       this.setState({ selectedItem: {} });
     }
   }
+
   renderZoomControls() {
     if (this.props.zoom && this.mapSvg) {
       const map = svg.adopt(this.mapSvg);
@@ -133,24 +142,25 @@ export default class Map extends Component {
     }
   }
 
-  renderConnectionToggle() {
+  renderSocketConnectionToggle() {
     if (this.props.show.tags) {
-      const { connection } = this.state;
-      if (!connection) {
+      const { socketConnection } = this.state;
+      if (!socketConnection) {
         return (
-          <Button onClick={() => this.connectionOpen()}>
+          <Button onClick={() => this.socketConnectionOpen()}>
             Open Connection (refresh data)
           </Button>
         );
       } else {
         return (
-          <Button onClick={() => this.connectionClose()}>
+          <Button onClick={() => this.socketConnectionClose()}>
             Close Connection
           </Button>
         );
       }
     }
   }
+
   renderSelectedItem() {
     const { selectedItem } = this.state;
     if (Object.keys(selectedItem).length > 0) {
@@ -158,13 +168,14 @@ export default class Map extends Component {
     }
     return null;
   }
+
   render() {
-    const { svgUrl, connectionStatus } = this.state;
+    const { svgUrl, socketConnectionStatus } = this.state;
     return (
       <div>
         <p>
-          {this.renderConnectionToggle()}
-          <span> Status: {connectionStatus}</span>
+          {this.renderSocketConnectionToggle()}
+          <span> Status: {socketConnectionStatus}</span>
         </p>
         {this.renderSelectedItem()}
         <div style={{ position: "relative" }}>

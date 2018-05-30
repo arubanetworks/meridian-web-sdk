@@ -10,11 +10,12 @@ const Tag = ({ x, y, id, data, onClick = () => {} }) => {
         height="23"
         x={x}
         y={y}
-        preserveAspectRatio="false"
+        preserveAspectRatio="xMidYMid slice"
         cursor="pointer"
         pointerEvents="bounding-box"
         xlinkHref={imageUrl}
         onClick={onClick}
+        style={{ clipPath: "circle()" }}
       />
     );
   }

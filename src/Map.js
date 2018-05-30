@@ -24,32 +24,35 @@ export default class Map extends Component {
     locationId: PropTypes.string.isRequired,
     floorId: PropTypes.string.isRequired,
     api: PropTypes.object,
-    // Either "all" or an array of IDs (all caps MAC address no colons)
-    tags: PropTypes.oneOfType([
-      PropTypes.oneOf(["all"]),
-      PropTypes.arrayOf(PropTypes.string)
-    ])
+    show: PropTypes.shape({
+      // Either "all" or an array of IDs (all caps MAC address no colons)
+      tags: PropTypes.oneOfType([
+        PropTypes.oneOf(["all"]),
+        PropTypes.arrayOf(PropTypes.string)
+      ])
+    })
   };
 
   static defaultProps = {
-    zoom: true
+    zoom: true,
+    show: {}
   };
   state = {
     tagsById: {},
     svgUrl: null,
     connectionStatus: "Not connected",
-    selectedItem: {},
+    selectedItem: {}
   };
 
   async componentDidMount() {
-    const { locationId, floorId, api, tags } = this.props;
+    const { locationId, floorId, api, show } = this.props;
     const { data } = await api.floor.get(locationId, floorId);
     this.setState(
       {
         svgUrl: data.svg_url
       },
       () => {
-        if (tags) {
+        if (show.tags) {
           this.connectionOpen();
         }
         this.initMap();
@@ -58,13 +61,13 @@ export default class Map extends Component {
   }
 
   connectionOpen() {
-    const { floorId, locationId, api, tags } = this.props;
+    const { floorId, locationId, api, show } = this.props;
     const connection = api.floor.listen({
       locationId: locationId,
       id: floorId,
       onUpdate: data => {
         const { mac } = data;
-        if (tags === "all" || tags.includes(mac)) {
+        if (show.tags === "all" || show.tags.includes(mac)) {
           const { name, image_url: imageUrl } = data.editor_data;
           const { x, y } = data.calculations.default.location;
           const tag = { name, imageUrl, mac, x, y };
@@ -112,7 +115,12 @@ export default class Map extends Component {
     console.info("the map is like totally initialized and ready");
   }
   onMapClick(e) {
-    console.log("onMapClick", this.map, e.target, this.map.isEqualNode(e.target));
+    console.log(
+      "onMapClick",
+      this.map,
+      e.target,
+      this.map.isEqualNode(e.target)
+    );
     if (this.map.isEqualNode(e.target)) {
       this.setState({ selectedItem: {} });
     }
@@ -126,7 +134,7 @@ export default class Map extends Component {
   }
 
   renderConnectionToggle() {
-    if (this.props.tags) {
+    if (this.props.show.tags) {
       const { connection } = this.state;
       if (!connection) {
         return (
@@ -146,9 +154,7 @@ export default class Map extends Component {
   renderSelectedItem() {
     const { selectedItem } = this.state;
     if (Object.keys(selectedItem).length > 0) {
-      return (
-        <Drawer>{selectedItem.name}</Drawer>
-      );
+      return <Drawer>{selectedItem.name}</Drawer>;
     }
     return null;
   }
@@ -161,7 +167,7 @@ export default class Map extends Component {
           <span> Status: {connectionStatus}</span>
         </p>
         {this.renderSelectedItem()}
-        <div  style={{ position: "relative" }} >
+        <div style={{ position: "relative" }}>
           {this.renderZoomControls()}
           <svg
             ref={el => (this.mapSvg = el)}
@@ -169,7 +175,13 @@ export default class Map extends Component {
             viewBox="0 0 1700 2200"
           >
             <g id="svg_parent">
-              <image width="1700" height="2200" ref={this.mapRef.bind(this)} xlinkHref={svgUrl} onClick={this.onMapClick.bind(this)} />
+              <image
+                width="1700"
+                height="2200"
+                ref={this.mapRef.bind(this)}
+                xlinkHref={svgUrl}
+                onClick={this.onMapClick.bind(this)}
+              />
               {this.renderTags()}
             </g>
           </svg>

@@ -30,7 +30,11 @@ export default class Map extends Component {
         PropTypes.oneOf(["all"]),
         PropTypes.arrayOf(PropTypes.string)
       ])
-    })
+    }),
+    /** onMarkerClick */
+    onMarkerClick: PropTypes.func,
+    /** onMapClick */
+    onMapClick: PropTypes.func,
   };
   static defaultProps = {
     zoom: true,
@@ -91,12 +95,6 @@ export default class Map extends Component {
     this.state.socketConnection.close();
   }
 
-  mapRef(ref) {
-    if (ref) {
-      this.map = ref;
-    }
-  }
-
   renderTags() {
     const { tagsById } = this.state;
     return Object.keys(tagsById).map(mac => {
@@ -111,7 +109,11 @@ export default class Map extends Component {
           name={name} // to show title on hover?
           data={data} // all of the server data
           onClick={() => {
-            this.setState({ selectedItem: t });
+            if (this.props.onMarkerClick) {
+              this.props.onMarkerClick(data);
+            } else {
+              this.setState({ selectedItem: t });
+            }
           }}
         />
       );
@@ -123,14 +125,13 @@ export default class Map extends Component {
   }
 
   onMapClick(e) {
-    console.log(
-      "onMapClick",
-      this.map,
-      e.target,
-      this.map.isEqualNode(e.target)
-    );
-    if (this.map.isEqualNode(e.target)) {
-      this.setState({ selectedItem: {} });
+    const mapClicked = this.mapSvg.isEqualNode(e.target) || this.mapImage.isEqualNode(e.target);
+    if (this.props.onMapClick && mapClicked) {
+      this.props.onMapClick(e);
+    } else {
+      if (mapClicked) {
+        this.setState({ selectedItem: {} });
+      }
     }
   }
 
@@ -183,15 +184,15 @@ export default class Map extends Component {
           <svg
             ref={el => (this.mapSvg = el)}
             className={cssMapSvg}
+            onClick={this.onMapClick.bind(this)}
             viewBox="0 0 1700 2200"
           >
             <g id="svg_parent">
               <image
                 width="1700"
                 height="2200"
-                ref={this.mapRef.bind(this)}
                 xlinkHref={svgUrl}
-                onClick={this.onMapClick.bind(this)}
+                ref={el => (this.mapImage = el)}
               />
               {this.renderTags()}
             </g>

@@ -11,10 +11,12 @@ class Tags extends Component {
       PropTypes.oneOf(["all"]),
       PropTypes.arrayOf(PropTypes.string)
     ]),
-    onMarkerClick: PropTypes.func
+    onMarkerClick: PropTypes.func,
+    onUpdate: PropTypes.func
   };
   static defaultProps = {
-    markers: {}
+    markers: {},
+    onUpdate: () => {}
   };
   state = {
     tagsById: {},
@@ -30,6 +32,11 @@ class Tags extends Component {
     }
   }
 
+  onUpdate() {
+    const { connection, status } = this.state;
+    this.props.onUpdate(connection, status);
+  }
+
   connect() {
     console.info("opening socket connection");
     const { floorId, locationId, api, markers } = this.props;
@@ -42,20 +49,26 @@ class Tags extends Component {
           const { name, image_url: imageUrl } = data.editor_data;
           const { x, y } = data.calculations.default.location;
           const tag = { name, mac, x, y, data: data.editor_data };
-          this.setState(prevState => ({
-            status: "Connected",
-            tagsById: { ...prevState.tagsById, [mac]: tag }
-          }));
+          this.setState(
+            prevState => ({
+              status: "Connected",
+              tagsById: { ...prevState.tagsById, [mac]: tag }
+            }),
+            this.onUpdate
+          );
         }
       },
       onClose: () => {
-        this.setState({
-          connection: null,
-          status: "Closed"
-        });
+        this.setState(
+          {
+            connection: null,
+            status: "Closed"
+          },
+          this.onUpdate
+        );
       }
     });
-    this.setState({ connection, status: "Connected" });
+    this.setState({ connection });
   }
 
   render() {

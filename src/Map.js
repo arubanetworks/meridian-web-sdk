@@ -43,8 +43,8 @@ export default class Map extends Component {
   state = {
     tagsById: {},
     svgUrl: null,
-    socketConnection: null,
-    socketConnectionStatus: "Not connected",
+    tagsConnection: null,
+    tagsStatus: "Connecting",
     selectedItem: {}
   };
 
@@ -70,6 +70,22 @@ export default class Map extends Component {
     }
   }
 
+  onMarkerClick = data => {
+    console.info(data);
+    if (this.props.onMarkerClick) {
+      this.props.onMarkerClick(data);
+    } else {
+      this.setState({ selectedItem: data });
+    }
+  };
+
+  onTagsUpdate = (connection, status) => {
+    this.setState({
+      tagsConnection: connection,
+      tagsStatus: status
+    });
+  };
+
   renderZoomControls() {
     if (this.props.zoom && this.mapSvg) {
       const map = svg.adopt(this.mapSvg);
@@ -78,22 +94,22 @@ export default class Map extends Component {
     }
   }
 
-  renderSocketConnectionToggle() {
+  renderTagsStatus() {
     if (this.props.show.tags) {
-      const { socketConnection } = this.state;
-      if (!socketConnection) {
-        return (
-          <Button onClick={() => this.socketConnectionOpen()}>
-            Open Connection (refresh data)
-          </Button>
-        );
-      } else {
-        return (
-          <Button onClick={() => this.socketConnectionClose()}>
+      return <span> Status: {this.state.tagsStatus} </span>;
+    }
+  }
+
+  renderTagsConnection() {
+    const { tagsConnection } = this.state;
+    if (this.props.show.tags && tagsConnection) {
+      return (
+        <span>
+          <Button onClick={() => tagsConnection.close()}>
             Close Connection
           </Button>
-        );
-      }
+        </span>
+      );
     }
   }
 
@@ -105,25 +121,16 @@ export default class Map extends Component {
     return null;
   }
 
-  onMarkerClick = data => {
-    console.info(data);
-    if (this.props.onMarkerClick) {
-      this.props.onMarkerClick(data);
-    } else {
-      this.setState({ selectedItem: data });
-    }
-  };
-
   render() {
-    const { svgUrl, socketConnectionStatus } = this.state;
+    const { svgUrl, tagsStatus } = this.state;
     const { locationId, floorId, api, show } = this.props;
 
     return (
       <div>
-        {/* <p>
-          {this.renderSocketConnectionToggle()}
-          <span> Status: {socketConnectionStatus}</span>
-        </p> */}
+        <p>
+          {this.renderTagsConnection()}
+          {this.renderTagsStatus()}
+        </p>
         {this.renderSelectedItem()}
         <div style={{ position: "relative" }}>
           {this.renderZoomControls()}
@@ -146,6 +153,7 @@ export default class Map extends Component {
                 api={api}
                 markers={show.tags}
                 onMarkerClick={this.onMarkerClick}
+                onUpdate={this.onTagsUpdate}
               />
             </g>
           </svg>

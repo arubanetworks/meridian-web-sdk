@@ -6,7 +6,7 @@ import "svg.panzoom.js";
 import Button from "./Button";
 import ZoomButtons from "./ZoomButtons";
 import Drawer from "./Drawer";
-import MapMarker from "./MapMarker";
+import Tags from "./Tags";
 import { css } from "./style";
 
 const cssMapSvg = css({
@@ -34,7 +34,7 @@ export default class Map extends Component {
     /** onMarkerClick */
     onMarkerClick: PropTypes.func,
     /** onMapClick */
-    onMapClick: PropTypes.func,
+    onMapClick: PropTypes.func
   };
   static defaultProps = {
     zoom: true,
@@ -51,73 +51,7 @@ export default class Map extends Component {
   async componentDidMount() {
     const { locationId, floorId, api, show } = this.props;
     const { data } = await api.floor.get(locationId, floorId);
-    this.setState(
-      {
-        svgUrl: data.svg_url
-      },
-      () => {
-        if (show.tags) {
-          this.socketConnectionOpen();
-        }
-        this.initMap();
-      }
-    );
-  }
-
-  socketConnectionOpen() {
-    const { floorId, locationId, api, show } = this.props;
-    const socketConnection = api.floor.listen({
-      locationId: locationId,
-      id: floorId,
-      onUpdate: data => {
-        const { mac } = data;
-        if (show.tags === "all" || show.tags.includes(mac)) {
-          const { name, image_url: imageUrl } = data.editor_data;
-          const { x, y } = data.calculations.default.location;
-          const tag = { name, mac, x, y, data: data.editor_data };
-          this.setState(prevState => ({
-            socketConnectionStatus: "Connected",
-            tagsById: { ...prevState.tagsById, [mac]: tag }
-          }));
-        }
-      },
-      onClose: () => {
-        this.setState({
-          socketConnection: null,
-          socketConnectionStatus: "Closed"
-        });
-      }
-    });
-    this.setState({ socketConnection, socketConnectionStatus: "Connected" });
-  }
-
-  socketConnectionClose() {
-    this.state.socketConnection.close();
-  }
-
-  renderTags() {
-    const { tagsById } = this.state;
-    return Object.keys(tagsById).map(mac => {
-      const t = tagsById[mac];
-      const { x, y, name, data } = t;
-      return (
-        <MapMarker
-          kind="tag"
-          mac={mac}
-          x={x}
-          y={y}
-          name={name} // to show title on hover?
-          data={data} // all of the server data
-          onClick={() => {
-            if (this.props.onMarkerClick) {
-              this.props.onMarkerClick(data);
-            } else {
-              this.setState({ selectedItem: t });
-            }
-          }}
-        />
-      );
-    });
+    this.setState({ svgUrl: data.svg_url });
   }
 
   initMap() {
@@ -125,7 +59,8 @@ export default class Map extends Component {
   }
 
   onMapClick(e) {
-    const mapClicked = this.mapSvg.isEqualNode(e.target) || this.mapImage.isEqualNode(e.target);
+    const mapClicked =
+      this.mapSvg.isEqualNode(e.target) || this.mapImage.isEqualNode(e.target);
     if (this.props.onMapClick && mapClicked) {
       this.props.onMapClick(e);
     } else {
@@ -170,14 +105,25 @@ export default class Map extends Component {
     return null;
   }
 
+  onMarkerClick = data => {
+    console.info(data);
+    if (this.props.onMarkerClick) {
+      this.props.onMarkerClick(data);
+    } else {
+      this.setState({ selectedItem: data });
+    }
+  };
+
   render() {
     const { svgUrl, socketConnectionStatus } = this.state;
+    const { locationId, floorId, api, show } = this.props;
+
     return (
       <div>
-        <p>
+        {/* <p>
           {this.renderSocketConnectionToggle()}
           <span> Status: {socketConnectionStatus}</span>
-        </p>
+        </p> */}
         {this.renderSelectedItem()}
         <div style={{ position: "relative" }}>
           {this.renderZoomControls()}
@@ -194,7 +140,13 @@ export default class Map extends Component {
                 xlinkHref={svgUrl}
                 ref={el => (this.mapImage = el)}
               />
-              {this.renderTags()}
+              <Tags
+                locationId={locationId}
+                floorId={floorId}
+                api={api}
+                markers={show.tags}
+                onMarkerClick={this.onMarkerClick}
+              />
             </g>
           </svg>
         </div>

@@ -19,21 +19,21 @@ class Tags extends Component {
   state = {
     tagsById: {},
     svgUrl: null,
-    socketConnection: null,
-    socketConnectionStatus: "Not connected"
+    connection: null,
+    status: "Not connected"
   };
 
   async componentDidMount() {
     const { markers } = this.props;
     if (markers) {
-      this.socketConnectionOpen();
+      this.connect();
     }
   }
 
-  socketConnectionOpen() {
+  connect() {
     console.info("opening socket connection");
     const { floorId, locationId, api, markers } = this.props;
-    const socketConnection = api.floor.listen({
+    const connection = api.floor.listen({
       locationId: locationId,
       id: floorId,
       onUpdate: data => {
@@ -43,19 +43,19 @@ class Tags extends Component {
           const { x, y } = data.calculations.default.location;
           const tag = { name, mac, x, y, data: data.editor_data };
           this.setState(prevState => ({
-            socketConnectionStatus: "Connected",
+            status: "Connected",
             tagsById: { ...prevState.tagsById, [mac]: tag }
           }));
         }
       },
       onClose: () => {
         this.setState({
-          socketConnection: null,
-          socketConnectionStatus: "Closed"
+          connection: null,
+          status: "Closed"
         });
       }
     });
-    this.setState({ socketConnection, socketConnectionStatus: "Connected" });
+    this.setState({ connection, status: "Connected" });
   }
 
   render() {

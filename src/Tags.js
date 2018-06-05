@@ -111,7 +111,7 @@ class Tags extends Component {
           y={y}
           name={name}
           data={data}
-          onMarkerClick={onMarkerClick}
+          onClick={onMarkerClick}
         />
       );
     });

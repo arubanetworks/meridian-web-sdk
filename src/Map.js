@@ -36,10 +36,12 @@ export default class Map extends Component {
     /** onMapClick */
     onMapClick: PropTypes.func
   };
+
   static defaultProps = {
     zoom: true,
     show: {}
   };
+
   state = {
     tagsById: {},
     svgUrl: null,
@@ -49,13 +51,14 @@ export default class Map extends Component {
   };
 
   async componentDidMount() {
-    const { locationId, floorId, api, show } = this.props;
-    const { data } = await api.floor.get(locationId, floorId);
+    const { locationId, floorId, api } = this.props;
+    const url = `locations/${locationId}/maps/${floorId}`;
+    const { data } = await api.axios.get(url);
     this.setState({ svgUrl: data.svg_url });
   }
 
   initMap() {
-    console.info("the map is like totally initialized and ready");
+    // console.info("the map is like totally initialized and ready");
   }
 
   onMapClick(e) {
@@ -71,7 +74,7 @@ export default class Map extends Component {
   }
 
   onMarkerClick = data => {
-    console.info(data);
+    // console.info(data);
     if (this.props.onMarkerClick) {
       this.props.onMarkerClick(data);
     } else {
@@ -92,12 +95,14 @@ export default class Map extends Component {
       map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
       return <ZoomButtons map={map} />;
     }
+    return null;
   }
 
   renderTagsStatus() {
     if (this.props.show.tags) {
       return <span> Status: {this.state.tagsStatus} </span>;
     }
+    return null;
   }
 
   renderTagsConnection() {
@@ -111,6 +116,7 @@ export default class Map extends Component {
         </span>
       );
     }
+    return null;
   }
 
   renderSelectedItem() {
@@ -122,9 +128,8 @@ export default class Map extends Component {
   }
 
   render() {
-    const { svgUrl, tagsStatus } = this.state;
+    const { svgUrl } = this.state;
     const { locationId, floorId, api, show } = this.props;
-
     return (
       <div>
         <p>
@@ -132,10 +137,13 @@ export default class Map extends Component {
           {this.renderTagsStatus()}
         </p>
         {this.renderSelectedItem()}
+        {/* TODO: Don't use inline styles */}
         <div style={{ position: "relative" }}>
           {this.renderZoomControls()}
           <svg
-            ref={el => (this.mapSvg = el)}
+            ref={el => {
+              this.mapSvg = el;
+            }}
             className={cssMapSvg}
             onClick={this.onMapClick.bind(this)}
             viewBox="0 0 1700 2200"
@@ -145,7 +153,9 @@ export default class Map extends Component {
                 width="1700"
                 height="2200"
                 xlinkHref={svgUrl}
-                ref={el => (this.mapImage = el)}
+                ref={el => {
+                  this.mapImage = el;
+                }}
               />
               <Tags
                 locationId={locationId}

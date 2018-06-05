@@ -18,11 +18,10 @@
   <p>Map Below</p>
   <div id="meridian-map"></div>
 
-  <script src="https://storage.googleapis.com/meridian-web-models/0.1.0/models.js"></script>
-  <script src="/mwc.js"></script>
+  <script src="/mws.js"></script>
   <script>
-    MeridianWebComponents.renderMap(document.getElementById("meridian-map"), {
-      api: MeridianWebModels.create({
+    MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
+      api: MeridianWebSDK.createAPI({
         environment: "staging",
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
       }),

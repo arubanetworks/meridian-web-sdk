@@ -14,10 +14,12 @@ class Tags extends Component {
     onMarkerClick: PropTypes.func,
     onUpdate: PropTypes.func
   };
+
   static defaultProps = {
     markers: {},
     onUpdate: () => {}
   };
+
   state = {
     tagsById: {},
     svgUrl: null,
@@ -25,7 +27,7 @@ class Tags extends Component {
     status: "Not connected"
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const { markers } = this.props;
     if (markers) {
       this.connect();
@@ -34,19 +36,20 @@ class Tags extends Component {
 
   onUpdate() {
     const { connection, status } = this.state;
-    this.props.onUpdate(connection, status);
+    const { onUpdate } = this.props;
+    onUpdate(connection, status);
   }
 
   connect() {
-    console.info("opening socket connection");
+    // console.info("opening socket connection");
     const { floorId, locationId, api, markers } = this.props;
-    const connection = api.floor.listen({
+    const connection = api.openStream({
       locationId: locationId,
       id: floorId,
-      onUpdate: data => {
+      onTagUpdate: data => {
         const { mac } = data;
         if (markers === "all" || markers.includes(mac)) {
-          const { name, image_url: imageUrl } = data.editor_data;
+          const { name } = data.editor_data;
           const { x, y } = data.calculations.default.location;
           const tag = { name, mac, x, y, data: data.editor_data };
           this.setState(
@@ -79,6 +82,7 @@ class Tags extends Component {
       const { x, y, name, data } = t;
       return (
         <MapMarker
+          key={mac}
           kind="tag"
           mac={mac}
           x={x}

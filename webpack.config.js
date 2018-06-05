@@ -19,13 +19,13 @@ module.exports = env => ({
   },
   entry: path.resolve(__dirname, "src/index.js"),
   output: {
-    filename: "mwc.js",
-    library: "MeridianWebComponents",
+    filename: "mws.js",
+    library: "MeridianWebSDK",
     libraryTarget: "var",
     path: path.resolve(__dirname, "dist")
   },
   devServer: {
-    filename: "mwc.js",
+    filename: "mws.js",
     clientLogLevel: "error",
     contentBase: path.resolve(__dirname, "demo"),
     overlay: true,

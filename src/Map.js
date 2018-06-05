@@ -23,16 +23,6 @@ const cssMapSvg = css({
 });
 
 export default class Map extends Component {
-  constructor(props) {
-    super(props);
-
-    this.setMapSvgRef = el => {
-      this.mapSvg = el;
-    };
-    // reference to the SVG.js svg constructor (pan, zoom, etc)
-    this.adoptedMapSvg = null;
-  }
-
   static propTypes = {
     zoom: PropTypes.bool,
     locationID: PropTypes.string.isRequired,
@@ -56,7 +46,7 @@ export default class Map extends Component {
 
   state = {
     tagsById: {},
-    svgUrl: null,
+    svgURL: null,
     tagsConnection: null,
     tagsStatus: "Connecting",
     selectedItem: {}
@@ -66,16 +56,22 @@ export default class Map extends Component {
     const { locationID, floorID, api } = this.props;
     const url = `locations/${locationID}/maps/${floorID}`;
     const { data } = await api.axios.get(url);
-    this.setState({ svgUrl: data.svg_url });
+    this.setState({ svgURL: data.svg_url });
   }
+
+  adoptedMapSVG = null;
+
+  setMapSVGRef = el => {
+    this.mapSVG = el;
+  };
 
   initMap() {
     // console.info("the map is like totally initialized and ready");
   }
 
-  onClick(e) {
+  onClick = e => {
     const mapClicked =
-      this.mapSvg.isEqualNode(e.target) || this.mapImage.isEqualNode(e.target);
+      this.mapSVG.isEqualNode(e.target) || this.mapImage.isEqualNode(e.target);
     if (this.props.onMapClick && mapClicked) {
       this.props.onMapClick(e);
     } else {
@@ -83,7 +79,7 @@ export default class Map extends Component {
         this.setState({ selectedItem: {} });
       }
     }
-  }
+  };
 
   onMarkerClick = ({ kind, data }) => {
     if (this.props.onMarkerClick) {
@@ -106,8 +102,8 @@ export default class Map extends Component {
   };
 
   onTagFound = tag => {
-    if (this.adoptedMapSvg) {
-      this.adoptedMapSvg.zoom(1, {
+    if (this.adoptedMapSVG) {
+      this.adoptedMapSVG.zoom(1, {
         x: tag.x,
         y: tag.y
       });
@@ -115,10 +111,10 @@ export default class Map extends Component {
   };
 
   renderZoomControls() {
-    if (this.props.zoom && this.mapSvg) {
-      const map = svg.adopt(this.mapSvg);
+    if (this.props.zoom && this.mapSVG) {
+      const map = svg.adopt(this.mapSVG);
       map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
-      this.adoptedMapSvg = map;
+      this.adoptedMapSVG = map;
       return <ZoomButtons map={map} />;
     }
     return null;
@@ -146,10 +142,10 @@ export default class Map extends Component {
   }
 
   render() {
-    const { svgUrl, tagsStatus, selectedItem } = this.state;
-    const { locationId, floorId, api, show } = this.props;
+    const { svgURL, selectedItem } = this.state;
+    const { locationID, floorID, api, show } = this.props;
     return (
-      <div class="meridian-component-container">
+      <div className="meridian-component-container">
         <p>
           {this.renderTagsConnection()}
           {this.renderTagsStatus()}
@@ -162,16 +158,16 @@ export default class Map extends Component {
           />
           {this.renderZoomControls()}
           <svg
-            ref={this.setMapSvgRef}
+            ref={this.setMapSVGRef}
             className={cssMapSvg}
-            onClick={this.onClick.bind(this)}
+            onClick={this.onClick}
             viewBox="0 0 1700 2200"
           >
             <g id="svg_parent">
               <image
                 width="1700"
                 height="2200"
-                xlinkHref={svgUrl}
+                xlinkHref={svgURL}
                 ref={el => {
                   this.mapImage = el;
                 }}

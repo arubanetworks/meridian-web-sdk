@@ -14,6 +14,10 @@
 - Meridian Watermark
 - Where to show messaging (looking for tag)
 - For tags use rest API first, then socket?
+- animate movement
+- animate zoom
+- fill target container
+- overlay customization (client customization, remove inline CSS)
 
 Messaging:
 

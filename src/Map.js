@@ -5,17 +5,21 @@ import "svg.panzoom.js";
 
 import Button from "./Button";
 import ZoomButtons from "./ZoomButtons";
-import Drawer from "./Drawer";
+import Overlay from "./Overlay";
 import Tags from "./Tags";
 import { css } from "./style";
 
-const cssMapSvg = css({
-  label: "map",
+const cssMapContainer = css({
+  label: "map-container",
   position: "relative",
   border: "1px solid #ccc",
+  borderRadius: 3,
   background: "#fafafa",
-  color: "#000",
-  fontWeight: "bold"
+  color: "#000"
+});
+
+const cssMapSvg = css({
+  label: "map"
 });
 
 export default class Map extends Component {
@@ -41,9 +45,7 @@ export default class Map extends Component {
         PropTypes.arrayOf(PropTypes.string)
       ])
     }),
-    /** onMarkerClick */
     onMarkerClick: PropTypes.func,
-    /** onMapClick */
     onMapClick: PropTypes.func
   };
   static defaultProps = {
@@ -68,7 +70,7 @@ export default class Map extends Component {
     console.info("the map is like totally initialized and ready");
   }
 
-  onMapClick(e) {
+  onClick(e) {
     const mapClicked =
       this.mapSvg.isEqualNode(e.target) || this.mapImage.isEqualNode(e.target);
     if (this.props.onMapClick && mapClicked) {
@@ -80,13 +82,16 @@ export default class Map extends Component {
     }
   }
 
-  onMarkerClick = data => {
-    console.info(data);
+  onMarkerClick = ({ kind, data }) => {
     if (this.props.onMarkerClick) {
       this.props.onMarkerClick(data);
     } else {
-      this.setState({ selectedItem: data });
+      this.setState({ selectedItem: { kind, data } });
     }
+  };
+
+  onOverlayClose = () => {
+    this.setState({ selectedItem: {} });
   };
 
   onTagsUpdate = (connection, status, tags) => {
@@ -134,31 +139,27 @@ export default class Map extends Component {
     }
   }
 
-  renderSelectedItem() {
-    const { selectedItem } = this.state;
-    if (Object.keys(selectedItem).length > 0) {
-      return <Drawer>{selectedItem.name}</Drawer>;
-    }
-    return null;
-  }
-
   render() {
-    const { svgUrl, tagsStatus } = this.state;
+    const { svgUrl, tagsStatus, selectedItem } = this.state;
     const { locationId, floorId, api, show } = this.props;
 
     return (
-      <div>
+      <div class="meridian-component-container">
         <p>
           {this.renderTagsConnection()}
           {this.renderTagsStatus()}
         </p>
-        {this.renderSelectedItem()}
-        <div style={{ position: "relative" }}>
+        <div className={`${cssMapContainer} meridian-map-container`}>
+          <Overlay
+            onClose={this.onOverlayClose}
+            data={selectedItem.data}
+            kind={selectedItem.kind}
+          />
           {this.renderZoomControls()}
           <svg
             ref={this.setMapSvgRef}
             className={cssMapSvg}
-            onClick={this.onMapClick.bind(this)}
+            onClick={this.onClick.bind(this)}
             viewBox="0 0 1700 2200"
           >
             <g id="svg_parent">

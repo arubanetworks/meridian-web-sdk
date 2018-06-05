@@ -2,7 +2,7 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 import Tag from "./Tag";
 
-const MapMarker = ({ kind, mac, x, y, data, onMarkerClick = () => {} }) => {
+const MapMarker = ({ kind, mac, x, y, data, onClick = () => {} }) => {
   if (kind === "tag") {
     return (
       <Tag
@@ -11,7 +11,7 @@ const MapMarker = ({ kind, mac, x, y, data, onMarkerClick = () => {} }) => {
         y={y}
         data={data}
         onClick={() => {
-          onMarkerClick(data);
+          onClick({ kind, data });
         }}
       />
     );
@@ -26,7 +26,7 @@ MapMarker.PropTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
-  onMarkerClick: PropTypes.func
+  onClick: PropTypes.func
 };
 
 export default MapMarker;

@@ -3,6 +3,14 @@ import PropTypes from "prop-types";
 import MapMarker from "./MapMarker";
 
 class Tags extends Component {
+  constructor(props) {
+    super(props);
+    let markers = props.markers;
+    if (markers && typeof markers === "object" && markers.length === 1) {
+      // TODO - not a long term solution
+      this.setState({ singleTagSearch: true });
+    }
+  }
   static propTypes = {
     locationId: PropTypes.string.isRequired,
     floorId: PropTypes.string.isRequired,
@@ -15,14 +23,14 @@ class Tags extends Component {
     onUpdate: PropTypes.func
   };
   static defaultProps = {
-    markers: {},
-    onUpdate: () => {}
+    markers: null,
+    onUpdate: () => {},
+    onFound: () => {}
   };
   state = {
     tagsById: {},
-    svgUrl: null,
-    connection: null,
-    status: "Not connected"
+    singleTagSearch: false,
+    connection: null
   };
 
   async componentDidMount() {
@@ -32,10 +40,24 @@ class Tags extends Component {
     }
   }
 
-  onUpdate() {
-    const { connection, status } = this.state;
-    this.props.onUpdate(connection, status);
-  }
+  onFound = tag => {
+    this.props.onFound(tag);
+  };
+
+  onUpdate = status => {
+    const { connection, tagsById, singleTagSearch } = this.state;
+    if (singleTagSearch && connection) {
+      const tag = Object.keys(tagsById)[0];
+      if (tag) {
+        this.onFound(tagsById[tag]);
+      } else {
+        status = `Looking for tag #${this.props.markers}`;
+      }
+    } else {
+      status = status;
+    }
+    this.props.onUpdate(connection, status, tagsById);
+  };
 
   connect() {
     console.info("opening socket connection");
@@ -51,24 +73,28 @@ class Tags extends Component {
           const tag = { name, mac, x, y, data: data.editor_data };
           this.setState(
             prevState => ({
-              status: "Connected",
               tagsById: { ...prevState.tagsById, [mac]: tag }
             }),
-            this.onUpdate
+            () => {
+              this.onUpdate("Connected");
+            }
           );
         }
       },
       onClose: () => {
         this.setState(
           {
-            connection: null,
-            status: "Closed"
+            connection: null
           },
-          this.onUpdate
+          () => {
+            this.onUpdate("Not Connected");
+          }
         );
       }
     });
-    this.setState({ connection });
+    this.setState({ connection }, () => {
+      this.onUpdate("Connected");
+    });
   }
 
   render() {

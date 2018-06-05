@@ -19,6 +19,16 @@ const cssMapSvg = css({
 });
 
 export default class Map extends Component {
+  constructor(props) {
+    super(props);
+
+    this.setMapSvgRef = el => {
+      this.mapSvg = el;
+    };
+    // reference to the SVG.js svg constructor (pan, zoom, etc)
+    this.adoptedMapSvg = null;
+  }
+
   static propTypes = {
     zoom: PropTypes.bool,
     locationId: PropTypes.string.isRequired,
@@ -79,17 +89,28 @@ export default class Map extends Component {
     }
   };
 
-  onTagsUpdate = (connection, status) => {
+  onTagsUpdate = (connection, status, tags) => {
     this.setState({
       tagsConnection: connection,
-      tagsStatus: status
+      tagsStatus: status,
+      tagsFound: tags
     });
+  };
+
+  onTagFound = tag => {
+    if (this.adoptedMapSvg) {
+      this.adoptedMapSvg.zoom(1, {
+        x: tag.x,
+        y: tag.y
+      });
+    }
   };
 
   renderZoomControls() {
     if (this.props.zoom && this.mapSvg) {
       const map = svg.adopt(this.mapSvg);
       map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
+      this.adoptedMapSvg = map;
       return <ZoomButtons map={map} />;
     }
   }
@@ -135,7 +156,7 @@ export default class Map extends Component {
         <div style={{ position: "relative" }}>
           {this.renderZoomControls()}
           <svg
-            ref={el => (this.mapSvg = el)}
+            ref={this.setMapSvgRef}
             className={cssMapSvg}
             onClick={this.onMapClick.bind(this)}
             viewBox="0 0 1700 2200"
@@ -154,6 +175,7 @@ export default class Map extends Component {
                 markers={show.tags}
                 onMarkerClick={this.onMarkerClick}
                 onUpdate={this.onTagsUpdate}
+                onFound={this.onTagFound}
               />
             </g>
           </svg>

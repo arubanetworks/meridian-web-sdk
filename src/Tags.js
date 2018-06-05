@@ -48,7 +48,7 @@ class Tags extends Component {
     const { connection, tagsById, singleTagSearch } = this.state;
     if (singleTagSearch && connection) {
       const tag = Object.keys(tagsById)[0];
-      if (Object.keys(tagsById).length) {
+      if (tag) {
         this.onFound(tagsById[tag]);
       } else {
         status = `Looking for tag #${this.props.markers}`;

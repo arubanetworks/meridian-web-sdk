@@ -15,7 +15,7 @@
 - Where to show messaging (looking for tag)
 - For tags use rest API first, then socket?
 
-Messaaging:
+Messaging:
 
 - Tag not found
 - No connection

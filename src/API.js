@@ -26,8 +26,8 @@ export default class API {
   }
 
   openStream({
-    locationId,
-    floorId,
+    locationID,
+    floorID,
     onTagUpdate = () => {},
     onClose = () => {},
     onException = () => {}
@@ -38,14 +38,14 @@ export default class API {
     );
     const authenticate = () => {
       connection.emit("authenticate", {
-        locationID: locationId,
+        locationID,
         token: this.token
       });
     };
     const subscribe = () => {
       connection.emit("subscribe", {
-        locationID: locationId,
-        mapID: floorId
+        locationID,
+        mapID: floorID
       });
     };
     connection.on("connect", authenticate);

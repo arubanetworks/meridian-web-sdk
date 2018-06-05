@@ -21,8 +21,8 @@ const cssMapSvg = css({
 export default class Map extends Component {
   static propTypes = {
     zoom: PropTypes.bool,
-    locationId: PropTypes.string.isRequired,
-    floorId: PropTypes.string.isRequired,
+    locationID: PropTypes.string.isRequired,
+    floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
     show: PropTypes.shape({
       // Either "all" or an array of IDs (all caps MAC address no colons)
@@ -51,8 +51,8 @@ export default class Map extends Component {
   };
 
   async componentDidMount() {
-    const { locationId, floorId, api } = this.props;
-    const url = `locations/${locationId}/maps/${floorId}`;
+    const { locationID, floorID, api } = this.props;
+    const url = `locations/${locationID}/maps/${floorID}`;
     const { data } = await api.axios.get(url);
     this.setState({ svgUrl: data.svg_url });
   }
@@ -129,7 +129,7 @@ export default class Map extends Component {
 
   render() {
     const { svgUrl } = this.state;
-    const { locationId, floorId, api, show } = this.props;
+    const { locationID, floorID, api, show } = this.props;
     return (
       <div>
         <p>
@@ -158,8 +158,8 @@ export default class Map extends Component {
                 }}
               />
               <Tags
-                locationId={locationId}
-                floorId={floorId}
+                locationID={locationID}
+                floorID={floorID}
                 api={api}
                 markers={show.tags}
                 onMarkerClick={this.onMarkerClick}

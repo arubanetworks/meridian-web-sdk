@@ -4,8 +4,8 @@ import MapMarker from "./MapMarker";
 
 class Tags extends Component {
   static propTypes = {
-    locationId: PropTypes.string.isRequired,
-    floorId: PropTypes.string.isRequired,
+    locationID: PropTypes.string.isRequired,
+    floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
     markers: PropTypes.oneOfType([
       PropTypes.oneOf(["all"]),
@@ -42,10 +42,10 @@ class Tags extends Component {
 
   connect() {
     // console.info("opening socket connection");
-    const { floorId, locationId, api, markers } = this.props;
+    const { floorID, locationID, api, markers } = this.props;
     const connection = api.openStream({
-      locationId: locationId,
-      id: floorId,
+      locationID,
+      id: floorID,
       onTagUpdate: data => {
         const { mac } = data;
         if (markers === "all" || markers.includes(mac)) {

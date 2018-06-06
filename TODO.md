@@ -12,6 +12,7 @@
 - animate zoom
 - fill target container
 - overlay customization (client customization, remove inline CSS)
+- zoom icons
 
 Messaging:
 

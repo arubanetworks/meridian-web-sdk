@@ -8,7 +8,7 @@ export const theme = {
   white: "#fff",
   brandOrange: "#ff8300",
   brandBlue: "#004876",
-  borderColor: "#e0e0e1",
+  borderColor: "#eaeaea"
 };
 
 export const mixins = {

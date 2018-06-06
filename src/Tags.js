@@ -22,15 +22,6 @@ class Tags extends Component {
     onFound: PropTypes.func
   };
 
-  constructor(props) {
-    super(props);
-    let markers = props.markers;
-    if (markers && typeof markers === "object" && markers.length === 1) {
-      // TODO - not a long term solution
-      this.setState({ singleTagSearch: true });
-    }
-  }
-
   state = {
     tagsById: {},
     singleTagSearch: false,
@@ -44,23 +35,26 @@ class Tags extends Component {
     }
   }
 
+  isSingleTagSearch(markers) {
+    return Array.isArray(markers) && markers.length === 1;
+  }
+
   onFound = tag => {
     this.props.onFound(tag);
   };
 
   onUpdate = status => {
-    const { connection, tagsById, singleTagSearch } = this.state;
-    if (singleTagSearch && connection) {
+    const { connection, tagsById } = this.state;
+    const { markers, onUpdate } = this.props;
+    if (this.isSingleTagSearch(markers) && connection) {
       const tag = Object.keys(tagsById)[0];
       if (tag) {
         this.onFound(tagsById[tag]);
       } else {
-        status = `Looking for tag #${this.props.markers}`;
+        status = `Looking for tag #${markers}`;
       }
-    } else {
-      status = status;
     }
-    this.props.onUpdate(connection, status, tagsById);
+    onUpdate(connection, status, tagsById);
   };
 
   connect() {

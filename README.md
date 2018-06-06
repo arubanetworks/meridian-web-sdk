@@ -17,19 +17,18 @@ Hello, please enjoy our provided JS SDK!
 ### npm Installation
 
 ```js
-// npm install @meridian/web-models @meridian/web-components
+// npm install --save @meridian/sdk
 
-const MeridianWebModels = require("@meridian/web-models");
-const MeridianWebComponents = require("@meridian/web-components");
+const Meridian = require("@meridian/sdk");
 
-var domTarget = document.getElementById("meridian-map");
-MeridianWebComponents.init({
-  api: MeridianWebModels.create({
+Meridian.init({
+  api: Meridian.createAPI({
     environment: "<ENVIRONMENT>",
     token: "<TOKEN>"
   })
 });
-MeridianWebComponents.renderMap(domTarget, {
+
+Meridian.renderMap(document.getElementById("meridian-map"), {
   locationID: "...",
   floorID: "..."
 });
@@ -38,18 +37,16 @@ MeridianWebComponents.renderMap(domTarget, {
 ### Script Tag Installation
 
 ```html
-<script src="https://google-cloud-storage.com/web-models.js"></script>
-<script src="https://google-cloud-storage.com/web-components.js"></script>
-
+<script src="https://storage.googleapis.com/meridian-web-models/x.y.z/meridian.js"></script>
 <script>
-var domTarget = document.getElementById("meridian-map");
-MeridianWebComponents.init({
-  api: MeridianWebModels.create({
+Meridian.init({
+  api: Meridian.createAPI({
     environment: "<ENVIRONMENT>",
     token: "<TOKEN>"
   })
 });
-MeridianWebComponents.renderMap(domTarget, {
+
+Meridian.renderMap(document.getElementById("meridian-map"), {
   locationID: "...",
   floorID: "..."
 });

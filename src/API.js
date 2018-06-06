@@ -25,6 +25,8 @@ export default class API {
     });
   }
 
+  // TODO
+  // - We might want to just expose the Socket.IO client more directly here?
   openStream({
     locationID,
     floorID,

@@ -38,6 +38,12 @@ const development = {
   ...common
 };
 
+// TODO:
+// - `production` should actually be two configurations in an array so we can
+//   build a "node" bundle for publishing to npm and a "web" bundle for putting
+//   on GCS to be used with a script tag.
+// - We should investigate the `node:` key to disable Node polyfills we probably
+//   don't need
 const production = {
   ...common
 };

@@ -12,8 +12,8 @@ class Tags extends Component {
     }
   }
   static propTypes = {
-    locationId: PropTypes.string.isRequired,
-    floorId: PropTypes.string.isRequired,
+    locationID: PropTypes.string.isRequired,
+    floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
     markers: PropTypes.oneOfType([
       PropTypes.oneOf(["all"]),
@@ -22,18 +22,20 @@ class Tags extends Component {
     onMarkerClick: PropTypes.func,
     onUpdate: PropTypes.func
   };
+
   static defaultProps = {
     markers: null,
     onUpdate: () => {},
     onFound: () => {}
   };
+
   state = {
     tagsById: {},
     singleTagSearch: false,
     connection: null
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const { markers } = this.props;
     if (markers) {
       this.connect();
@@ -60,15 +62,15 @@ class Tags extends Component {
   };
 
   connect() {
-    console.info("opening socket connection");
-    const { floorId, locationId, api, markers } = this.props;
-    const connection = api.floor.listen({
-      locationId: locationId,
-      id: floorId,
-      onUpdate: data => {
+    // console.info("opening socket connection");
+    const { floorID, locationID, api, markers } = this.props;
+    const connection = api.openStream({
+      locationID,
+      id: floorID,
+      onTagUpdate: data => {
         const { mac } = data;
         if (markers === "all" || markers.includes(mac)) {
-          const { name, image_url: imageUrl } = data.editor_data;
+          const { name } = data.editor_data;
           const { x, y } = data.calculations.default.location;
           const tag = { name, mac, x, y, data: data.editor_data };
           this.setState(
@@ -105,6 +107,7 @@ class Tags extends Component {
       const { x, y, name, data } = t;
       return (
         <MapMarker
+          key={mac}
           kind="tag"
           mac={mac}
           x={x}

@@ -1,9 +1,19 @@
 {
   "presets": [
-    ["env", { "modules": false }]
+    [
+      "env",
+      {
+        "modules": false
+      }
+    ]
   ],
   "plugins": [
-    ["transform-react-jsx", { "pragma": "h" }],
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "h"
+      }
+    ],
     "transform-async-to-generator",
     "transform-runtime",
     "transform-class-properties",

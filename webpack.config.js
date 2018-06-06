@@ -3,7 +3,7 @@
 const path = require("path");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
-module.exports = env => ({
+const common = {
   module: {
     rules: [
       {
@@ -19,18 +19,38 @@ module.exports = env => ({
   },
   entry: path.resolve(__dirname, "src/index.js"),
   output: {
-    filename: "mwc.js",
-    library: "MeridianWebComponents",
+    filename: "mws.js",
+    library: "MeridianWebSDK",
     libraryTarget: "var",
     path: path.resolve(__dirname, "dist")
   },
   devServer: {
-    filename: "mwc.js",
+    filename: "mws.js",
     clientLogLevel: "error",
     contentBase: path.resolve(__dirname, "demo"),
     overlay: true,
     port: 3011,
     stats: "errors-only"
-  },
-  plugins: env === "production" ? [new BundleAnalyzerPlugin()] : []
-});
+  }
+};
+
+const development = {
+  ...common
+};
+
+const production = {
+  ...common
+};
+
+const analyze = {
+  ...common,
+  plugins: [new BundleAnalyzerPlugin()]
+};
+
+const configs = {
+  development,
+  production,
+  analyze
+};
+
+module.exports = env => configs[env];

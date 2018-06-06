@@ -2,7 +2,7 @@
 
 ## TODO
 
-* We should probably have a different way of injecting the API?
+- We should probably have a different way of injecting the API?
 
 ## Editor Web SDK integration page example
 
@@ -30,8 +30,8 @@ MeridianWebComponents.init({
   })
 });
 MeridianWebComponents.renderMap(domTarget, {
-  locationId: "...",
-  floorId: "..."
+  locationID: "...",
+  floorID: "..."
 });
 ```
 
@@ -50,8 +50,8 @@ MeridianWebComponents.init({
   })
 });
 MeridianWebComponents.renderMap(domTarget, {
-  locationId: "...",
-  floorId: "..."
+  locationID: "...",
+  floorID: "..."
 });
 </script>
 ```

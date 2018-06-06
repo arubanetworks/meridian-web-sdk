@@ -18,18 +18,17 @@
   <p>Map Below</p>
   <div id="meridian-map"></div>
 
-  <script src="https://storage.googleapis.com/meridian-web-models/0.1.0/models.js"></script>
-  <script src="/mwc.js"></script>
+  <script src="/mws.js"></script>
   <script>
-    MeridianWebComponents.init({
-      api: MeridianWebModels.create({
+    MeridianWebSDK.init({
+      api: MeridianWebSDK.createAPI({
         environment: "staging",
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
       })
     });
-    MeridianWebComponents.renderMap(document.getElementById("meridian-map"), {
-      locationId: "5468665088573440",
-      floorId: "5653104741580800",
+    MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
+      locationID: "5468665088573440",
+      floorID: "5653104741580800",
       show: {
         // tags: "all"
         tags: ["A0E6F8381B31"]

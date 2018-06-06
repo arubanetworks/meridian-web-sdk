@@ -3,14 +3,12 @@ import PropTypes from "prop-types";
 import MapMarker from "./MapMarker";
 
 class Tags extends Component {
-  constructor(props) {
-    super(props);
-    let markers = props.markers;
-    if (markers && typeof markers === "object" && markers.length === 1) {
-      // TODO - not a long term solution
-      this.setState({ singleTagSearch: true });
-    }
-  }
+  static defaultProps = {
+    markers: null,
+    onUpdate: () => {},
+    onFound: () => {}
+  };
+
   static propTypes = {
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
@@ -20,14 +18,18 @@ class Tags extends Component {
       PropTypes.arrayOf(PropTypes.string)
     ]),
     onMarkerClick: PropTypes.func,
-    onUpdate: PropTypes.func
+    onUpdate: PropTypes.func,
+    onFound: PropTypes.func
   };
 
-  static defaultProps = {
-    markers: null,
-    onUpdate: () => {},
-    onFound: () => {}
-  };
+  constructor(props) {
+    super(props);
+    let markers = props.markers;
+    if (markers && typeof markers === "object" && markers.length === 1) {
+      // TODO - not a long term solution
+      this.setState({ singleTagSearch: true });
+    }
+  }
 
   state = {
     tagsById: {},

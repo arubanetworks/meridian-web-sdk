@@ -3,7 +3,7 @@
 const path = require("path");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
-module.exports = env => ({
+const common = {
   module: {
     rules: [
       {
@@ -31,6 +31,26 @@ module.exports = env => ({
     overlay: true,
     port: 3011,
     stats: "errors-only"
-  },
-  plugins: env === "production" ? [new BundleAnalyzerPlugin()] : []
-});
+  }
+};
+
+const development = {
+  ...common
+};
+
+const production = {
+  ...common
+};
+
+const analyze = {
+  ...common,
+  plugins: [new BundleAnalyzerPlugin()]
+};
+
+const configs = {
+  development,
+  production,
+  analyze
+};
+
+module.exports = env => configs[env];

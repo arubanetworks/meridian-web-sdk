@@ -7,11 +7,9 @@
 - Figure out versioning
 - Meridian Watermark
 - Where to show messaging (looking for tag etc.)
-- For tags use rest API first, then socket?
-- animate movement
 - fill target container
 - overlay customization (client customization, remove inline CSS)
-- zoom icons
+
 
 Messaging:
 

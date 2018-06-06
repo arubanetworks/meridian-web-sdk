@@ -1,63 +1,80 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
-import { css } from "./style";
+import { css, theme } from "./style";
+
+const cssZoomButtons = css({
+  position: "absolute",
+  display: "flex",
+  flexDirection: "column",
+  zIndex: 1,
+  right: 10,
+  top: 10,
+  "& :focus": { outline: "none" }
+});
+
+const styleZoomButton = {
+  width: 30,
+  height: 29,
+  border: `1px solid ${theme.borderColor}`,
+  borderRadius: "5px",
+  fontSize: 21,
+  fontWeight: 200,
+  color: `${theme.brandBlue}`,
+  background: "white",
+  "&:hover": { background: "#f2f2f2" }
+};
+
+const cssZoomButtonIn = css({
+  ...styleZoomButton,
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 0,
+  borderBottom: 0
+});
+
+const cssZoomButtonOut = css({
+  ...styleZoomButton,
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 0
+});
 
 const zoom = (map, dir) => {
   const currentZoom = map.zoom();
-  const zoomStep = 0.15;
+  const zoomStep = 0.2;
   const zoomVal =
     dir === "in" ? currentZoom + zoomStep : currentZoom - zoomStep;
-  map.zoom(zoomVal);
+  map.animate().zoom(zoomVal);
 };
 
-const zoomIn = map => {
-  zoom(map, "in");
+const ZoomButton = ({ map, dir }) => {
+  if (dir === "in") {
+    return (
+      <button
+        className={`${cssZoomButtonIn} meridian-zoom-button meridian-zoom-button-in`}
+        onClick={() => zoom(map, "in")}
+      >
+        +
+      </button>
+    );
+  } else {
+    return (
+      <button
+        className={`${cssZoomButtonOut} meridian-zoom-button meridian-zoom-button-out`}
+        onClick={() => zoom(map, "out")}
+      >
+        &ndash;
+      </button>
+    );
+  }
 };
-
-const zoomOut = map => {
-  zoom(map, "out");
-};
-
-const cssZoomButton = css({
-  width: 25,
-  height: 25,
-  border: "1px solid #ccc",
-  borderRadius: "3px"
-});
-
-const ZoomButton = ({ map, dir }) => (
-  <button
-    className={`${cssZoomButton} meridian-zoom-button`}
-    onClick={dir === "in" ? () => zoomIn(map) : () => zoomOut(map)}
-  >
-    {dir === "in" ? "+" : "-"}
-  </button>
-);
 
 ZoomButton.propTypes = {
   map: PropTypes.node,
   dir: PropTypes.oneOf(["in", "out"])
 };
 
-const cssSeparator = css({
-  paddingTop: 4
-});
-
-const Separator = () => <div className={cssSeparator} />;
-
-const cssZoomButtons = css({
-  display: "flex",
-  flexDirection: "column",
-  position: "absolute",
-  zIndex: 1,
-  right: 10,
-  top: 10
-});
-
 const ZoomButtons = ({ map }) => (
   <div className={cssZoomButtons}>
     <ZoomButton map={map} dir="in" />
-    <Separator />
     <ZoomButton map={map} dir="out" />
   </div>
 );

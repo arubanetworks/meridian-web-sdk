@@ -27,6 +27,7 @@ export default class API {
 
   // TODO
   // - We might want to just expose the Socket.IO client more directly here?
+  // - Subscribe to all events listed here: https://github.com/arubanetworks/asset-tracking-backend/blob/master/components/tag-tracker/API.md
   openStream({
     locationID,
     floorID,

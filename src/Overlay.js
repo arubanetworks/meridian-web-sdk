@@ -23,8 +23,12 @@ const cssOverlay = css({
   }
 });
 
-const cssImage = css({
-  width: "100%",
+const cssMarkerImage = css({
+  width: 400,
+  height: 300,
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
   borderRadius: 5,
   borderBottomRightRadius: 0,
   borderBottomLeftRadius: 0
@@ -34,10 +38,14 @@ const Overlay = ({ kind, data, onClose }) => {
   if (kind && data && Object.keys(data).length > 0) {
     return (
       <div className={cssOverlay}>
-        <img className={cssImage} src={data.image_url} />
-        <button class="meridian-overlay-close" onClick={onClose}>
-          close
-        </button>
+        <div
+          className={cssMarkerImage}
+          style={{ backgroundImage: `url('${data.image_url}')` }}
+        >
+          <button class="meridian-overlay-close" onClick={onClose}>
+            close
+          </button>
+        </div>
         <div class="meridian-overlay-content">
           <p style={{ marginTop: 0 }}>
             <span style={{ fontSize: 16, fontWeight: "bold" }}>

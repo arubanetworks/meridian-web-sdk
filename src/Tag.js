@@ -1,5 +1,12 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
+import { css } from "./style";
+
+const cssTag = css({
+  label: "meridian-tag",
+  clipPath: "circle()",
+  transition: "x 500ms ease, y 500ms ease"
+});
 
 const Tag = ({ x, y, id, data, onClick = () => {} }) => {
   const imageUrl = data.image_url;
@@ -15,25 +22,23 @@ const Tag = ({ x, y, id, data, onClick = () => {} }) => {
         pointerEvents="bounding-box"
         xlinkHref={imageUrl}
         onClick={onClick}
-        style={{ clipPath: "circle()" }}
+        className={`${cssTag} meridian-tag`}
       />
     );
   }
   return (
     <svg
-      width="36"
-      height="36"
       viewBox="0 0 36 36"
       key={id}
-      className="tag"
       cursor="pointer"
       pointerEvents="bounding-box"
       fill="black"
-      width="23"
-      height="23"
+      width="36"
+      height="36"
       x={x}
       y={y}
       onClick={onClick}
+      className={`${cssTag} meridian-tag`}
     >
       <path
         d="M18.09,7c-0.01,0-0.01,0-0.02,0c0,0-0.01,0-0.01,0C18.04,7,18.02,7,18,7C11.93,7,7,11.93,7,18s4.93,11,11,11

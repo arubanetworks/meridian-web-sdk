@@ -1,75 +1,84 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Material UI | Meridian Web SDK</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../shared.css">
 
-    <!-- Material Design Lite https://getmdl.io/ -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Material UI | Meridian Web SDK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../shared.css">
 
-    <style>
-      body {
-        margin: 0 auto;
-        padding: 40px;
-        width: auto;
-      }
-      #meridian-map-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
-        grid-template-areas:
-          "left center right";
-        padding: 20px;
-      }
-      #meridian-map {
-        grid-area: 1 / 1 / last-line / 4;
-        margin: -20px;
-      }
-      #left-column {
-        grid-area: left;
-      }
-      .mdl-card {
-        min-width: 330px;
-        width: auto;
-      }
-      .hide {
-        display: none;
-      }
-      #card {
-        z-index: 1;
-      }
-    </style>
+  <!-- Material Design Lite https://getmdl.io/ -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
-  </head>
-  <body>
-    <a class="back" href="..">Back to examples</a>
-    <div id="meridian-map-container">
-      <div id="left-column">
-        <div id="card"></div>
-      </div>
-      <div id="meridian-map"></div>
+  <style>
+    body {
+      margin: 0 auto;
+      padding: 40px;
+      width: auto;
+    }
+
+    #meridian-map-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+      grid-template-areas: "left center right";
+      padding: 20px;
+    }
+
+    #meridian-map {
+      grid-area: 1 / 1 / last-line / 4;
+      margin: -20px;
+    }
+
+    #left-column {
+      grid-area: left;
+    }
+
+    .mdl-card {
+      min-width: 330px;
+      width: auto;
+    }
+
+    .hide {
+      display: none;
+    }
+
+    #card {
+      z-index: 1;
+    }
+  </style>
+
+</head>
+
+<body>
+  <a class="back" href="..">Back to examples</a>
+  <div id="meridian-map-container">
+    <div id="left-column">
+      <div id="card"></div>
     </div>
-    <script src="/meridian-sdk.js"></script>
-    <script>
-      MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
-        api: MeridianWebSDK.createAPI({
-          environment: "staging",
-          token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
-        }),
-        locationID: "5468665088573440",
-        floorID: "5653104741580800",
-        tags: "all",
-        show: {
-          tags: "all"
-        },
-        onMarkerClick: (marker) => {
-          const card = document.getElementById("card");
-          card.innerHTML = `
+    <div id="meridian-map"></div>
+  </div>
+  <script src="/meridian-sdk.js"></script>
+  <script>
+    MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
+      api: MeridianWebSDK.createAPI({
+        environment: "staging",
+        token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
+      }),
+      locationID: "5468665088573440",
+      floorID: "5653104741580800",
+      markers: {
+        tags: {
+          // ids: ["A0E6F8381B31"],
+          all: true
+        }
+      },
+      onMarkerClick: (marker) => {
+        const card = document.getElementById("card");
+        card.innerHTML = `
             <div class="demo-card-wide mdl-card mdl-shadow--2dp">
               <div class="mdl-card__title">
                 <h2 class="mdl-card__title-text">${marker.name}</h2>
@@ -87,11 +96,12 @@
               </div>
             </div>
           `
-        },
-        onMapClick: (event) => {
-          document.getElementById("card").innerHTML = "";
-        }
-      });
-    </script>
-  </body>
+      },
+      onMapClick: (event) => {
+        document.getElementById("card").innerHTML = "";
+      }
+    });
+  </script>
+</body>
+
 </html>

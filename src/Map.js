@@ -31,12 +31,12 @@ export default class Map extends Component {
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
-    show: PropTypes.shape({
-      // Either "all" or an array of IDs (all caps MAC address no colons)
-      tags: PropTypes.oneOfType([
-        PropTypes.oneOf(["all"]),
-        PropTypes.arrayOf(PropTypes.string)
-      ])
+    markers: PropTypes.shape({
+      tags: PropTypes.shape({
+        all: PropTypes.bool,
+        categories: PropTypes.arrayOf(PropTypes.string),
+        ids: PropTypes.arrayOf(PropTypes.string)
+      })
     }),
     onMarkerClick: PropTypes.func,
     onMapClick: PropTypes.func
@@ -44,7 +44,7 @@ export default class Map extends Component {
 
   static defaultProps = {
     zoom: true,
-    show: {}
+    markers: {}
   };
 
   state = {
@@ -123,7 +123,8 @@ export default class Map extends Component {
 
   render() {
     const { svgURL, selectedItem } = this.state;
-    const { locationID, floorID, api, show } = this.props;
+    const { locationID, floorID, api, markers } = this.props;
+    const tagsToShow = markers.tags.all ? "all" : markers.tags.ids;
     return (
       <div className={`${cssMapContainer} meridian-map-container`}>
         <Overlay
@@ -151,7 +152,7 @@ export default class Map extends Component {
               locationID={locationID}
               floorID={floorID}
               api={api}
-              markers={show.tags}
+              markers={tagsToShow}
               onMarkerClick={this.onMarkerClick}
               onUpdate={this.onTagsUpdate}
               onFound={this.onTagFound}

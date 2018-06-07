@@ -12,6 +12,7 @@
       max-width: 600px;
       margin: 0 auto;
     }
+
     #meridian-map {
       position: fixed;
       top: 0;
@@ -19,6 +20,7 @@
       right: 0;
       bottom: 0;
     }
+
     body .meridian-map-container {
       border: 0;
       border-radius: 0;
@@ -41,8 +43,10 @@
     MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
-      show: {
-        tags: "all"
+      markers: {
+        tags: {
+          all: true
+        }
       }
     });
   </script>

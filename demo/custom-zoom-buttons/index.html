@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Context API | Meridian Web SDK</title>
+  <title>Custom Zoom Buttons | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../shared.css">
   <style>
@@ -12,6 +12,39 @@
       max-width: 600px;
       margin: 0 auto;
       padding-top: 20px;
+    }
+
+    /**
+     * Use `body` as a parent select to gain extra specificity and beat our
+     * default rules regardless of CSS load order for a robust styling solution
+     */
+
+    body .meridian-map-container {
+      border-radius: 0 30px 0 80px;
+      border: 6px solid mediumturquoise;
+      background: papayawhip;
+      box-shadow: 0 8px 10px 2px chocolate;
+    }
+
+    body .meridian-zoom-button {
+      color: red;
+      background: lightblue;
+      cursor: pointer;
+    }
+
+    body .meridian-zoom-button:hover {
+      color: green;
+      background: pink;
+    }
+
+    body .meridian-zoom-button-in {
+      border-color: darkgreen;
+    }
+
+    body .meridian-zoom-buttons-container {
+      border-radius: 0;
+      box-shadow: 0 0 3px 3px orange;
+      border-radius: 0 20px 0 20px;
     }
   </style>
 </head>
@@ -33,7 +66,6 @@
       floorID: "5653104741580800",
       show: {
         tags: "all"
-        // tags: ["A0E6F837EC5A"],
       }
     });
   </script>

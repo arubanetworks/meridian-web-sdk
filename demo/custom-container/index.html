@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Props API | Meridian Web SDK</title>
+  <title>Custom Container | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../shared.css">
   <style>
@@ -12,6 +12,12 @@
       max-width: 600px;
       margin: 0 auto;
       padding-top: 20px;
+    }
+
+    body .meridian-map-container {
+      border-radius: 10px;
+      border: 6px solid mediumturquoise;
+      background: papayawhip;
     }
   </style>
 </head>
@@ -22,16 +28,17 @@
 
   <script src="/meridian-sdk.js"></script>
   <script>
-    MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
+    MeridianWebSDK.init({
       api: MeridianWebSDK.createAPI({
         environment: "staging",
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
-      }),
+      })
+    });
+    MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
       show: {
         tags: "all"
-        // tags: ["A0E6F837EC5A"],
       }
     });
   </script>

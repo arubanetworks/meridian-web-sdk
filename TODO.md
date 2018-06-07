@@ -10,6 +10,7 @@
 - fill target container
 - overlay customization (client customization, remove inline CSS)
 - what if the marker doesn't have an image?
+- zoom into single tag after initial data load
 
 Messaging:
 

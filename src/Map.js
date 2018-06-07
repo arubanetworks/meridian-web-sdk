@@ -7,7 +7,7 @@ import Button from "./Button";
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
 import Tags from "./Tags";
-import { css } from "./style";
+import { css, theme } from "./style";
 
 const cssMapContainer = css({
   label: "map-container",
@@ -15,7 +15,8 @@ const cssMapContainer = css({
   border: "1px solid #ccc",
   borderRadius: 3,
   background: "#fafafa",
-  color: "#000"
+  color: "#000",
+  fontFamily: theme.fontFamily
 });
 
 const cssMapSvg = css({

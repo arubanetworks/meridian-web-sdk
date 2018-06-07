@@ -103,10 +103,8 @@ export default class Map extends Component {
 
   onTagFound = tag => {
     if (this.adoptedMapSVG) {
-      this.adoptedMapSVG.zoom(1, {
-        x: tag.x,
-        y: tag.y
-      });
+      const { x, y } = tag;
+      this.adoptedMapSVG.zoom(1, { x, y });
     }
   };
 
@@ -163,7 +161,7 @@ export default class Map extends Component {
             onClick={this.onClick}
             viewBox="0 0 1700 2200"
           >
-            <g id="svg_parent">
+            <g>
               <image
                 width="1700"
                 height="2200"

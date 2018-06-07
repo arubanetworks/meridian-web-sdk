@@ -8,12 +8,32 @@ export const theme = {
   white: "#fff",
   brandOrange: "#ff8300",
   brandBlue: "#004876",
-  borderColor: "#eaeaea"
+  brandBrightBlue: "#004876",
+  borderColor: "#eaeaea",
+  buttonActiveColor: "#f0f0f0",
+  buttonHoverColor: "#f8f8f8",
+  buttonSeparatorColor: "#f0f0f0"
 };
 
 export const mixins = {
+  buttonReset: {
+    fontFamily: "inherit",
+    border: 0,
+    borderRadius: 0,
+    background: "transparent",
+    color: "inherit"
+  },
+  borderBox: {
+    boxSizing: "border-box"
+  },
+  shadow: {
+    boxShadow: `
+      0 0 0 1px rgba(0, 0, 0, 0.1),
+      0 0 8px rgba(0, 0, 0, 0.2)
+    `
+  },
   rounded: {
-    borderRadius: "0.25em"
+    borderRadius: 8
   },
   paddingMedium: {
     padding: "20px"

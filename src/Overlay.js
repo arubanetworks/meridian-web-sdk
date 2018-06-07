@@ -1,16 +1,17 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
-import { css, theme } from "./style";
+import { css, theme, mixins, cx } from "./style";
 
 const cssOverlay = css({
   label: "overlay",
-  border: `1px solid ${theme.borderColor}`,
-  borderRadius: 5,
-  background: "#fafafa",
+  ...mixins.shadow,
+  ...mixins.rounded,
+  overflow: "hidden",
+  background: theme.white,
   color: "#000",
   position: "absolute",
-  left: 13,
-  top: 13,
+  left: 10,
+  top: 10,
   zIndex: 2,
   width: 400,
   "& .meridian-overlay-close": {
@@ -21,30 +22,48 @@ const cssOverlay = css({
     padding: 20
   },
   "& .meridian-overlay-marker-image": {
-    width: 400,
+    width: "100%",
     height: 300,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    borderRadius: 5,
-    borderBottomRightRadius: 0,
-    borderBottomLeftRadius: 0
+    backgroundSize: "cover"
   },
   "& .meridian-overlay-marker-name": {
     fontSize: 16
   }
 });
 
+const cssClose = css({
+  label: "close",
+  ...mixins.buttonReset,
+  width: 30,
+  height: 30,
+  background: "rgba(255, 255, 255, 0.5)",
+  color: theme.black,
+  borderRadius: "100%",
+  fontWeight: "bold",
+  boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
+  "&:hover": {
+    background: theme.white,
+    boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"
+  }
+});
+
+const closeCharacter = "✕";
+
 const Overlay = ({ kind, data, onClose }) => {
   if (kind && data && Object.keys(data).length > 0) {
     return (
-      <div className={`${cssOverlay} meridian-overlay`}>
+      <div className={cx(cssOverlay, "meridian-overlay")}>
         <div
           className="meridian-overlay-marker-image"
           style={{ backgroundImage: `url('${data.image_url}')` }}
         >
-          <button className="meridian-overlay-close" onClick={onClose}>
-            x
+          <button
+            className={cx(cssClose, "meridian-overlay-close")}
+            onClick={onClose}
+          >
+            {closeCharacter}
           </button>
         </div>
         <div className="meridian-overlay-content">

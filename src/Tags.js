@@ -1,5 +1,6 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
+
 import MapMarker from "./MapMarker";
 
 export default class Tags extends Component {
@@ -78,39 +79,59 @@ export default class Tags extends Component {
     }, {});
   }
 
+  removeTag(data) {
+    this.setState(prevState => {
+      const { tagsByMac } = prevState;
+      const macs = Object.keys(tagsByMac);
+      const newMACs = macs.filter(mac => mac !== data.mac);
+      const newTagsByMac = newMACs.reduce((obj, mac) => {
+        obj[mac] = tagsByMac[mac];
+        return obj;
+      }, {});
+      return { tagsByMac: newTagsByMac };
+    });
+  }
+
+  observeTagUpdate(data) {
+    const { markers } = this.props;
+    const tag = this.normalizeTag(data);
+    if (markers === "all" || markers.includes(tag.mac)) {
+      this.setState(
+        prevState => ({
+          tagsByMac: {
+            ...prevState.tagsByMac,
+            [tag.mac]: tag
+          }
+        }),
+        () => {
+          this.onUpdate("Connected");
+        }
+      );
+    }
+  }
+
+  setInitialTags(data) {
+    this.setState({ tagsByMac: this.groupTagsByMac(data) });
+  }
+
   connect() {
-    const { floorID, locationID, api, markers } = this.props;
+    const { floorID, locationID, api } = this.props;
     const connection = api.openStream({
       locationID,
       id: floorID,
       onInitialTags: data => {
-        this.setState({ tagsByMac: this.groupTagsByMac(data) });
+        this.setInitialTags(data);
+      },
+      onTagDisappear: data => {
+        this.removeTag(data);
       },
       onTagUpdate: data => {
-        const tag = this.normalizeTag(data);
-        if (markers === "all" || markers.includes(tag.mac)) {
-          this.setState(
-            prevState => ({
-              tagsByMac: {
-                ...prevState.tagsByMac,
-                [tag.mac]: tag
-              }
-            }),
-            () => {
-              this.onUpdate("Connected");
-            }
-          );
-        }
+        this.observeTagUpdate(data);
       },
       onClose: () => {
-        this.setState(
-          {
-            connection: null
-          },
-          () => {
-            this.onUpdate("Not Connected");
-          }
-        );
+        this.setState({ connection: null }, () => {
+          this.onUpdate("Not Connected");
+        });
       }
     });
     this.setState({ connection }, () => {

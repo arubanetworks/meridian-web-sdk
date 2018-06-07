@@ -79,6 +79,15 @@ export default class Tags extends Component {
     }, {});
   }
 
+  filterTagsByMAC(tags, macs) {
+    return Object.keys(tags).reduce((obj, mac) => {
+      if (macs.includes(mac)) {
+        obj[mac] = tags[mac];
+      }
+      return obj;
+    }, {});
+  }
+
   removeTag(data) {
     this.setState(prevState => {
       const { tagsByMAC } = prevState;
@@ -111,7 +120,11 @@ export default class Tags extends Component {
   }
 
   setInitialTags(data) {
-    this.setState({ tagsByMAC: this.groupTagsByMAC(data) });
+    let tags = this.groupTagsByMAC(data);
+    if (this.props.markers !== "all") {
+      tags = this.filterTagsByMAC(tags, this.props.markers);
+    }
+    this.setState({ tagsByMAC: tags });
   }
 
   connect() {

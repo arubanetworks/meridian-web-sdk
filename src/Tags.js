@@ -72,7 +72,7 @@ export default class Tags extends Component {
     return { name, mac, x, y, data };
   }
 
-  groupTagsByMac(tags) {
+  groupTagsByMAC(tags) {
     return tags.map(tag => this.normalizeTag(tag)).reduce((obj, tag) => {
       obj[tag.mac] = tag;
       return obj;
@@ -84,11 +84,11 @@ export default class Tags extends Component {
       const { tagsByMAC } = prevState;
       const macs = Object.keys(tagsByMAC);
       const newMACs = macs.filter(mac => mac !== data.mac);
-      const newTagsByMac = newMACs.reduce((obj, mac) => {
+      const newTagsByMAC = newMACs.reduce((obj, mac) => {
         obj[mac] = tagsByMAC[mac];
         return obj;
       }, {});
-      return { tagsByMAC: newTagsByMac };
+      return { tagsByMAC: newTagsByMAC };
     });
   }
 
@@ -111,7 +111,7 @@ export default class Tags extends Component {
   }
 
   setInitialTags(data) {
-    this.setState({ tagsByMAC: this.groupTagsByMac(data) });
+    this.setState({ tagsByMAC: this.groupTagsByMAC(data) });
   }
 
   connect() {

@@ -1,9 +1,9 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
-import { css, theme, mixins } from "./style";
+import { css, theme } from "./style";
 
 const cssOverlay = css({
-  label: "drawer",
+  label: "overlay",
   border: `1px solid ${theme.borderColor}`,
   borderRadius: 5,
   background: "#fafafa",
@@ -14,44 +14,41 @@ const cssOverlay = css({
   zIndex: 2,
   width: 400,
   "& button.meridian-overlay-close": {
-    position: "absolute",
-    top: 10,
-    left: 10
+    display: "inline-block",
+    margin: 10
   },
   "& .meridian-overlay-content": {
     padding: 20
+  },
+  "& .meridian-overlay-marker-image": {
+    width: 400,
+    height: 300,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    borderRadius: 5,
+    borderBottomRightRadius: 0,
+    borderBottomLeftRadius: 0
+  },
+  "& .meridian-overlay-marker-name": {
+    fontSize: 16
   }
-});
-
-const cssMarkerImage = css({
-  width: 400,
-  height: 300,
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
-  backgroundSize: "cover",
-  borderRadius: 5,
-  borderBottomRightRadius: 0,
-  borderBottomLeftRadius: 0
 });
 
 const Overlay = ({ kind, data, onClose }) => {
   if (kind && data && Object.keys(data).length > 0) {
     return (
-      <div className={cssOverlay}>
+      <div className={`${cssOverlay} meridian-overlay`}>
         <div
-          className={cssMarkerImage}
+          className="meridian-overlay-marker-image"
           style={{ backgroundImage: `url('${data.image_url}')` }}
         >
-          <button class="meridian-overlay-close" onClick={onClose}>
-            close
+          <button className="meridian-overlay-close" onClick={onClose}>
+            x
           </button>
         </div>
-        <div class="meridian-overlay-content">
-          <p style={{ marginTop: 0 }}>
-            <span style={{ fontSize: 16, fontWeight: "bold" }}>
-              ({kind}) {data.name}
-            </span>
-          </p>
+        <div className="meridian-overlay-content">
+          <div className="meridian-overlay-marker-name">{data.name}</div>
         </div>
       </div>
     );

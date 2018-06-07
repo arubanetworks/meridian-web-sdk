@@ -9,7 +9,7 @@
 - Where to show messaging (looking for tag etc.)
 - fill target container
 - overlay customization (client customization, remove inline CSS)
-
+- what if the marker doesn't have an image?
 
 Messaging:
 

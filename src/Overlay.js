@@ -56,7 +56,7 @@ const Overlay = ({ kind, data, onClose }) => {
   return null;
 };
 
-Overlay.PropTypes = {
+Overlay.propTypes = {
   data: PropTypes.object,
   kind: PropTypes.string,
   onClose: PropTypes.object

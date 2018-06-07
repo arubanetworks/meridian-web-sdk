@@ -24,7 +24,7 @@ export default class Tags extends Component {
   };
 
   state = {
-    tagsByMac: {},
+    tagsByMAC: {},
     singleTagSearch: false,
     connection: null
   };
@@ -52,17 +52,17 @@ export default class Tags extends Component {
   };
 
   onUpdate = status => {
-    const { connection, tagsByMac } = this.state;
+    const { connection, tagsByMAC } = this.state;
     const { markers, onUpdate } = this.props;
     if (this.isSingleTagSearch(markers) && connection) {
-      const tag = Object.keys(tagsByMac)[0];
+      const tag = Object.keys(tagsByMAC)[0];
       if (tag) {
-        this.onFound(tagsByMac[tag]);
+        this.onFound(tagsByMAC[tag]);
       } else {
         status = `Looking for tag #${markers}`;
       }
     }
-    onUpdate(connection, status, tagsByMac);
+    onUpdate(connection, status, tagsByMAC);
   };
 
   normalizeTag(tag) {
@@ -81,14 +81,14 @@ export default class Tags extends Component {
 
   removeTag(data) {
     this.setState(prevState => {
-      const { tagsByMac } = prevState;
-      const macs = Object.keys(tagsByMac);
+      const { tagsByMAC } = prevState;
+      const macs = Object.keys(tagsByMAC);
       const newMACs = macs.filter(mac => mac !== data.mac);
       const newTagsByMac = newMACs.reduce((obj, mac) => {
-        obj[mac] = tagsByMac[mac];
+        obj[mac] = tagsByMAC[mac];
         return obj;
       }, {});
-      return { tagsByMac: newTagsByMac };
+      return { tagsByMAC: newTagsByMac };
     });
   }
 
@@ -98,8 +98,8 @@ export default class Tags extends Component {
     if (markers === "all" || markers.includes(tag.mac)) {
       this.setState(
         prevState => ({
-          tagsByMac: {
-            ...prevState.tagsByMac,
+          tagsByMAC: {
+            ...prevState.tagsByMAC,
             [tag.mac]: tag
           }
         }),
@@ -111,7 +111,7 @@ export default class Tags extends Component {
   }
 
   setInitialTags(data) {
-    this.setState({ tagsByMac: this.groupTagsByMac(data) });
+    this.setState({ tagsByMAC: this.groupTagsByMac(data) });
   }
 
   connect() {
@@ -140,10 +140,10 @@ export default class Tags extends Component {
   }
 
   render() {
-    const { tagsByMac } = this.state;
+    const { tagsByMAC } = this.state;
     const { onMarkerClick } = this.props;
-    const markers = Object.keys(tagsByMac).map(mac => {
-      const t = tagsByMac[mac];
+    const markers = Object.keys(tagsByMAC).map(mac => {
+      const t = tagsByMAC[mac];
       const { x, y, name, data } = t;
       return (
         <MapMarker

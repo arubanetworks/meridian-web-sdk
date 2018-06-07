@@ -1,40 +1,41 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
-import { css, theme } from "./style";
+import { css, theme, mixins } from "./style";
 
 const cssZoomButtons = css({
+  ...mixins.shadow,
+  ...mixins.rounded,
+  background: "white",
+  overflow: "hidden",
   position: "absolute",
   display: "flex",
   flexDirection: "column",
   zIndex: 1,
   right: 10,
-  top: 10,
-  "& :focus": { outline: "none" }
+  top: 10
 });
 
 const styleZoomButton = {
-  width: 30,
-  height: 29,
-  border: `1px solid ${theme.borderColor}`,
-  borderRadius: "5px",
-  fontSize: 21,
+  ...mixins.buttonReset,
+  width: 32,
+  height: 32,
+  border: 0,
+  borderRadius: 0,
+  fontSize: 20,
   fontWeight: 200,
-  color: `${theme.brandBlue}`,
-  background: "white",
-  "&:hover": { background: "#f2f2f2" }
+  color: theme.brandBlue,
+  "&:hover": { background: theme.buttonHoverColor },
+  "&:active": { background: theme.buttonActiveColor },
+  "&:focus": { outline: "none" }
 };
 
 const cssZoomButtonIn = css({
   ...styleZoomButton,
-  borderBottomLeftRadius: 0,
-  borderBottomRightRadius: 0,
-  borderBottom: 0
+  borderBottom: `1px solid ${theme.buttonSeparatorColor}`
 });
 
 const cssZoomButtonOut = css({
-  ...styleZoomButton,
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
+  ...styleZoomButton
 });
 
 const zoom = (map, dir) => {
@@ -61,7 +62,7 @@ const ZoomButton = ({ map, dir }) => {
         className={`${cssZoomButtonOut} meridian-zoom-button meridian-zoom-button-out`}
         onClick={() => zoom(map, "out")}
       >
-        &ndash;
+        &minus;
       </button>
     );
   }
@@ -73,7 +74,7 @@ ZoomButton.propTypes = {
 };
 
 const ZoomButtons = ({ map }) => (
-  <div className={cssZoomButtons}>
+  <div className={`${cssZoomButtons} meridian-zoom-buttons-container`}>
     <ZoomButton map={map} dir="in" />
     <ZoomButton map={map} dir="out" />
   </div>

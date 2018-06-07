@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import svg from "svg.js";
 import "svg.panzoom.js";
 
-import Button from "./Button";
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
 import Tags from "./Tags";
@@ -11,16 +10,19 @@ import { css, theme } from "./style";
 
 const cssMapContainer = css({
   label: "map-container",
+  lineHeight: 0,
+  overflow: "hidden",
   position: "relative",
   border: "1px solid #ccc",
-  borderRadius: 3,
+  borderRadius: 0,
   background: "#fafafa",
   color: "#000",
   fontFamily: theme.fontFamily
 });
 
-const cssMapSvg = css({
-  label: "map"
+const cssMapSVG = css({
+  label: "map-svg",
+  height: "100%"
 });
 
 export default class Map extends Component {
@@ -104,10 +106,8 @@ export default class Map extends Component {
 
   onTagFound = tag => {
     if (this.adoptedMapSVG) {
-      this.adoptedMapSVG.zoom(1, {
-        x: tag.x,
-        y: tag.y
-      });
+      const { x, y } = tag;
+      this.adoptedMapSVG.zoom(1, { x, y });
     }
   };
 
@@ -121,70 +121,43 @@ export default class Map extends Component {
     return null;
   }
 
-  renderTagsStatus() {
-    if (this.props.show.tags) {
-      return <span> Status: {this.state.tagsStatus} </span>;
-    }
-    return null;
-  }
-
-  renderTagsConnection() {
-    const { tagsConnection } = this.state;
-    if (this.props.show.tags && tagsConnection) {
-      return (
-        <span>
-          <Button onClick={() => tagsConnection.close()}>
-            Close Connection
-          </Button>
-        </span>
-      );
-    }
-    return null;
-  }
-
   render() {
     const { svgURL, selectedItem } = this.state;
     const { locationID, floorID, api, show } = this.props;
     return (
-      <div className="meridian-component-container">
-        <p>
-          {this.renderTagsConnection()}
-          {this.renderTagsStatus()}
-        </p>
-        <div className={`${cssMapContainer} meridian-map-container`}>
-          <Overlay
-            onClose={this.onOverlayClose}
-            data={selectedItem.data}
-            kind={selectedItem.kind}
-          />
-          {this.renderZoomControls()}
-          <svg
-            ref={this.setMapSVGRef}
-            className={cssMapSvg}
-            onClick={this.onClick}
-            viewBox="0 0 1700 2200"
-          >
-            <g id="svg_parent">
-              <image
-                width="1700"
-                height="2200"
-                xlinkHref={svgURL}
-                ref={el => {
-                  this.mapImage = el;
-                }}
-              />
-              <Tags
-                locationID={locationID}
-                floorID={floorID}
-                api={api}
-                markers={show.tags}
-                onMarkerClick={this.onMarkerClick}
-                onUpdate={this.onTagsUpdate}
-                onFound={this.onTagFound}
-              />
-            </g>
-          </svg>
-        </div>
+      <div className={`${cssMapContainer} meridian-map-container`}>
+        <Overlay
+          onClose={this.onOverlayClose}
+          data={selectedItem.data}
+          kind={selectedItem.kind}
+        />
+        {this.renderZoomControls()}
+        <svg
+          ref={this.setMapSVGRef}
+          className={`${cssMapSVG} meridian-map-svg`}
+          onClick={this.onClick}
+          viewBox="0 0 1700 2200"
+        >
+          <g>
+            <image
+              width="1700"
+              height="2200"
+              xlinkHref={svgURL}
+              ref={el => {
+                this.mapImage = el;
+              }}
+            />
+            <Tags
+              locationID={locationID}
+              floorID={floorID}
+              api={api}
+              markers={show.tags}
+              onMarkerClick={this.onMarkerClick}
+              onUpdate={this.onTagsUpdate}
+              onFound={this.onTagFound}
+            />
+          </g>
+        </svg>
       </div>
     );
   }

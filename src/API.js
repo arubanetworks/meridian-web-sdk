@@ -28,10 +28,13 @@ export default class API {
   // TODO
   // - We might want to just expose the Socket.IO client more directly here?
   // - Subscribe to all events listed here: https://github.com/arubanetworks/asset-tracking-backend/blob/master/components/tag-tracker/API.md
+  // - We should probably work on the names of these callback functions
   openStream({
     locationID,
     floorID,
+    onInitialTags = () => {},
     onTagUpdate = () => {},
+    onTagDisappear = () => {},
     onClose = () => {},
     onException = () => {}
   }) {
@@ -57,7 +60,9 @@ export default class API {
     connection.on("exception", onException);
     connection.on("authenticated", subscribe);
     connection.on("unauthenticated", onClose);
+    connection.on("assets", onInitialTags);
     connection.on("asset_update", onTagUpdate);
+    connection.on("asset_delete", onTagDisappear);
     return {
       close: () => connection.close()
     };

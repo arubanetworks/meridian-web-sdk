@@ -19,13 +19,13 @@ const common = {
   },
   entry: path.resolve(__dirname, "src/index.js"),
   output: {
-    filename: "mws.js",
+    filename: "meridian-sdk.js",
     library: "MeridianWebSDK",
     libraryTarget: "var",
     path: path.resolve(__dirname, "dist")
   },
   devServer: {
-    filename: "mws.js",
+    filename: "meridian-sdk.js",
     clientLogLevel: "error",
     contentBase: path.resolve(__dirname, "demo"),
     overlay: true,

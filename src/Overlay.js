@@ -13,7 +13,7 @@ const cssOverlay = css({
   top: 13,
   zIndex: 2,
   width: 400,
-  "& button.meridian-overlay-close": {
+  "& .meridian-overlay-close": {
     display: "inline-block",
     margin: 10
   },

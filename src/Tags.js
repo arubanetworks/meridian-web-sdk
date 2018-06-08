@@ -14,10 +14,11 @@ export default class Tags extends Component {
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
-    markers: PropTypes.oneOfType([
-      PropTypes.oneOf(["all"]),
-      PropTypes.arrayOf(PropTypes.string)
-    ]),
+    markers: PropTypes.shape({
+      all: PropTypes.bool,
+      categories: PropTypes.arrayOf(PropTypes.string),
+      ids: PropTypes.arrayOf(PropTypes.string)
+    }),
     onMarkerClick: PropTypes.func,
     onUpdate: PropTypes.func,
     onFound: PropTypes.func
@@ -43,8 +44,19 @@ export default class Tags extends Component {
     }
   }
 
-  isSingleTagSearch(markers) {
-    return Array.isArray(markers) && markers.length === 1;
+  filterBy() {
+    const { ids, categories } = this.props.markers;
+    if (ids && Array.isArray(ids) && ids.length) {
+      return "ID";
+    } else if (categories && Array.isArray(categories) && categories.length) {
+      return "CATEGORY";
+    }
+    return null;
+  }
+
+  isSingleTagSearch() {
+    const { ids } = this.props.markers;
+    return this.filterBy() === "ID" && ids.length === 1;
   }
 
   onFound = tag => {
@@ -54,12 +66,12 @@ export default class Tags extends Component {
   onUpdate = status => {
     const { connection, tagsByMAC } = this.state;
     const { markers, onUpdate } = this.props;
-    if (this.isSingleTagSearch(markers) && connection) {
+    if (this.isSingleTagSearch() && connection) {
       const tag = Object.keys(tagsByMAC)[0];
       if (tag) {
         this.onFound(tagsByMAC[tag]);
       } else {
-        status = `Looking for tag #${markers}`;
+        status = `Looking for tag #${markers.ids[0]}`;
       }
     }
     onUpdate(connection, status, tagsByMAC);
@@ -79,13 +91,47 @@ export default class Tags extends Component {
     }, {});
   }
 
-  filterTagsByMAC(tags, macs) {
+  filterTagsByMAC(tags) {
+    const { ids: macs } = this.props.markers;
     return Object.keys(tags).reduce((obj, mac) => {
       if (macs.includes(mac)) {
         obj[mac] = tags[mac];
       }
       return obj;
     }, {});
+  }
+
+  filterTagsByCategory(tags) {
+    const { categories } = this.props.markers;
+    return Object.keys(tags).reduce((obj, mac) => {
+      const tag = tags[mac];
+      const tagCatObjects = tag.data.tags;
+      if (tagCatObjects.length) {
+        const tagCats = tagCatObjects.map(obj => obj.name);
+        const match = tagCats.some(category => categories.includes(category));
+        if (match) {
+          obj[mac] = tags[mac];
+        }
+      }
+      return obj;
+    }, {});
+  }
+
+  isMatch(tag) {
+    const { markers } = this.props;
+    const filterBy = this.filterBy();
+    if (filterBy === "ID") {
+      return markers.ids.includes(tag.mac);
+    }
+    if (filterBy === "CATEGORY") {
+      const tagCatObjects = tag.data.tags;
+      if (tagCatObjects.length) {
+        const tagCats = tagCatObjects.map(obj => obj.name);
+        return tagCats.some(category => markers.categories.includes(category));
+      }
+      return false;
+    }
+    return false;
   }
 
   removeTag(data) {
@@ -104,7 +150,7 @@ export default class Tags extends Component {
   observeTagUpdate(data) {
     const { markers } = this.props;
     const tag = this.normalizeTag(data);
-    if (markers === "all" || markers.includes(tag.mac)) {
+    if (markers.all || this.isMatch(tag)) {
       this.setState(
         prevState => ({
           tagsByMAC: {
@@ -121,8 +167,11 @@ export default class Tags extends Component {
 
   setInitialTags(data) {
     let tags = this.groupTagsByMAC(data);
-    if (this.props.markers !== "all") {
-      tags = this.filterTagsByMAC(tags, this.props.markers);
+    if (this.filterBy() === "ID") {
+      tags = this.filterTagsByMAC(tags);
+    }
+    if (this.filterBy() === "CATEGORY") {
+      tags = this.filterTagsByCategory(tags);
     }
     this.setState({ tagsByMAC: tags });
     this.onUpdate("Connected");

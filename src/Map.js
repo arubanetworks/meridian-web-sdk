@@ -48,7 +48,6 @@ export default class Map extends Component {
   };
 
   state = {
-    tagsById: {},
     svgURL: null,
     tagsConnection: null,
     tagsStatus: "Connecting",
@@ -124,7 +123,6 @@ export default class Map extends Component {
   render() {
     const { svgURL, selectedItem } = this.state;
     const { locationID, floorID, api, markers } = this.props;
-    const tagsToShow = markers.tags.all ? "all" : markers.tags.ids;
     return (
       <div className={`${cssMapContainer} meridian-map-container`}>
         <Overlay
@@ -152,7 +150,7 @@ export default class Map extends Component {
               locationID={locationID}
               floorID={floorID}
               api={api}
-              markers={tagsToShow}
+              markers={markers.tags}
               onMarkerClick={this.onMarkerClick}
               onUpdate={this.onTagsUpdate}
               onFound={this.onTagFound}

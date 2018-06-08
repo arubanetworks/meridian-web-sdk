@@ -125,6 +125,7 @@ export default class Tags extends Component {
       tags = this.filterTagsByMAC(tags, this.props.markers);
     }
     this.setState({ tagsByMAC: tags });
+    this.onUpdate("Connected");
   }
 
   connect() {

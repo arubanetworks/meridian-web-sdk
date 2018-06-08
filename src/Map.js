@@ -10,8 +10,6 @@ import { css, theme } from "./style";
 
 const cssMapContainer = css({
   label: "map-container",
-  lineHeight: 0,
-  overflow: "hidden",
   position: "relative",
   border: "1px solid #ccc",
   borderRadius: 0,
@@ -22,7 +20,9 @@ const cssMapContainer = css({
 
 const cssMapSVG = css({
   label: "map-svg",
-  height: "100%"
+  height: "100%",
+  borderRadius: "inherit",
+  display: "block"
 });
 
 export default class Map extends Component {

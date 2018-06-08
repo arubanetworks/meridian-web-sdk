@@ -1,16 +1,25 @@
 .back {
+  font-size: 16px;
   position: fixed;
   display: block;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   text-decoration: none;
   border-top-right-radius: 8px;
-  padding: 1em;
+  padding: 10px;
   bottom: 0;
   left: 0;
-  background: rgba(255, 255, 255, 0.5);
-  color: black;
+  background: rgba(255, 255, 255, 0.8);
+  color: #26e;
   text-shadow: 0 1px white;
   font-family: sans-serif;
-  font-weight: bold;
   z-index: 1;
+}
+
+.back::before {
+  content: "⬅ ";
+}
+
+.back:hover {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+  background: white;
 }

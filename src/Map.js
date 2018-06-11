@@ -20,7 +20,6 @@ const cssMapContainer = css({
 
 const cssMapSVG = css({
   label: "map-svg",
-  height: "100%",
   borderRadius: "inherit",
   display: "block"
 });
@@ -28,6 +27,8 @@ const cssMapSVG = css({
 export default class Map extends Component {
   static propTypes = {
     zoom: PropTypes.bool,
+    width: PropTypes.string,
+    height: PropTypes.string,
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
@@ -44,6 +45,8 @@ export default class Map extends Component {
 
   static defaultProps = {
     zoom: true,
+    width: "100%",
+    height: "100%",
     markers: {}
   };
 
@@ -122,9 +125,12 @@ export default class Map extends Component {
 
   render() {
     const { svgURL, selectedItem } = this.state;
-    const { locationID, floorID, api, markers } = this.props;
+    const { locationID, floorID, api, markers, width, height } = this.props;
     return (
-      <div className={`${cssMapContainer} meridian-map-container`}>
+      <div
+        className={`${cssMapContainer} meridian-map-container`}
+        style={{ width: width, height: height }}
+      >
         <Overlay
           onClose={this.onOverlayClose}
           data={selectedItem.data}
@@ -136,6 +142,9 @@ export default class Map extends Component {
           className={`${cssMapSVG} meridian-map-svg`}
           onClick={this.onClick}
           viewBox="0 0 1700 2200"
+          width={width}
+          height={height}
+          preserveAspectRatio="xMidYMid meet"
         >
           <g>
             <image

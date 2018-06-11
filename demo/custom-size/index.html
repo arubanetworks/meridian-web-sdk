@@ -4,23 +4,9 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Full Page | Meridian Web SDK</title>
+  <title>Custom Size | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../shared.css">
-  <style>
-    #meridian-map {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-
-    body .meridian-map-container {
-      border: 0;
-      border-radius: 0;
-    }
-  </style>
 </head>
 
 <body>
@@ -38,6 +24,10 @@
     MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
+      // width: default is '100%' (of container width)
+      width: "400px",
+      // height: default is '100%' (does not respect container height, overflow can occur)
+      height: "400px",
       markers: {
         tags: {
           all: true

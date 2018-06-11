@@ -4,21 +4,15 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Full Page | Meridian Web SDK</title>
+  <title>Multiple Maps | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../shared.css">
   <style>
-    #meridian-map {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-
-    body .meridian-map-container {
-      border: 0;
-      border-radius: 0;
+    #meridian-map,
+    #meridian-map2,
+    #meridian-map3 {
+      display: inline-block;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -26,6 +20,8 @@
 <body>
   <a class="back" href="..">Back to examples</a>
   <div id="meridian-map"></div>
+  <div id="meridian-map2"></div>
+  <div id="meridian-map3"></div>
 
   <script src="/meridian-sdk.js"></script>
   <script>
@@ -38,6 +34,30 @@
     MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
+      width: "500px",
+      height: "500px",
+      markers: {
+        tags: {
+          all: true
+        }
+      }
+    });
+    MeridianWebSDK.renderMap(document.getElementById("meridian-map2"), {
+      locationID: "5468665088573440",
+      floorID: "5653104741580800",
+      width: "400px",
+      height: "400px",
+      markers: {
+        tags: {
+          all: true
+        }
+      }
+    });
+    MeridianWebSDK.renderMap(document.getElementById("meridian-map3"), {
+      locationID: "5468665088573440",
+      floorID: "5653104741580800",
+      width: "300px",
+      height: "300px",
       markers: {
         tags: {
           all: true

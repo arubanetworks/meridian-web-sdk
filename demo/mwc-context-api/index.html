@@ -8,8 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../shared.css">
   <style>
-    body {
-      max-width: 600px;
+    #meridian-map {
+      max-width: 500px;
       margin: 0 auto;
       padding-top: 20px;
     }
@@ -31,6 +31,7 @@
     MeridianWebSDK.renderMap(document.getElementById("meridian-map"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
+      height: "500px",
       markers: {
         tags: {
           all: true

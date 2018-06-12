@@ -36,9 +36,9 @@ const cssOverlayName = css({
 const cssClose = css({
   label: "close",
   ...mixins.buttonReset,
-  width: 30,
-  height: 30,
-  fontSize: 16,
+  width: 26,
+  height: 26,
+  fontSize: 11,
   textAlign: "center",
   margin: 10,
   background: "rgba(255, 255, 255, 0.5)",

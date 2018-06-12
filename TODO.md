@@ -7,7 +7,6 @@
 - Meridian Watermark
 - Where to show messaging (looking for tag etc.)
 - what if the marker doesn't have an image?
-- tag clickability (entire icon should be clickable)
 - add text-align: left (safe guard)
 
 Messaging:

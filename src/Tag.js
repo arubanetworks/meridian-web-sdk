@@ -1,6 +1,6 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
-import { css } from "./style";
+import { css, cx } from "./style";
 
 const cssTag = css({
   label: "meridian-tag",
@@ -27,19 +27,7 @@ const Tag = ({ x, y, id, data, onClick = () => {} }) => {
     );
   }
   return (
-    <svg
-      viewBox="0 0 36 36"
-      key={id}
-      cursor="pointer"
-      pointerEvents="all"
-      fill="black"
-      width="36"
-      height="36"
-      x={x}
-      y={y}
-      onClick={onClick}
-      className={`${cssTag} meridian-tag`}
-    >
+    <svg width="30" height="30" x={x} y={y}>
       <path
         d="M18.09,7c-0.01,0-0.01,0-0.02,0c0,0-0.01,0-0.01,0C18.04,7,18.02,7,18,7C11.93,7,7,11.93,7,18s4.93,11,11,11
 c6.06,0,11-4.93,11-11C29,11.97,24.11,7.05,18.09,7z M15.09,18c0,1.64,1.33,2.98,2.98,2.98c1.64,0,2.98-1.33,2.98-2.98
@@ -48,7 +36,15 @@ c0-2.45,1.78-4.49,4.11-4.91v2.12C15.92,15.62,15.09,16.71,15.09,18z M18,27c-4.96,
 c-3.44,0.44-6.11,3.38-6.11,6.94c0,3.86,3.14,7,7,7c3.86,0,7-3.14,7-7c0-3.48-2.56-6.37-5.89-6.9V9.07C23.53,9.6,27,13.4,27,18
 C27,22.96,22.96,27,18,27z"
       />
-      <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
+      <rect
+        width="100%"
+        height="100%"
+        fill="transparent"
+        pointerEvents="all"
+        cursor="pointer"
+        onClick={onClick}
+        className={cx(cssTag, "meridian-tag")}
+      />
     </svg>
   );
 };

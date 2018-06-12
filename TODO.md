@@ -11,7 +11,6 @@
 - overlay customization (client customization, remove inline CSS)
 - what if the marker doesn't have an image?
 - zoom into single tag after initial data load
-- more than one map per page
 - throw if location and floor are not set
 - tag clickability
 

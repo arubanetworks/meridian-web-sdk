@@ -1,6 +1,6 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
-import * as d3 from "./d3";
+import * as d3 from "d3";
 
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
@@ -64,15 +64,22 @@ export default class Map extends Component {
     if (this.props.zoom && this.mapG && this.mapSVG) {
       this.mapGSelection = d3.select(this.mapG);
       const onZoom = () => {
-        console.log("onZoom!", d3.event.transform.toString());
-        this.mapGSelection.attr("transform", d3.event.transform);
+        this.mapGSelection.attr("transform", d3.zoomTransform(this.mapSVG));
       };
-      this.zoomD3 = d3.zoom().on("zoom", onZoom);
-      d3.select(this.mapSVG).call(this.zoomD3);
+      // TODO: Don't hard code this
+      const [width, height] = [2700, 3400];
+      this.zoomD3 = d3
+        .zoom()
+        .scaleExtent([0.25, 16])
+        .translateExtent([[0, 0], [width, height]])
+        .on("zoom", onZoom);
+      this.mapSVGSelection = d3.select(this.mapSVG);
+      this.mapSVGSelection.call(this.zoomD3);
     }
   }
 
-  adoptedMapSVG = null;
+  mapGSelection = null;
+  mapSVGSelection = null;
 
   setMapSVGRef = el => {
     this.mapSVG = el;
@@ -82,12 +89,18 @@ export default class Map extends Component {
     this.mapG = element;
   };
 
+  zoomBy = factor => {
+    // TODO: Don't hard code this
+    console.log(factor);
+    this.mapSVGSelection.call(this.zoomD3.scaleBy, factor);
+  };
+
   zoomIn = () => {
-    this.mapGSelection.call(this.zoomD3.scaleBy, 1.5);
+    this.zoomBy(1.25);
   };
 
   zoomOut = () => {
-    this.mapGSelection.call(this.zoomD3.scaleBy, 0.5);
+    this.zoomBy(0.75);
   };
 
   onClick = event => {

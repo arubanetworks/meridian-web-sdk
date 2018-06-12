@@ -19,7 +19,7 @@ const Tag = ({ x, y, id, data, onClick = () => {} }) => {
         y={y}
         preserveAspectRatio="xMidYMid slice"
         cursor="pointer"
-        pointerEvents="bounding-box"
+        pointerEvents="all"
         xlinkHref={imageUrl}
         onClick={onClick}
         className={`${cssTag} meridian-tag`}
@@ -31,7 +31,7 @@ const Tag = ({ x, y, id, data, onClick = () => {} }) => {
       viewBox="0 0 36 36"
       key={id}
       cursor="pointer"
-      pointerEvents="bounding-box"
+      pointerEvents="all"
       fill="black"
       width="36"
       height="36"
@@ -48,6 +48,7 @@ c0-2.45,1.78-4.49,4.11-4.91v2.12C15.92,15.62,15.09,16.71,15.09,18z M18,27c-4.96,
 c-3.44,0.44-6.11,3.38-6.11,6.94c0,3.86,3.14,7,7,7c3.86,0,7-3.14,7-7c0-3.48-2.56-6.37-5.89-6.9V9.07C23.53,9.6,27,13.4,27,18
 C27,22.96,22.96,27,18,27z"
       />
+      <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
     </svg>
   );
 };

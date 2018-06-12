@@ -7,6 +7,9 @@ import Overlay from "./Overlay";
 import Tags from "./Tags";
 import { css, theme, cx } from "./style";
 
+const ZOOM_FACTOR = 0.5;
+const ZOOM_DURATION = 200;
+
 const cssMapContainer = css({
   label: "map-container",
   position: "relative",
@@ -66,12 +69,18 @@ export default class Map extends Component {
       const onZoom = () => {
         this.mapGSelection.attr("transform", d3.zoomTransform(this.mapSVG));
       };
-      // TODO: Don't hard code this
-      const [width, height] = [2700, 3400];
+      // TODO:
+      // - Use `.filter(...)` to filter out mouse wheel events without a
+      //   modifier key, depending on user settings
+      // - Don't hard code this
+      const [width, height] = [1700, 2200];
       this.zoomD3 = d3
         .zoom()
+        // TODO: Oops more hard coding!
+        .extent([[0, 0], [width, height]])
         .scaleExtent([0.25, 16])
-        .translateExtent([[0, 0], [width, height]])
+        // TODO: Why is the translateExtent not working right?
+        // .translateExtent([[-width, -height], [width, height]])
         .on("zoom", onZoom);
       this.mapSVGSelection = d3.select(this.mapSVG);
       this.mapSVGSelection.call(this.zoomD3);
@@ -90,17 +99,19 @@ export default class Map extends Component {
   };
 
   zoomBy = factor => {
-    // TODO: Don't hard code this
-    console.log(factor);
-    this.mapSVGSelection.call(this.zoomD3.scaleBy, factor);
+    // this.mapSVGSelection.call(this.zoomD3.scaleBy, factor);
+    this.mapSVGSelection
+      .transition()
+      .duration(ZOOM_DURATION)
+      .call(this.zoomD3.scaleBy, factor);
   };
 
   zoomIn = () => {
-    this.zoomBy(1.25);
+    this.zoomBy(1 + ZOOM_FACTOR);
   };
 
   zoomOut = () => {
-    this.zoomBy(0.75);
+    this.zoomBy(1 - ZOOM_FACTOR);
   };
 
   onClick = event => {

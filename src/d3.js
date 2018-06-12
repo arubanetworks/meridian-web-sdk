@@ -1,4 +1,4 @@
-import { zoom, zoomTransform } from "d3-zoom";
+import { zoom, zoomTransform, zoomIdentity } from "d3-zoom";
 import { select, event } from "d3-selection";
 
-export { zoom, zoomTransform, select, event };
+export { zoom, zoomTransform, zoomIdentity, select, event };

@@ -17,7 +17,8 @@ const cssMapContainer = css({
   borderRadius: 0,
   background: "#fafafa",
   color: "#000",
-  fontFamily: theme.fontFamily
+  fontFamily: theme.fontFamily,
+  textAlign: "left"
 });
 
 const cssMapSVG = css({

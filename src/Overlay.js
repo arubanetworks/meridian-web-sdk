@@ -18,7 +18,6 @@ const cssOverlay = css({
 
 const cssOverlayImage = css({
   width: "100%",
-  height: 300,
   backgroundColor: "white",
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
@@ -61,7 +60,10 @@ const Overlay = ({ kind, data, onClose }) => {
       <div className={cx(cssOverlay, "meridian-overlay")}>
         <div
           className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
-          style={{ backgroundImage: `url('${data.image_url}')` }}
+          style={{
+            backgroundImage: `url('${data.image_url}')`,
+            height: data.image_url ? "300px" : "20px"
+          }}
         >
           <button
             className={cx(cssClose, "meridian-overlay-close")}

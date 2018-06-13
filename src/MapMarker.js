@@ -19,7 +19,7 @@ const MapMarker = ({ kind, mac, x, y, data, onClick = () => {} }) => {
   return null;
 };
 
-MapMarker.PropTypes = {
+MapMarker.propTypes = {
   kind: PropTypes.string.isRequired,
   mac: PropTypes.string,
   name: PropTypes.string,

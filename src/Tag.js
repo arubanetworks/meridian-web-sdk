@@ -1,56 +1,84 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
+
 import { css, cx } from "./style";
 
-const cssTag = css({
-  label: "meridian-tag",
-  clipPath: "circle()",
-  transition: "x 500ms ease, y 500ms ease"
+const cssCircleClip = css({
+  label: "meridian-svg-circle-clip",
+  clipPath: "circle()"
 });
 
-const Tag = ({ x, y, id, data, onClick = () => {} }) => {
+const cssTransitionXY = css({
+  label: "meridian-transition-xy",
+  transition: `
+    cx 500ms ease,
+    cy 500ms ease,
+    x 500ms ease,
+    y 500ms ease
+  `
+});
+
+const Tag = ({ x, y, data, onClick = () => {} }) => {
   const imageUrl = data.image_url;
   if (imageUrl) {
     return (
-      <image
-        width="23"
-        height="23"
-        x={x}
-        y={y}
-        preserveAspectRatio="xMidYMid slice"
-        cursor="pointer"
-        pointerEvents="all"
-        xlinkHref={imageUrl}
-        onClick={onClick}
-        className={`${cssTag} meridian-tag`}
-      />
+      <g cursor="pointer">
+        <circle
+          className={cssTransitionXY}
+          r="14"
+          cx={x + 14}
+          cy={y + 14}
+          fill="rgba(0, 0, 0, 0.2)"
+        />
+        <circle
+          className={cssTransitionXY}
+          r="13"
+          cx={x + 14}
+          cy={y + 14}
+          fill="white"
+        />
+        <image
+          className={cx(cssCircleClip, cssTransitionXY, "meridian-tag")}
+          width="24"
+          height="24"
+          x={x + 2}
+          y={y + 2}
+          preserveAspectRatio="xMidYMid slice"
+          pointerEvents="all"
+          xlinkHref={imageUrl}
+          onClick={onClick}
+        />
+      </g>
     );
   }
   return (
-    <svg width="30" height="30" x={x} y={y}>
-      <path
-        d="M18.09,7c-0.01,0-0.01,0-0.02,0c0,0-0.01,0-0.01,0C18.04,7,18.02,7,18,7C11.93,7,7,11.93,7,18s4.93,11,11,11
-c6.06,0,11-4.93,11-11C29,11.97,24.11,7.05,18.09,7z M15.09,18c0,1.64,1.33,2.98,2.98,2.98c1.64,0,2.98-1.33,2.98-2.98
-c0-1.29-0.83-2.38-1.97-2.79v-2.08c2.22,0.51,3.89,2.49,3.89,4.87c0,2.76-2.24,5-5,5c-2.76,0-5-2.24-5-5
-c0-2.45,1.78-4.49,4.11-4.91v2.12C15.92,15.62,15.09,16.71,15.09,18z M18,27c-4.96,0-9-4.04-9-9c0-4.65,3.54-8.48,8.07-8.95v2.01
-c-3.44,0.44-6.11,3.38-6.11,6.94c0,3.86,3.14,7,7,7c3.86,0,7-3.14,7-7c0-3.48-2.56-6.37-5.89-6.9V9.07C23.53,9.6,27,13.4,27,18
-C27,22.96,22.96,27,18,27z"
+    <g cursor="pointer">
+      <circle
+        className={cssTransitionXY}
+        r="14"
+        cx={x + 12}
+        cy={y + 12}
+        fill="rgba(0, 0, 0, 0.2)"
       />
-      <rect
-        width="100%"
-        height="100%"
-        fill="transparent"
-        pointerEvents="all"
-        cursor="pointer"
+      <circle
+        className={cssTransitionXY}
+        r="13"
+        cx={x + 12}
+        cy={y + 12}
+        fill="white"
         onClick={onClick}
-        className={cx(cssTag, "meridian-tag")}
       />
-    </svg>
+      <use
+        className={cssTransitionXY}
+        x={x - 6}
+        y={y - 6}
+        href="#meridian-tag-default"
+      />
+    </g>
   );
 };
 
-Tag.PropTypes = {
-  id: PropTypes.string.isRequired,
+Tag.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,

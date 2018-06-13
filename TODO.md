@@ -3,6 +3,8 @@
 - Figure out versioning of the SDK
 - Meridian Watermark
 - Where to show messaging (looking for tag etc.)
+- map scale?
+- don't scale map markers?
 
 Messaging:
 

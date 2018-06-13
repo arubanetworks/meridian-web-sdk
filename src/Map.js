@@ -2,6 +2,7 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
 
+import Watermark from "./Watermark";
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
 import Tags from "./Tags";
@@ -174,6 +175,7 @@ export default class Map extends Component {
           data={selectedItem.data}
           kind={selectedItem.kind}
         />
+        <Watermark />
         {this.renderZoomControls()}
         <svg
           ref={this.setMapSVGRef}

@@ -13,7 +13,8 @@ export const theme = {
   borderColor: "#eaeaea",
   buttonActiveColor: "#f0f0f0",
   buttonHoverColor: "#f8f8f8",
-  buttonSeparatorColor: "#f0f0f0"
+  buttonSeparatorColor: "#f0f0f0",
+  borderRadius: 6
 };
 
 export const mixins = {
@@ -33,7 +34,7 @@ export const mixins = {
     boxShadow: "0 0 3px rgba(0, 0, 0, 0.25)"
   },
   rounded: {
-    borderRadius: 6
+    borderRadius: theme.borderRadius
   },
   paddingMedium: {
     padding: "20px"

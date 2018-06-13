@@ -6,6 +6,7 @@
   "main": "dist/__TODO__.js",
   "scripts": {
     "start": "webpack-dev-server --watch -d --env development",
+    "nonlocal": "npm run start -- --host 0.0.0.0",
     "build": "webpack -p --mode production --env production",
     "analyze": "webpack -p --mode production --env analyze",
     "test": "echo \"Error: no test specified\" && exit 1"

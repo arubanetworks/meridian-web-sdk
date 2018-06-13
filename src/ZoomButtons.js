@@ -1,6 +1,6 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
-import { css, theme, mixins } from "./style";
+import { css, theme, mixins, cx } from "./style";
 
 const cssZoomButtons = css({
   ...mixins.shadow,
@@ -11,8 +11,8 @@ const cssZoomButtons = css({
   display: "flex",
   flexDirection: "column",
   zIndex: 1,
-  right: 10,
-  top: 10
+  right: 15,
+  top: 15
 });
 
 const styleZoomButton = {
@@ -23,7 +23,7 @@ const styleZoomButton = {
   borderRadius: 0,
   fontSize: 20,
   fontWeight: 200,
-  color: theme.brandBlue,
+  color: theme.brandBrightBlue,
   "&:hover": { background: theme.buttonHoverColor },
   "&:active": { background: theme.buttonActiveColor },
   "&:focus": { outline: "none" }
@@ -38,20 +38,16 @@ const cssZoomButtonOut = css({
   ...styleZoomButton
 });
 
-const zoom = (map, dir) => {
-  const currentZoom = map.zoom();
-  const zoomStep = 0.2;
-  const zoomVal =
-    dir === "in" ? currentZoom + zoomStep : currentZoom - zoomStep;
-  map.animate().zoom(zoomVal);
-};
-
-const ZoomButton = ({ map, dir }) => {
+const ZoomButton = ({ onClick, dir }) => {
   if (dir === "in") {
     return (
       <button
-        className={`${cssZoomButtonIn} meridian-zoom-button meridian-zoom-button-in`}
-        onClick={() => zoom(map, "in")}
+        className={cx(
+          cssZoomButtonIn,
+          "meridian-zoom-button",
+          "meridian-zoom-button-in"
+        )}
+        onClick={onClick}
       >
         +
       </button>
@@ -59,8 +55,12 @@ const ZoomButton = ({ map, dir }) => {
   } else {
     return (
       <button
-        className={`${cssZoomButtonOut} meridian-zoom-button meridian-zoom-button-out`}
-        onClick={() => zoom(map, "out")}
+        className={cx(
+          cssZoomButtonOut,
+          "meridian-zoom-button",
+          "meridian-zoom-button-out"
+        )}
+        onClick={onClick}
       >
         &minus;
       </button>
@@ -69,19 +69,20 @@ const ZoomButton = ({ map, dir }) => {
 };
 
 ZoomButton.propTypes = {
-  map: PropTypes.node,
+  zoomD3: PropTypes.node,
   dir: PropTypes.oneOf(["in", "out"])
 };
 
-const ZoomButtons = ({ map }) => (
-  <div className={`${cssZoomButtons} meridian-zoom-buttons-container`}>
-    <ZoomButton map={map} dir="in" />
-    <ZoomButton map={map} dir="out" />
+const ZoomButtons = ({ onZoomIn, onZoomOut }) => (
+  <div className={cx(cssZoomButtons, "meridian-zoom-buttons-container")}>
+    <ZoomButton onClick={onZoomIn} dir="in" />
+    <ZoomButton onClick={onZoomOut} dir="out" />
   </div>
 );
 
 ZoomButtons.propTypes = {
-  map: PropTypes.node
+  onZoomIn: PropTypes.func,
+  onZoomOut: PropTypes.func
 };
 
 export default ZoomButtons;

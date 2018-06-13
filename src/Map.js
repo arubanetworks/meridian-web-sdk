@@ -1,12 +1,14 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
-import svg from "svg.js";
-import "svg.panzoom.js";
+import * as d3 from "d3";
 
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
 import Tags from "./Tags";
-import { css, theme } from "./style";
+import { css, theme, cx } from "./style";
+
+const ZOOM_FACTOR = 0.5;
+const ZOOM_DURATION = 200;
 
 const cssMapContainer = css({
   label: "map-container",
@@ -62,23 +64,61 @@ export default class Map extends Component {
     const url = `locations/${locationID}/maps/${floorID}`;
     const { data } = await api.axios.get(url);
     this.setState({ svgURL: data.svg_url });
+    if (this.props.zoom && this.mapG && this.mapSVG) {
+      this.mapGSelection = d3.select(this.mapG);
+      const onZoom = () => {
+        this.mapGSelection.attr("transform", d3.zoomTransform(this.mapSVG));
+      };
+      // TODO:
+      // - Use `.filter(...)` to filter out mouse wheel events without a
+      //   modifier key, depending on user settings
+      // - Don't hard code this
+      const [width, height] = [1700, 2200];
+      this.zoomD3 = d3
+        .zoom()
+        // TODO: Oops more hard coding!
+        .extent([[0, 0], [width, height]])
+        .scaleExtent([0.25, 16])
+        // TODO: Why is the translateExtent not working right?
+        // .translateExtent([[-width, -height], [width, height]])
+        .on("zoom", onZoom);
+      this.mapSVGSelection = d3.select(this.mapSVG);
+      this.mapSVGSelection.call(this.zoomD3);
+    }
   }
 
-  adoptedMapSVG = null;
+  mapGSelection = null;
+  mapSVGSelection = null;
 
   setMapSVGRef = el => {
     this.mapSVG = el;
   };
 
-  initMap() {
-    // console.info("the map is like totally initialized and ready");
-  }
+  setMapGRef = element => {
+    this.mapG = element;
+  };
 
-  onClick = e => {
+  zoomBy = factor => {
+    this.mapSVGSelection
+      .transition()
+      .duration(ZOOM_DURATION)
+      .call(this.zoomD3.scaleBy, factor);
+  };
+
+  zoomIn = () => {
+    this.zoomBy(1 + ZOOM_FACTOR);
+  };
+
+  zoomOut = () => {
+    this.zoomBy(1 - ZOOM_FACTOR);
+  };
+
+  onClick = event => {
     const mapClicked =
-      this.mapSVG.isEqualNode(e.target) || this.mapImage.isEqualNode(e.target);
+      this.mapSVG.isEqualNode(event.target) ||
+      this.mapImage.isEqualNode(event.target);
     if (this.props.onMapClick && mapClicked) {
-      this.props.onMapClick(e);
+      this.props.onMapClick(event);
     } else {
       if (mapClicked) {
         this.setState({ selectedItem: {} });
@@ -114,11 +154,8 @@ export default class Map extends Component {
   };
 
   renderZoomControls() {
-    if (this.props.zoom && this.mapSVG) {
-      const map = svg.adopt(this.mapSVG);
-      map.panZoom({ zoomMin: 0.25, zoomMax: 20 });
-      this.adoptedMapSVG = map;
-      return <ZoomButtons map={map} />;
+    if (this.props.zoom) {
+      return <ZoomButtons onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />;
     }
     return null;
   }
@@ -128,7 +165,7 @@ export default class Map extends Component {
     const { locationID, floorID, api, markers, width, height } = this.props;
     return (
       <div
-        className={`${cssMapContainer} meridian-map-container`}
+        className={cx(cssMapContainer, "meridian-map-container")}
         style={{ width: width, height: height }}
       >
         <Overlay
@@ -139,14 +176,14 @@ export default class Map extends Component {
         {this.renderZoomControls()}
         <svg
           ref={this.setMapSVGRef}
-          className={`${cssMapSVG} meridian-map-svg`}
+          className={cx(cssMapSVG, "meridian-map-svg")}
           onClick={this.onClick}
           viewBox="0 0 1700 2200"
           width={width}
           height={height}
           preserveAspectRatio="xMidYMid meet"
         >
-          <g>
+          <g ref={this.setMapGRef}>
             <image
               width="1700"
               height="2200"

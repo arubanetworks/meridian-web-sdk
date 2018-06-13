@@ -17,6 +17,11 @@ const common = {
     __dirname: true,
     fs: "empty"
   },
+  resolve: {
+    alias: {
+      d3: path.resolve(__dirname, "src/d3")
+    }
+  },
   entry: path.resolve(__dirname, "src/index.js"),
   output: {
     filename: "meridian-sdk.js",

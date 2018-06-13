@@ -99,7 +99,6 @@ export default class Map extends Component {
   };
 
   zoomBy = factor => {
-    // this.mapSVGSelection.call(this.zoomD3.scaleBy, factor);
     this.mapSVGSelection
       .transition()
       .duration(ZOOM_DURATION)

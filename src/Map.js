@@ -79,7 +79,7 @@ export default class Map extends Component {
         .zoom()
         // TODO: Oops more hard coding!
         .extent([[0, 0], [width, height]])
-        .scaleExtent([0.25, 16])
+        .scaleExtent([0.5, 16])
         // TODO: Why is the translateExtent not working right?
         // .translateExtent([[-width, -height], [width, height]])
         .on("zoom", onZoom);

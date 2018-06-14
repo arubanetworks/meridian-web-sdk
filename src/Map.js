@@ -104,18 +104,35 @@ export default class Map extends Component {
 
   mapInnerSelection = null;
   mapOuterSelection = null;
+  mapOuter = null;
+  mapInner = null;
 
-  setMapSVGRef = el => {
+  setMapOuterRef = el => {
     this.mapOuter = el;
   };
 
-  setMapGRef = element => {
+  setMapInnerRef = element => {
     this.mapInner = element;
   };
 
-  // zoomToPoint = (x, y, k) => {
-  //   // TODO
-  // };
+  getMapOuterSize() {
+    return {
+      width: this.mapOuter.clientWidth,
+      height: this.mapOuter.clientHeight
+    };
+  }
+
+  zoomToPoint = (x, y, k) => {
+    const { width, height } = this.getMapOuterSize();
+    // I'm so sorry, but it's really hard to center things, and also math
+    const t = d3.zoomIdentity
+      .translate(-k * x + width / 2, -k * y + height / 2)
+      .scale(k);
+    this.mapOuterSelection
+      .transition()
+      .duration(ZOOM_DURATION)
+      .call(this.zoomD3.transform, t);
+  };
 
   zoomBy = factor => {
     this.mapOuterSelection
@@ -166,9 +183,7 @@ export default class Map extends Component {
   };
 
   onTagFound = tag => {
-    // this.zoomToPoint(tag.x, tag.y, SOME_SCALE_FACTOR);
-    // TODO
-    tag;
+    this.zoomToPoint(tag.x, tag.y, 2);
   };
 
   renderZoomControls() {
@@ -208,12 +223,12 @@ C27,22.96,22.96,27,18,27z"
         <Watermark />
         {this.renderZoomControls()}
         <div
-          ref={this.setMapSVGRef}
+          ref={this.setMapOuterRef}
           className={cssMapSVG}
           onClick={this.onClick}
           style={{ width, height }}
         >
-          <div ref={this.setMapGRef} style={{ transformOrigin: "0 0 0" }}>
+          <div ref={this.setMapInnerRef} style={{ transformOrigin: "0 0 0" }}>
             <img
               src={mapData && mapData.svg_url}
               ref={el => {

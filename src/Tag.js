@@ -6,6 +6,7 @@ import { css, cx, mixins } from "./style";
 const cssTag = css({
   label: "meridian-tag",
   ...mixins.shadow,
+  cursor: "pointer",
   borderRadius: "100%",
   position: "absolute",
   backgroundColor: "white",

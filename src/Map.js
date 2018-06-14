@@ -86,7 +86,8 @@ export default class Map extends Component {
         .zoom()
         // TODO: Oops more hard coding!
         // .extent([[-width, -height], [0, 0]])
-        .extent([[0, 0], [width, height]])
+        // .extent([[0, 0], [width, height]])
+        .extent([[-1700 / 2, -2200 / 2], [1700 / 2, 1200 / 2]])
         // .extent([[0, 0], [1700, 1200]])
         // .extent([[width, height], [0, 0]])
         // .extent([[-width / 2, -height / 2], [width / 2, height / 2]])
@@ -193,11 +194,33 @@ export default class Map extends Component {
           onClick={this.onClick}
           style={{ width, height }}
         >
-          <div ref={this.setMapGRef} style={{ transformOrigin: "center" }}>
+          <div ref={this.setMapGRef} style={{ transformOrigin: "0 0 0" }}>
             <img
               src={svgURL}
               ref={el => {
                 this.mapImage = el;
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                background: "red",
+                width: 30,
+                height: 30,
+                borderRadius: "100%",
+                left: 1700 / 2,
+                top: 2200 / 2
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                background: "green",
+                width: 30,
+                height: 30,
+                borderRadius: "100%",
+                left: "50%",
+                top: "50%"
               }}
             />
             <Tags

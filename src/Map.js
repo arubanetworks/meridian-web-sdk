@@ -25,7 +25,8 @@ const cssMapContainer = css({
 const cssMapSVG = css({
   label: "map-svg",
   borderRadius: "inherit",
-  display: "block"
+  display: "block",
+  overflow: "hidden"
 });
 
 export default class Map extends Component {
@@ -71,24 +72,32 @@ export default class Map extends Component {
       const onZoom = () => {
         const { k, x, y } = d3.zoomTransform(this.mapSVG);
         const t = `translate(${x}px, ${y}px) scale(${k})`;
+        console.log("onZoom!", t);
         this.mapGSelection.style("transform", t);
       };
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
       // - Don't hard code this
-      const width = this.mapSVG.clientWidth;
-      const height = this.mapSVG.clientHeight;
+      // const width = this.mapSVG.clientWidth;
+      // const height = this.mapSVG.clientHeight;
+      const { width, height } = this.mapSVG.getBoundingClientRect();
       this.zoomD3 = d3
         .zoom()
         // TODO: Oops more hard coding!
+        // .extent([[-width, -height], [0, 0]])
         .extent([[0, 0], [width, height]])
+        // .extent([[0, 0], [1700, 1200]])
+        // .extent([[width, height], [0, 0]])
+        // .extent([[-width / 2, -height / 2], [width / 2, height / 2]])
+        // .translateExtent([[-width, -height], [width, height]])
         .scaleExtent([0.5, 16])
         // TODO: Why is the translateExtent not working right?
-        // .translateExtent([[-width, -height], [width, height]])
         .on("zoom", onZoom);
       this.mapSVGSelection = d3.select(this.mapSVG);
       this.mapSVGSelection.call(this.zoomD3);
+      // this.mapSVGSelection.call(this.zoomD3.translateTo, width / 2, height / 2);
+      this.mapSVGSelection.call(this.zoomD3.translateTo, 1700 / 2, 2200 / 2);
     }
   }
 
@@ -182,13 +191,10 @@ export default class Map extends Component {
           ref={this.setMapSVGRef}
           className={cx(cssMapSVG, "meridian-map-svg")}
           onClick={this.onClick}
-          width={width}
-          height={height}
+          style={{ width, height }}
         >
-          <div ref={this.setMapGRef}>
+          <div ref={this.setMapGRef} style={{ transformOrigin: "center" }}>
             <img
-              width="1700"
-              height="2200"
               src={svgURL}
               ref={el => {
                 this.mapImage = el;

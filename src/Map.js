@@ -9,7 +9,7 @@ import Tags from "./Tags";
 import { css, theme, cx } from "./style";
 
 const ZOOM_FACTOR = 0.5;
-const ZOOM_DURATION = 200;
+const ZOOM_DURATION = 250;
 
 const cssMapContainer = css({
   label: "map-container",
@@ -25,7 +25,8 @@ const cssMapContainer = css({
 const cssMapSVG = css({
   label: "map-svg",
   borderRadius: "inherit",
-  display: "block"
+  display: "block",
+  overflow: "hidden"
 });
 
 export default class Map extends Component {
@@ -55,6 +56,7 @@ export default class Map extends Component {
   };
 
   state = {
+    mapData: null,
     svgURL: null,
     tagsConnection: null,
     tagsStatus: "Connecting",
@@ -65,43 +67,75 @@ export default class Map extends Component {
     const { locationID, floorID, api } = this.props;
     const url = `locations/${locationID}/maps/${floorID}`;
     const { data } = await api.axios.get(url);
-    this.setState({ svgURL: data.svg_url });
-    if (this.props.zoom && this.mapG && this.mapSVG) {
-      this.mapGSelection = d3.select(this.mapG);
+    this.setState({ mapData: data }, () => {
+      this.addZoomBehavior();
+    });
+  }
+
+  addZoomBehavior() {
+    if (this.props.zoom && this.mapInner && this.mapOuter) {
+      this.mapInnerSelection = d3.select(this.mapInner);
       const onZoom = () => {
-        this.mapGSelection.attr("transform", d3.zoomTransform(this.mapSVG));
+        const { k, x, y } = d3.zoomTransform(this.mapOuter);
+        const t = `translate(${x}px, ${y}px) scale(${k})`;
+        this.mapInnerSelection.style("transform", t);
       };
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
-      // - Don't hard code this
-      const [width, height] = [1700, 2200];
+      const { width, height } = this.state.mapData;
       this.zoomD3 = d3
         .zoom()
-        // TODO: Oops more hard coding!
-        .extent([[0, 0], [width, height]])
         .scaleExtent([0.5, 16])
         // TODO: Why is the translateExtent not working right?
-        // .translateExtent([[-width, -height], [width, height]])
+        .duration(ZOOM_DURATION)
         .on("zoom", onZoom);
-      this.mapSVGSelection = d3.select(this.mapSVG);
-      this.mapSVGSelection.call(this.zoomD3);
+      this.mapOuterSelection = d3.select(this.mapOuter);
+      this.mapOuterSelection.call(this.zoomD3);
+      this.mapOuterSelection.call(
+        this.zoomD3.translateTo,
+        width / 2,
+        height / 2
+      );
+      // TODO: Figure out the appropriate scale level to show the "whole" map
+      this.mapOuterSelection.call(this.zoomD3.scaleTo, 0.5);
     }
   }
 
-  mapGSelection = null;
-  mapSVGSelection = null;
+  mapInnerSelection = null;
+  mapOuterSelection = null;
+  mapOuter = null;
+  mapInner = null;
 
-  setMapSVGRef = el => {
-    this.mapSVG = el;
+  setMapOuterRef = el => {
+    this.mapOuter = el;
   };
 
-  setMapGRef = element => {
-    this.mapG = element;
+  setMapInnerRef = element => {
+    this.mapInner = element;
+  };
+
+  getMapOuterSize() {
+    return {
+      width: this.mapOuter.clientWidth,
+      height: this.mapOuter.clientHeight
+    };
+  }
+
+  zoomToPoint = (x, y, k) => {
+    const { width, height } = this.getMapOuterSize();
+    // I'm so sorry, but it's really hard to center things, and also math
+    const t = d3.zoomIdentity
+      .translate(-k * x + width / 2, -k * y + height / 2)
+      .scale(k);
+    this.mapOuterSelection
+      .transition()
+      .duration(ZOOM_DURATION)
+      .call(this.zoomD3.transform, t);
   };
 
   zoomBy = factor => {
-    this.mapSVGSelection
+    this.mapOuterSelection
       .transition()
       .duration(ZOOM_DURATION)
       .call(this.zoomD3.scaleBy, factor);
@@ -117,7 +151,7 @@ export default class Map extends Component {
 
   onClick = event => {
     const mapClicked =
-      this.mapSVG.isEqualNode(event.target) ||
+      this.mapOuter.isEqualNode(event.target) ||
       this.mapImage.isEqualNode(event.target);
     if (this.props.onMapClick && mapClicked) {
       this.props.onMapClick(event);
@@ -149,10 +183,7 @@ export default class Map extends Component {
   };
 
   onTagFound = tag => {
-    if (this.adoptedMapSVG) {
-      const { x, y } = tag;
-      this.adoptedMapSVG.zoom(1, { x, y });
-    }
+    this.zoomToPoint(tag.x, tag.y, 2);
   };
 
   renderZoomControls() {
@@ -163,29 +194,14 @@ export default class Map extends Component {
   }
 
   render() {
-    const { svgURL, selectedItem } = this.state;
+    const { mapData, selectedItem } = this.state;
     const { locationID, floorID, api, markers, width, height } = this.props;
     return (
       <div
         className={cx(cssMapContainer, "meridian-map-container")}
-        style={{ width: width, height: height }}
+        style={{ width, height }}
       >
-        <Overlay
-          onClose={this.onOverlayClose}
-          data={selectedItem.data}
-          kind={selectedItem.kind}
-        />
-        <Watermark />
-        {this.renderZoomControls()}
-        <svg
-          ref={this.setMapSVGRef}
-          className={cx(cssMapSVG, "meridian-map-svg")}
-          onClick={this.onClick}
-          viewBox="0 0 1700 2200"
-          width={width}
-          height={height}
-          preserveAspectRatio="xMidYMid meet"
-        >
+        <svg style={{ display: "none" }}>
           <def>
             <symbol id="meridian-tag-default">
               <path
@@ -198,11 +214,23 @@ C27,22.96,22.96,27,18,27z"
               />
             </symbol>
           </def>
-          <g ref={this.setMapGRef}>
-            <image
-              width="1700"
-              height="2200"
-              xlinkHref={svgURL}
+        </svg>
+        <Overlay
+          onClose={this.onOverlayClose}
+          data={selectedItem.data}
+          kind={selectedItem.kind}
+        />
+        <Watermark />
+        {this.renderZoomControls()}
+        <div
+          ref={this.setMapOuterRef}
+          className={cssMapSVG}
+          onClick={this.onClick}
+          style={{ width, height }}
+        >
+          <div ref={this.setMapInnerRef} style={{ transformOrigin: "0 0 0" }}>
+            <img
+              src={mapData && mapData.svg_url}
               ref={el => {
                 this.mapImage = el;
               }}
@@ -216,8 +244,8 @@ C27,22.96,22.96,27,18,27z"
               onUpdate={this.onTagsUpdate}
               onFound={this.onTagFound}
             />
-          </g>
-        </svg>
+          </div>
+        </div>
       </div>
     );
   }

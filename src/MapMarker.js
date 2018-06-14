@@ -2,10 +2,19 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 import Tag from "./Tag";
 
-const MapMarker = ({ kind, mac, x, y, data, onClick = () => {} }) => {
+const MapMarker = ({
+  kind,
+  mac,
+  x,
+  y,
+  data,
+  mapZoomFactor,
+  onClick = () => {}
+}) => {
   if (kind === "tag") {
     return (
       <Tag
+        mapZoomFactor={mapZoomFactor}
         id={mac}
         x={x}
         y={y}
@@ -20,6 +29,7 @@ const MapMarker = ({ kind, mac, x, y, data, onClick = () => {} }) => {
 };
 
 MapMarker.propTypes = {
+  mapZoomFactor: PropTypes.number.isRequired,
   kind: PropTypes.string.isRequired,
   mac: PropTypes.string,
   name: PropTypes.string,

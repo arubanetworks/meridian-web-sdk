@@ -11,6 +11,7 @@ export default class Tags extends Component {
   };
 
   static propTypes = {
+    mapZoomFactor: PropTypes.number.isRequired,
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
@@ -204,12 +205,13 @@ export default class Tags extends Component {
 
   render() {
     const { tagsByMAC } = this.state;
-    const { onMarkerClick } = this.props;
+    const { onMarkerClick, mapZoomFactor } = this.props;
     const markers = Object.keys(tagsByMAC).map(mac => {
       const t = tagsByMAC[mac];
       const { x, y, name, data } = t;
       return (
         <MapMarker
+          mapZoomFactor={mapZoomFactor}
           key={mac}
           kind="tag"
           mac={mac}

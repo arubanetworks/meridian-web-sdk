@@ -56,6 +56,7 @@ export default class Map extends Component {
   };
 
   state = {
+    mapZoomFactor: 0.5,
     mapData: null,
     svgURL: null,
     tagsConnection: null,
@@ -79,6 +80,7 @@ export default class Map extends Component {
         const { k, x, y } = d3.zoomTransform(this.mapOuter);
         const t = `translate(${x}px, ${y}px) scale(${k})`;
         this.mapInnerSelection.style("transform", t);
+        this.setState({ mapZoomFactor: k });
       };
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
@@ -238,6 +240,7 @@ C27,22.96,22.96,27,18,27z"
               }}
             />
             <Tags
+              mapZoomFactor={this.state.mapZoomFactor}
               locationID={locationID}
               floorID={floorID}
               api={api}

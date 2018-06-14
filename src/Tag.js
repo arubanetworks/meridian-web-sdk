@@ -30,20 +30,21 @@ const cssTag = css({
   }
 });
 
-// Gotta subtract half the size to line up the center of the circle on the point
-const Tag = ({ x, y, data, onClick = () => {} }) => {
+const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
+  const k = 1 / mapZoomFactor;
+  const transform = `scale(${k})`;
   const imageURL = data.image_url;
+  const left = x - SIZE / 2;
+  const top = y - SIZE / 2;
+  const className = cx(cssTag, "meridian-tag");
   if (imageURL) {
+    const backgroundImage = `url('${imageURL}')`;
     return (
       <div
         aria-role="button"
         tabIndex="0"
-        className={cx(cssTag, "meridian-tag")}
-        style={{
-          left: x - SIZE / 2,
-          top: y - SIZE / 2,
-          backgroundImage: `url('${imageURL}')`
-        }}
+        className={className}
+        style={{ left, top, backgroundImage, transform }}
         onClick={onClick}
       />
     );
@@ -52,11 +53,8 @@ const Tag = ({ x, y, data, onClick = () => {} }) => {
     <div
       aria-role="button"
       tabIndex="0"
-      className={cx(cssTag, "meridian-tag")}
-      style={{
-        left: x - SIZE / 2,
-        top: y - SIZE / 2
-      }}
+      className={className}
+      style={{ left, top, transform }}
       onClick={onClick}
     >
       <svg viewBox="0 0 36 36" style={{ margin: -8 }}>
@@ -67,6 +65,7 @@ const Tag = ({ x, y, data, onClick = () => {} }) => {
 };
 
 Tag.propTypes = {
+  mapZoomFactor: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,

@@ -1,4 +1,11 @@
-- Possible utilize prop type warnings in production
+### NEXT
+
+- Placemarks!
+- Change tag `categories` to `labels`
+- Expose API object representing the map with methods and such
+
+### OTHER
+
 - Make a new hidden page with copy/paste API code
 - Figure out versioning of the SDK
 - Can we fix the 3 circle per tag problem?

@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import { css, cx, mixins } from "./style";
 
+const SIZE = 24;
+
 const cssTag = css({
   label: "meridian-tag",
   ...mixins.shadow,
@@ -15,8 +17,8 @@ const cssTag = css({
   backgroundSize: "cover",
   border: "2px solid white",
   overflow: "hidden",
-  width: 24,
-  height: 24,
+  width: SIZE,
+  height: SIZE,
   transition: `
     top 500ms ease,
     left 500ms ease
@@ -28,6 +30,7 @@ const cssTag = css({
   }
 });
 
+// Gotta subtract half the size to line up the center of the circle on the point
 const Tag = ({ x, y, data, onClick = () => {} }) => {
   const imageURL = data.image_url;
   if (imageURL) {
@@ -37,8 +40,8 @@ const Tag = ({ x, y, data, onClick = () => {} }) => {
         tabIndex="0"
         className={cx(cssTag, "meridian-tag")}
         style={{
-          left: x,
-          top: y,
+          left: x - SIZE / 2,
+          top: y - SIZE / 2,
           backgroundImage: `url('${imageURL}')`
         }}
         onClick={onClick}
@@ -51,8 +54,8 @@ const Tag = ({ x, y, data, onClick = () => {} }) => {
       tabIndex="0"
       className={cx(cssTag, "meridian-tag")}
       style={{
-        left: x,
-        top: y
+        left: x - SIZE / 2,
+        top: y - SIZE / 2
       }}
       onClick={onClick}
     >

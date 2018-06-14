@@ -51,7 +51,7 @@ export default class Map extends Component {
   static defaultProps = {
     zoom: true,
     width: "100%",
-    height: "100%",
+    height: "400px",
     markers: {}
   };
 
@@ -86,7 +86,9 @@ export default class Map extends Component {
       const { width, height } = this.state.mapData;
       this.zoomD3 = d3
         .zoom()
-        .scaleExtent([0.5, 16])
+        // TODO: We're gonna need to calculate reasonable extents here based on
+        // the container size and the map size
+        .scaleExtent([0.125, 16])
         // TODO: Why is the translateExtent not working right?
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom);

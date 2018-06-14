@@ -14,6 +14,7 @@ const cssTag = css({
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
   border: "2px solid white",
+  overflow: "hidden",
   width: 24,
   height: 24,
   transition: `
@@ -29,9 +30,21 @@ const cssTag = css({
 
 const Tag = ({ x, y, data, onClick = () => {} }) => {
   const imageURL = data.image_url;
-  const background = imageURL
-    ? { backgroundImage: `url('${imageURL}')` }
-    : { backgroundColor: "black" };
+  if (imageURL) {
+    return (
+      <div
+        aria-role="button"
+        tabIndex="0"
+        className={cx(cssTag, "meridian-tag")}
+        style={{
+          left: x,
+          top: y,
+          backgroundImage: `url('${imageURL}')`
+        }}
+        onClick={onClick}
+      />
+    );
+  }
   return (
     <div
       aria-role="button"
@@ -39,11 +52,14 @@ const Tag = ({ x, y, data, onClick = () => {} }) => {
       className={cx(cssTag, "meridian-tag")}
       style={{
         left: x,
-        top: y,
-        ...background
+        top: y
       }}
       onClick={onClick}
-    />
+    >
+      <svg viewBox="0 0 36 36" style={{ margin: -8 }}>
+        <use href="#meridian-tag-default" />
+      </svg>
+    </div>
   );
 };
 

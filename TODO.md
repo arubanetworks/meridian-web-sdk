@@ -8,6 +8,7 @@
 
 - Include a mode where the SVG is rasterized at a few specific sizes in order to
   increase performance (mostly a Firefox thing)
+- Center the map markers (offset by half width/height)
 - Make a new hidden page with copy/paste API code
 - Figure out versioning of the SDK
 - Can we fix the 3 circle per tag problem?

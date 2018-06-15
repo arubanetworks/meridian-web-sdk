@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 
 import { css, cx, mixins } from "./style";
 
-const SIZE = 24;
-
 const cssTag = css({
   label: "meridian-tag",
   ...mixins.shadow,
@@ -17,8 +15,6 @@ const cssTag = css({
   backgroundSize: "cover",
   border: "2px solid white",
   overflow: "hidden",
-  width: SIZE,
-  height: SIZE,
   transition: `
     top 500ms ease,
     left 500ms ease
@@ -31,11 +27,14 @@ const cssTag = css({
 });
 
 const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
+  const size = 32;
   const k = 1 / mapZoomFactor;
   const transform = `scale(${k})`;
   const imageURL = data.image_url;
-  const left = x - SIZE / 2;
-  const top = y - SIZE / 2;
+  const width = size;
+  const height = size;
+  const left = x - size / 2;
+  const top = y - size / 2;
   const className = cx(cssTag, "meridian-tag");
   if (imageURL) {
     const backgroundImage = `url('${imageURL}')`;
@@ -44,7 +43,7 @@ const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
         aria-role="button"
         tabIndex="0"
         className={className}
-        style={{ left, top, backgroundImage, transform }}
+        style={{ width, height, left, top, backgroundImage, transform }}
         onClick={onClick}
       />
     );
@@ -54,7 +53,7 @@ const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
       aria-role="button"
       tabIndex="0"
       className={className}
-      style={{ left, top, transform }}
+      style={{ width, height, left, top, transform }}
       onClick={onClick}
     >
       <svg viewBox="0 0 36 36" style={{ margin: -8 }}>

@@ -28,23 +28,31 @@ const cssPlacemark = css({
   }
 });
 
+const getIconName = ({ type }) => {
+  if (type) {
+    return "placemark-" + type.replace(/_/g, "-");
+  }
+  return "placemark";
+};
+
+// TODO: Show the name for label placemarks instead of an icon
 const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
   const size = 24;
   const k = 1 / mapZoomFactor;
-  // const imageURL = data.image_url;
   const className = cx(cssPlacemark, "meridian-placemark");
+  const iconName = getIconName(data);
+  // TODO: Maybe not our final location?
+  const prefix =
+    "https://storage.googleapis.com/meridian-web-sdk-assets/placemarks/";
   const style = {
     width: size,
     height: size,
     left: x,
     top: y,
-    transform: `translate(-50%, -50%) scale(${k})`
+    transform: `translate(-50%, -50%) scale(${k})`,
+    backgroundImage: `url('${prefix}${iconName}.svg')`
   };
-  return (
-    <button className={className} onClick={onClick} style={style}>
-      <span style={{ fontSize: 8 }}>{data.id}</span>
-    </button>
-  );
+  return <button className={className} onClick={onClick} style={style} />;
 };
 
 Placemark.propTypes = {

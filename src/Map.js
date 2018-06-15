@@ -16,14 +16,14 @@ const cssMapContainer = css({
   display: "block",
   position: "relative",
   borderRadius: "inherit",
-  background: "transparent",
+  background: "#fafafa",
   color: "#000",
   fontFamily: theme.fontFamily,
   textAlign: "left"
 });
 
-const cssMapSVG = css({
-  label: "map-svg",
+const cssMapOuter = css({
+  label: "map-outer",
   borderRadius: "inherit",
   display: "block",
   overflow: "hidden"
@@ -85,7 +85,7 @@ export default class Map extends Component {
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
-      const { width, height } = this.state.mapData;
+      const { mapData } = this.state;
       this.zoomD3 = d3
         .zoom()
         // TODO: We're gonna need to calculate reasonable extents here based on
@@ -98,11 +98,16 @@ export default class Map extends Component {
       this.mapOuterSelection.call(this.zoomD3);
       this.mapOuterSelection.call(
         this.zoomD3.translateTo,
-        width / 2,
-        height / 2
+        mapData.width / 2,
+        mapData.height / 2
       );
-      // TODO: Figure out the appropriate scale level to show the "whole" map
-      this.mapOuterSelection.call(this.zoomD3.scaleTo, 0.5);
+      const outerSize = this.getMapOuterSize();
+      this.mapOuterSelection.call(
+        this.zoomD3.scaleTo,
+        // TODO: Figure out the appropriate scale level to show the "whole" map.
+        // This is currently just a quick calculation that seems to work ok.
+        (0.5 * outerSize.width) / mapData.width
+      );
     }
   }
 
@@ -228,7 +233,7 @@ C27,22.96,22.96,27,18,27z"
         {this.renderZoomControls()}
         <div
           ref={this.setMapOuterRef}
-          className={cssMapSVG}
+          className={cx(cssMapOuter, "meridian-map-background")}
           onClick={this.onClick}
           style={{ width, height }}
         >

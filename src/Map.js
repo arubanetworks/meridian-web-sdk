@@ -40,7 +40,7 @@ export default class Map extends Component {
     markers: PropTypes.shape({
       tags: PropTypes.shape({
         all: PropTypes.bool,
-        categories: PropTypes.arrayOf(PropTypes.string),
+        labels: PropTypes.arrayOf(PropTypes.string),
         ids: PropTypes.arrayOf(PropTypes.string)
       })
     }),

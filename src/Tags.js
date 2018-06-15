@@ -17,7 +17,7 @@ export default class Tags extends Component {
     api: PropTypes.object,
     markers: PropTypes.shape({
       all: PropTypes.bool,
-      categories: PropTypes.arrayOf(PropTypes.string),
+      labels: PropTypes.arrayOf(PropTypes.string),
       ids: PropTypes.arrayOf(PropTypes.string)
     }),
     onMarkerClick: PropTypes.func,
@@ -46,10 +46,10 @@ export default class Tags extends Component {
   }
 
   filterBy() {
-    const { ids, categories } = this.props.markers;
+    const { ids, labels } = this.props.markers;
     if (ids && Array.isArray(ids) && ids.length) {
       return "ID";
-    } else if (categories && Array.isArray(categories) && categories.length) {
+    } else if (labels && Array.isArray(labels) && labels.length) {
       return "CATEGORY";
     }
     return null;
@@ -103,13 +103,13 @@ export default class Tags extends Component {
   }
 
   filterTagsByCategory(tags) {
-    const { categories } = this.props.markers;
+    const { labels } = this.props.markers;
     return Object.keys(tags).reduce((obj, mac) => {
       const tag = tags[mac];
       const tagCatObjects = tag.data.tags;
       if (tagCatObjects.length) {
         const tagCats = tagCatObjects.map(obj => obj.name);
-        const match = tagCats.some(category => categories.includes(category));
+        const match = tagCats.some(category => labels.includes(category));
         if (match) {
           obj[mac] = tags[mac];
         }
@@ -128,7 +128,7 @@ export default class Tags extends Component {
       const tagCatObjects = tag.data.tags;
       if (tagCatObjects.length) {
         const tagCats = tagCatObjects.map(obj => obj.name);
-        return tagCats.some(category => markers.categories.includes(category));
+        return tagCats.some(category => markers.labels.includes(category));
       }
       return false;
     }

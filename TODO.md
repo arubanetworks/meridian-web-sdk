@@ -1,7 +1,7 @@
 ### NEXT
 
 - Placemarks!
-- Change tag `categories` to `labels`
+- Should labels be case insensitive?
 - Expose API object representing the map with methods and such
 
 ### OTHER

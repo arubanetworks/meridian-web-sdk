@@ -29,13 +29,15 @@ const cssTag = css({
 const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
   const size = 32;
   const k = 1 / mapZoomFactor;
-  const transform = `scale(${k})`;
   const imageURL = data.image_url;
-  const width = size;
-  const height = size;
-  const left = x - size / 2;
-  const top = y - size / 2;
   const className = cx(cssTag, "meridian-tag");
+  const style = {
+    width: size,
+    height: size,
+    left: x,
+    top: y,
+    transform: `translate(-50%, -50%) scale(${k})`
+  };
   if (imageURL) {
     const backgroundImage = `url('${imageURL}')`;
     return (
@@ -43,8 +45,8 @@ const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
         aria-role="button"
         tabIndex="0"
         className={className}
-        style={{ width, height, left, top, backgroundImage, transform }}
         onClick={onClick}
+        style={{ ...style, backgroundImage }}
       />
     );
   }
@@ -53,8 +55,8 @@ const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
       aria-role="button"
       tabIndex="0"
       className={className}
-      style={{ width, height, left, top, transform }}
       onClick={onClick}
+      style={style}
     >
       <svg viewBox="0 0 36 36" style={{ margin: -8 }}>
         <use href="#meridian-tag-default" />

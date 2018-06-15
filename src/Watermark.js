@@ -18,13 +18,14 @@ const Logo = () => (
 
 const cssWatermark = css({
   label: "watermark",
-  background: "rgba(250, 250, 250, 0.6)",
+  background: "rgba(255, 255, 255, 0.6)",
   overflow: "hidden",
   position: "absolute",
   zIndex: 1,
   right: 0,
   bottom: 0,
-  borderTopLeftRadius: theme.borderRadius
+  borderTopLeftRadius: theme.borderRadius,
+  borderBottomRightRadius: "inherit"
 });
 
 const Watermark = () => (

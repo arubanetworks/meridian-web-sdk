@@ -13,10 +13,10 @@ const ZOOM_DURATION = 250;
 
 const cssMapContainer = css({
   label: "map-container",
+  display: "block",
   position: "relative",
-  border: "1px solid #ccc",
-  borderRadius: 0,
-  background: "#fafafa",
+  borderRadius: "inherit",
+  background: "transparent",
   color: "#000",
   fontFamily: theme.fontFamily,
   textAlign: "left"

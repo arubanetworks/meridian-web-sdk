@@ -86,12 +86,12 @@ export default class Map extends Component {
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
       const { mapData } = this.state;
+      const outerSize = this.getMapOuterSize();
       this.zoomD3 = d3
         .zoom()
         // TODO: We're gonna need to calculate reasonable extents here based on
         // the container size and the map size
         .scaleExtent([0.125, 14])
-        // .translateExtent([[0, 0], [mapData.width, mapData.height]])
         // TODO: Why is the translateExtent not working right?
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom);
@@ -102,7 +102,6 @@ export default class Map extends Component {
         mapData.width / 2,
         mapData.height / 2
       );
-      const outerSize = this.getMapOuterSize();
       this.mapOuterSelection.call(
         this.zoomD3.scaleTo,
         // TODO: Figure out the appropriate scale level to show the "whole" map.

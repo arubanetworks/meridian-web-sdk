@@ -6,13 +6,12 @@ import Watermark from "./Watermark";
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
 import Tags from "./Tags";
-import { css, theme, cx, mixins } from "./style";
+import { css, theme, cx } from "./style";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
 
 const cssMapContainer = css({
-  ...mixins.borderBox,
   label: "map-container",
   position: "relative",
   border: "1px solid #ccc",

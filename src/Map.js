@@ -6,6 +6,7 @@ import Watermark from "./Watermark";
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
 import Tags from "./Tags";
+import Placemarks from "./Placemarks";
 import { css, theme, cx } from "./style";
 
 const ZOOM_FACTOR = 0.5;
@@ -58,6 +59,7 @@ export default class Map extends Component {
   state = {
     mapZoomFactor: 0.5,
     mapData: null,
+    placemarksData: null,
     svgURL: null,
     tagsConnection: null,
     tagsStatus: "Connecting",
@@ -66,8 +68,8 @@ export default class Map extends Component {
 
   async componentDidMount() {
     const { locationID, floorID, api } = this.props;
-    const url = `locations/${locationID}/maps/${floorID}`;
-    const { data } = await api.axios.get(url);
+    const mapURL = `locations/${locationID}/maps/${floorID}`;
+    const { data } = await api.axios.get(mapURL);
     this.setState({ mapData: data }, () => {
       this.addZoomBehavior();
     });
@@ -229,6 +231,14 @@ export default class Map extends Component {
               ref={el => {
                 this.mapImage = el;
               }}
+            />
+            <Placemarks
+              mapZoomFactor={this.state.mapZoomFactor}
+              locationID={locationID}
+              floorID={floorID}
+              api={api}
+              markers={markers.placemarks}
+              onMarkerClick={this.onMarkerClick}
             />
             <Tags
               mapZoomFactor={this.state.mapZoomFactor}

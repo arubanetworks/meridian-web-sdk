@@ -1,10 +1,12 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
+
 import Tag from "./Tag";
+import Placemark from "./Placemark";
 
 const MapMarker = ({
   kind,
-  mac,
+  id,
   x,
   y,
   data,
@@ -15,7 +17,20 @@ const MapMarker = ({
     return (
       <Tag
         mapZoomFactor={mapZoomFactor}
-        id={mac}
+        id={id}
+        x={x}
+        y={y}
+        data={data}
+        onClick={() => {
+          onClick({ kind, data });
+        }}
+      />
+    );
+  } else if (kind === "placemark") {
+    return (
+      <Placemark
+        mapZoomFactor={mapZoomFactor}
+        id={id}
         x={x}
         y={y}
         data={data}
@@ -31,7 +46,7 @@ const MapMarker = ({
 MapMarker.propTypes = {
   mapZoomFactor: PropTypes.number.isRequired,
   kind: PropTypes.string.isRequired,
-  mac: PropTypes.string,
+  id: PropTypes.string,
   name: PropTypes.string,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,

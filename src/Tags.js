@@ -50,7 +50,7 @@ export default class Tags extends Component {
     if (ids && Array.isArray(ids) && ids.length) {
       return "ID";
     } else if (labels && Array.isArray(labels) && labels.length) {
-      return "CATEGORY";
+      return "LABEL";
     }
     return null;
   }
@@ -124,7 +124,7 @@ export default class Tags extends Component {
     if (filterBy === "ID") {
       return markers.ids.includes(tag.mac);
     }
-    if (filterBy === "CATEGORY") {
+    if (filterBy === "LABEL") {
       const tagCatObjects = tag.data.tags;
       if (tagCatObjects.length) {
         const tagCats = tagCatObjects.map(obj => obj.name);
@@ -168,7 +168,7 @@ export default class Tags extends Component {
     if (this.filterBy() === "ID") {
       tags = this.filterTagsByMAC(tags);
     }
-    if (this.filterBy() === "CATEGORY") {
+    if (this.filterBy() === "LABEL") {
       tags = this.filterTagsByCategory(tags);
     }
     this.setState({ tagsByMAC: tags });

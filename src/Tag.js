@@ -20,8 +20,9 @@ const cssTag = css({
     top 500ms ease,
     left 500ms ease
   `,
+  zIndex: 2,
   "&:focus": {
-    zIndex: 1,
+    zIndex: 3,
     outline: "none",
     boxShadow: "0 0 4px black"
   }

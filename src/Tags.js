@@ -149,21 +149,18 @@ export default class Tags extends Component {
   }
 
   observeTagUpdate(data) {
-    const { markers } = this.props;
     const tag = this.normalizeTag(data);
-    if (markers.all || this.isMatch(tag)) {
-      this.setState(
-        prevState => ({
-          tagsByMAC: {
-            ...prevState.tagsByMAC,
-            [tag.mac]: tag
-          }
-        }),
-        () => {
-          this.onUpdate("Connected");
+    this.setState(
+      prevState => ({
+        tagsByMAC: {
+          ...prevState.tagsByMAC,
+          [tag.mac]: tag
         }
-      );
-    }
+      }),
+      () => {
+        this.onUpdate("Connected");
+      }
+    );
   }
 
   setInitialTags(data) {
@@ -205,24 +202,26 @@ export default class Tags extends Component {
 
   render() {
     const { tagsByMAC } = this.state;
-    const { onMarkerClick, mapZoomFactor } = this.props;
-    const markers = Object.keys(tagsByMAC).map(mac => {
-      const t = tagsByMAC[mac];
-      const { x, y, name, data } = t;
-      return (
-        <MapMarker
-          mapZoomFactor={mapZoomFactor}
-          key={mac}
-          kind="tag"
-          mac={mac}
-          x={x}
-          y={y}
-          name={name}
-          data={data}
-          onClick={onMarkerClick}
-        />
-      );
-    });
-    return <g>{markers}</g>;
+    const { markers, onMarkerClick, mapZoomFactor } = this.props;
+    const filteredMarkers = Object.keys(tagsByMAC)
+      .map(mac => tagsByMAC[mac])
+      .filter(tag => markers.all || this.isMatch(tag))
+      .map(tag => {
+        const { x, y, name, mac, data } = tag;
+        return (
+          <MapMarker
+            mapZoomFactor={mapZoomFactor}
+            key={mac}
+            kind="tag"
+            mac={mac}
+            x={x}
+            y={y}
+            name={name}
+            data={data}
+            onClick={onMarkerClick}
+          />
+        );
+      });
+    return <div>{filteredMarkers}</div>;
   }
 }

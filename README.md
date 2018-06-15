@@ -28,7 +28,7 @@ Meridian.init({
   })
 });
 
-Meridian.renderMap(document.getElementById("meridian-map"), {
+Meridian.createMap(document.getElementById("meridian-map"), {
   locationID: "...",
   floorID: "..."
 });
@@ -46,7 +46,7 @@ Meridian.init({
   })
 });
 
-Meridian.renderMap(document.getElementById("meridian-map"), {
+Meridian.createMap(document.getElementById("meridian-map"), {
   locationID: "...",
   floorID: "..."
 });

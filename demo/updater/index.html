@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Props API | Meridian Web SDK</title>
+  <title>Updater | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- IE11 polyfill -->
   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
@@ -15,6 +15,7 @@
       margin: 0 auto;
       padding-top: 20px;
     }
+
   </style>
 </head>
 
@@ -24,11 +25,13 @@
 
   <script src="/meridian-sdk.js"></script>
   <script>
-    MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
+    MeridianWebSDK.init({
       api: MeridianWebSDK.createAPI({
         environment: "staging",
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
-      }),
+      })
+    });
+    const map = MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
       height: "500px",
@@ -38,6 +41,16 @@
         }
       }
     });
+    setTimeout(() => {
+      console.log("Updating map!");
+      map.update({
+        markers: {
+          tags: {
+            labels: ["Adam"]
+          }
+        }
+      });
+    }, 3000);
   </script>
 </body>
 

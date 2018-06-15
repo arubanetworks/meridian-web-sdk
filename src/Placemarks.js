@@ -65,14 +65,8 @@ export default class Placemarks extends Component {
     const filterBy = this.filterBy();
     if (filterBy === "ID") {
       return markers.ids.includes(placemark.id);
-    }
-    if (filterBy === "TYPE") {
-      const tagCatObjects = placemark.data.tags;
-      if (tagCatObjects.length) {
-        const tagCats = tagCatObjects.map(obj => obj.name);
-        return tagCats.some(category => markers.types.includes(category));
-      }
-      return false;
+    } else if (filterBy === "TYPE") {
+      return markers.types.includes(placemark.type);
     }
     return false;
   }

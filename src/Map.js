@@ -2,7 +2,6 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
 
-import Defs from "./Defs";
 import Watermark from "./Watermark";
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
@@ -92,6 +91,7 @@ export default class Map extends Component {
         // TODO: We're gonna need to calculate reasonable extents here based on
         // the container size and the map size
         .scaleExtent([0.125, 14])
+        // .translateExtent([[0, 0], [mapData.width, mapData.height]])
         // TODO: Why is the translateExtent not working right?
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom);
@@ -211,7 +211,6 @@ export default class Map extends Component {
         className={cx(cssMapContainer, "meridian-map-container")}
         style={{ width, height }}
       >
-        <Defs />
         <Overlay
           onClose={this.onOverlayClose}
           data={selectedItem.data}

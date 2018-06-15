@@ -10,6 +10,7 @@ const context = {
 };
 
 function requiredParam(argName) {
+  // eslint-disable-next-line no-console
   console.error(`${argName} is required`);
 }
 

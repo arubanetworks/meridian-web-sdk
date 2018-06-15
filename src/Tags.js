@@ -206,22 +206,19 @@ export default class Tags extends Component {
     const filteredMarkers = Object.keys(tagsByMAC)
       .map(mac => tagsByMAC[mac])
       .filter(tag => markers.all || this.isMatch(tag))
-      .map(tag => {
-        const { x, y, name, mac, data } = tag;
-        return (
-          <MapMarker
-            mapZoomFactor={mapZoomFactor}
-            key={mac}
-            kind="tag"
-            mac={mac}
-            x={x}
-            y={y}
-            name={name}
-            data={data}
-            onClick={onMarkerClick}
-          />
-        );
-      });
+      .map(tag => (
+        <MapMarker
+          mapZoomFactor={mapZoomFactor}
+          key={tag.mac}
+          kind="tag"
+          mac={tag.mac}
+          x={tag.x}
+          y={tag.y}
+          name={tag.name}
+          data={tag.data}
+          onClick={onMarkerClick}
+        />
+      ));
     return <div>{filteredMarkers}</div>;
   }
 }

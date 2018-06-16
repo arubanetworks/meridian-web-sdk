@@ -1,6 +1,7 @@
 ### NEXT
 
 - Should labels be case insensitive?
+- Culling! A lot of it. Talk with Jim.
 
 ### OTHER
 

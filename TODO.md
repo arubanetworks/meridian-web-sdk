@@ -1,6 +1,5 @@
 ### NEXT
 
-- Placemarks!
 - Should labels be case insensitive?
 
 ### OTHER

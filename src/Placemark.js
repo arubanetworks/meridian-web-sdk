@@ -9,17 +9,12 @@ const cssPlacemark = css({
   ...mixins.buttonReset,
   cursor: "pointer",
   borderRadius: "100%",
-  position: "absolute",
   backgroundColor: "white",
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
   border: "2px solid white",
   overflow: "hidden",
-  transition: `
-    top 500ms ease,
-    left 500ms ease
-  `,
   zIndex: 1,
   "&:focus": {
     zIndex: 3,
@@ -28,11 +23,26 @@ const cssPlacemark = css({
   }
 });
 
-const getIconName = ({ type }) => {
-  if (type) {
-    return "placemark-" + type.replace(/_/g, "-");
+const cssLabel = css({
+  width: 80,
+  transform: "translate(-35%, 0)",
+  textAlign: "center",
+  padding: "2px 4px",
+  borderRadius: 4,
+  color: "black",
+  textShadow: "0 0 8px white"
+});
+
+// TODO: Maybe not our final location?
+const assetPrefix =
+  "https://storage.googleapis.com/meridian-web-sdk-assets/placemarks";
+
+const getIconStyle = ({ type }) => {
+  if (!type || type === "label_department") {
+    return {};
   }
-  return "placemark";
+  const name = "placemark-" + type.replace(/_/g, "-");
+  return { backgroundImage: `url('${assetPrefix}/${name}.svg')` };
 };
 
 // TODO: Show the name for label placemarks instead of an icon
@@ -40,19 +50,26 @@ const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
   const size = 24;
   const k = 1 / mapZoomFactor;
   const className = cx(cssPlacemark, "meridian-placemark");
-  const iconName = getIconName(data);
-  // TODO: Maybe not our final location?
-  const prefix =
-    "https://storage.googleapis.com/meridian-web-sdk-assets/placemarks/";
   const style = {
-    width: size,
-    height: size,
     left: x,
     top: y,
     transform: `translate(-50%, -50%) scale(${k})`,
-    backgroundImage: `url('${prefix}${iconName}.svg')`
+    position: "absolute"
   };
-  return <button className={className} onClick={onClick} style={style} />;
+  return (
+    <div style={style}>
+      <button
+        className={className}
+        onClick={onClick}
+        style={{
+          ...getIconStyle(data),
+          width: size,
+          height: size
+        }}
+      />
+      <div className={cx(cssLabel, "meridian-label")}>{data.name}</div>
+    </div>
+  );
 };
 
 Placemark.propTypes = {

@@ -1,5 +1,6 @@
 ### NEXT
 
+- Pull SVG assets into separate repo and have build/deploy script
 - Should labels be case insensitive?
 - Culling! A lot of it. Talk with Jim
 

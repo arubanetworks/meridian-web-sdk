@@ -5,7 +5,7 @@ import MapMarker from "./MapMarker";
 
 export default class PlacemarkLayer extends Component {
   static defaultProps = {
-    markers: null,
+    markers: {},
     onUpdate: () => {},
     onFound: () => {}
   };

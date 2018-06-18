@@ -26,7 +26,6 @@ const cssPlacemark = css({
 const cssLabel = css({
   width: 80,
   fontSize: 14,
-  transform: "translate(-35%, 0)",
   textAlign: "center",
   padding: 2,
   borderRadius: 4,
@@ -66,7 +65,8 @@ const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
     left: x,
     top: y,
     transform: `translate(-50%, -50%) scale(${k})`,
-    position: "absolute"
+    position: "absolute",
+    textAlign: "center"
   };
   return (
     <div style={style}>

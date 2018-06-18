@@ -30,7 +30,12 @@ const cssLabel = css({
   padding: "2px 4px",
   borderRadius: 4,
   color: "black",
-  textShadow: "0 0 8px white"
+  textShadow: `
+    0 1px 1px white,
+    -1px 0 1px white,
+    1px 0 1px white,
+    0 -1px 1px white
+  `
 });
 
 // TODO: Maybe not our final location?

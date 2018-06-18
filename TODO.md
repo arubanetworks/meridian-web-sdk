@@ -1,5 +1,7 @@
 ### NEXT
 
+- Pick different background color based on placemark type
+- All caps text with no icon for label placemarks
 - Pull SVG assets into separate repo and have build/deploy script
 - Should labels be case insensitive?
 - Culling! A lot of it. Talk with Jim

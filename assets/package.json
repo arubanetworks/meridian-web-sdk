@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "meridian-web-sdk-assets",
+  "version": "0.0.1-beta3",
+  "description": "Assets for the Meridian Web SDK",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "bash bin/deploy.sh",
+    "minify": "svgo --disable=removeViewBox placemarks/*.svg",
+    "postversion": "npm run -s deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Aruba, a Hewlett Packard Enterprise Company",
+  "license": "???",
+  "devDependencies": {
+    "svgo": "^1.0.5"
+  }
+}

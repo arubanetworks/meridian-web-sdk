@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import MapMarker from "./MapMarker";
 
-export default class Tags extends Component {
+export default class TagLayer extends Component {
   static defaultProps = {
     markers: null,
     onUpdate: () => {},

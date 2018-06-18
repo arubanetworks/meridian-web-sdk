@@ -5,8 +5,8 @@ import * as d3 from "d3";
 import Watermark from "./Watermark";
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
-import Tags from "./Tags";
-import Placemarks from "./Placemarks";
+import TagLayer from "./TagLayer";
+import PlacemarkLayer from "./PlacemarkLayer";
 import { css, theme, cx } from "./style";
 
 const ZOOM_FACTOR = 0.5;
@@ -232,7 +232,7 @@ export default class Map extends Component {
                 this.mapImage = el;
               }}
             />
-            <Placemarks
+            <PlacemarkLayer
               mapZoomFactor={this.state.mapZoomFactor}
               locationID={locationID}
               floorID={floorID}
@@ -240,7 +240,7 @@ export default class Map extends Component {
               markers={markers.placemarks}
               onMarkerClick={this.onMarkerClick}
             />
-            <Tags
+            <TagLayer
               mapZoomFactor={this.state.mapZoomFactor}
               locationID={locationID}
               floorID={floorID}

@@ -13,7 +13,7 @@ const cssPlacemark = css({
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
-  border: `2px solid ${theme.brandBlue}`,
+  border: `2px solid transparent`,
   overflow: "hidden",
   zIndex: 1,
   "&:focus": {
@@ -25,9 +25,10 @@ const cssPlacemark = css({
 
 const cssLabel = css({
   width: 80,
+  fontSize: 14,
   transform: "translate(-35%, 0)",
   textAlign: "center",
-  padding: "2px 4px",
+  padding: 2,
   borderRadius: 4,
   color: "black",
   userSelect: "none",
@@ -43,12 +44,17 @@ const cssLabel = css({
 const assetPrefix =
   "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
 
-const getIconStyle = ({ type }) => {
-  if (!type || type === "label_department") {
+const getIconStyle = data => {
+  if (!data.type || data.type === "label_department") {
     return {};
   }
-  const name = "placemark-" + type.replace(/_/g, "-");
-  return { backgroundImage: `url('${assetPrefix}/${name}.svg')` };
+  const name = "placemark-" + data.type.replace(/_/g, "-");
+  const color = "#" + data.color;
+  return {
+    borderColor: color,
+    backgroundColor: color,
+    backgroundImage: `url('${assetPrefix}/${name}.svg')`
+  };
 };
 
 // TODO: Show the name for label placemarks instead of an icon

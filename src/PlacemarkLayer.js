@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 import MapMarker from "./MapMarker";
 
-export default class Placemarks extends Component {
+export default class PlacemarkLayer extends Component {
   static defaultProps = {
-    markers: null,
+    markers: {},
     onUpdate: () => {},
     onFound: () => {}
   };

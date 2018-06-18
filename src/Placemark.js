@@ -1,7 +1,7 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
-import { css, cx, mixins } from "./style";
+import { css, cx, mixins, theme } from "./style";
 
 const cssPlacemark = css({
   label: "meridian-placemark",
@@ -9,11 +9,11 @@ const cssPlacemark = css({
   ...mixins.buttonReset,
   cursor: "pointer",
   borderRadius: "100%",
-  backgroundColor: "white",
+  backgroundColor: theme.brandBlue,
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
-  border: "2px solid white",
+  border: `2px solid ${theme.brandBlue}`,
   overflow: "hidden",
   zIndex: 1,
   "&:focus": {
@@ -30,12 +30,18 @@ const cssLabel = css({
   padding: "2px 4px",
   borderRadius: 4,
   color: "black",
-  textShadow: "0 0 8px white"
+  userSelect: "none",
+  textShadow: `
+    0 1px 1px white,
+    -1px 0 1px white,
+    1px 0 1px white,
+    0 -1px 1px white
+  `
 });
 
 // TODO: Maybe not our final location?
 const assetPrefix =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/placemarks";
+  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
 
 const getIconStyle = ({ type }) => {
   if (!type || type === "label_department") {

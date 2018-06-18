@@ -5,8 +5,8 @@ import * as d3 from "d3";
 import Watermark from "./Watermark";
 import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
-import Tags from "./Tags";
-import Placemarks from "./Placemarks";
+import TagLayer from "./TagLayer";
+import PlacemarkLayer from "./PlacemarkLayer";
 import { css, theme, cx } from "./style";
 
 const ZOOM_FACTOR = 0.5;
@@ -23,7 +23,7 @@ const cssMapContainer = css({
   textAlign: "left"
 });
 
-const cssMapOuter = css({
+const cssMap = css({
   label: "map-outer",
   borderRadius: "inherit",
   display: "block",
@@ -57,6 +57,7 @@ export default class Map extends Component {
   };
 
   state = {
+    mapTransform: "",
     mapZoomFactor: 0.5,
     mapData: null,
     placemarksData: null,
@@ -76,77 +77,65 @@ export default class Map extends Component {
   }
 
   addZoomBehavior() {
-    if (this.props.zoom && this.mapInner && this.mapOuter) {
-      this.mapInnerSelection = d3.select(this.mapInner);
+    if (this.props.zoom && this.mapRef) {
       const onZoom = () => {
-        const { k, x, y } = d3.zoomTransform(this.mapOuter);
+        const { k, x, y } = d3.zoomTransform(this.mapRef);
         const t = `translate(${x}px, ${y}px) scale(${k})`;
-        this.mapInnerSelection.style("transform", t);
-        this.setState({ mapZoomFactor: k });
+        this.setState({ mapTransform: t, mapZoomFactor: k });
       };
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
       const { mapData } = this.state;
-      const outerSize = this.getMapOuterSize();
+      const mapSize = this.getMapRefSize();
       this.zoomD3 = d3
         .zoom()
         // TODO: We're gonna need to calculate reasonable extents here based on
         // the container size and the map size
-        .scaleExtent([0.125, 14])
+        .scaleExtent([1 / 8, 14])
         // TODO: Why is the translateExtent not working right?
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom);
-      this.mapOuterSelection = d3.select(this.mapOuter);
-      this.mapOuterSelection.call(this.zoomD3);
-      this.mapOuterSelection.call(
+      this.mapSelection = d3.select(this.mapRef);
+      this.mapSelection.call(this.zoomD3);
+      this.mapSelection.call(
         this.zoomD3.translateTo,
         mapData.width / 2,
         mapData.height / 2
       );
-      this.mapOuterSelection.call(
+      this.mapSelection.call(
         this.zoomD3.scaleTo,
         // TODO: Figure out the appropriate scale level to show the "whole" map.
         // This is currently just a quick calculation that seems to work ok.
-        (0.5 * outerSize.width) / mapData.width
+        (0.5 * mapSize.width) / mapData.width
       );
     }
   }
 
-  mapInnerSelection = null;
-  mapOuterSelection = null;
-  mapOuter = null;
-  mapInner = null;
+  mapSelection = null;
+  mapRef = null;
 
-  setMapOuterRef = el => {
-    this.mapOuter = el;
-  };
-
-  setMapInnerRef = element => {
-    this.mapInner = element;
-  };
-
-  getMapOuterSize() {
+  getMapRefSize() {
     return {
-      width: this.mapOuter.clientWidth,
-      height: this.mapOuter.clientHeight
+      width: this.mapRef.clientWidth,
+      height: this.mapRef.clientHeight
     };
   }
 
   zoomToPoint = (x, y, k) => {
-    const { width, height } = this.getMapOuterSize();
+    const { width, height } = this.getMapRefSize();
     // I'm so sorry, but it's really hard to center things, and also math
     const t = d3.zoomIdentity
       .translate(-k * x + width / 2, -k * y + height / 2)
       .scale(k);
-    this.mapOuterSelection
+    this.mapSelection
       .transition()
       .duration(ZOOM_DURATION)
       .call(this.zoomD3.transform, t);
   };
 
   zoomBy = factor => {
-    this.mapOuterSelection
+    this.mapSelection
       .transition()
       .duration(ZOOM_DURATION)
       .call(this.zoomD3.scaleBy, factor);
@@ -162,7 +151,7 @@ export default class Map extends Component {
 
   onClick = event => {
     const mapClicked =
-      this.mapOuter.isEqualNode(event.target) ||
+      this.mapRef.isEqualNode(event.target) ||
       this.mapImage.isEqualNode(event.target);
     if (this.props.onMapClick && mapClicked) {
       this.props.onMapClick(event);
@@ -205,7 +194,7 @@ export default class Map extends Component {
   }
 
   render() {
-    const { mapData, selectedItem } = this.state;
+    const { mapData, selectedItem, mapTransform } = this.state;
     const { locationID, floorID, api, markers, width, height } = this.props;
     return (
       <div
@@ -220,19 +209,21 @@ export default class Map extends Component {
         <Watermark />
         {this.renderZoomControls()}
         <div
-          ref={this.setMapOuterRef}
-          className={cx(cssMapOuter, "meridian-map-background")}
+          ref={el => {
+            this.mapRef = el;
+          }}
+          className={cx(cssMap, "meridian-map-background")}
           onClick={this.onClick}
           style={{ width, height }}
         >
-          <div ref={this.setMapInnerRef} style={{ transformOrigin: "0 0 0" }}>
+          <div style={{ transform: mapTransform, transformOrigin: "0 0 0" }}>
             <img
               src={mapData && mapData.svg_url}
               ref={el => {
                 this.mapImage = el;
               }}
             />
-            <Placemarks
+            <PlacemarkLayer
               mapZoomFactor={this.state.mapZoomFactor}
               locationID={locationID}
               floorID={floorID}
@@ -240,7 +231,7 @@ export default class Map extends Component {
               markers={markers.placemarks}
               onMarkerClick={this.onMarkerClick}
             />
-            <Tags
+            <TagLayer
               mapZoomFactor={this.state.mapZoomFactor}
               locationID={locationID}
               floorID={floorID}

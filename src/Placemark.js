@@ -13,7 +13,7 @@ const cssPlacemark = css({
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
-  border: "2px solid transparent",
+  border: `2px solid ${theme.brandBlue}`,
   overflow: "hidden",
   zIndex: 1,
   "&:focus": {
@@ -35,7 +35,7 @@ const cssLabel = css({
 
 // TODO: Maybe not our final location?
 const assetPrefix =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/placemarks";
+  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
 
 const getIconStyle = ({ type }) => {
   if (!type || type === "label_department") {

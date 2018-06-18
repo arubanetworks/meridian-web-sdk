@@ -1,7 +1,7 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
-import { css, cx, mixins } from "./style";
+import { css, cx, mixins, theme } from "./style";
 
 const cssPlacemark = css({
   label: "meridian-placemark",
@@ -9,11 +9,11 @@ const cssPlacemark = css({
   ...mixins.buttonReset,
   cursor: "pointer",
   borderRadius: "100%",
-  backgroundColor: "white",
+  backgroundColor: theme.brandBlue,
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
-  border: "2px solid white",
+  border: "2px solid transparent",
   overflow: "hidden",
   zIndex: 1,
   "&:focus": {

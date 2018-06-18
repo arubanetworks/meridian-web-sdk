@@ -1,11 +1,11 @@
 import { h } from "preact";
 
-import { css, theme } from "./style";
+import { css } from "./style";
 
 const cssLogo = css({
   label: "logo",
   display: "block",
-  fill: "rgba(0, 0, 0, 0.4)",
+  fill: "black",
   width: 70,
   height: 30
 });
@@ -18,14 +18,13 @@ const Logo = () => (
 
 const cssWatermark = css({
   label: "watermark",
-  background: "rgba(250, 250, 250, 0.6)",
   overflow: "hidden",
   position: "absolute",
+  transform: "translate(-50%, 0)",
+  opacity: 0.4,
   zIndex: 1,
-  right: 0,
-  bottom: 0,
-  borderTopLeftRadius: theme.borderRadius,
-  borderBottomRightRadius: "inherit"
+  left: "50%",
+  top: 0
 });
 
 const Watermark = () => (

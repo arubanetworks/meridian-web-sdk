@@ -8,7 +8,7 @@ const cssOverlay = css({
   ...mixins.rounded,
   overflow: "hidden",
   background: theme.white,
-  color: "#000",
+  fill: "#000",
   position: "absolute",
   left: 10,
   top: 10,

@@ -1,7 +1,5 @@
 import createEmotion from "create-emotion";
 
-// TODO: Rename `theme` and `mixins` probably
-
 export const theme = {
   fontFamily: "'Open Sans', helvetica, arial, sans-serif",
   fontSize: "16px",

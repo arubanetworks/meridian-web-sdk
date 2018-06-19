@@ -10,6 +10,7 @@ const cssPlacemark = css({
   ...mixins.shadow,
   ...mixins.buttonReset,
   ...mixins.pointer,
+  display: "block",
   width: SIZE,
   height: SIZE,
   borderRadius: "100%",
@@ -29,11 +30,13 @@ const cssPlacemark = css({
 
 const cssLabel = css({
   label: "meridian-label",
+  marginLeft: "-50%",
+  position: "absolute",
+  minWidth: 44,
   maxWidth: 120,
   fontSize: 14,
   textAlign: "center",
-  padding: 2,
-  borderRadius: 4,
+  padding: 0,
   color: "black",
   userSelect: "none",
   textShadow: `
@@ -110,7 +113,7 @@ const Placemark = ({
       <div
         className={cx(cssLabel, "meridian-label")}
         style={{
-          display: mapZoomFactor < 1 ? "none" : ""
+          visibility: mapZoomFactor < 1 ? "hidden" : ""
         }}
       >
         {data.name}

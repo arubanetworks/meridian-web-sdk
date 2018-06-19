@@ -3,10 +3,14 @@ import PropTypes from "prop-types";
 
 import { css, cx, mixins, theme } from "./style";
 
+const SIZE = 24;
+
 const cssPlacemark = css({
   label: "meridian-placemark",
   ...mixins.shadow,
   ...mixins.buttonReset,
+  width: SIZE,
+  height: SIZE,
   cursor: "pointer",
   borderRadius: "100%",
   backgroundColor: theme.brandBlue,
@@ -45,7 +49,6 @@ const cssLabelOnly = css({
   fontSize: 16
 });
 
-// TODO: Maybe not our final location?
 const assetPrefix =
   "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
 
@@ -60,16 +63,10 @@ const getIconStyle = data => {
 };
 
 const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
-  const size = 24;
-  // placemarks with a type that starts with label_ are special
+  // Placemarks with a type that starts with label_ are special
   // No icon, grey uppercase text
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
   const k = 1 / mapZoomFactor;
-  const labelClassName = cx(
-    cssLabel,
-    "meridian-label",
-    labelOnly && [cssLabelOnly, "meridian-label-only"]
-  );
   const style = {
     left: x,
     top: y,
@@ -77,20 +74,30 @@ const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
     position: "absolute",
     textAlign: "center"
   };
+  if (labelOnly) {
+    return (
+      <div style={style}>
+        <div
+          className={cx(
+            cssLabel,
+            cssLabelOnly,
+            "meridian-label",
+            "meridian-label-only"
+          )}
+        >
+          {data.name}
+        </div>
+      </div>
+    );
+  }
   return (
     <div style={style}>
-      {labelOnly ? null : (
-        <button
-          className={cx(cssPlacemark, "meridian-placemark")}
-          onClick={onClick}
-          style={{
-            ...getIconStyle(data),
-            width: size,
-            height: size
-          }}
-        />
-      )}
-      <div className={labelClassName}>{data.name}</div>
+      <button
+        className={cx(cssPlacemark, "meridian-placemark")}
+        onClick={onClick}
+        style={getIconStyle(data)}
+      />
+      <div className={cx(cssLabel, "meridian-label")}>{data.name}</div>
     </div>
   );
 };

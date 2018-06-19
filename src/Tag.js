@@ -3,10 +3,14 @@ import PropTypes from "prop-types";
 
 import { css, cx, mixins } from "./style";
 
+const SIZE = 32;
+
 const cssTag = css({
   label: "meridian-tag",
   ...mixins.shadow,
   ...mixins.buttonReset,
+  width: SIZE,
+  height: SIZE,
   cursor: "pointer",
   borderRadius: "100%",
   position: "absolute",
@@ -29,13 +33,10 @@ const cssTag = css({
 });
 
 const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
-  const size = 32;
   const k = 1 / mapZoomFactor;
   const imageURL = data.image_url;
   const className = cx(cssTag, "meridian-tag");
   const style = {
-    width: size,
-    height: size,
     left: x,
     top: y,
     transform: `translate(-50%, -50%) scale(${k})`

@@ -97,7 +97,14 @@ const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
         onClick={onClick}
         style={getIconStyle(data)}
       />
-      <div className={cx(cssLabel, "meridian-label")}>{data.name}</div>
+      <div
+        className={cx(cssLabel, "meridian-label")}
+        style={{
+          display: mapZoomFactor < 1 ? "none" : ""
+        }}
+      >
+        {data.name}
+      </div>
     </div>
   );
 };

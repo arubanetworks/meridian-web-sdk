@@ -24,7 +24,7 @@ const cssPlacemark = css({
 });
 
 const cssLabel = css({
-  width: 80,
+  width: 120,
   fontSize: 14,
   textAlign: "center",
   padding: 2,
@@ -39,14 +39,17 @@ const cssLabel = css({
   `
 });
 
+const cssLabelOnly = css({
+  textTransform: "uppercase",
+  color: "#666",
+  fontSize: 16
+});
+
 // TODO: Maybe not our final location?
 const assetPrefix =
   "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
 
 const getIconStyle = data => {
-  if (!data.type || data.type === "label_department") {
-    return {};
-  }
   const name = "placemark-" + data.type.replace(/_/g, "-");
   const color = "#" + data.color;
   return {
@@ -56,11 +59,17 @@ const getIconStyle = data => {
   };
 };
 
-// TODO: Show the name for label placemarks instead of an icon
 const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
   const size = 24;
+  // placemarks with a type that starts with label_ are special
+  // No icon, grey uppercase text
+  const labelOnly = !data.type || data.type.indexOf("label_") === 0;
   const k = 1 / mapZoomFactor;
-  const className = cx(cssPlacemark, "meridian-placemark");
+  const labelClassName = cx(
+    cssLabel,
+    "meridian-label",
+    labelOnly && [cssLabelOnly, "meridian-label-only"]
+  );
   const style = {
     left: x,
     top: y,
@@ -70,16 +79,18 @@ const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
   };
   return (
     <div style={style}>
-      <button
-        className={className}
-        onClick={onClick}
-        style={{
-          ...getIconStyle(data),
-          width: size,
-          height: size
-        }}
-      />
-      <div className={cx(cssLabel, "meridian-label")}>{data.name}</div>
+      {labelOnly ? null : (
+        <button
+          className={cx(cssPlacemark, "meridian-placemark")}
+          onClick={onClick}
+          style={{
+            ...getIconStyle(data),
+            width: size,
+            height: size
+          }}
+        />
+      )}
+      <div className={labelClassName}>{data.name}</div>
     </div>
   );
 };

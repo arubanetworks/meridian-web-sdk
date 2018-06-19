@@ -23,7 +23,7 @@ const styleZoomButton = {
   borderRadius: 0,
   fontSize: 20,
   fontWeight: 200,
-  color: theme.brandBrightBlue,
+  fill: theme.brandBrightBlue,
   "&:hover": { background: theme.buttonHoverColor },
   "&:active": { background: theme.buttonActiveColor },
   "&:focus": { outline: "none" }
@@ -49,7 +49,9 @@ const ZoomButton = ({ onClick, dir }) => {
         )}
         onClick={onClick}
       >
-        +
+        <svg viewBox="0 0 36 36">
+          <path d="M26 17h-7v-7a1 1 0 0 0-2 0v7h-7a1 1 0 0 0 0 2h7v7a1 1 0 0 0 2 0v-7h7a1 1 0 0 0 0-2" />
+        </svg>
       </button>
     );
   } else {
@@ -62,7 +64,9 @@ const ZoomButton = ({ onClick, dir }) => {
         )}
         onClick={onClick}
       >
-        &minus;
+        <svg viewBox="0 0 36 36">
+          <path d="M26 19H10a1 1 0 0 1 0-2h16a1 1 0 0 1 0 2" />
+        </svg>
       </button>
     );
   }

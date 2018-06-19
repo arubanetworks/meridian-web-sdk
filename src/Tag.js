@@ -9,9 +9,9 @@ const cssTag = css({
   label: "meridian-tag",
   ...mixins.shadow,
   ...mixins.buttonReset,
+  ...mixins.pointer,
   width: SIZE,
   height: SIZE,
-  cursor: "pointer",
   borderRadius: "100%",
   position: "absolute",
   backgroundColor: "white",
@@ -32,7 +32,14 @@ const cssTag = css({
   }
 });
 
-const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
+const Tag = ({
+  x,
+  y,
+  data,
+  mapZoomFactor,
+  onClick = () => {},
+  disabled = false
+}) => {
   const k = 1 / mapZoomFactor;
   const imageURL = data.image_url;
   const className = cx(cssTag, "meridian-tag");
@@ -45,6 +52,7 @@ const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
     const backgroundImage = `url('${imageURL}')`;
     return (
       <button
+        disabled={disabled}
         className={className}
         onClick={onClick}
         style={{ ...style, backgroundImage }}
@@ -52,7 +60,12 @@ const Tag = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
     );
   }
   return (
-    <button className={className} onClick={onClick} style={style}>
+    <button
+      className={className}
+      onClick={onClick}
+      style={style}
+      disabled={disabled}
+    >
       <svg viewBox="0 0 36 36" style={{ margin: -8, display: "block" }}>
         <path
           fill="black"
@@ -73,7 +86,8 @@ Tag.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool
 };
 
 export default Tag;

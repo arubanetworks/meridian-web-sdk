@@ -18,7 +18,8 @@ export default class TagLayer extends Component {
     markers: PropTypes.shape({
       all: PropTypes.bool,
       labels: PropTypes.arrayOf(PropTypes.string),
-      ids: PropTypes.arrayOf(PropTypes.string)
+      ids: PropTypes.arrayOf(PropTypes.string),
+      disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
     onUpdate: PropTypes.func,
@@ -217,6 +218,7 @@ export default class TagLayer extends Component {
           name={tag.name}
           data={tag.data}
           onClick={onMarkerClick}
+          disabled={markers.disabled}
         />
       ));
     return <div>{filteredMarkers}</div>;

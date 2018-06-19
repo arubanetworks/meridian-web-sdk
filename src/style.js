@@ -38,6 +38,12 @@ export const mixins = {
   },
   paddingMedium: {
     padding: "20px"
+  },
+  pointer: {
+    cursor: "pointer",
+    "&:disabled": {
+      cursor: "default"
+    }
   }
 };
 

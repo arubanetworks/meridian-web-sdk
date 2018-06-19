@@ -3,21 +3,21 @@ import PropTypes from "prop-types";
 
 import { css, cx, mixins, theme } from "./style";
 
-const SIZE = 24;
+const SIZE = 22;
 
 const cssPlacemark = css({
   label: "meridian-placemark",
   ...mixins.shadow,
   ...mixins.buttonReset,
+  ...mixins.pointer,
   width: SIZE,
   height: SIZE,
-  cursor: "pointer",
   borderRadius: "100%",
   backgroundColor: theme.brandBlue,
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
   backgroundSize: "cover",
-  border: `2px solid transparent`,
+  border: "2px solid transparent",
   overflow: "hidden",
   zIndex: 1,
   "&:focus": {
@@ -28,7 +28,8 @@ const cssPlacemark = css({
 });
 
 const cssLabel = css({
-  width: 120,
+  label: "meridian-label",
+  maxWidth: 120,
   fontSize: 14,
   textAlign: "center",
   padding: 2,
@@ -44,6 +45,7 @@ const cssLabel = css({
 });
 
 const cssLabelOnly = css({
+  label: "meridian-label-only",
   textTransform: "uppercase",
   color: "#666",
   fontSize: 16
@@ -62,7 +64,14 @@ const getIconStyle = data => {
   };
 };
 
-const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
+const Placemark = ({
+  x,
+  y,
+  data,
+  mapZoomFactor,
+  onClick = () => {},
+  disabled = false
+}) => {
   // Placemarks with a type that starts with label_ are special
   // No icon, grey uppercase text
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
@@ -93,6 +102,7 @@ const Placemark = ({ x, y, data, mapZoomFactor, onClick = () => {} }) => {
   return (
     <div style={style}>
       <button
+        disabled={disabled}
         className={cx(cssPlacemark, "meridian-placemark")}
         onClick={onClick}
         style={getIconStyle(data)}
@@ -114,7 +124,8 @@ Placemark.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool
 };
 
 export default Placemark;

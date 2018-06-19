@@ -11,7 +11,8 @@ const MapMarker = ({
   y,
   data,
   mapZoomFactor,
-  onClick = () => {}
+  onClick = () => {},
+  disabled
 }) => {
   if (kind === "tag") {
     return (
@@ -24,6 +25,7 @@ const MapMarker = ({
         onClick={() => {
           onClick({ kind, data });
         }}
+        disabled={disabled}
       />
     );
   } else if (kind === "placemark") {
@@ -37,6 +39,7 @@ const MapMarker = ({
         onClick={() => {
           onClick({ kind, data });
         }}
+        disabled={disabled}
       />
     );
   }
@@ -51,7 +54,8 @@ MapMarker.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
+  disabled: PropTypes.bool
 };
 
 export default MapMarker;

@@ -42,7 +42,14 @@ export default class Map extends Component {
       tags: PropTypes.shape({
         all: PropTypes.bool,
         labels: PropTypes.arrayOf(PropTypes.string),
-        ids: PropTypes.arrayOf(PropTypes.string)
+        ids: PropTypes.arrayOf(PropTypes.string),
+        disabled: PropTypes.bool
+      }),
+      placemarks: PropTypes.shape({
+        all: PropTypes.bool,
+        types: PropTypes.arrayOf(PropTypes.string),
+        ids: PropTypes.arrayOf(PropTypes.string),
+        disabled: PropTypes.bool
       })
     }),
     onMarkerClick: PropTypes.func,

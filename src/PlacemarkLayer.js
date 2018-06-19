@@ -18,7 +18,8 @@ export default class PlacemarkLayer extends Component {
     markers: PropTypes.shape({
       all: PropTypes.bool,
       types: PropTypes.arrayOf(PropTypes.string),
-      ids: PropTypes.arrayOf(PropTypes.string)
+      ids: PropTypes.arrayOf(PropTypes.string),
+      disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func
   };
@@ -88,6 +89,7 @@ export default class PlacemarkLayer extends Component {
           name={placemark.name}
           data={placemark}
           onClick={onMarkerClick}
+          disabled={markers.disabled}
         />
       ));
     return <div>{filteredMarkers}</div>;

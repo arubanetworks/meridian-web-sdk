@@ -18,6 +18,7 @@ function updateMap() {
 }
 
 var tagFilters = {
+  "filter-none": { all: false },
   "filter-all": { all: true },
   "filter-Adam": { labels: ["Adam"] },
   "filter-AHMqsGp": { labels: ["AHMqsGp"] }

@@ -1,26 +1,35 @@
+/* eslint-disable no-console */
+
 var map = window.TheMap;
 var $ = window.jQuery;
 
 var state = {
-  placemarks: false,
-  tags: true
+  placemarks: { all: false },
+  tags: { all: true }
 };
 
 function updateMap() {
   map.update({
     markers: {
-      placemarks: { all: state.placemarks },
-      tags: { all: state.tags }
+      placemarks: state.placemarks,
+      tags: state.tags
     }
   });
 }
 
+var tagFilters = {
+  "filter-none": { all: false },
+  "filter-all": { all: true },
+  "filter-Adam": { labels: ["Adam"] },
+  "filter-AHMqsGp": { labels: ["AHMqsGp"] }
+};
+
 $("#show-placemarks").on("change", function() {
-  state.placemarks = this.checked;
+  state.placemarks = { all: this.checked };
   updateMap();
 });
 
-$("#show-tags").on("change", function() {
-  state.tags = this.checked;
+$("[name='tag-filter']").on("change", function() {
+  state.tags = tagFilters[this.value];
   updateMap();
 });

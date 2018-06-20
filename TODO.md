@@ -1,6 +1,8 @@
 ### NEXT
 
 - What location should we demo to the client?
+- Checkbox toggles Ian Mentioned
+- Rename repo (meridian-web-sdk)
 - Should labels be case insensitive?
 - Culling! A lot of it. Talk with Jim
   - openstreetmap/ID uses RBush

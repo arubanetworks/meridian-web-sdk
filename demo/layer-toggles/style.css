@@ -1,12 +1,12 @@
 body {
   font-family: sans-serif;
   padding: 20px;
-  max-width: 500px;
   margin: 0 auto;
 }
 
 .controls {
-  margin-top: 20px;
+  margin-left: 20px;
+  margin-bottom: 20px;
   background: hsl(210, 50%, 98%);
   color: hsl(210, 80%, 30%);
   border: 1px solid hsl(210, 30%, 80%);
@@ -31,6 +31,7 @@ body {
 }
 
 .map {
-  min-height: 500px;
+  width: 500px;
+  height: 500px;
   border: 1px solid #ccc;
 }

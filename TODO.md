@@ -7,6 +7,14 @@
 - Culling! A lot of it. Talk with Jim
   - openstreetmap/ID uses RBush
 
+### NEED
+
+- `@meridian` namespace on npm
+- What license for the library?
+- Open source on GitHub or keep it private and only publish minified source on
+  GCS and npm
+- Rename repo to `meridian-web-sdk`
+
 ### OTHER
 
 - Make a new hidden page with copy/paste API code

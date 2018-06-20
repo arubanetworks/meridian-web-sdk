@@ -32,7 +32,7 @@ const cssPlacemark = css({
 
 const cssLabel = css({
   label: "meridian-label",
-  marginLeft: "-50%",
+  marginLeft: "50%",
   position: "absolute",
   minWidth: 55,
   maxWidth: 120,
@@ -41,6 +41,7 @@ const cssLabel = css({
   paddingTop: 4,
   color: "black",
   userSelect: "none",
+  transform: "translate(-50%, 0)",
   textShadow: `
     0 1px 0 rgba(255, 255, 255, 0.5),
     -1px 0 0 rgba(255, 255, 255, 0.5),

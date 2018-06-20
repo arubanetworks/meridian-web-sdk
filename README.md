@@ -1,9 +1,5 @@
 # Meridian Web Components
 
-## TODO
-
-- We should probably have a different way of injecting the API?
-
 ## Editor Web SDK integration page example
 
 NOTE: <TOKEN> will be replaced in the snippet automatically for convenience. And
@@ -19,16 +15,16 @@ Hello, please enjoy our provided JS SDK!
 ```js
 // npm install --save @meridian/sdk
 
-const Meridian = require("@meridian/sdk");
+const MeridianWebSDK = require("@meridian/sdk");
 
-Meridian.init({
-  api: Meridian.createAPI({
+MeridianWebSDK.init({
+  api: MeridianWebSDK.createAPI({
     environment: "<ENVIRONMENT>",
     token: "<TOKEN>"
   })
 });
 
-Meridian.createMap(document.getElementById("meridian-map"), {
+MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
   locationID: "...",
   floorID: "..."
 });
@@ -37,18 +33,22 @@ Meridian.createMap(document.getElementById("meridian-map"), {
 ### Script Tag Installation
 
 ```html
-<script src="https://storage.googleapis.com/meridian-web-models/x.y.z/meridian.js"></script>
+<script src="https://storage.googleapis.com/meridian-web-sdk/x.y.z/meridian.js"></script>
 <script>
-Meridian.init({
-  api: Meridian.createAPI({
+MeridianWebSDK.init({
+  api: MeridianWebSDK.createAPI({
     environment: "<ENVIRONMENT>",
     token: "<TOKEN>"
   })
 });
 
-Meridian.createMap(document.getElementById("meridian-map"), {
+var map = MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
   locationID: "...",
   floorID: "..."
+});
+
+map.update({
+  // ...
 });
 </script>
 ```

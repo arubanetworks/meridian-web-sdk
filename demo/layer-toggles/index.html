@@ -10,41 +10,7 @@
   <script src="https://unpkg.com/promise-polyfill@8/dist/polyfill.min.js"></script>
   <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
   <link rel="stylesheet" href="../shared.css">
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .controls {
-      background: #fafcff;
-      border: 1px solid #ccc;
-      margin-top: 20px;
-    }
-
-    .toggle {
-      display: block;
-      padding: 16px;
-      user-select: none;
-    }
-
-    .toggle+.toggle {
-      border-top: 1px solid #eee;
-    }
-
-    .toggle:hover {
-      background: rgba(0, 0, 0, 0.025);
-    }
-
-    .map {
-      max-width: 500px;
-      margin: 0 auto;
-      border: 1px solid #ccc;
-    }
-
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -53,13 +19,27 @@
   <div class="map" id="meridian-map"></div>
 
   <div class="controls">
-    <label class="toggle">
-      <input type="checkbox" id="show-placemarks"> Show placemarks
-    </label>
-    <label class="toggle">
-      <input type="checkbox" id="show-tags" checked> Show tags
+    <label class="controls__item">
+      <input type="checkbox" id="show-placemarks">
+      <span>Show placemarks</span>
     </label>
   </div>
+
+  <div class="controls">
+    <label class="controls__item">
+      <input type="radio" name="tag-filter" value="filter-all" checked>
+      <span>Show all tags</span>
+    </label>
+    <label class="controls__item">
+      <input type="radio" name="tag-filter" value="filter-Adam">
+      <span>Show tags labeled <b>Adam</b></span>
+    </label>
+    <label class="controls__item">
+      <input type="radio" name="tag-filter" value="filter-AHMqsGp">
+      <span>Show tags labeled <b>AHMqsGp</b></span>
+    </label>
+  </div>
+
 
   <script src="/meridian-sdk.js"></script>
   <script>

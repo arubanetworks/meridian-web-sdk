@@ -21,11 +21,15 @@ const cssTag = css({
   border: "2px solid white",
   overflow: "hidden",
   transition: `
+    width 80ms ease,
+    height 80ms ease,
     top 500ms ease,
     left 500ms ease
   `,
   zIndex: 2,
   "&:focus": {
+    width: SIZE * 1.25,
+    height: SIZE * 1.25,
     zIndex: 3,
     outline: "none",
     boxShadow: "0 0 4px black"

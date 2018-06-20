@@ -7,9 +7,9 @@ const SIZE = 22;
 
 const cssPlacemark = css({
   label: "meridian-placemark",
-  ...mixins.shadow,
   ...mixins.buttonReset,
   ...mixins.pointer,
+  transition: "width 80ms ease, height 80ms ease",
   display: "block",
   width: SIZE,
   height: SIZE,
@@ -21,10 +21,12 @@ const cssPlacemark = css({
   border: "2px solid transparent",
   overflow: "hidden",
   zIndex: 1,
+  boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.5)",
   "&:focus": {
     zIndex: 3,
-    outline: "none",
-    boxShadow: "0 0 4px black"
+    width: SIZE * 1.25,
+    height: SIZE * 1.25,
+    outline: "none"
   }
 });
 
@@ -32,18 +34,18 @@ const cssLabel = css({
   label: "meridian-label",
   marginLeft: "-50%",
   position: "absolute",
-  minWidth: 44,
+  minWidth: 55,
   maxWidth: 120,
   fontSize: 14,
   textAlign: "center",
-  padding: 0,
+  paddingTop: 4,
   color: "black",
   userSelect: "none",
   textShadow: `
-    0 1px 1px white,
-    -1px 0 1px white,
-    1px 0 1px white,
-    0 -1px 1px white
+    0 1px 0 rgba(255, 255, 255, 0.5),
+    -1px 0 0 rgba(255, 255, 255, 0.5),
+    1px 0 0 rgba(255, 255, 255, 0.5),
+    0 -1px 0 rgba(255, 255, 255, 0.5)
   `
 });
 

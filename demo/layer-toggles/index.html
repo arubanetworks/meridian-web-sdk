@@ -6,11 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Layer Toggles | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- IE11 polyfills -->
-  <script src="https://unpkg.com/es6-object-assign@1.1.0/index.js"></script>
+  <!-- This polyfill is needed for the SDK to work in IE11 -->
   <script src="https://unpkg.com/promise-polyfill@8/dist/polyfill.min.js"></script>
-
+  <!-- jQuery is just for the external UI, it is not a dependency for the SDK -->
   <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
   <link rel="stylesheet" href="../shared.css">
   <link rel="stylesheet" href="style.css">
@@ -70,13 +68,15 @@
 
   <script src="/meridian-sdk.js"></script>
   <script>
+    // ---vvv SDK setup vvv---
     MeridianWebSDK.init({
       api: MeridianWebSDK.createAPI({
         environment: "staging",
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
       })
     });
-    window.TheMap = MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
+
+    var map = MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
       height: "500px",
@@ -86,8 +86,66 @@
         }
       }
     });
+    // ---^^^ SDK setup ^^^---
+
+    // ---vvv UI controls vvv---
+    var state = {
+      placemarks: {
+        all: false,
+        labels: undefined,
+        disabled: false
+      },
+      tags: {
+        all: true,
+        disabled: false
+      }
+    };
+
+    function updateMap() {
+      map.update({ markers: state });
+    }
+
+    $("#show-placemarks").on("change", function () {
+      state.placemarks.all = this.checked;
+      state.placemarks.labels = undefined;
+      updateMap();
+    });
+
+    $("[name='tag-filter']").on("change", function () {
+      switch (this.value) {
+        case "filter-none":
+          state.tags.all = false;
+          state.tags.labels = [];
+          break;
+        case "filter-all":
+          state.tags.all = true;
+          state.tags.labels = [];
+          break;
+        case "filter-Adam":
+          state.tags.all = false;
+          state.tags.labels = ["Adam"];
+          break;
+        case "filter-AHMqsGp":
+          state.tags.all = false;
+          state.tags.labels = ["AHMqsGp"];
+          break;
+        default:
+          throw new Error("unexpected option " + this.value);
+      }
+      updateMap();
+    });
+
+    $("#disable-placemarks").on("change", function () {
+      state.placemarks.disabled = this.checked;
+      updateMap();
+    });
+
+    $("#disable-tags").on("change", function () {
+      state.tags.disabled = this.checked;
+      updateMap();
+    });
+    // ---^^^ UI controls ^^^---
   </script>
-  <script src="./controls.js"></script>
 </body>
 
 </html>

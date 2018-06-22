@@ -1,7 +1,7 @@
 {
   "name": "meridian-web-components",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0-beta5",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
   "main": "dist/__TODO__.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "nonlocal": "npm run start -- --host 0.0.0.0",
     "build": "webpack -p --mode production --env production",
     "analyze": "webpack -p --mode production --env analyze",
+    "deploy:demo": "bash bin/deploy-demo.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -50,17 +50,17 @@
 </head>
 
 <body>
-  <a class="back" href="..">Back to examples</a>
+  <a class="back" href="../index.html">Back to examples</a>
   <div id="meridian-map-container">
     <div id="left-column">
       <div id="card"></div>
     </div>
     <div id="meridian-map"></div>
   </div>
-  <script src="/meridian-sdk.js"></script>
+  <script src="../meridian-sdk.js"></script>
   <script>
-    MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
-      api: MeridianWebSDK.createAPI({
+    MeridianSDK.createMap(document.getElementById("meridian-map"), {
+      api: MeridianSDK.createAPI({
         environment: "staging",
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
       }),

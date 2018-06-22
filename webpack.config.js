@@ -25,7 +25,7 @@ const common = {
   entry: path.resolve(__dirname, "src/index.js"),
   output: {
     filename: "meridian-sdk.js",
-    library: "MeridianWebSDK",
+    library: "MeridianSDK",
     libraryTarget: "var",
     path: path.resolve(__dirname, "dist")
   },

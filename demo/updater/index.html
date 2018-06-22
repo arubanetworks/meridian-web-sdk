@@ -21,19 +21,19 @@
 </head>
 
 <body>
-  <a class="back" href="..">Back to examples</a>
+  <a class="back" href="../index.html">Back to examples</a>
   <div class="map" id="meridian-map"></div>
   <div class="map" id="meridian-map2"></div>
 
-  <script src="/meridian-sdk.js"></script>
+  <script src="../meridian-sdk.js"></script>
   <script>
-    MeridianWebSDK.init({
-      api: MeridianWebSDK.createAPI({
+    MeridianSDK.init({
+      api: MeridianSDK.createAPI({
         environment: "staging",
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
       })
     });
-    const map = MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
+    const map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
       height: "500px",
@@ -53,7 +53,7 @@
         }
       });
     }, 3000);
-    const map2 = MeridianWebSDK.createMap(document.getElementById("meridian-map2"), {
+    const map2 = MeridianSDK.createMap(document.getElementById("meridian-map2"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
       height: "500px",

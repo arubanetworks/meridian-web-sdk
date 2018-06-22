@@ -19,21 +19,21 @@ export function init({ api }) {
 }
 
 export function createMap(
-  targetElement = requiredParam("targetElement"),
+  node = requiredParam("node"),
   options = requiredParam("options")
 ) {
-  let theProvider = null;
-  const ref = theComponent => {
-    theProvider = theComponent;
-    theProvider.setState({ options });
+  let provider = null;
+
+  const ref = component => {
+    provider = component;
+    provider.setState({ options });
   };
-  render(
-    <Provider component={Map} context={context} ref={ref} />,
-    targetElement
-  );
+
+  render(<Provider component={Map} context={context} ref={ref} />, node);
+
   return {
     update: options => {
-      theProvider.setState(prevState => ({
+      provider.setState(prevState => ({
         options: { ...prevState.options, ...options }
       }));
     }

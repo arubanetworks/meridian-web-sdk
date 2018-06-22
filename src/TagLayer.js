@@ -28,7 +28,6 @@ export default class TagLayer extends Component {
 
   state = {
     tagsByMAC: {},
-    singleTagSearch: false,
     connection: null
   };
 
@@ -46,19 +45,9 @@ export default class TagLayer extends Component {
     }
   }
 
-  filterBy() {
-    const { ids, labels } = this.props.markers;
-    if (ids && Array.isArray(ids) && ids.length) {
-      return "ID";
-    } else if (labels && Array.isArray(labels) && labels.length) {
-      return "LABEL";
-    }
-    return null;
-  }
-
   isSingleTagSearch() {
     const { ids } = this.props.markers;
-    return this.filterBy() === "ID" && ids.length === 1;
+    return ids && Array.isArray(ids) && ids.length === 1;
   }
 
   onFound = tag => {
@@ -69,11 +58,12 @@ export default class TagLayer extends Component {
     const { connection, tagsByMAC } = this.state;
     const { markers, onUpdate } = this.props;
     if (this.isSingleTagSearch() && connection) {
-      const tag = Object.keys(tagsByMAC)[0];
+      const mac = markers.ids[0];
+      const tag = tagsByMAC[mac];
       if (tag) {
-        this.onFound(tagsByMAC[tag]);
+        this.onFound(tag);
       } else {
-        status = `Looking for tag #${markers.ids[0]}`;
+        status = `Looking for tag ${mac}`;
       }
     }
     onUpdate(connection, status, tagsByMAC);
@@ -86,54 +76,24 @@ export default class TagLayer extends Component {
     return { name, mac, x, y, data };
   }
 
-  groupTagsByMAC(tags) {
-    return tags.map(tag => this.normalizeTag(tag)).reduce((obj, tag) => {
-      obj[tag.mac] = tag;
-      return obj;
-    }, {});
-  }
-
-  filterTagsByMAC(tags) {
-    const { ids: macs } = this.props.markers;
-    return Object.keys(tags).reduce((obj, mac) => {
-      if (macs.includes(mac)) {
-        obj[mac] = tags[mac];
-      }
-      return obj;
-    }, {});
-  }
-
-  filterTagsByCategory(tags) {
-    const { labels } = this.props.markers;
-    return Object.keys(tags).reduce((obj, mac) => {
-      const tag = tags[mac];
-      const tagCatObjects = tag.data.tags;
-      if (tagCatObjects.length) {
-        const tagCats = tagCatObjects.map(obj => obj.name);
-        const match = tagCats.some(category => labels.includes(category));
-        if (match) {
-          obj[mac] = tags[mac];
-        }
-      }
-      return obj;
-    }, {});
-  }
-
-  isMatch(tag) {
+  getFilterFunction() {
     const { markers } = this.props;
-    const filterBy = this.filterBy();
-    if (filterBy === "ID") {
-      return markers.ids.includes(tag.mac);
+    const { ids, labels, all } = markers;
+    if (all) {
+      return () => true;
+    } else if (ids && Array.isArray(ids) && ids.length > 0) {
+      return tag => markers.ids.includes(tag.mac);
+    } else if (labels && Array.isArray(labels) && labels.length > 0) {
+      return tag => {
+        const tagCatObjects = tag.data.tags;
+        if (tagCatObjects.length) {
+          const tagCats = tagCatObjects.map(obj => obj.name);
+          return tagCats.some(category => markers.labels.includes(category));
+        }
+        return false;
+      };
     }
-    if (filterBy === "LABEL") {
-      const tagCatObjects = tag.data.tags;
-      if (tagCatObjects.length) {
-        const tagCats = tagCatObjects.map(obj => obj.name);
-        return tagCats.some(category => markers.labels.includes(category));
-      }
-      return false;
-    }
-    return false;
+    return () => false;
   }
 
   removeTag(data) {
@@ -164,15 +124,14 @@ export default class TagLayer extends Component {
     );
   }
 
-  setInitialTags(data) {
-    let tags = this.groupTagsByMAC(data);
-    if (this.filterBy() === "ID") {
-      tags = this.filterTagsByMAC(tags);
-    }
-    if (this.filterBy() === "LABEL") {
-      tags = this.filterTagsByCategory(tags);
-    }
-    this.setState({ tagsByMAC: tags });
+  setInitialTags(tags) {
+    const tagsByMAC = tags
+      .map(tag => this.normalizeTag(tag))
+      .reduce((obj, tag) => {
+        obj[tag.mac] = tag;
+        return obj;
+      }, {});
+    this.setState({ tagsByMAC });
     this.onUpdate("Connected");
   }
 
@@ -204,9 +163,10 @@ export default class TagLayer extends Component {
   render() {
     const { tagsByMAC } = this.state;
     const { markers, onMarkerClick, mapZoomFactor } = this.props;
+    const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(tagsByMAC)
       .map(mac => tagsByMAC[mac])
-      .filter(tag => markers.all || this.isMatch(tag))
+      .filter(filter)
       .map(tag => (
         <MapMarker
           mapZoomFactor={mapZoomFactor}

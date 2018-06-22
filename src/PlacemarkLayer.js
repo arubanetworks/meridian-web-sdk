@@ -37,16 +37,6 @@ export default class PlacemarkLayer extends Component {
     this.setState({ placemarksByID });
   }
 
-  filterBy() {
-    const { ids, types } = this.props.markers;
-    if (ids && Array.isArray(ids) && ids.length) {
-      return "ID";
-    } else if (types && Array.isArray(types) && types.length) {
-      return "TYPE";
-    }
-    return null;
-  }
-
   normalizePlacemark(placemark) {
     // TODO: Strip off excess data
     return placemark;
@@ -61,23 +51,25 @@ export default class PlacemarkLayer extends Component {
       }, {});
   }
 
-  isMatch(placemark) {
-    const { markers } = this.props;
-    const filterBy = this.filterBy();
-    if (filterBy === "ID") {
-      return markers.ids.includes(placemark.id);
-    } else if (filterBy === "TYPE") {
-      return markers.types.includes(placemark.type);
+  getFilterFunction() {
+    const { ids, types, all } = this.props.markers;
+    if (all) {
+      return () => true;
+    } else if (ids && Array.isArray(ids) && ids.length > 0) {
+      return placemark => ids.includes(placemark.id);
+    } else if (types && Array.isArray(types) && types.length > 0) {
+      return placemark => types.includes(placemark.type);
     }
-    return false;
+    return () => false;
   }
 
   render() {
     const { placemarksByID } = this.state;
     const { markers, onMarkerClick, mapZoomFactor } = this.props;
+    const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(placemarksByID)
       .map(id => placemarksByID[id])
-      .filter(placemark => markers.all || this.isMatch(placemark))
+      .filter(filter)
       .map(placemark => (
         <MapMarker
           mapZoomFactor={mapZoomFactor}

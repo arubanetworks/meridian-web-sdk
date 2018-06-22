@@ -13,6 +13,12 @@
   GCS and npm
 - Rename repo to `meridian-web-sdk`
 
+### PERFORMANCE
+
+- The number of placemarks/tags on the map seems to directly affect performance
+  in Chrome on Android
+- Using a background SVG for the map directly affects performance in Firefox
+
 ### OTHER
 
 - Make a new hidden page with copy/paste API code

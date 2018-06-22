@@ -15,16 +15,16 @@ Hello, please enjoy our provided JS SDK!
 ```js
 // npm install --save @meridian/sdk
 
-const MeridianWebSDK = require("@meridian/sdk");
+const MeridianSDK = require("@meridian/sdk");
 
-MeridianWebSDK.init({
-  api: MeridianWebSDK.createAPI({
+MeridianSDK.init({
+  api: MeridianSDK.createAPI({
     environment: "<ENVIRONMENT>",
     token: "<TOKEN>"
   })
 });
 
-MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
+MeridianSDK.createMap(document.getElementById("meridian-map"), {
   locationID: "...",
   floorID: "..."
 });
@@ -33,16 +33,16 @@ MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
 ### Script Tag Installation
 
 ```html
-<script src="https://storage.googleapis.com/meridian-web-sdk/x.y.z/meridian.js"></script>
+<script src="https://storage.googleapis.com/meridian-sdk/x.y.z/meridian-sdk.js"></script>
 <script>
-MeridianWebSDK.init({
-  api: MeridianWebSDK.createAPI({
+MeridianSDK.init({
+  api: MeridianSDK.createAPI({
     environment: "<ENVIRONMENT>",
     token: "<TOKEN>"
   })
 });
 
-var map = MeridianWebSDK.createMap(document.getElementById("meridian-map"), {
+var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
   locationID: "...",
   floorID: "..."
 });

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Santa Clara | Meridian Web SDK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- IE11 polyfill -->
+  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    #meridian-map {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    body .meridian-map-container {
+      border: 0;
+      border-radius: 0;
+    }
+
+  </style>
+</head>
+
+<body>
+  <a class="back" href="../index.html">Back to examples</a>
+  <div id="meridian-map"></div>
+
+  <script src="../meridian-sdk.js"></script>
+  <script>
+    MeridianSDK.init({
+      api: MeridianSDK.createAPI({
+        environment: "production",
+        token: "4b78cab57cc6930d5646039ea4749d0dc0b55f75"
+      })
+    });
+    var buildingD = {
+      floor1: "5755685136498688",
+      floor2: "5724160613416960",
+      floor3: "5750790484393984",
+    }
+    var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
+      locationID: "5198682008846336",
+      floorID: buildingD.floor1,
+      height: "100%",
+      markers: {
+        placemarks: {
+          all: true
+        },
+        tags: {
+          all: true
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

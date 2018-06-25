@@ -63,27 +63,34 @@ export default class PlacemarkLayer extends Component {
     return () => false;
   }
 
+  cullMarkers(markers) {
+    // TODO: Perform culling based on collision detection of labels and also for
+    // performance reasons
+    return markers;
+  }
+
   render() {
     const { placemarksByID } = this.state;
     const { markers, onMarkerClick, mapZoomFactor } = this.props;
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(placemarksByID)
       .map(id => placemarksByID[id])
-      .filter(filter)
-      .map(placemark => (
-        <MapMarker
-          mapZoomFactor={mapZoomFactor}
-          key={placemark.id}
-          kind="placemark"
-          id={placemark.id}
-          x={placemark.x}
-          y={placemark.y}
-          name={placemark.name}
-          data={placemark}
-          onClick={onMarkerClick}
-          disabled={markers.disabled}
-        />
-      ));
-    return <div>{filteredMarkers}</div>;
+      .filter(filter);
+    const culledMarkers = this.cullMarkers(filteredMarkers);
+    const finalMarkers = culledMarkers.map(placemark => (
+      <MapMarker
+        mapZoomFactor={mapZoomFactor}
+        key={placemark.id}
+        kind="placemark"
+        id={placemark.id}
+        x={placemark.x}
+        y={placemark.y}
+        name={placemark.name}
+        data={placemark}
+        onClick={onMarkerClick}
+        disabled={markers.disabled}
+      />
+    ));
+    return <div>{finalMarkers}</div>;
   }
 }

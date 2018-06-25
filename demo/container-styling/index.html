@@ -4,27 +4,50 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Updater | Meridian Web SDK</title>
+  <title>Container styling | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- IE11 polyfill -->
   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
   <link rel="stylesheet" href="../shared.css">
   <script src="../shared.js"></script>
   <style>
-    .map {
-      border: 1px solid #ccc;
-      max-width: 600px;
+    body {
+      padding: 60px;
+      max-width: 500px;
       margin: 0 auto;
+    }
+
+    .map {
       margin-top: 20px;
     }
 
+    #meridian-map-1 {
+      border-radius: 5px;
+      border: 1px solid mediumturquoise;
+    }
+
+    #meridian-map-1 .meridian-map-background {
+      background: papayawhip;
+    }
+
+    #meridian-map-2 {
+      border-radius: 2px;
+      background: whitesmoke;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    }
+
+    #meridian-map-3 {
+      border-radius: 8px;
+      border: 2px solid black;
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="map" id="meridian-map"></div>
-  <div class="map" id="meridian-map2"></div>
+  <div class="map" id="meridian-map-1"></div>
+  <div class="map" id="meridian-map-2"></div>
+  <div class="map" id="meridian-map-3"></div>
 
   <script src="../meridian-sdk.js"></script>
   <script>
@@ -34,46 +57,33 @@
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
       })
     });
-    const map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
+    MeridianSDK.createMap(document.getElementById("meridian-map-1"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
-      height: "500px",
       markers: {
         tags: {
           all: true
         }
       }
     });
-    setTimeout(() => {
-      console.log("Updating map!");
-      map.update({
-        markers: {
-          tags: {
-            labels: ["Adam"]
-          }
-        }
-      });
-    }, 3000);
-    const map2 = MeridianSDK.createMap(document.getElementById("meridian-map2"), {
+    MeridianSDK.createMap(document.getElementById("meridian-map-2"), {
       locationID: "5468665088573440",
       floorID: "5653104741580800",
-      height: "500px",
       markers: {
         tags: {
           all: true
         }
       }
     });
-    setTimeout(() => {
-      console.log("Updating map!");
-      map2.update({
-        markers: {
-          tags: {
-            labels: ["AHMqsGp"]
-          }
+    MeridianSDK.createMap(document.getElementById("meridian-map-3"), {
+      locationID: "5468665088573440",
+      floorID: "5653104741580800",
+      markers: {
+        tags: {
+          all: true
         }
-      });
-    }, 3000);
+      }
+    });
   </script>
 </body>
 

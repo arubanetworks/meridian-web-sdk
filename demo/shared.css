@@ -1,24 +1,89 @@
+.dialog {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: #222;
+  color: #eee;
+  z-index: 2;
+  overflow-y: auto;
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
+.dialog pre {
+  font-family: Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.dialog .close {
+  padding: 16px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border-radius: 3px;
+  border: 2px solid #555;
+  background: #333;
+  width: 100%;
+}
+
+.dialog .close:hover {
+  border-color: #ccc;
+  background: #444;
+}
+
 .back {
   font-size: 16px;
   position: fixed;
-  display: block;
+  display: flex;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   text-decoration: none;
   border-radius: 6px;
-  padding: 8px 16px;
   bottom: 16px;
   left: 16px;
   background: rgba(255, 255, 255, 0.9);
   color: #26e;
   font-family: sans-serif;
   z-index: 1;
-}
-
-.back::before {
-  content: "⬅ ";
+  overflow: hidden;
 }
 
 .back:hover {
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
   background: white;
+}
+
+.back > a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.back > button {
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.back > button:focus {
+  outline: 0;
+}
+
+.back > * {
+  flex: 1 1 auto;
+  padding: 8px 16px;
+}
+
+.back > *:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.back > .separator {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0;
 }

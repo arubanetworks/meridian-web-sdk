@@ -99,7 +99,7 @@ export default class Map extends Component {
         .zoom()
         // TODO: We're gonna need to calculate reasonable extents here based on
         // the container size and the map size
-        .scaleExtent([1 / 8, 14])
+        .scaleExtent([1 / 16, 14])
         // TODO: Why is the translateExtent not working right?
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom);

@@ -1,5 +1,6 @@
 ### NEXT
 
+- Add placemarks of type to option toggles
 - What location should we demo to the client?
 - Should labels be case insensitive?
 - Culling! A lot of it. Talk with Jim

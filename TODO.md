@@ -1,10 +1,8 @@
 ### NEXT
 
 - Add placemarks of type to option toggles
-- What location should we demo to the client?
 - Should labels be case insensitive?
-- Culling! A lot of it. Talk with Jim
-  - openstreetmap/ID uses RBush
+- Culling! (openstreetmap/ID uses RBush)
 
 ### NEED
 
@@ -16,6 +14,7 @@
 
 ### PERFORMANCE
 
+- Do indepth performance testing
 - The number of placemarks/tags on the map seems to directly affect performance
   in Chrome on Android
 - Using a background SVG for the map directly affects performance in Firefox

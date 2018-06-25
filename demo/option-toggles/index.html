@@ -38,15 +38,15 @@
           <span>Show all tags</span>
         </label>
         <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-Adam">
+          <input type="radio" name="tag-filter" value="filter-Chair">
           <span>Show tags labeled
-            <b>Adam</b>
+            <b>Chair</b>
           </span>
         </label>
         <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-AHMqsGp">
+          <input type="radio" name="tag-filter" value="filter-iPad">
           <span>Show tags labeled
-            <b>AHMqsGp</b>
+            <b>iPad</b>
           </span>
         </label>
       </div>
@@ -121,13 +121,13 @@
           state.tags.all = true;
           state.tags.labels = [];
           break;
-        case "filter-Adam":
+        case "filter-Chair":
           state.tags.all = false;
-          state.tags.labels = ["Adam"];
+          state.tags.labels = ["Chair"];
           break;
-        case "filter-AHMqsGp":
+        case "filter-iPad":
           state.tags.all = false;
-          state.tags.labels = ["AHMqsGp"];
+          state.tags.labels = ["iPad"];
           break;
         default:
           throw new Error("unexpected option " + this.value);

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Location Viewer | Meridian Web SDK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- IE11 polyfill -->
+  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+  <!-- jQuery is just for the external UI, it is not a dependency for the SDK -->
+  <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    #meridian-map {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    body .meridian-map-container {
+      border: 0;
+      border-radius: 0;
+    }
+
+    input,
+    button {
+      display: block;
+      margin-bottom: 16px;
+      font-family: inherit;
+      font-size: 24px;
+      padding: 8px 16px;
+    }
+
+    input:focus,
+    button:focus {
+      outline: 0;
+      box-shadow: 0 0 0 2px white, 0 0 0 4px black;
+    }
+
+    input {
+      width: 100%;
+      border: 2px solid #ccc;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    button {
+      margin-top: 32px;
+      border: 0;
+      border-radius: 4px;
+      background: seagreen;
+      color: white;
+    }
+
+    label {
+      display: block;
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    body {
+      padding: 16px;
+      font-family: sans-serif;
+    }
+
+  </style>
+</head>
+
+<body>
+  <a class="back" href="../index.html">Back to examples</a>
+  <form action="" method="POST" id="map-form">
+    <label for="environment">Environment</label>
+    <input type="text" id="environment">
+    <label for="token">Token</label>
+    <input type="text" id="token">
+    <label for="location-id">Location ID</label>
+    <input type="text" id="location-id">
+    <label for="floor-id">Floor ID</label>
+    <input type="text" id="floor-id">
+    <button>Create map</button>
+  </form>
+  <div id="meridian-map" style="display: none"></div>
+
+  <script src="../meridian-sdk.js"></script>
+  <script>
+    // Load last used form values
+    $("#environment").val(localStorage.LAST_ENVIRONMENT || "production");
+    $("#token").val(localStorage.LAST_TOKEN || "");
+    $("#location-id").val(localStorage.LAST_LOCATION_ID || "");
+    $("#floor-id").val(localStorage.LAST_FLOOR_ID || "");
+
+    // Add form submit handler
+    $("#map-form").on("submit", function onMapFormSubmit(event) {
+      event.preventDefault();
+
+      // Show the map
+      $("#map-form").hide();
+      $("#meridian-map").show();
+
+      // Gather the form values
+      var environment = $("#environment").val();
+      var token = $("#token").val();
+      var locationID = $("#location-id").val();
+      var floorID = $("#floor-id").val();
+
+      // Save the form values for next page load
+      localStorage.LAST_ENVIRONMENT = environment;
+      localStorage.LAST_TOKEN = token;
+      localStorage.LAST_LOCATION_ID = locationID;
+      localStorage.LAST_FLOOR_ID = floorID;
+
+      // Initialize the SDK
+      MeridianSDK.init({
+        api: MeridianSDK.createAPI({
+          environment: environment,
+          token: token
+        })
+      });
+
+      // Create the map
+      var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
+        locationID: locationID,
+        floorID: floorID,
+        height: "100%",
+        markers: {
+          placemarks: {
+            all: true
+          },
+          tags: {
+            all: true
+          }
+        }
+      });
+    })
+  </script>
+</body>
+
+</html>

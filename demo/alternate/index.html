@@ -4,23 +4,16 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Full Page | Meridian Web SDK</title>
+  <title>Alternate (API as an option) | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- IE11 polyfill -->
   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
   <link rel="stylesheet" href="../shared.css">
   <style>
     #meridian-map {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-
-    body .meridian-map-container {
-      border: 0;
-      border-radius: 0;
+      max-width: 600px;
+      margin: 0 auto;
+      padding-top: 20px;
     }
   </style>
 </head>
@@ -31,20 +24,15 @@
 
   <script src="../meridian-sdk.js"></script>
   <script>
-    MeridianSDK.init({
+    MeridianSDK.createMap(document.getElementById("meridian-map"), {
       api: MeridianSDK.createAPI({
         environment: "staging",
         token: "058d11ddcf1e7c75912e31600c3c0eb0fcee6532"
-      })
-    });
-    MeridianSDK.createMap(document.getElementById("meridian-map"), {
+      }),
       locationID: "5468665088573440",
       floorID: "5653104741580800",
-      height: "100%",
+      height: "500px",
       markers: {
-        placemarks: {
-          types: ["cafeteria"]
-        },
         tags: {
           all: true
         }

@@ -22,6 +22,7 @@
       border: 0;
       border-radius: 0;
     }
+
   </style>
 </head>
 
@@ -37,12 +38,14 @@
         token: "4b78cab57cc6930d5646039ea4749d0dc0b55f75"
       })
     });
-    var buildingDFloor1 = "5755685136498688";
-    var buildingDFloor2 = "5724160613416960";
-    var buildingDFloor3 = "5750790484393984";
-    MeridianSDK.createMap(document.getElementById("meridian-map"), {
+    var buildingD = {
+      floor1: "5755685136498688",
+      floor2: "5724160613416960",
+      floor3: "5750790484393984",
+    }
+    var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
       locationID: "5198682008846336",
-      floorID: buildingDFloor1,
+      floorID: buildingD.floor1,
       height: "100%",
       markers: {
         placemarks: {

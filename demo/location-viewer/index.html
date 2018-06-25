@@ -77,7 +77,7 @@
   <a class="back" href="../index.html">Back to examples</a>
   <form action="" method="POST" id="map-form">
     <label for="environment">Environment</label>
-    <input type="text" id="environment" value="production">
+    <input type="text" id="environment">
     <label for="token">Token</label>
     <input type="text" id="token">
     <label for="location-id">Location ID</label>
@@ -91,6 +91,7 @@
   <script src="../meridian-sdk.js"></script>
   <script>
     // Load last used form values
+    $("#environment").val(localStorage.LAST_ENVIRONMENT || "production");
     $("#token").val(localStorage.LAST_TOKEN || "");
     $("#location-id").val(localStorage.LAST_LOCATION_ID || "");
     $("#floor-id").val(localStorage.LAST_FLOOR_ID || "");
@@ -110,6 +111,7 @@
       var floorID = $("#floor-id").val();
 
       // Save the form values for next page load
+      localStorage.LAST_ENVIRONMENT = environment;
       localStorage.LAST_TOKEN = token;
       localStorage.LAST_LOCATION_ID = locationID;
       localStorage.LAST_FLOOR_ID = floorID;

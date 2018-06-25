@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Location Viewer | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- IE11 polyfill -->
   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
-  <!-- jQuery is just for the external UI, it is not a dependency for the SDK -->
+  <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
   <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
   <link rel="stylesheet" href="../shared.css">
+  <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
   <script src="../shared.js"></script>
   <style>
     #meridian-map {
@@ -26,8 +26,8 @@
       border-radius: 0;
     }
 
-    input,
-    button {
+    .form input,
+    .form button {
       display: block;
       margin-bottom: 16px;
       font-family: inherit;
@@ -35,23 +35,23 @@
       padding: 8px 16px;
     }
 
-    input:focus,
-    button:focus {
+    .form input:focus,
+    .form button:focus {
       outline: 0;
       box-shadow: 0 0 0 2px white, 0 0 0 4px black;
     }
 
-    input {
+    .form input {
       width: 100%;
       border: 2px solid #ccc;
     }
 
-    form {
+    .form {
       max-width: 400px;
       margin: 0 auto;
     }
 
-    button {
+    .form button {
       margin-top: 32px;
       border: 0;
       border-radius: 4px;
@@ -59,11 +59,11 @@
       color: white;
     }
 
-    button:hover {
+    .form button:hover {
       background: hsl(146, 57%, 28%);
     }
 
-    label {
+    .form label {
       display: block;
       font-size: 24px;
       font-weight: bold;
@@ -80,7 +80,7 @@
 </head>
 
 <body>
-  <form action="" method="POST" id="map-form">
+  <form action="" method="POST" id="map-form" class="form">
     <label for="environment">Environment</label>
     <input type="text" id="environment">
     <label for="token">Token</label>
@@ -94,7 +94,7 @@
   <div id="meridian-map" style="display: none"></div>
 
   <script src="../meridian-sdk.js"></script>
-  <script>
+  <script id="the-code">
     // Load last used form values
     $("#environment").val(localStorage.LAST_ENVIRONMENT || "production");
     $("#token").val(localStorage.LAST_TOKEN || "");

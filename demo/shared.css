@@ -1,3 +1,34 @@
+.dialog {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: #222;
+  color: #eee;
+  z-index: 2;
+  overflow-y: auto;
+}
+
+.dialog pre {
+  font-family: Menlo, Consolas, monospace;
+  font-size: 16px;
+}
+
+.dialog .close {
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 2px solid #555;
+  background: #333;
+  width: 100%;
+}
+
+.dialog .close:hover {
+  border-color: #ccc;
+  background: #444;
+}
+
 .back {
   font-size: 16px;
   position: fixed;
@@ -18,9 +49,22 @@
   background: white;
 }
 
-.back a {
+.back > a {
   text-decoration: none;
   color: inherit;
+}
+
+.back > button {
+  border: 0;
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.back > button:focus {
+  outline: 0;
 }
 
 .back > * {

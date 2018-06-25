@@ -6,9 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Find single tag | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- IE11 polyfill -->
   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+  <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+  <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
   <link rel="stylesheet" href="../shared.css">
+  <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
   <script src="../shared.js"></script>
   <style>
     #meridian-map {
@@ -17,10 +19,6 @@
       margin-top: 20px;
       border-radius: 4px;
     }
-
-    /* body .meridian-map-container {
-      border-radius: 4px;
-    } */
   </style>
 </head>
 
@@ -29,7 +27,7 @@
   <div id="meridian-map" style="border: 1px solid black"></div>
 
   <script src="../meridian-sdk.js"></script>
-  <script>
+  <script id="the-code">
     MeridianSDK.init({
       api: MeridianSDK.createAPI({
         environment: "staging",

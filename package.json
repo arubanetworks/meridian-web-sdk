@@ -1,9 +1,9 @@
 {
   "name": "meridian-web-components",
   "private": true,
-  "version": "0.2.0-beta8",
+  "version": "0.2.0-beta9",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
-  "main": "dist/__TODO__.js",
+  "main": "dist/meridian-sdk.js",
   "scripts": {
     "start": "webpack-dev-server --watch -d --env development",
     "nonlocal": "npm run start -- --host 0.0.0.0",

@@ -14,7 +14,7 @@ const envToRestURL = {
 };
 
 export default class API {
-  constructor({ environment, token }) {
+  constructor({ environment = "production", token }) {
     this.token = token;
     this.environment = environment;
     this.axios = axios.create({

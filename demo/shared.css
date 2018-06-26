@@ -43,8 +43,8 @@
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
   text-decoration: none;
   border-radius: 6px;
-  bottom: 16px;
-  left: 16px;
+  bottom: 15px;
+  left: 15px;
   background: rgba(255, 255, 255, 0.9);
   color: #26e;
   font-family: sans-serif;
@@ -62,6 +62,8 @@
 }
 
 .back > button {
+  padding: 4px 8px;
+  margin: 0;
   border: 0;
   border-radius: 0;
   color: inherit;

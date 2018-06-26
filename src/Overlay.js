@@ -13,8 +13,9 @@ const cssOverlay = css({
   position: "absolute",
   left: 10,
   top: 10,
+  right: 10,
   zIndex: 2,
-  width: 400
+  maxWidth: 400
 });
 
 const cssOverlayImage = css({

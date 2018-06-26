@@ -23,14 +23,30 @@
 
       <div class="controls">
         <label class="controls__item">
-          <input type="checkbox" id="show-placemarks">
-          <span>Show placemarks</span>
+          <input type="radio" name="placemark-filter" value="filter-none" checked>
+          <span>Hide all placemarks</span>
+        </label>
+        <label class="controls__item">
+          <input type="radio" name="placemark-filter" value="filter-all">
+          <span>Show all placemarks</span>
+        </label>
+        <label class="controls__item">
+          <input type="radio" name="placemark-filter" value="filter-cafe">
+          <span>Show placemarks of type
+            <b>cafe</b>
+          </span>
+        </label>
+        <label class="controls__item">
+          <input type="radio" name="placemark-filter" value="filter-water_fountain">
+          <span>Show placemarks of type
+            <b>water_fountain</b>
+          </span>
         </label>
       </div>
 
       <div class="controls">
         <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-none" checked>
+          <input type="radio" name="tag-filter" value="filter-none">
           <span>Hide all tags</span>
         </label>
         <label class="controls__item">
@@ -97,6 +113,7 @@
       },
       tags: {
         all: true,
+        labels: undefined,
         disabled: false
       }
     };
@@ -105,9 +122,27 @@
       map.update({ markers: state });
     }
 
-    $("#show-placemarks").on("change", function () {
-      state.placemarks.all = this.checked;
-      state.placemarks.labels = undefined;
+    $("[name='placemark-filter']").on("change", function () {
+      switch (this.value) {
+        case "filter-none":
+          state.placemarks.all = false;
+          state.placemarks.types = [];
+          break;
+        case "filter-all":
+          state.placemarks.all = true;
+          state.placemarks.types = [];
+          break;
+        case "filter-cafe":
+          state.placemarks.all = false;
+          state.placemarks.types = ["cafe"];
+          break;
+        case "filter-water_fountain":
+          state.placemarks.all = false;
+          state.placemarks.types = ["water_fountain"];
+          break;
+        default:
+          throw new Error("unexpected option " + this.value);
+      }
       updateMap();
     });
 

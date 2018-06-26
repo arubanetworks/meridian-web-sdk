@@ -1,5 +1,6 @@
 ### NEXT
 
+- keyboard shortcuts
 - Test default zoom level on mobile and ... 
 - Add mobile breakpoint for overlay width
 - Add placemarks of type to option toggles

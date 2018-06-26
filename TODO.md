@@ -1,7 +1,8 @@
 ### NEXT
 
+- **PERFORMANCE!** It doesn't hold up for busy locations, especially on mobile
 - keyboard shortcuts
-- Test default zoom level on mobile and ... 
+- Test default zoom level on mobile and ...
 - Add mobile breakpoint for overlay width
 - Add placemarks of type to option toggles
 - Should labels be case insensitive?
@@ -28,4 +29,4 @@
 - Figure out versioning of the SDK
 - Map style support (eventually)
   - Maybe have the editor apply the styles inline to the SVG?
-- Map scale ([_____] = 50 ft)
+- Map scale like `[_____] = 50 ft`

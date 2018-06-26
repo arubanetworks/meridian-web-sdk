@@ -1,5 +1,7 @@
 ### NEXT
 
+- Test default zoom level on mobile and ... 
+- Add mobile breakpoint for overlay width
 - Add placemarks of type to option toggles
 - Should labels be case insensitive?
 - Culling! (openstreetmap/ID uses RBush)

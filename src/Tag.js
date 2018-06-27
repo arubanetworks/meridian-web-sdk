@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 
 import { css, cx, mixins } from "./style";
 
-const SIZE = 32;
+const SIZE = 26;
+const SHRINK_POINT = 0.2;
+const SHRINK_FACTOR = 1.4;
 
 const cssTag = css({
   label: "meridian-tag",
@@ -44,7 +46,8 @@ const Tag = ({
   onClick = () => {},
   disabled = false
 }) => {
-  const k = 1 / mapZoomFactor;
+  const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
+  const k = 1 / mapZoomFactor / shrinkFactor;
   const imageURL = data.image_url;
   const className = cx(cssTag, "meridian-tag");
   const style = {

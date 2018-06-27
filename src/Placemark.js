@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 
 import { css, cx, mixins, theme } from "./style";
 
-const SIZE = 22;
+const SIZE = 24;
+const SHRINK_POINT = 0.2;
+const SHRINK_FACTOR = 1.4;
 
 const cssPlacemark = css({
   label: "meridian-placemark",
@@ -81,7 +83,8 @@ const Placemark = ({
   // Placemarks with a type that starts with label_ are special
   // No icon, grey uppercase text
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
-  const k = 1 / mapZoomFactor;
+  const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
+  const k = 1 / mapZoomFactor / shrinkFactor;
   const style = {
     left: x,
     top: y,

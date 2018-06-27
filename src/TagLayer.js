@@ -11,6 +11,7 @@ export default class TagLayer extends Component {
   };
 
   static propTypes = {
+    isPanningOrZooming: PropTypes.bool.isRequired,
     mapZoomFactor: PropTypes.number.isRequired,
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
@@ -44,6 +45,8 @@ export default class TagLayer extends Component {
       connection.close();
     }
   }
+
+  tagUpdates = {};
 
   isSingleTagSearch() {
     const { ids } = this.props.markers;
@@ -109,29 +112,41 @@ export default class TagLayer extends Component {
     });
   }
 
-  observeTagUpdate(data) {
-    const tag = this.normalizeTag(data);
+  handleTagUpdates(data) {
+    const { isPanningOrZooming } = this.props;
+    this.tagUpdates = {
+      ...this.tagUpdates,
+      ...this.tagsByMAC(data)
+    };
+    if (!isPanningOrZooming) {
+      this.commitTagUpdates();
+    }
+  }
+
+  commitTagUpdates() {
     this.setState(
       prevState => ({
         tagsByMAC: {
           ...prevState.tagsByMAC,
-          [tag.mac]: tag
+          ...this.tagUpdates
         }
       }),
       () => {
+        this.tagUpdates = {};
         this.onUpdate("Connected");
       }
     );
   }
 
+  tagsByMAC(tags) {
+    return tags.map(tag => this.normalizeTag(tag)).reduce((obj, tag) => {
+      obj[tag.mac] = tag;
+      return obj;
+    }, {});
+  }
+
   setInitialTags(tags) {
-    const tagsByMAC = tags
-      .map(tag => this.normalizeTag(tag))
-      .reduce((obj, tag) => {
-        obj[tag.mac] = tag;
-        return obj;
-      }, {});
-    this.setState({ tagsByMAC });
+    this.setState({ tagsByMAC: this.tagsByMAC(tags) });
     this.onUpdate("Connected");
   }
 
@@ -147,7 +162,7 @@ export default class TagLayer extends Component {
         this.removeTag(data);
       },
       onTagUpdate: data => {
-        this.observeTagUpdate(data);
+        this.handleTagUpdates([data]);
       },
       onClose: () => {
         this.setState({ connection: null }, () => {

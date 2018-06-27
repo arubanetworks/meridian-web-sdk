@@ -64,6 +64,7 @@ export default class Map extends Component {
   };
 
   state = {
+    isPanningOrZooming: false,
     mapTransform: "",
     mapZoomFactor: 0.5,
     mapData: null,
@@ -90,6 +91,12 @@ export default class Map extends Component {
         const t = `translate(${x}px, ${y}px) scale(${k})`;
         this.setState({ mapTransform: t, mapZoomFactor: k });
       };
+      const onZoomStart = () => {
+        this.setState({ isPanningOrZooming: true });
+      };
+      const onZoomEnd = () => {
+        this.setState({ isPanningOrZooming: false });
+      };
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
@@ -102,7 +109,9 @@ export default class Map extends Component {
         .scaleExtent([1 / 16, 14])
         // TODO: Why is the translateExtent not working right?
         .duration(ZOOM_DURATION)
-        .on("zoom", onZoom);
+        .on("start.zoom", onZoomStart)
+        .on("zoom", onZoom)
+        .on("end.zoom", onZoomEnd);
       this.mapSelection = d3.select(this.mapRef);
       this.mapSelection.call(this.zoomD3);
       this.mapSelection.call(
@@ -201,7 +210,13 @@ export default class Map extends Component {
   }
 
   render() {
-    const { mapData, selectedItem, mapTransform } = this.state;
+    const {
+      mapData,
+      selectedItem,
+      mapTransform,
+      mapZoomFactor,
+      isPanningOrZooming
+    } = this.state;
     const { locationID, floorID, api, markers, width, height } = this.props;
     return (
       <div
@@ -231,7 +246,7 @@ export default class Map extends Component {
               }}
             />
             <PlacemarkLayer
-              mapZoomFactor={this.state.mapZoomFactor}
+              mapZoomFactor={mapZoomFactor}
               locationID={locationID}
               floorID={floorID}
               api={api}
@@ -239,7 +254,8 @@ export default class Map extends Component {
               onMarkerClick={this.onMarkerClick}
             />
             <TagLayer
-              mapZoomFactor={this.state.mapZoomFactor}
+              isPanningOrZooming={isPanningOrZooming}
+              mapZoomFactor={mapZoomFactor}
               locationID={locationID}
               floorID={floorID}
               api={api}

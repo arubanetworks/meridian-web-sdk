@@ -1,10 +1,5 @@
 ### NEXT
 
-- **PERFORMANCE!** It doesn't hold up for busy locations, especially on mobile
-- keyboard shortcuts
-- Test default zoom level on mobile and ...
-- Add mobile breakpoint for overlay width
-- Add placemarks of type to option toggles
 - Should labels be case insensitive?
 - Culling! (openstreetmap/ID uses RBush)
 
@@ -18,15 +13,13 @@
 
 ### PERFORMANCE
 
-- Do indepth performance testing
+- Do in-depth performance testing
 - The number of placemarks/tags on the map seems to directly affect performance
   in Chrome on Android
 - Using a background SVG for the map directly affects performance in Firefox
 
 ### OTHER
 
+- Hit Escape to close overlay modal
 - Make a new hidden page with copy/paste API code
-- Figure out versioning of the SDK
-- Map style support (eventually)
-  - Maybe have the editor apply the styles inline to the SVG?
 - Map scale like `[_____] = 50 ft`

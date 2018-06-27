@@ -1,7 +1,21 @@
 /* global $ */
 /* global hljs */
+/* global Stats */
 
 $(function() {
+  function showPerf() {
+    var script = document.createElement("script");
+    script.onload = function() {
+      var stats = new Stats();
+      document.body.appendChild(stats.dom);
+      requestAnimationFrame(function loop() {
+        stats.update();
+        requestAnimationFrame(loop);
+      });
+    };
+    script.src = "//rawgit.com/mrdoob/stats.js/master/build/stats.min.js";
+    document.head.appendChild(script);
+  }
   function showTheCode() {
     function remove() {
       dialog.remove();
@@ -29,13 +43,17 @@ $(function() {
     .on("click", function() {
       window.location = "../index.html";
     });
-  var separator = $("<span>").addClass("separator");
   var code = $("<button>")
     .text("Code")
     .on("click", showTheCode);
+  var perf = $("<button>")
+    .text("Perf")
+    .on("click", showPerf);
   container
     .append(back)
-    .append(separator)
-    .append(code);
+    .append($("<span>").addClass("separator"))
+    .append(code)
+    .append($("<span>").addClass("separator"))
+    .append(perf);
   $("body").append(container);
 });

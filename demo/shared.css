@@ -45,15 +45,11 @@
   border-radius: 6px;
   bottom: 15px;
   left: 15px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #26e;
+  background: white;
+  color: #297bc0;
   font-family: sans-serif;
   z-index: 1;
   overflow: hidden;
-}
-
-.back:hover {
-  background: white;
 }
 
 .back > a {
@@ -82,7 +78,11 @@
 }
 
 .back > *:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: #f8f8f8;
+}
+
+.back > *:active {
+  background: #f0f0f0;
 }
 
 .back > .separator {

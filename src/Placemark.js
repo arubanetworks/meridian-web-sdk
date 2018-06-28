@@ -38,7 +38,7 @@ const cssLabel = css({
   position: "absolute",
   minWidth: 55,
   maxWidth: 120,
-  fontSize: 14,
+  fontSize: 13,
   textAlign: "center",
   paddingTop: 4,
   color: "black",
@@ -119,7 +119,7 @@ const Placemark = ({
       <div
         className={cx(cssLabel, "meridian-label")}
         style={{
-          visibility: mapZoomFactor < 1 ? "hidden" : ""
+          visibility: mapZoomFactor < SHRINK_POINT ? "hidden" : ""
         }}
       >
         {data.name}

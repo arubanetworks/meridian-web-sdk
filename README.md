@@ -1,4 +1,4 @@
-# Meridian Web Components
+# Meridian Web SDK
 
 ## Editor Web SDK integration page example
 

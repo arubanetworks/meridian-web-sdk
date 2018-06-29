@@ -1,7 +1,7 @@
 {
   "name": "meridian-web-components",
   "private": true,
-  "version": "0.2.0-beta12",
+  "version": "0.2.0-beta13",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
   "main": "dist/meridian-sdk.js",
   "scripts": {
@@ -26,10 +26,11 @@
   "dependencies": {
     "axios": "^0.18.0",
     "create-emotion": "^9.1.3",
-    "preact": "^8.2.9",
-    "prop-types": "^15.6.1",
     "d3-selection": "^1.3.0",
-    "d3-zoom": "^1.7.1"
+    "d3-zoom": "^1.7.1",
+    "lodash.throttle": "^4.1.1",
+    "preact": "^8.2.9",
+    "prop-types": "^15.6.1"
   },
   "devDependencies": {
     "babel-eslint": "8.2.3",

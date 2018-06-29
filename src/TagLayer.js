@@ -1,5 +1,6 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
+import throttle from "lodash.throttle";
 
 import MapMarker from "./MapMarker";
 
@@ -37,6 +38,15 @@ export default class TagLayer extends Component {
     if (markers) {
       this.connect();
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
+    // don't re-render when panning only (no zoom change)
+    if (this.props.isPanningOrZooming && !zoomChanged) {
+      return false;
+    }
+    return true;
   }
 
   componentWillUnmount() {
@@ -123,7 +133,7 @@ export default class TagLayer extends Component {
     }
   }
 
-  commitTagUpdates() {
+  commitTagUpdates = throttle(() => {
     this.setState(
       prevState => ({
         tagsByMAC: {
@@ -136,7 +146,7 @@ export default class TagLayer extends Component {
         this.onUpdate("Connected");
       }
     );
-  }
+  }, 1000);
 
   tagsByMAC(tags) {
     return tags.map(tag => this.normalizeTag(tag)).reduce((obj, tag) => {

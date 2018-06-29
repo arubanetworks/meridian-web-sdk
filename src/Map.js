@@ -191,11 +191,11 @@ export default class Map extends Component {
   };
 
   onTagsUpdate = (connection, status, tags) => {
-    this.setState({
-      tagsConnection: connection,
-      tagsStatus: status,
-      tagsFound: tags
-    });
+    // this.setState({
+    //   tagsConnection: connection,
+    //   tagsStatus: status,
+    //   tagsFound: tags
+    // });
   };
 
   onTagFound = tag => {

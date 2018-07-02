@@ -11,6 +11,7 @@ export default class PlacemarkLayer extends Component {
   };
 
   static propTypes = {
+    isPanningOrZooming: PropTypes.bool.isRequired,
     mapZoomFactor: PropTypes.number.isRequired,
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
@@ -35,6 +36,15 @@ export default class PlacemarkLayer extends Component {
     // TODO: This data is paginated... do we want to fetch _all_ of it?
     const placemarksByID = this.groupPlacemarksByID(data.results);
     this.setState({ placemarksByID });
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
+    // don't re-render when panning only (no zoom change)
+    if (this.props.isPanningOrZooming && !zoomChanged) {
+      return false;
+    }
+    return true;
   }
 
   normalizePlacemark(placemark) {
@@ -70,6 +80,7 @@ export default class PlacemarkLayer extends Component {
   }
 
   render() {
+    // console.info("Render > PlacemarkLayer", Math.floor(Date.now() / 1000));
     const { placemarksByID } = this.state;
     const { markers, onMarkerClick, mapZoomFactor } = this.props;
     const filter = this.getFilterFunction();

@@ -246,6 +246,7 @@ export default class Map extends Component {
               }}
             />
             <PlacemarkLayer
+              isPanningOrZooming={isPanningOrZooming}
               mapZoomFactor={mapZoomFactor}
               locationID={locationID}
               floorID={floorID}

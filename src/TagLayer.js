@@ -40,7 +40,7 @@ export default class TagLayer extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
+  shouldComponentUpdate(nextProps) {
     const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
     // don't re-render when panning only (no zoom change)
     if (this.props.isPanningOrZooming && !zoomChanged) {
@@ -186,6 +186,7 @@ export default class TagLayer extends Component {
   }
 
   render() {
+    // console.info("Render > TagLayer", Math.floor(Date.now() / 1000));
     const { tagsByMAC } = this.state;
     const { markers, onMarkerClick, mapZoomFactor } = this.props;
     const filter = this.getFilterFunction();

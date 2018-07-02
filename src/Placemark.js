@@ -6,9 +6,16 @@ import { css, cx, mixins, theme } from "./style";
 const SIZE = 24;
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
+const ASSET_PREFIX =
+  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
 
 const cssPlacemark = css({
   label: "meridian-placemark",
+  position: "absolute"
+});
+
+const cssPlacemarkIcon = css({
+  label: "meridian-placemark-icon",
   ...mixins.buttonReset,
   ...mixins.pointer,
   transition: "width 80ms ease, height 80ms ease",
@@ -59,16 +66,13 @@ const cssLabelOnly = css({
   fontSize: 16
 });
 
-const assetPrefix =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
-
 const getIconStyle = data => {
   const name = "placemark-" + data.type.replace(/_/g, "-");
   const color = "#" + data.color;
   return {
     borderColor: color,
     backgroundColor: color,
-    backgroundImage: `url('${assetPrefix}/${name}.svg')`
+    backgroundImage: `url('${ASSET_PREFIX}/${name}.svg')`
   };
 };
 
@@ -88,13 +92,11 @@ const Placemark = ({
   const style = {
     left: x,
     top: y,
-    transform: `translate(-50%, -50%) scale(${k})`,
-    position: "absolute",
-    textAlign: "center"
+    transform: `translate(-50%, -50%) scale(${k})`
   };
   if (labelOnly) {
     return (
-      <div style={style}>
+      <div className={cx(cssPlacemark, "meridian-placemark")} style={style}>
         <div
           className={cx(
             cssLabel,
@@ -109,10 +111,10 @@ const Placemark = ({
     );
   }
   return (
-    <div style={style}>
+    <div className={cx(cssPlacemark, "meridian-placemark")} style={style}>
       <button
         disabled={disabled}
-        className={cx(cssPlacemark, "meridian-placemark")}
+        className={cx(cssPlacemarkIcon, "meridian-placemark-icon")}
         onClick={onClick}
         style={getIconStyle(data)}
       />

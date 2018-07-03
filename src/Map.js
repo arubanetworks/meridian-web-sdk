@@ -38,19 +38,17 @@ export default class Map extends Component {
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
-    markers: PropTypes.shape({
-      tags: PropTypes.shape({
-        all: PropTypes.bool,
-        labels: PropTypes.arrayOf(PropTypes.string),
-        ids: PropTypes.arrayOf(PropTypes.string),
-        disabled: PropTypes.bool
-      }),
-      placemarks: PropTypes.shape({
-        all: PropTypes.bool,
-        types: PropTypes.arrayOf(PropTypes.string),
-        ids: PropTypes.arrayOf(PropTypes.string),
-        disabled: PropTypes.bool
-      })
+    tags: PropTypes.shape({
+      all: PropTypes.bool,
+      labels: PropTypes.arrayOf(PropTypes.string),
+      ids: PropTypes.arrayOf(PropTypes.string),
+      disabled: PropTypes.bool
+    }),
+    placemarks: PropTypes.shape({
+      all: PropTypes.bool,
+      types: PropTypes.arrayOf(PropTypes.string),
+      ids: PropTypes.arrayOf(PropTypes.string),
+      disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
     onMapClick: PropTypes.func,
@@ -61,7 +59,8 @@ export default class Map extends Component {
     zoom: true,
     width: "100%",
     height: "400px",
-    markers: {},
+    placemarks: {},
+    tags: {},
     onTagsUpdate: () => {}
   };
 
@@ -215,7 +214,8 @@ export default class Map extends Component {
       locationID,
       floorID,
       api,
-      markers,
+      tags,
+      placemarks,
       width,
       height,
       onTagsUpdate
@@ -253,7 +253,7 @@ export default class Map extends Component {
               locationID={locationID}
               floorID={floorID}
               api={api}
-              markers={markers.placemarks}
+              markers={placemarks}
               onMarkerClick={this.onMarkerClick}
             />
             <TagLayer
@@ -262,7 +262,7 @@ export default class Map extends Component {
               locationID={locationID}
               floorID={floorID}
               api={api}
-              markers={markers.tags}
+              markers={tags}
               onMarkerClick={this.onMarkerClick}
               onUpdate={onTagsUpdate}
               onFound={this.onTagFound}

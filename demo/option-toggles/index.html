@@ -61,6 +61,12 @@
           </span>
         </label>
         <label class="controls__item">
+          <input type="radio" name="tag-filter" value="filter-A0E6F83805E3">
+          <span>Show tags with ID
+            <b>A0E6F83805E3</b>
+          </span>
+        </label>
+        <label class="controls__item">
           <input type="radio" name="tag-filter" value="filter-iPad">
           <span>Show tags labeled
             <b>iPad</b>
@@ -97,10 +103,8 @@
       locationID: "5198682008846336",
       floorID: "5755685136498688",
       height: "500px",
-      markers: {
-        tags: {
-          all: true
-        }
+      tags: {
+        all: true
       }
     });
     // ---^^^ SDK setup ^^^---
@@ -115,12 +119,13 @@
       tags: {
         all: true,
         labels: undefined,
+        ids: undefined,
         disabled: false
       }
     };
 
     function updateMap() {
-      map.update({ markers: state });
+      map.update(state);
     }
 
     $("[name='placemark-filter']").on("change", function () {
@@ -152,18 +157,27 @@
         case "filter-none":
           state.tags.all = false;
           state.tags.labels = [];
+          state.tags.ids = [];
           break;
         case "filter-all":
           state.tags.all = true;
           state.tags.labels = [];
+          state.tags.ids = [];
           break;
         case "filter-Chair":
           state.tags.all = false;
           state.tags.labels = ["Chair"];
+          state.tags.ids = [];
+          break;
+        case "filter-A0E6F83805E3":
+          state.tags.all = false;
+          state.tags.labels = [];
+          state.tags.ids = ["A0E6F83805E3"];
           break;
         case "filter-iPad":
           state.tags.all = false;
           state.tags.labels = ["iPad"];
+          state.tags.ids = [];
           break;
         default:
           throw new Error("unexpected option " + this.value);

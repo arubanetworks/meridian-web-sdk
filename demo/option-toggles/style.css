@@ -14,13 +14,13 @@ body {
 }
 
 .controls__item {
-  display: block;
+  display: flex;
   padding: 16px 8px;
   user-select: none;
 }
 
 .controls__item > span {
-  margin-left: 4px;
+  margin-left: 10px;
 }
 
 .controls__item + .controls__item {

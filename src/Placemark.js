@@ -52,7 +52,7 @@ const cssLabel = css({
   userSelect: "none",
   transform: "translate(-50%, 0)",
   textShadow: `
-    0 0 3px white
+    0 0 2px white
   `
 });
 

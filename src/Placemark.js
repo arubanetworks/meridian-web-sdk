@@ -45,17 +45,14 @@ const cssLabel = css({
   position: "absolute",
   minWidth: 55,
   maxWidth: 120,
-  fontSize: 13,
+  fontSize: 14,
   textAlign: "center",
   paddingTop: 4,
   color: "black",
   userSelect: "none",
   transform: "translate(-50%, 0)",
   textShadow: `
-    0 1px 0 rgba(255, 255, 255, 0.5),
-    -1px 0 0 rgba(255, 255, 255, 0.5),
-    1px 0 0 rgba(255, 255, 255, 0.5),
-    0 -1px 0 rgba(255, 255, 255, 0.5)
+    0 0 3px white
   `
 });
 

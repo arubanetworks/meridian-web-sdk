@@ -67,7 +67,7 @@ export default class TagLayer extends Component {
     this.props.onFound(tag);
   };
 
-  onUpdate = status => {
+  onUpdate = () => {
     const { connection, tagsByMAC } = this.state;
     const { markers, onUpdate } = this.props;
     if (this.isSingleTagSearch() && connection) {
@@ -75,8 +75,6 @@ export default class TagLayer extends Component {
       const tag = tagsByMAC[mac];
       if (tag) {
         this.onFound(tag);
-      } else {
-        status = `Looking for tag ${mac}`;
       }
     }
     onUpdate(tagsByMAC);
@@ -143,7 +141,7 @@ export default class TagLayer extends Component {
       }),
       () => {
         this.tagUpdates = {};
-        this.onUpdate("Connected");
+        this.onUpdate();
       }
     );
   }, 1000);
@@ -157,7 +155,7 @@ export default class TagLayer extends Component {
 
   setInitialTags(tags) {
     this.setState({ tagsByMAC: this.tagsByMAC(tags) });
-    this.onUpdate("Connected");
+    this.onUpdate();
   }
 
   connect() {
@@ -176,12 +174,12 @@ export default class TagLayer extends Component {
       },
       onClose: () => {
         this.setState({ connection: null }, () => {
-          this.onUpdate("Not Connected");
+          this.onUpdate();
         });
       }
     });
     this.setState({ connection }, () => {
-      this.onUpdate("Connected");
+      this.onUpdate();
     });
   }
 

@@ -22,14 +22,15 @@
 
     .map {
       margin-top: 20px;
-    }
-
-    #meridian-map {
-      border-radius: 5px;
+      border-radius: 2px;
       border: 1px solid mediumturquoise;
-      background: papayawhip;
       box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
     }
+
+    body .meridian-map-container {
+      background: papayawhip;
+    }
+
   </style>
 </head>
 
@@ -47,10 +48,8 @@
       locationID: "5198682008846336",
       floorID: "5755685136498688",
       height: "500px",
-      markers: {
-        tags: {
-          all: true
-        }
+      tags: {
+        all: true
       }
     });
   </script>

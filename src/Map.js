@@ -53,14 +53,16 @@ export default class Map extends Component {
       })
     }),
     onMarkerClick: PropTypes.func,
-    onMapClick: PropTypes.func
+    onMapClick: PropTypes.func,
+    onTagsUpdate: PropTypes.func
   };
 
   static defaultProps = {
     zoom: true,
     width: "100%",
     height: "400px",
-    markers: {}
+    markers: {},
+    onTagsUpdate: () => {}
   };
 
   state = {
@@ -190,14 +192,6 @@ export default class Map extends Component {
     this.setState({ selectedItem: {} });
   };
 
-  onTagsUpdate = (connection, status, tags) => {
-    // this.setState({
-    //   tagsConnection: connection,
-    //   tagsStatus: status,
-    //   tagsFound: tags
-    // });
-  };
-
   onTagFound = tag => {
     this.zoomToPoint(tag.x, tag.y, 2);
   };
@@ -217,7 +211,15 @@ export default class Map extends Component {
       mapZoomFactor,
       isPanningOrZooming
     } = this.state;
-    const { locationID, floorID, api, markers, width, height } = this.props;
+    const {
+      locationID,
+      floorID,
+      api,
+      markers,
+      width,
+      height,
+      onTagsUpdate
+    } = this.props;
     return (
       <div
         className={cx(cssMapContainer, "meridian-map-container")}
@@ -262,7 +264,7 @@ export default class Map extends Component {
               api={api}
               markers={markers.tags}
               onMarkerClick={this.onMarkerClick}
-              onUpdate={this.onTagsUpdate}
+              onUpdate={onTagsUpdate}
               onFound={this.onTagFound}
             />
           </div>

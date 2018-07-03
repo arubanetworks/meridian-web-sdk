@@ -8,7 +8,7 @@ body {
 .map {
   border: 1px solid #ccc;
   float: left;
-  max-width: 350px;
+  width: 340px;
 }
 
 .controls-container {
@@ -43,18 +43,19 @@ body {
 }
 
 @media only screen and (max-width: 750px) {
-  body {
-    padding: 10px;
+  .container {
+    max-width: 340px;
+    margin: 0 auto;
   }
   .controls-container {
     float: none;
-    margin: 20px auto 0 auto;
-    width: auto;
+    margin: 10px 0 0 0;
+    width: 100%;
+    max-width: auto;
   }
 
   .map {
-    margin: 0 auto;
     float: none;
-    max-width: auto;
+    width: 100%;
   }
 }

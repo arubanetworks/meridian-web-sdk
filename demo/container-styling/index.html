@@ -24,63 +24,29 @@
       margin-top: 20px;
     }
 
-    #meridian-map-1 {
+    #meridian-map {
       border-radius: 5px;
       border: 1px solid mediumturquoise;
-    }
-
-    #meridian-map-1 .meridian-map-background {
       background: papayawhip;
-    }
-
-    #meridian-map-2 {
-      border-radius: 2px;
-      background: whitesmoke;
       box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
-    }
-
-    #meridian-map-3 {
-      border-radius: 8px;
-      border: 2px solid black;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="map" id="meridian-map-1"></div>
-  <div class="map" id="meridian-map-2"></div>
-  <div class="map" id="meridian-map-3"></div>
+  <div class="map" id="meridian-map"></div>
 
   <script src="../meridian-sdk.js"></script>
   <script id="the-code">
-    MeridianSDK.init({
+    MeridianSDK.createMap(document.getElementById("meridian-map"), {
       api: MeridianSDK.createAPI({
         environment: "production",
         token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-      })
-    });
-    MeridianSDK.createMap(document.getElementById("meridian-map-1"), {
+      }),
       locationID: "5198682008846336",
       floorID: "5755685136498688",
-      markers: {
-        tags: {
-          all: true
-        }
-      }
-    });
-    MeridianSDK.createMap(document.getElementById("meridian-map-2"), {
-      locationID: "5198682008846336",
-      floorID: "5755685136498688",
-      markers: {
-        tags: {
-          all: true
-        }
-      }
-    });
-    MeridianSDK.createMap(document.getElementById("meridian-map-3"), {
-      locationID: "5198682008846336",
-      floorID: "5755685136498688",
+      height: "500px",
       markers: {
         tags: {
           all: true

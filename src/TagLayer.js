@@ -79,7 +79,7 @@ export default class TagLayer extends Component {
         status = `Looking for tag ${mac}`;
       }
     }
-    onUpdate(connection, status, tagsByMAC);
+    onUpdate(tagsByMAC);
   };
 
   normalizeTag(tag) {

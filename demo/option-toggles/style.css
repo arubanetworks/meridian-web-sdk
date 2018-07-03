@@ -1,13 +1,26 @@
 body {
   font-family: sans-serif;
-  max-width: 900px;
-  padding: 20px;
+}
+
+.container {
+  width: 900px;
   margin: 0 auto;
 }
 
-.controls {
+.map {
+  border: 1px solid #ccc;
+  float: left;
+  width: 500px;
+}
+
+.controls-container {
+  float: left;
   margin-left: 20px;
-  margin-bottom: 20px;
+  max-width: 350px;
+}
+
+.controls {
+  margin-bottom: 10px;
   background: hsl(210, 50%, 98%);
   color: hsl(210, 80%, 30%);
   border: 1px solid hsl(210, 30%, 80%);
@@ -31,8 +44,21 @@ body {
   background: hsl(210, 50%, 95%);
 }
 
-.map {
-  width: 500px;
-  height: 500px;
-  border: 1px solid #ccc;
+@media only screen and (max-width: 900px) {
+  .container {
+    max-width: 340px;
+    width: auto;
+    margin: 0 auto;
+  }
+  .controls-container {
+    float: none;
+    margin: 10px 0 0 0;
+    width: 100%;
+    max-width: auto;
+  }
+
+  .map {
+    float: none;
+    width: 100%;
+  }
 }

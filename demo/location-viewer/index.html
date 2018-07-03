@@ -14,17 +14,14 @@
   <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
   <script src="../shared.js"></script>
   <style>
-    #meridian-map {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+    .map {
+      max-width: 500px;
+      margin: auto;
+      border: 1px solid #ccc;
     }
 
-    body .meridian-map-container {
-      border: 0;
-      border-radius: 0;
+    .form {
+      padding: 10px;
     }
 
     .form input,
@@ -33,7 +30,7 @@
       margin-bottom: 16px;
       font-family: inherit;
       font-size: 24px;
-      padding: 8px 16px;
+      /* padding: 8px 16px; */
     }
 
     .form input:focus,
@@ -73,10 +70,8 @@
 
     body {
       background: #fafafa;
-      padding: 16px;
       font-family: sans-serif;
     }
-
   </style>
 </head>
 
@@ -92,7 +87,7 @@
     <input type="text" id="floor-id">
     <button>Create map</button>
   </form>
-  <div id="meridian-map" style="display: none"></div>
+  <div class="map" id="meridian-map" style="display: none"></div>
 
   <script src="../meridian-sdk.js"></script>
   <script id="the-code">
@@ -134,7 +129,6 @@
       var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
         locationID: locationID,
         floorID: floorID,
-        height: "100%",
         placemarks: {
           all: true
         },

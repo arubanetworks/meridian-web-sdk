@@ -18,10 +18,10 @@
 
 <body>
 
-  <div style="display: flex">
+  <div class="container">
     <div class="map" id="meridian-map"></div>
-    <div style="flex: 1 1 auto">
 
+    <div class="controls-container">
       <div class="controls">
         <label class="controls__item">
           <input type="radio" name="placemark-filter" value="filter-none" checked>
@@ -44,7 +44,6 @@
           </span>
         </label>
       </div>
-
       <div class="controls">
         <label class="controls__item">
           <input type="radio" name="tag-filter" value="filter-none">
@@ -73,7 +72,6 @@
           </span>
         </label>
       </div>
-
       <div class="controls">
         <label class="controls__item">
           <input type="checkbox" id="disable-placemarks">
@@ -86,6 +84,7 @@
       </div>
 
     </div>
+    <!-- /.controls-container -->
   </div>
 
 
@@ -102,7 +101,7 @@
     var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
       locationID: "5198682008846336",
       floorID: "5755685136498688",
-      height: "500px",
+      height: "360px",
       tags: {
         all: true
       }

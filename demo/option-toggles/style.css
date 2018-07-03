@@ -1,13 +1,24 @@
 body {
   font-family: sans-serif;
-  max-width: 900px;
-  padding: 20px;
+  max-width: 725px;
+  padding: 10px;
   margin: 0 auto;
 }
 
-.controls {
+.map {
+  border: 1px solid #ccc;
+  float: left;
+  max-width: 350px;
+}
+
+.controls-container {
+  float: left;
   margin-left: 20px;
-  margin-bottom: 20px;
+  max-width: 350px;
+}
+
+.controls {
+  margin-bottom: 10px;
   background: hsl(210, 50%, 98%);
   color: hsl(210, 80%, 30%);
   border: 1px solid hsl(210, 30%, 80%);
@@ -31,8 +42,19 @@ body {
   background: hsl(210, 50%, 95%);
 }
 
-.map {
-  width: 500px;
-  height: 500px;
-  border: 1px solid #ccc;
+@media only screen and (max-width: 750px) {
+  body {
+    padding: 10px;
+  }
+  .controls-container {
+    float: none;
+    margin: 20px auto 0 auto;
+    width: auto;
+  }
+
+  .map {
+    margin: 0 auto;
+    float: none;
+    max-width: auto;
+  }
 }

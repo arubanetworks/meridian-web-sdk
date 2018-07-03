@@ -14,10 +14,10 @@
   <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
   <script src="../shared.js"></script>
   <style>
-    #meridian-map {
-      max-width: 600px;
-      margin: 0 auto;
-      padding-top: 20px;
+    .map {
+      max-width: 500px;
+      margin: auto;
+      padding: 0 20px 0 10px;
     }
 
     /**
@@ -72,13 +72,12 @@
       fill: red;
       box-shadow: 0 0 0 6px gold;
     }
-
   </style>
 </head>
 
 <body>
 
-  <div id="meridian-map"></div>
+  <div class="map" id="meridian-map"></div>
 
   <script src="../meridian-sdk.js"></script>
   <script id="the-code">
@@ -91,7 +90,6 @@
     MeridianSDK.createMap(document.getElementById("meridian-map"), {
       locationID: "5198682008846336",
       floorID: "5755685136498688",
-      height: "500px",
       tags: {
         all: true
       }

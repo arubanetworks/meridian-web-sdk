@@ -30,7 +30,7 @@ const cssPlacemarkIcon = css({
   border: "2px solid transparent",
   overflow: "hidden",
   zIndex: 1,
-  boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.5)",
+  boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.7)",
   "&:focus": {
     zIndex: 3,
     width: SIZE * 1.25,
@@ -51,8 +51,12 @@ const cssLabel = css({
   color: "black",
   userSelect: "none",
   transform: "translate(-50%, 0)",
+  fontWeight: "bold",
   textShadow: `
-    0 0 2px white
+    white 1px 0 1px,
+    white 0 1px 1px,
+    white -1px 0 1px,
+    white 0 -1px 1px
   `
 });
 

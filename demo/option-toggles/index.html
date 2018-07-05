@@ -54,21 +54,15 @@
           <span>Show all tags</span>
         </label>
         <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-Chair">
+          <input type="radio" name="tag-filter" value="filter-Jamboard">
           <span>Show tags labeled
-            <b>Chair</b>
+            <b>Jamboard</b>
           </span>
         </label>
         <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-A0E6F83805E3">
-          <span>Show tags with ID
-            <b>A0E6F83805E3</b>
-          </span>
-        </label>
-        <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-iPad">
-          <span>Show tags labeled
-            <b>iPad</b>
+          <input type="radio" name="tag-filter" value="filter-CC78ABC6CB63">
+          <span>Show tag with ID
+            <b>CC78ABC6CB63</b>
           </span>
         </label>
       </div>
@@ -163,20 +157,15 @@
           state.tags.labels = [];
           state.tags.ids = [];
           break;
-        case "filter-Chair":
+        case "filter-Jamboard":
           state.tags.all = false;
-          state.tags.labels = ["Chair"];
+          state.tags.labels = ["Jamboard"];
           state.tags.ids = [];
           break;
-        case "filter-A0E6F83805E3":
+        case "filter-CC78ABC6CB63":
           state.tags.all = false;
           state.tags.labels = [];
-          state.tags.ids = ["A0E6F83805E3"];
-          break;
-        case "filter-iPad":
-          state.tags.all = false;
-          state.tags.labels = ["iPad"];
-          state.tags.ids = [];
+          state.tags.ids = ["CC78ABC6CB63"];
           break;
         default:
           throw new Error("unexpected option " + this.value);

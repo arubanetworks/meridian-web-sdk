@@ -23,11 +23,10 @@ rm -rf dist
 
 Heading "* Building SDK JS bundle..."
 npm run -s build
+mv dist/meridian-sdk.js demo/
 
 Heading "* Copying build files..."
-mkdir dist/__SECRET__/
-cp -r demo/* dist/__SECRET__/
-npx gh-pages-deploy
+npx gh-pages --dist demo --dest __SECRET__
 
 Heading "* Cleaning up build files..."
 rm -rf dist

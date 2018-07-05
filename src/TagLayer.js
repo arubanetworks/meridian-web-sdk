@@ -190,6 +190,7 @@ export default class TagLayer extends Component {
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(tagsByMAC)
       .map(mac => tagsByMAC[mac])
+      .filter(tag => !tag.data.is_control_tag)
       .filter(filter)
       .map(tag => (
         <MapMarker

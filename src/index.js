@@ -1,7 +1,6 @@
 import { h, render } from "preact";
 import "preact/debug";
 
-import Provider from "./Provider";
 import Map from "./Map";
 import API from "./API";
 
@@ -22,20 +21,14 @@ export function createMap(
   node = requiredParam("node"),
   options = requiredParam("options")
 ) {
-  let provider = null;
+  let domRef = null;
 
-  const ref = component => {
-    provider = component;
-    provider.setState({ options });
-  };
-
-  render(<Provider component={Map} context={context} ref={ref} />, node);
+  domRef = render(<Map api={context.api} {...options} />, node);
 
   return {
-    update: options => {
-      provider.setState(prevState => ({
-        options: { ...prevState.options, ...options }
-      }));
+    update: updatedOptions => {
+      options = { ...options, ...updatedOptions };
+      domRef = render(<Map api={context.api} {...options} />, node, domRef);
     }
   };
 }

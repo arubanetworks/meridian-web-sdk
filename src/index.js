@@ -21,22 +21,14 @@ export function createMap(
   node = requiredParam("node"),
   options = requiredParam("options")
 ) {
-  let mapRef = null;
+  let DOMref = null;
 
-  const ref = component => {
-    mapRef = component;
-  };
-
-  render(<Map api={context.api} {...options} ref={ref} />, node);
+  DOMref = render(<Map api={context.api} {...options} />, node);
 
   return {
     update: updatedOptions => {
       options = { ...options, ...updatedOptions };
-      render(
-        <Map api={context.api} {...options} ref={ref} />,
-        node,
-        mapRef.base
-      );
+      DOMref = render(<Map api={context.api} {...options} />, node, DOMref);
     }
   };
 }

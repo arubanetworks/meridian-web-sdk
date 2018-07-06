@@ -15,21 +15,22 @@ Heading() {
 # package.json just to get the version number
 version="${VERSION:-$npm_package_version}"
 name="${npm_package_name}"
-url="https://arubanetworks.github.io/meridian-web-sdk"
 
 Heading "--- Deploying $name demos v$version ---"
 
 Heading "* Cleaning old build..."
 rm -rf dist
+mkdir -p dist/--SECRET--
 
 Heading "* Building SDK JS bundle..."
 npm run -s build
-mv dist/meridian-sdk.js demo/
+mv dist/meridian-sdk.js dist/--SECRET--/
+cp -r demo/* dist/--SECRET--/
 
 Heading "* Copying build files..."
-npx gh-pages --dist demo
+npx gh-pages --dist dist
 
 Heading "* Cleaning up build files..."
-rm demo/meridian-sdk.js
+rm -rf dist
 
-Heading "==> $url"
+Heading "==> https://arubanetworks.github.io/meridian-web-sdk/--SECRET--"

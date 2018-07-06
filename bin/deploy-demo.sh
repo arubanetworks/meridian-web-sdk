@@ -6,9 +6,9 @@ cyan=$'\e[36m'
 clear=$'\e[0m'
 
 Heading() {
-  echo "$clear"
-  echo "$bold$cyan$@$clear"
-  echo "$clear"
+  echo "${clear}"
+  echo "${bold}${cyan}$@${clear}"
+  echo "${clear}"
 }
 
 # `npm run` provides this environment variable so we don't have to parse the

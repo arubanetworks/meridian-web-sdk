@@ -5,7 +5,7 @@
 #
 set -eu
 
-die() {
+Die() {
   echo "$@" >&2
   exit 1
 }
@@ -13,13 +13,13 @@ die() {
 bucket="gs://${npm_package_name}"
 
 echo "Verifying you are logged into gcloud..."
-if ! gcloud auth list 2>&1 |  grep 'ACTIVE'; then
-  die "You are NOT logged into gcloud. Please run: gcloud auth login"
+if ! gcloud auth list 2>&1 |  grep ACTIVE; then
+  Die "You are NOT logged into gcloud. Please run: gcloud auth login"
 fi
 
 # `npm run` provides this environment variable so we don't have to parse the
 # package.json just to get the version number
-version=${VERSION:-$npm_package_version}
+version="${VERSION:-$npm_package_version}"
 
 echo
 echo "--- Deploying ${npm_package_name} ${version} ---"

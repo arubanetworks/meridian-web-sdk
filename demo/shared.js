@@ -1,6 +1,7 @@
 /* global $ */
 /* global hljs */
 /* global Stats */
+/* global MeridianSDK */
 
 $(function() {
   function showPerf() {
@@ -20,21 +21,25 @@ $(function() {
     function remove() {
       dialog.remove();
     }
-    var close1 = $("<button>")
+    var dialog = $("<div>").addClass("dialog flex flex-column");
+    var heading = $("<div>")
+      .addClass("flex flex-center section")
+      .appendTo(dialog);
+    $("<div>")
+      .text("Meridian SDK " + MeridianSDK.version)
+      .addClass("heading flex-auto")
+      .appendTo(heading);
+    $("<button>")
       .text("Close")
-      .addClass("close")
-      .on("click", remove);
-    var close2 = $("<button>")
-      .text("Close")
-      .addClass("close")
-      .on("click", remove);
+      .addClass("close flex-0")
+      .on("click", remove)
+      .appendTo(heading);
     var code = $("#the-code").text();
     var html = hljs.highlight("javascript", code).value;
-    var dialog = $("<div>").addClass("dialog");
-    var pre = $("<pre>").html(html);
-    dialog.append(close1);
-    dialog.append(pre);
-    dialog.append(close2);
+    $("<pre>")
+      .html(html)
+      .addClass("section")
+      .appendTo(dialog);
     $("body").append(dialog);
   }
   var container = $("<div>").addClass("back");

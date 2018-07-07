@@ -21,12 +21,12 @@ $(function() {
     function remove() {
       dialog.remove();
     }
-    var dialog = $("<div>").addClass("dialog");
+    var dialog = $("<div>").addClass("dialog flex flex-column");
     var heading = $("<div>")
       .addClass("flex flex-center section")
       .appendTo(dialog);
     $("<div>")
-      .text("Meridian Web SDK v" + MeridianSDK.version)
+      .text("Meridian SDK " + MeridianSDK.version)
       .addClass("heading flex-auto")
       .appendTo(heading);
     $("<button>")

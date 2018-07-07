@@ -2,6 +2,10 @@
   display: flex;
 }
 
+.flex-column {
+  flex-direction: column;
+}
+
 .flex-center {
   align-items: center;
   justify-content: center;
@@ -36,7 +40,7 @@
 }
 
 .dialog .section {
-  padding: 16px;
+  padding: 32px 16px;
 }
 
 .dialog .section + .section {
@@ -46,8 +50,7 @@
 .dialog pre {
   margin: 0;
   font-family: Input, Menlo, Consolas, monospace;
-  white-space: pre-wrap;
-  word-break: break-all;
+  overflow: auto;
 }
 
 .dialog .close {
@@ -67,6 +70,12 @@
 .dialog .close:hover {
   border-color: #ccc;
   background: #444;
+}
+
+.dialog .close:focus {
+  border-color: #fff;
+  background: #555;
+  outline: 0;
 }
 
 .back {

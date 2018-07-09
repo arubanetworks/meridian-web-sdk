@@ -27,7 +27,6 @@
   </div>
 
   <script src="../meridian-sdk.js"></script>
-  <!-- <script id="the-code"> -->
   <script type="text/babel" id="the-code">
     // ---vvv SDK setup vvv---
     MeridianSDK.init({
@@ -43,7 +42,8 @@
       constructor(props) {
         super(props);
         this.state = {
-          tagLabels: []
+          tagLabels: [],
+          isLabelVisible: {}
         };
         this.initMeridianMap = this.initMeridianMap.bind(this);
         this.onTagsUpdate = this.onTagsUpdate.bind(this);
@@ -54,42 +54,61 @@
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "360px",
-          onTagsUpdate: this.onTagsUpdate,
-          tags: {
-            all: true
-          }
+          onTagsUpdate: this.onTagsUpdate
         });
       }
 
       onTagsUpdate(tagsByMAC) {
-        var labels = this.getLabels(tagsByMAC);
-        this.map.update({
-          tags: {
-            all: true,
-            labels: labels
-          }
-        });
+        const labels = this.getLabels(tagsByMAC);
         this.setState({ tagLabels: labels });
       }
 
       getLabels(tagsByMAC) {
-        var labels = {};
-        Object.keys(tagsByMAC).forEach(function (mac) {
-          var tag = tagsByMAC[mac];
-          tag.labels.forEach(function (label) {
+        const labels = {};
+        Object.keys(tagsByMAC).forEach(mac => {
+          const tag = tagsByMAC[mac];
+          tag.labels.forEach(label => {
             labels[label] = true;
           });
         });
         return Object.keys(labels);
       }
 
+      toggleLabel(label) {
+        // TODO: This code is possibly confusing
+        this.setState(prevState => ({
+          isLabelVisible: {
+            ...prevState.isLabelVisible,
+            [label]: !prevState.isLabelVisible[label]
+          }
+        }), () => {
+          this.map.update({
+            tags: {
+              labels: this.getVisibleLabels()
+            }
+          });
+        });
+      }
+
+      getVisibleLabels() {
+        return this.state.tagLabels.filter(label =>
+          this.state.isLabelVisible[label]
+        );
+      }
+
       render() {
         return <div>
           <div className="map" id="map" ref={this.initMeridianMap} />
           <div className="controls-container">
-            <div className="controls">
+            <div className="controls" style={{ maxHeight: 500, overflow: "auto" }}>
               {this.state.tagLabels.map(label => (
-                <div className="controls__item">{label}</div>
+                <label key={label} className="controls__item">
+                  <input
+                    type="checkbox"
+                    onChange={() => this.toggleLabel(label)}
+                  />
+                  <span>{label}</span>
+                </label>
               ))}
             </div>
           </div>

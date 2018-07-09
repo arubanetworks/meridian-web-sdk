@@ -1,5 +1,6 @@
 ### NEXT
 
+- Filter control tags out of the `tagsByMAC`
 - Search for tag by name
 - Filter/Search by category
 - Audit State usage

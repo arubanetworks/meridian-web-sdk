@@ -43,8 +43,10 @@
   padding: 32px 16px;
 }
 
-.dialog .section + .section {
-  border-top: 2px solid #444;
+.dialog .top-bar {
+  /* border-bottom: 2px solid #333; */
+  z-index: 1;
+  box-shadow: 0 0 32px black;
 }
 
 .dialog pre {
@@ -59,22 +61,21 @@
   font-family: inherit;
   font-size: inherit;
   color: inherit;
-  border-radius: 999px;
-  border: 2px solid #888;
-  background: #333;
+  border-radius: 4px;
+  background: #ccc;
+  border: 0;
+  color: #000;
   width: 100%;
   font-weight: bold;
-  text-transform: uppercase;
 }
 
 .dialog .close:hover {
-  border-color: #ccc;
-  background: #444;
+  background: #fff;
 }
 
 .dialog .close:focus {
-  border-color: #fff;
-  background: #555;
+  box-shadow: 0 0 0 2px black, 0 0 0 4px white;
+  background: #eee;
   outline: 0;
 }
 

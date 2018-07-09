@@ -1,5 +1,7 @@
 ### NEXT
 
+- Search for tag by name
+- Filter/Search by category
 - Audit State usage
 - Should labels be case insensitive?
 - Culling! (openstreetmap/ID uses RBush)

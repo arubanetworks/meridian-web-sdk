@@ -21,6 +21,7 @@
 
 ### OTHER
 
+- Tag updates are coming in first (onTagUpdate)
 - Hit Escape to close overlay modal
 - Make a new hidden page with copy/paste API code
 - Map scale like `[_____] = 50 ft`

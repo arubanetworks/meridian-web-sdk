@@ -158,8 +158,7 @@ export default class TagLayer extends Component {
   }
 
   setInitialTags(tags) {
-    this.setState({ tagsByMAC: this.tagsByMAC(tags) });
-    this.onUpdate();
+    this.setState({ tagsByMAC: this.tagsByMAC(tags) }, () => this.onUpdate());
   }
 
   connect() {

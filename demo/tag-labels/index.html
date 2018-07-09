@@ -43,7 +43,7 @@
         super(props);
         this.state = {
           tagLabels: [],
-          isLabelVisible: {}
+          showTagsWithLabel: {}
         };
         this.initMeridianMap = this.initMeridianMap.bind(this);
         this.onTagsUpdate = this.onTagsUpdate.bind(this);
@@ -75,11 +75,11 @@
       }
 
       toggleLabel(label) {
-        // TODO: This code is possibly confusing
+        // Toggle the visibility of the label then update the Meridian Map
         this.setState(prevState => ({
-          isLabelVisible: {
-            ...prevState.isLabelVisible,
-            [label]: !prevState.isLabelVisible[label]
+          showTagsWithLabel: {
+            ...prevState.showTagsWithLabel,
+            [label]: !prevState.showTagsWithLabel[label]
           }
         }), () => {
           this.map.update({
@@ -92,7 +92,7 @@
 
       getVisibleLabels() {
         return this.state.tagLabels.filter(label =>
-          this.state.isLabelVisible[label]
+          this.state.showTagsWithLabel[label]
         );
       }
 
@@ -100,8 +100,10 @@
         return <div>
           <div className="map" id="map" ref={this.initMeridianMap} />
           <div className="controls-container">
-            <p>{this.state.tagLabels.length} labels</p>
-            <div className="controls" style={{ maxHeight: 500, overflow: "auto" }}>
+            <p style={{ textAlign: "center" }}>
+              {this.state.tagLabels.length} categories found
+            </p>
+            <div className="controls" style={{ minHeight: 100, minWidth: 260 }}>
               {this.state.tagLabels.map(label => (
                 <label key={label} className="controls__item">
                   <input

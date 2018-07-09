@@ -11,12 +11,9 @@
   <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
   <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
   <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
-<<<<<<< HEAD
   <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
-=======
->>>>>>> ae8f1aea2cbaa608bbdbf5ef577d37ac6fcfa98e
   <link rel="stylesheet" href="../shared.css">
   <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
   <script src="../shared.js"></script>
@@ -26,79 +23,11 @@
 <body>
 
   <div class="container">
-<<<<<<< HEAD
     <div id="react-root"></div>
   </div>
 
   <script src="../meridian-sdk.js"></script>
   <script type="text/babel" id="the-code">
-=======
-    <div class="map" id="meridian-map"></div>
-
-    <div class="controls-container">
-      <div class="controls">
-        <label class="controls__item">
-          <input type="radio" name="placemark-filter" value="filter-none" checked>
-          <span>Hide all placemarks</span>
-        </label>
-        <label class="controls__item">
-          <input type="radio" name="placemark-filter" value="filter-all">
-          <span>Show all placemarks</span>
-        </label>
-        <label class="controls__item">
-          <input type="radio" name="placemark-filter" value="filter-cafe">
-          <span>Show placemarks of type
-            <b>cafe</b>
-          </span>
-        </label>
-        <label class="controls__item">
-          <input type="radio" name="placemark-filter" value="filter-water_fountain">
-          <span>Show placemarks of type
-            <b>water_fountain</b>
-          </span>
-        </label>
-      </div>
-      <div class="controls">
-        <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-none">
-          <span>Hide all tags</span>
-        </label>
-        <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-all" checked>
-          <span>Show all tags</span>
-        </label>
-        <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-Jamboard">
-          <span>Show tags labeled
-            <b>Jamboard</b>
-          </span>
-        </label>
-        <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-CC78ABC6CB63">
-          <span>Show tag with ID
-            <b>CC78ABC6CB63</b>
-          </span>
-        </label>
-      </div>
-      <div class="controls">
-        <label class="controls__item">
-          <input type="checkbox" id="disable-placemarks">
-          <span>Disable clicking on placemarks</span>
-        </label>
-        <label class="controls__item">
-          <input type="checkbox" id="disable-tags">
-          <span>Disable clicking on tags</span>
-        </label>
-      </div>
-
-    </div>
-    <!-- /.controls-container -->
-  </div>
-
-
-  <script src="../meridian-sdk.js"></script>
-  <script id="the-code">
->>>>>>> ae8f1aea2cbaa608bbdbf5ef577d37ac6fcfa98e
     // ---vvv SDK setup vvv---
     MeridianSDK.init({
       api: MeridianSDK.createAPI({
@@ -106,7 +35,6 @@
         token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
       })
     });
-<<<<<<< HEAD
     // ---^^^ SDK setup ^^^---
 
     // ---vvv UI controls vvv---
@@ -172,6 +100,7 @@
         return <div>
           <div className="map" id="map" ref={this.initMeridianMap} />
           <div className="controls-container">
+            <p>{this.state.tagLabels.length} labels</p>
             <div className="controls" style={{ maxHeight: 500, overflow: "auto" }}>
               {this.state.tagLabels.map(label => (
                 <label key={label} className="controls__item">
@@ -189,56 +118,6 @@
     }
 
     ReactDOM.render(<App />, document.getElementById("react-root"));
-=======
-
-    var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
-      locationID: "5198682008846336",
-      floorID: "5755685136498688",
-      height: "360px",
-      onTagsUpdate: onTagsUpdate,
-      tags: {
-        all: true
-      }
-    });
-    // ---^^^ SDK setup ^^^---
-
-    // ---vvv UI controls vvv---
-    var state = {
-      tagLabels: [],
-      tagsByMAC: {}
-    };
-
-    function onTagsUpdate(tagsByMAC) {
-      state.tagsByMAC = tagsByMAC;
-      renderTags();
-    }
-
-    function renderTags() {
-      var labels = getLabels(state.tagsByMAC);
-      console.log(labels);
-    }
-
-    function getLabels(tagsByMAC) {
-      var labels = {};
-      Object.keys(tagsByMAC).forEach(function (mac) {
-        var tag = tagsByMAC[mac];
-        tag.labels.forEach(function(label) {
-          labels[label] = true;
-        });
-      });
-      return Object.keys(labels);
-    }
-
-    function updateMap() {
-      map.update({
-        tags: {
-          all: true,
-          labels: state.tagLabels
-        }
-      });
-    }
-
->>>>>>> ae8f1aea2cbaa608bbdbf5ef577d37ac6fcfa98e
 
   </script>
 </body>

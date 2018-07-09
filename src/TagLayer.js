@@ -84,7 +84,8 @@ export default class TagLayer extends Component {
     const { mac, editor_data: data } = tag;
     const { name } = data;
     const { x, y } = tag.calculations.default.location;
-    return { name, mac, x, y, data };
+    const labels = tag.editor_data.tags.map(x => x.name);
+    return { name, mac, x, y, labels, data };
   }
 
   getFilterFunction() {

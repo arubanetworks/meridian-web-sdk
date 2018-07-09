@@ -84,7 +84,8 @@ export default class TagLayer extends Component {
     const { mac, editor_data: data } = tag;
     const { name } = data;
     const { x, y } = tag.calculations.default.location;
-    return { name, mac, x, y, data };
+    const labels = tag.editor_data.tags.map(x => x.name);
+    return { name, mac, x, y, labels, data };
   }
 
   getFilterFunction() {
@@ -147,10 +148,13 @@ export default class TagLayer extends Component {
   }, 1000);
 
   tagsByMAC(tags) {
-    return tags.map(tag => this.normalizeTag(tag)).reduce((obj, tag) => {
-      obj[tag.mac] = tag;
-      return obj;
-    }, {});
+    return tags
+      .map(tag => this.normalizeTag(tag))
+      .filter(tag => !tag.data.is_control_tag)
+      .reduce((obj, tag) => {
+        obj[tag.mac] = tag;
+        return obj;
+      }, {});
   }
 
   setInitialTags(tags) {
@@ -190,7 +194,6 @@ export default class TagLayer extends Component {
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(tagsByMAC)
       .map(mac => tagsByMAC[mac])
-      .filter(tag => !tag.data.is_control_tag)
       .filter(filter)
       .map(tag => (
         <MapMarker

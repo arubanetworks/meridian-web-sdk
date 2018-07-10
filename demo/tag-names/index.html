@@ -14,7 +14,7 @@
   <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
-  <script src="https://unpkg.com/downshift@2.0.10/dist/downshift.umd.min.js"></script>
+  <script src="https://unpkg.com/downshift@1.31.16/dist/downshift.umd.min.js"></script>
   <link rel="stylesheet" href="../shared.css">
   <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
   <script src="../shared.js"></script>
@@ -38,13 +38,6 @@
     });
     // ---^^^ SDK setup ^^^---
 
-    const items = [
-      {value: 'apple'},
-      {value: 'pear'},
-      {value: 'orange'},
-      {value: 'grape'},
-      {value: 'banana'},
-    ]
 
     // ---vvv UI controls vvv---
     class App extends React.Component {
@@ -56,6 +49,7 @@
         };
         this.initMeridianMap = this.initMeridianMap.bind(this);
         this.onTagsUpdate = this.onTagsUpdate.bind(this);
+        this.getTagNames = this.getTagNames.bind(this);
       }
 
       initMeridianMap(element) {
@@ -65,6 +59,18 @@
           height: "360px",
           onTagsUpdate: this.onTagsUpdate
         });
+      }
+
+
+      getTagNames() {
+        const options = [];
+        if (this.state) {
+          Object.keys(this.state.tagNames).forEach((mac) => {
+            options.push({ value: this.state.tagNames[mac], mac })
+          })
+          // console.info(options);
+        }
+        return options;
       }
 
       onTagsUpdate(tagsByMAC) {
@@ -92,7 +98,8 @@
           }),
           () => {
 
-            // console.info(this.state.showTagsWithMac);
+            // console.info(this.state.tagNames);
+            this.getTagNames();
             // console.info(this.getVisibleMACs());
 
             this.map.update({
@@ -115,6 +122,54 @@
           <div>
             <div className="map" id="map" ref={this.initMeridianMap} />
             <div className="controls-container">
+              <p>
+                <Downshift
+                  onChange={selection => {
+                    this.map.update({
+                      tags: {
+                        ids: [selection.mac]
+                      }
+                    });
+                  }}
+                  itemToString={item => (item ? item.value : '')}
+                >
+                  {({
+                    getInputProps,
+                    getItemProps,
+                    getLabelProps,
+                    isOpen,
+                    inputValue,
+                    highlightedIndex,
+                    selectedItem,
+                  }) => (
+                      <div>
+                        <label {...getLabelProps()}>Enter a fruit</label>
+                        <input {...getInputProps()} />
+                        {isOpen ? (
+                          <div>
+                            {this.getTagNames()
+                              .filter(item => !inputValue || item.value.includes(inputValue))
+                              .map((item, index) => (
+                                <div
+                                  {...getItemProps({
+                                    key: item.value,
+                                    index,
+                                    item,
+                                    style: {
+                                      backgroundColor:
+                                        highlightedIndex === index ? 'lightgray' : 'white',
+                                      fontWeight: selectedItem === item ? 'bold' : 'normal',
+                                    },
+                                  })}
+                                >
+                                  {item.value}
+                                </div>
+                              ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    )}
+                </Downshift></p>
               <p style={{ textAlign: "center" }}>
                 {this.state.tagNames.length} tags found
           </p>

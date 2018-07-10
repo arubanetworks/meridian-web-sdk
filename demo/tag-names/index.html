@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Tag Labels | Meridian Web SDK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+  <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+  <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+  <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <script src="https://unpkg.com/downshift@2.0.10/dist/downshift.umd.min.js"></script>
+  <link rel="stylesheet" href="../shared.css">
+  <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
+  <script src="../shared.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <div id="react-root"></div>
+  </div>
+
+  <script src="../meridian-sdk.js"></script>
+  <script type="text/babel" id="the-code">
+    // ---vvv SDK setup vvv---
+    MeridianSDK.init({
+      api: MeridianSDK.createAPI({
+        environment: "production",
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+      })
+    });
+    // ---^^^ SDK setup ^^^---
+
+    const items = [
+      {value: 'apple'},
+      {value: 'pear'},
+      {value: 'orange'},
+      {value: 'grape'},
+      {value: 'banana'},
+    ]
+
+    // ---vvv UI controls vvv---
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          tagNames: [],
+          showTagsWithMac: {}
+        };
+        this.initMeridianMap = this.initMeridianMap.bind(this);
+        this.onTagsUpdate = this.onTagsUpdate.bind(this);
+      }
+
+      initMeridianMap(element) {
+        this.map = MeridianSDK.createMap(element, {
+          locationID: "5198682008846336",
+          floorID: "5755685136498688",
+          height: "360px",
+          onTagsUpdate: this.onTagsUpdate
+        });
+      }
+
+      onTagsUpdate(tagsByMAC) {
+        const names = this.getNames(tagsByMAC);
+        this.setState({ tagNames: names });
+      }
+
+      getNames(tagsByMAC) {
+        const names = {};
+        Object.keys(tagsByMAC).forEach(mac => {
+          const tag = tagsByMAC[mac];
+          names[mac] = tag.name;
+        });
+        return names;
+      }
+
+      toggleName(mac) {
+        // Toggle the visibility of the tag then update the Meridian Map
+        this.setState(
+          prevState => ({
+            showTagsWithMac: {
+              ...prevState.showTagsWithMac,
+              [mac]: !prevState.showTagsWithMac[mac]
+            }
+          }),
+          () => {
+
+            // console.info(this.state.showTagsWithMac);
+            // console.info(this.getVisibleMACs());
+
+            this.map.update({
+              tags: {
+                ids: this.getVisibleMACs()
+              }
+            });
+          }
+        );
+      }
+
+      getVisibleMACs() {
+        return Object.keys(this.state.tagNames).filter(
+          mac => this.state.showTagsWithMac[mac]
+        );
+      }
+
+      render() {
+        return (
+          <div>
+            <div className="map" id="map" ref={this.initMeridianMap} />
+            <div className="controls-container">
+              <p style={{ textAlign: "center" }}>
+                {this.state.tagNames.length} tags found
+          </p>
+              <div className="controls" style={{ minHeight: 100, minWidth: 260 }}>
+                {Object.keys(this.state.tagNames).map(mac => (
+                  <label key={mac} className="controls__item">
+                    <input
+                      type="checkbox"
+                      onChange={() => this.toggleName(mac)}
+                    />
+                    <span>{this.state.tagNames[mac]}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      }
+    }
+
+    ReactDOM.render(<App />, document.getElementById("react-root"));
+  </script>
+</body>
+
+</html>

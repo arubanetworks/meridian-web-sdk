@@ -165,7 +165,7 @@ export default class TagLayer extends Component {
     const { floorID, locationID, api } = this.props;
     const connection = api.openStream({
       locationID,
-      id: floorID,
+      floorID,
       onInitialTags: data => {
         this.setInitialTags(data);
       },

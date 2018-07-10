@@ -9,7 +9,7 @@
     "nonlocal": "npm run start -- --host 0.0.0.0",
     "build": "webpack -p --mode production --env production",
     "analyze": "webpack -p --mode production --env analyze",
-    "postversion": "npm run -s deploy:demo",
+    "postversion": "bash bin/postversion.sh",
     "deploy:demo": "bash bin/deploy-demo.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -45,11 +45,10 @@
         super(props);
         this.state = {
           tagNames: [],
-          showTagsWithMac: {}
+          inputFocus: false
         };
         this.initMeridianMap = this.initMeridianMap.bind(this);
         this.onTagsUpdate = this.onTagsUpdate.bind(this);
-        this.getTagNames = this.getTagNames.bind(this);
       }
 
       initMeridianMap(element) {
@@ -57,20 +56,11 @@
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "360px",
-          onTagsUpdate: this.onTagsUpdate
+          onTagsUpdate: this.onTagsUpdate,
+          tags: {
+            all: true
+          }
         });
-      }
-
-
-      getTagNames() {
-        const options = [];
-        if (this.state) {
-          Object.keys(this.state.tagNames).forEach((mac) => {
-            options.push({ value: this.state.tagNames[mac], mac })
-          })
-          // console.info(options);
-        }
-        return options;
       }
 
       onTagsUpdate(tagsByMAC) {
@@ -79,42 +69,11 @@
       }
 
       getNames(tagsByMAC) {
-        const names = {};
-        Object.keys(tagsByMAC).forEach(mac => {
-          const tag = tagsByMAC[mac];
-          names[mac] = tag.name;
+        const opts = [];
+        Object.keys(tagsByMAC).forEach((mac) => {
+          opts.push({ value: tagsByMAC[mac].name, mac });
         });
-        return names;
-      }
-
-      toggleName(mac) {
-        // Toggle the visibility of the tag then update the Meridian Map
-        this.setState(
-          prevState => ({
-            showTagsWithMac: {
-              ...prevState.showTagsWithMac,
-              [mac]: !prevState.showTagsWithMac[mac]
-            }
-          }),
-          () => {
-
-            // console.info(this.state.tagNames);
-            this.getTagNames();
-            // console.info(this.getVisibleMACs());
-
-            this.map.update({
-              tags: {
-                ids: this.getVisibleMACs()
-              }
-            });
-          }
-        );
-      }
-
-      getVisibleMACs() {
-        return Object.keys(this.state.tagNames).filter(
-          mac => this.state.showTagsWithMac[mac]
-        );
+        return opts;
       }
 
       render() {
@@ -122,33 +81,54 @@
           <div>
             <div className="map" id="map" ref={this.initMeridianMap} />
             <div className="controls-container">
+
               <p>
                 <Downshift
                   onChange={selection => {
+                    console.info("change, new selection", selection);
                     this.map.update({
                       tags: {
                         ids: [selection.mac]
                       }
                     });
+
                   }}
                   itemToString={item => (item ? item.value : '')}
+                  isOpen={this.state.inputFocus}
+                  onInputValueChange={
+                    (val) => {
+                      if (!val) {
+                        this.map.update({
+                          tags: {
+                            all: true
+                          }
+                        });
+                      }
+                    }
+                  }
                 >
                   {({
                     getInputProps,
                     getItemProps,
                     getLabelProps,
+                    getToggleButtonProps,
                     isOpen,
                     inputValue,
                     highlightedIndex,
-                    selectedItem,
+                    selectedItem
                   }) => (
                       <div>
-                        <label {...getLabelProps()}>Enter a fruit</label>
-                        <input {...getInputProps()} />
+                        <label {...getLabelProps()}>Enter a tag name </label>
+                        <input {...getInputProps({
+                          onFocus: event => { this.setState({ inputFocus: true }) },
+                          onBlur: event => { this.setState({ inputFocus: false }) }
+                        })} />
                         {isOpen ? (
                           <div>
-                            {this.getTagNames()
-                              .filter(item => !inputValue || item.value.includes(inputValue))
+                            {this.state.tagNames
+                              .filter(item => {
+                                return !inputValue || item.value.toLowerCase().includes(inputValue)
+                              })
                               .map((item, index) => (
                                 <div
                                   {...getItemProps({
@@ -169,21 +149,13 @@
                         ) : null}
                       </div>
                     )}
-                </Downshift></p>
+                </Downshift>
+              </p>
+
               <p style={{ textAlign: "center" }}>
                 {this.state.tagNames.length} tags found
-          </p>
-              <div className="controls" style={{ minHeight: 100, minWidth: 260 }}>
-                {Object.keys(this.state.tagNames).map(mac => (
-                  <label key={mac} className="controls__item">
-                    <input
-                      type="checkbox"
-                      onChange={() => this.toggleName(mac)}
-                    />
-                    <span>{this.state.tagNames[mac]}</span>
-                  </label>
-                ))}
-              </div>
+              </p>
+
             </div>
           </div>
         );

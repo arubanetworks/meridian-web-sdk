@@ -36,14 +36,18 @@
       })
     });
 
-    var element = document.getElementById("meridian-map");
-    var map = MeridianSDK.createMap(element, {
+    const element = document.getElementById("meridian-map");
+    const map = MeridianSDK.createMap(element, {
       locationID: "{{ INSERT_YOUR_LOCATION_ID_HERE }}",
-      floorID: "{{ INSERT_YOUR_FLOOR_ID_HERE }}"
+      floorID: "{{ INSERT_YOUR_FLOOR_ID_HERE }}",
+      placemarks: { all: true },
+      tags: { all: false }
     });
 
+    // Later on...
     map.update({
-      // ...
+      placemarks: { all: false },
+      tags: { all: true }
     });
   </code></pre>
 
@@ -90,6 +94,70 @@
     });
   </code></pre>
 
+  <h2 id="create-map">
+    <a href="#create-map">MeridianSDK.createMap(element, options)</a>
+  </h2>
+
+  <ul>
+    <li>
+      <b>element:</b> the DOM element where the map should be rendered
+    </li>
+    <!-- zoom: PropTypes.bool,
+    width: PropTypes.string,
+    height: PropTypes.string,
+    locationID: PropTypes.string.isRequired,
+    floorID: PropTypes.string.isRequired,
+    api: PropTypes.object,
+    tags: PropTypes.shape({
+      all: PropTypes.bool,
+      labels: PropTypes.arrayOf(PropTypes.string),
+      ids: PropTypes.arrayOf(PropTypes.string),
+      disabled: PropTypes.bool
+    }),
+    placemarks: PropTypes.shape({
+      all: PropTypes.bool,
+      types: PropTypes.arrayOf(PropTypes.string),
+      ids: PropTypes.arrayOf(PropTypes.string),
+      disabled: PropTypes.bool
+    }),
+    onMarkerClick: PropTypes.func,
+    onMapClick: PropTypes.func,
+    onTagsUpdate: PropTypes.func -->
+    <li>
+      <b>options:</b> an object with any of the following keys:
+      <ul>
+        <li>TODO</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p>Returns an API object with the following properties:</p>
+
+  <ul>
+    <li>
+      <b>update(options):</b> a method that merged the initial options and the options passed here and updates the map accordingly
+    </li>
+  </ul>
+
+  <pre><code class="js">
+    const element = document.getElementById("meridian-map");
+    const map = MeridianSDK.createMap(element, {
+      locationID: "{{ INSERT_YOUR_LOCATION_ID_HERE }}",
+      floorID: "{{ INSERT_YOUR_FLOOR_ID_HERE }}",
+      tags: { all: false },
+      placemarks: { all: true }
+    });
+
+    // Toggle tags/placemarks after 10 seconds
+    setTimeout(() => {
+      map.update({
+        tags: { all: true },
+        placemarks: { all: false }
+      });
+    }, 10000)
+  </code></pre>
+
+
   <h2 id="create-api">
     <a href="#create-api">MeridianSDK.createAPI(options)</a>
   </h2>
@@ -120,15 +188,16 @@
       <b>environment:</b> the API environment</li>
     <li>
       <b>axios:</b> an instance of
-      <a href="https://github.com/axios/axios">axios</a> configured with a base URL for the current environment and including an HTTP header with the token
+      <a target="_blank" href="https://github.com/axios/axios">axios</a> configured with a base URL for the current environment and including an HTTP header with the token
     </li>
     <li>
-      <b>openStream:</b> a function to open a streaming connection for real time tag updates, documented below
+      <b>openStream(options):</b> a function to
+      <a href="#open-stream">open a streaming connection</a> for real time tag updates
     </li>
   </ul>
 
   <pre><code class="js">
-    var api = MeridianSDK.createAPI({
+    const api = MeridianSDK.createAPI({
       environment: "production",
       token: "{{ INSERT_YOUR_READONLY_TOKEN_HERE }}"
     });
@@ -173,7 +242,7 @@
 
   <ul>
     <li>
-      <b>close:</b> a method to close the stream
+      <b>close():</b> a method to close the stream
     </li>
   </ul>
 
@@ -224,9 +293,7 @@
         elem.textContent = trimIndent(elem.textContent);
         hljs.highlightBlock(elem);
       });
-
     })();
-
   </script>
 
 </body>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Documentation | Meridian Web SDK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../shared.css">
+  <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+  <script src="../shared.js"></script>
+  <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1>
+    <a href="#">Meridian Web SDK Documentation</a>
+  </h1>
+
+  <h2 id="overview">
+    <a href="#overview">Overview</a>
+  </h2>
+
+  <p>
+    Lorem ipsum dolor sit amet
+  </p>
+
+  <pre>
+    <code class="js">
+        MeridianSDK.init({
+          api: MeridianSDK.createAPI({
+            environment: "<ENVIRONMENT>",
+            token: "<TOKEN>"
+          })
+        });
+
+        var element = document.getElementById("meridian-map");
+        var map = MeridianSDK.createMap(element, {
+          locationID: "...",
+          floorID: "..."
+        });
+
+        map.update({
+          // ...
+        });
+
+    </code>
+  </pre>
+
+  <h2 id="init">
+    <a href="#init">MeridianSDK.init(options)</a>
+  </h2>
+
+  <ul>
+    <li>
+      options
+      <ul>
+        <li>foo</li>
+        <li>bar</li>
+        <li>baz</li>
+      </ul>
+    </li>
+  </ul>
+
+  <pre>
+    <code class="js">
+      // Hello world
+      myCode.methodIsCool("my code", 123);
+    </code>
+  </pre>
+
+  <script>
+    (function () {
+      function trimIndent(str) {
+        var match = str.match(/^[ \t]*(?=\S)/gm);
+        if (!match) {
+          return str;
+        }
+        var lengths = match.map(function (x) {
+          return x.length;
+        });
+        var indent = Math.min.apply(Math, lengths);
+        var re = new RegExp("^[ \\t]{" + indent + "}", "gm");
+        var s = indent > 0 ? str.replace(re, "") : str;
+        return s.trim();
+      }
+      var elements = [].slice.call(document.querySelectorAll("pre code"));
+      elements.forEach(function (elem) {
+        elem.textContent = trimIndent(elem.textContent);
+        hljs.highlightBlock(elem);
+      });
+
+    })();
+
+  </script>
+
+</body>
+
+</html>

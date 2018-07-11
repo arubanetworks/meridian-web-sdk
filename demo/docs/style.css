@@ -1,0 +1,37 @@
+body {
+  font-family: sans-serif;
+  margin: 0 auto;
+  padding: 30px;
+  max-width: 800px;
+  font-size: 22px;
+}
+
+pre code {
+  font-size: 16px;
+  font-family: Input, Menlo, Consolas, monospace;
+  padding: 16px !important;
+  border-radius: 4px;
+}
+
+p {
+  line-height: 1.5;
+}
+
+h2 {
+  border-top: 2px solid #ccc;
+  padding: 0;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  margin: 0;
+}
+
+h1 a,
+h2 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1 a:hover,
+h2 a:hover {
+  text-decoration: underline;
+}

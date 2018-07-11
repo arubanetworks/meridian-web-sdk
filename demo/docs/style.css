@@ -1,28 +1,48 @@
 body {
-  font-family: sans-serif;
+  font-family: Georgia, serif;
   margin: 0 auto;
   padding: 30px;
   max-width: 800px;
   font-size: 22px;
 }
 
-pre code {
+pre {
+  line-height: 0;
+}
+
+.hljs {
   font-size: 16px;
   font-family: Input, Menlo, Consolas, monospace;
-  padding: 16px !important;
+  font-family: Menlo, Consolas, monospace;
+  padding: 16px;
   border-radius: 4px;
+  line-height: 1.35;
 }
 
 p {
   line-height: 1.5;
 }
 
+h1 {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
 h2 {
   border-top: 2px solid #ccc;
+  margin: 0;
+  margin-bottom: 10px;
   padding: 0;
   padding-top: 20px;
-  padding-bottom: 10px;
-  margin: 0;
 }
 
 h1 a,

@@ -1,9 +1,9 @@
 ### NEXT
 
+- JS API documentation
+- Allow switching `floorID`s after loading
 - Search for tag by name
-- Filter/Search by category
 - Audit State usage
-- Should labels be case insensitive?
 - Culling! (openstreetmap/ID uses RBush)
 
 ### NEED

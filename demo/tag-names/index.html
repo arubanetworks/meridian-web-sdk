@@ -81,76 +81,72 @@
           <div>
             <div className="map" id="map" ref={this.initMeridianMap} />
             <div className="controls-container">
-
-              <p>
-                <Downshift
-                  onChange={selection => {
-                    console.info("change, new selection", selection);
-                    this.map.update({
-                      tags: {
-                        ids: [selection.mac]
-                      }
-                    });
-
-                  }}
-                  itemToString={item => (item ? item.value : '')}
-                  isOpen={this.state.inputFocus}
-                  onInputValueChange={
-                    (val) => {
-                      if (!val) {
-                        this.map.update({
-                          tags: {
-                            all: true
-                          }
-                        });
-                      }
+              <Downshift
+                onChange={selection => {
+                  this.map.update({
+                    tags: {
+                      ids: [selection.mac]
+                    }
+                  });
+                }}
+                itemToString={item => (item ? item.value : '')}
+                isOpen={this.state.inputFocus}
+                onInputValueChange={
+                  (val) => {
+                    if (!val) {
+                      this.map.update({
+                        tags: {
+                          all: true
+                        }
+                      });
                     }
                   }
-                >
-                  {({
-                    getInputProps,
-                    getItemProps,
-                    getLabelProps,
-                    getToggleButtonProps,
-                    isOpen,
-                    inputValue,
-                    highlightedIndex,
-                    selectedItem
-                  }) => (
-                      <div>
-                        <label {...getLabelProps()}>Enter a tag name </label>
-                        <input {...getInputProps({
-                          onFocus: event => { this.setState({ inputFocus: true }) },
-                          onBlur: event => { this.setState({ inputFocus: false }) }
-                        })} />
-                        {isOpen ? (
-                          <div>
-                            {this.state.tagNames
-                              .filter(item => {
-                                return !inputValue || item.value.toLowerCase().includes(inputValue)
-                              })
-                              .map((item, index) => (
-                                <div
-                                  {...getItemProps({
-                                    key: item.value,
-                                    index,
-                                    item,
-                                    style: {
-                                      backgroundColor:
-                                        highlightedIndex === index ? 'lightgray' : 'white',
-                                      fontWeight: selectedItem === item ? 'bold' : 'normal',
-                                    },
-                                  })}
-                                >
-                                  {item.value}
-                                </div>
-                              ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    )}
-                </Downshift>
-              </p>
+                }
+              >
+                {({
+                  getInputProps,
+                  getItemProps,
+                  getLabelProps,
+                  getToggleButtonProps,
+                  isOpen,
+                  inputValue,
+                  highlightedIndex,
+                  selectedItem
+                }) => (
+                    <div>
+                      <label {...getLabelProps()}>Enter a tag name </label>
+                      <input {...getInputProps({
+                        onFocus: event => { this.setState({ inputFocus: true }) },
+                        onBlur: event => { this.setState({ inputFocus: false }) }
+                      })} />
+                      {isOpen ? (
+                        <div>
+                          {this.state.tagNames
+                            .filter(item => {
+                              return !inputValue || item.value.toLowerCase().includes(inputValue)
+                            })
+                            .map((item, index) => (
+                              <div
+                                {...getItemProps({
+                                  key: item.value,
+                                  index,
+                                  item,
+                                  style: {
+                                    backgroundColor: highlightedIndex === index ? 'lightgray' : 'white',
+                                    fontWeight: selectedItem === item ? 'bold' : 'normal',
+                                    padding: "2px 5px",
+                                    cursor: "pointer",
+                                  },
+                                })}
+                              >
+                                {item.value}
+                              </div>
+                            ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+              </Downshift>
 
               <p style={{ textAlign: "center" }}>
                 {this.state.tagNames.length} tags found

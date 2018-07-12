@@ -1,3 +1,6 @@
+// TODO: We should have a license header in the entry file that also gets saved
+// in the bundle build
+
 import { h, render } from "preact";
 import "preact/debug";
 

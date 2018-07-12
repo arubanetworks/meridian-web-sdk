@@ -10,6 +10,7 @@
 
 - `@meridian` namespace on npm
 - What license for the library?
+  - Put the license at the top of the JS bundle and index.js
 - Open source on GitHub or keep it private and only publish minified source on
   GCS and npm
 

@@ -85,7 +85,7 @@
   <p>
     Calling
     <code>init</code> is optional. You can instead pass the API instance directly to
-    <a href="#create-map">createMap</a> if it better suits your use case.
+    <a href="#createMap">createMap</a> if it better suits your use case.
   </p>
 
   <pre><code class="js">
@@ -103,8 +103,8 @@
     });
   </code></pre>
 
-  <h2 id="create-map">
-    <a href="#create-map">MeridianSDK.createMap(element, options)</a>
+  <h2 id="createMap">
+    <a href="#createMap">MeridianSDK.createMap(element, options)</a>
   </h2>
 
   <pre><code class="js">
@@ -154,7 +154,7 @@
           <span class="parameter">api:</span> (default = the
           <code>api</code> object passed to
           <a href="#init">init</a>) the API object returned by
-          <a href="#create-api">createAPI</a>
+          <a href="#createAPI">createAPI</a>
         </li>
         <li>
           <span class="parameter">tags:</span> (default =
@@ -233,8 +233,8 @@
     <code>update(options)</code> yet, but this is in development.
   </p>
 
-  <h2 id="create-api">
-    <a href="#create-api">MeridianSDK.createAPI(options)</a>
+  <h2 id="createAPI">
+    <a href="#createAPI">MeridianSDK.createAPI(options)</a>
   </h2>
 
   <pre><code class="js">
@@ -274,18 +274,23 @@
     </li>
     <li>
       <span class="parameter">openStream(options):</span> a function to
-      <a href="#open-stream">open a streaming connection</a> for real time tag updates
+      <a href="#api.openStream">open a streaming connection</a> for real time tag updates
     </li>
   </ul>
 
-  <h2 id="open-stream">
-    <a href="#open-stream">api.openStream(options)</a>
+  <h2 id="api.openStream">
+    <a href="#api.openStream">api.openStream(options)</a>
   </h2>
 
   <pre><code class="js">
+    const api = MeridianSDK.createAPI({
+      environment: "production",
+      token: "Insert your readonly token here"
+    });
+
     const connection = api.openStream({
-      locationID: locationID,
-      floorID: floorID,
+      locationID: "Insert your location ID here",
+      floorID: "Insert your floor ID here",
       onInitialTags: tagArray => {
         console.log(tagArray);
       },

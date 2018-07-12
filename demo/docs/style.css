@@ -2,7 +2,7 @@ body {
   font-family: Georgia, serif;
   margin: 0 auto;
   padding: 30px;
-  max-width: 800px;
+  max-width: 1000px;
   font-size: 22px;
 }
 
@@ -52,10 +52,16 @@ code {
   font-family: Input, Menlo, Consolas, monospace;
   font-size: 90%;
   font-weight: bold;
+  display: block;
+  margin-left: -2em;
+}
+
+li {
+  margin-left: 2em;
 }
 
 ul {
-  padding-left: 1em;
+  padding-left: 0.25em;
   border-left: 2px solid #ddd;
   list-style-type: none;
 }

@@ -44,7 +44,6 @@
 }
 
 .dialog .top-bar {
-  /* border-bottom: 2px solid #333; */
   z-index: 1;
   box-shadow: 0 0 32px black;
 }
@@ -83,7 +82,7 @@
   font-size: 16px;
   position: fixed;
   display: flex;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
   text-decoration: none;
   border-radius: 6px;
   bottom: 15px;
@@ -101,7 +100,8 @@
 }
 
 .back > button {
-  padding: 4px 8px;
+  flex: 1 1 auto;
+  padding: 6px 12px;
   margin: 0;
   border: 0;
   border-radius: 0;
@@ -111,24 +111,18 @@
   font-size: inherit;
 }
 
+.back > button:hover {
+  background: #f8f8f8;
+}
+
+.back > button:active {
+  background: #f0f0f0;
+}
+
 .back > button:focus {
   outline: 0;
 }
 
-.back > * {
-  flex: 1 1 auto;
-  padding: 8px 16px;
-}
-
-.back > *:hover {
-  background: #f8f8f8;
-}
-
-.back > *:active {
-  background: #f0f0f0;
-}
-
 .back > .separator {
   border-left: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 0;
 }

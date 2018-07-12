@@ -19,31 +19,6 @@ body {
   max-width: 350px;
 }
 
-.controls {
-  margin-bottom: 10px;
-  background: hsl(210, 50%, 98%);
-  color: hsl(210, 80%, 30%);
-  border: 1px solid hsl(210, 30%, 80%);
-}
-
-.controls__item {
-  display: flex;
-  padding: 16px 8px;
-  user-select: none;
-}
-
-.controls__item > span {
-  margin-left: 10px;
-}
-
-.controls__item + .controls__item {
-  border-top: 1px solid hsl(210, 30%, 90%);
-}
-
-.controls__item:hover {
-  background: hsl(210, 50%, 95%);
-}
-
 @media only screen and (max-width: 900px) {
   .container {
     max-width: 340px;

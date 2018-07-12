@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Tag Labels | Meridian Web SDK</title>
+  <title>Tag Names | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -14,7 +14,6 @@
   <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
-  <script src="https://unpkg.com/downshift@1.31.16/dist/downshift.umd.min.js"></script>
   <link rel="stylesheet" href="../shared.css">
   <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
   <script src="../shared.js"></script>
@@ -45,13 +44,11 @@
         super(props);
         this.state = {
           tagNames: [],
-          inputFocus: false
+          selectedTag: null,
         };
-        this.initMeridianMap = this.initMeridianMap.bind(this);
-        this.onTagsUpdate = this.onTagsUpdate.bind(this);
       }
 
-      initMeridianMap(element) {
+      initMeridianMap = (element) => {
         this.map = MeridianSDK.createMap(element, {
           locationID: "5198682008846336",
           floorID: "5755685136498688",
@@ -63,108 +60,64 @@
         });
       }
 
-      onTagsUpdate(tagsByMAC) {
-        const names = this.getNames(tagsByMAC);
-        this.setState({ tagNames: names });
+      onTagsUpdate = (tagsByMAC) => {
+        const opts = Object.keys(tagsByMAC).reduce((accumulator, mac) => {
+          accumulator.push({ value: tagsByMAC[mac].name, mac });
+          return accumulator;
+        }, []);
+        this.setState({ tagNames: opts });
       }
 
-      getNames(tagsByMAC) {
-        const opts = [];
-        Object.keys(tagsByMAC).forEach((mac) => {
-          opts.push({ value: tagsByMAC[mac].name, mac });
-        });
-        return opts;
+      onSelectChange = (event) => {
+        this.setState({ selectedTag: event.target.value }, () => {
+          const selectedTag = this.state.selectedTag
+          if (selectedTag) {
+            this.map.update({
+              tags: {
+                ids: [selectedTag]
+              }
+            })
+          } else {
+            this.map.update({
+              tags: {
+                all: true
+              }
+            })
+          }
+        })
+      }
+
+      renderSelectOptions = () => {
+        return this.state.tagNames.map((item, index) => {
+          const isSelected = (item.mac === this.state.selectedTag) ? 'selected' : '';
+          return (
+            <option selected={isSelected} value={item.mac} key={item.mac}>
+              {item.value}
+            </option>
+          )
+
+        })
       }
 
       render() {
         return (
           <div>
             <div className="map" id="map" ref={this.initMeridianMap} />
-            <div className="controls-container">
-              <Downshift
-                onChange={selection => {
-                  if (selection && selection.mac) {
-                    this.map.update({
-                      tags: {
-                        ids: [selection.mac]
-                      }
-                    });
-                  } else {
-                    this.map.update({
-                      tags: {
-                        all: true
-                      }
-                    })
-                  }
-                }}
-                itemToString={item => (item ? item.value : '')}
-                isOpen={this.state.inputFocus}
-                onOuterClick={() => this.setState({inputFocus: false})}
-              >
-                {({
-                  getInputProps,
-                  getItemProps,
-                  getLabelProps,
-                  isOpen,
-                  inputValue,
-                  highlightedIndex,
-                  selectedItem,
-                  clearSelection,
-                }) => (
-                    <div>
-                      <label {...getLabelProps()}>Enter a tag name</label>
-                      <input {...getInputProps(
-                        {
-                          onFocus: event => {
-                            this.setState({ inputFocus: true })
-                          },
-                          onChange: event => {
-                            if (!event.target.value) {
-                              clearSelection();
-                            }
-                          }
-                        }
-                      )} />
-                      {isOpen ? (
-                        <div>
-                          {this.state.tagNames
-                            .filter(item => {
-                              return !inputValue || item.value.toLowerCase().includes(inputValue.toLowerCase());
-                            })
-                            .map((item, index) => (
-                              <div
-                                {...getItemProps({
-                                  key: item.mac,
-                                  index,
-                                  item,
-                                  style: {
-                                    backgroundColor:
-                                      highlightedIndex === index ? 'lightgray' : 'white',
-                                    fontWeight: selectedItem && selectedItem.mac === item.mac ? 'bold' : 'normal',
-                                    padding: "2px 5px",
-                                    cursor: "pointer",
-                                  },
-                                })}
-                              >
-                                {item.value}
-                              </div>
-                            ))}
-                        </div>
-                      ) : null}
-                    </div>
-                  )}
-              </Downshift>
-
-              <p style={{ textAlign: "center" }}>
+            <div className="controls-container"  style={{ textAlign: "center" }}>
+              <div>
+                <select onChange={this.onSelectChange}>
+                  <option value="">all</option>
+                  {this.renderSelectOptions()}
+                </select>
+              </div>
+              <p>
                 {this.state.tagNames.length} tags found
               </p>
-
             </div>
           </div>
         );
       }
     }
-
     ReactDOM.render(<App />, document.getElementById("react-root"));
   </script>
 </body>

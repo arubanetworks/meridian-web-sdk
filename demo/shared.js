@@ -75,7 +75,7 @@ $(function() {
       .text("Perf")
       .on("click", showPerf);
     container.append(back);
-    if (window.location.pathname !== "/docs/") {
+    if (window.location.pathname.indexOf("/docs/") === -1) {
       container
         .append($("<span>").addClass("separator"))
         .append(code)

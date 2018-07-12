@@ -33,14 +33,14 @@
     MeridianSDK.init({
       api: MeridianSDK.createAPI({
         environment: "production",
-        token: "{{ INSERT_YOUR_READONLY_TOKEN_HERE }}"
+        token: "Insert your readonly token here"
       })
     });
 
     const element = document.getElementById("meridian-map");
     const map = MeridianSDK.createMap(element, {
-      locationID: "{{ INSERT_YOUR_LOCATION_ID_HERE }}",
-      floorID: "{{ INSERT_YOUR_FLOOR_ID_HERE }}",
+      locationID: "Insert your location ID here",
+      floorID: "Insert your floor ID here",
       placemarks: { all: true },
       tags: { all: false }
     });
@@ -53,7 +53,7 @@
   </code></pre>
 
   <p>
-    You can obtain the location ID and floor ID for a given map by navigating to it in the editor and grabbing the IDs from the
+    You can obtain the location ID and floor ID for a given map by navigating to it in the Editor and grabbing the IDs from the
     URL in your browser.
   </p>
 
@@ -90,7 +90,7 @@
     MeridianSDK.init({
       api: MeridianSDK.createAPI({
         environment: "production",
-        token: "{{ INSERT_YOUR_READONLY_TOKEN_HERE }}"
+        token: "Insert your readonly token here"
       })
     });
   </code></pre>
@@ -221,8 +221,8 @@
   <pre><code class="js">
     const element = document.getElementById("meridian-map");
     const map = MeridianSDK.createMap(element, {
-      locationID: "{{ INSERT_YOUR_LOCATION_ID_HERE }}",
-      floorID: "{{ INSERT_YOUR_FLOOR_ID_HERE }}",
+      locationID: "Insert your location ID here",
+      floorID: "Insert your floor ID here",
       tags: { all: false },
       placemarks: { all: true }
     });
@@ -367,11 +367,18 @@
         var s = indent > 0 ? str.replace(re, "") : str;
         return s.trim();
       }
-      var elements = [].slice.call(document.querySelectorAll("pre code"));
-      elements.forEach(function (elem) {
-        elem.textContent = trimIndent(elem.textContent);
+      $("pre code").each(function (i, elem) {
+        var $elem = $(elem);
+        $elem.text(trimIndent($elem.text()));
         hljs.highlightBlock(elem);
-      });
+        $elem.find(".hljs-string").each(function (j, str) {
+          var $str = $(str);
+          var re = /.insert.*here./i;
+          if (re.test($str.text())) {
+            $str.addClass("user-input");
+          }
+        });
+      })
     })();
   </script>
 

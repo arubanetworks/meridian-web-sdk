@@ -21,8 +21,16 @@ a:hover {
 
 .highlighter {
   padding: 2px 4px;
-  background: yellow;
+  background: hsl(55, 100%, 50%);
   color: black;
+}
+
+.user-input {
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.25);
+  background: hsla(0, 100%, 50%, 0.75);
+  color: white;
+  text-shadow: 0 1px 1px black;
+  text-transform: uppercase;
 }
 
 code {
@@ -40,9 +48,10 @@ code {
   line-height: 1.35;
 }
 
-li li,
-li + li {
-  margin-top: 0.5em;
+/* TODO: Use proper classes here instead of this hacky selector */
+li b {
+  font-family: Input, Menlo, Consolas, monospace;
+  font-size: 90%;
 }
 
 li,

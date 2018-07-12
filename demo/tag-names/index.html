@@ -89,9 +89,8 @@
 
       renderSelectOptions = () => {
         return this.state.tagNames.map((item, index) => {
-          const isSelected = (item.mac === this.state.selectedTag) ? 'selected' : '';
           return (
-            <option selected={isSelected} value={item.mac} key={item.mac}>
+            <option selected={item.mac === this.state.selectedTag} value={item.mac} key={item.mac}>
               {item.value}
             </option>
           )

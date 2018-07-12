@@ -102,12 +102,7 @@
     <li>
       <b>element:</b> the DOM element where the map should be rendered
     </li>
-    <!-- zoom: PropTypes.bool,
-    width: PropTypes.string,
-    height: PropTypes.string,
-    locationID: PropTypes.string.isRequired,
-    floorID: PropTypes.string.isRequired,
-    api: PropTypes.object,
+    <!--
     tags: PropTypes.shape({
       all: PropTypes.bool,
       labels: PropTypes.arrayOf(PropTypes.string),
@@ -120,13 +115,89 @@
       ids: PropTypes.arrayOf(PropTypes.string),
       disabled: PropTypes.bool
     }),
-    onMarkerClick: PropTypes.func,
-    onMapClick: PropTypes.func,
-    onTagsUpdate: PropTypes.func -->
+    -->
     <li>
       <b>options:</b> an object with any of the following keys:
       <ul>
-        <li>TODO</li>
+        <li>
+          <b>locationID:</b> (required) location ID
+        </li>
+        <li>
+          <b>mapID:</b> (required) map ID
+        </li>
+        <li>
+          <b>zoom:</b> (default =
+          <code>true</code>) allow map zooming when true
+        </li>
+        <li>
+          <b>width:</b> (default =
+          <code>"100%"</code>) map width as a CSS length string
+        </li>
+        <li>
+          <b>height:</b> (default =
+          <code>"400px"</code>) map height as a CSS length string
+        </li>
+        <li>
+          <b>api:</b> (default = the
+          <code>api</code> object passed to
+          <a href="#init">init</a>) the API object returned by
+          <a href="#create-api">createAPI</a>
+        </li>
+        <li>
+          <b>tags:</b> (default =
+          <code>{}</code>) an object with any of the following keys:
+          <ul>
+            <li>
+              <b>all:</b> (default =
+              <code>false</code>) show all tags when true
+            </li>
+            <li>
+              <b>ids:</b> (default =
+              <code>[]</code>) show all tags which match the IDs in the list
+            </li>
+            <li>
+              <b>labels:</b> (default =
+              <code>[]</code>) show all tags which have any of these named labels
+            </li>
+            <li>
+              <b>disabled:</b> (default =
+              <code>false</code>) disable clicking on tags when true
+            </li>
+          </ul>
+        </li>
+        <li>
+          <b>placemarks:</b> (default =
+          <code>{}</code>) an object with any of the following keys:
+          <ul>
+            <li>
+              <b>all:</b> (default =
+              <code>false</code>) show all placemarks when true
+            </li>
+            <li>
+              <b>ids:</b> (default =
+              <code>[]</code>) show all placemarks which match the IDs in the list
+            </li>
+            <li>
+              <b>types:</b> (default =
+              <code>[]</code>) show all placemarks matching the named types in the list
+            </li>
+            <li>
+              <b>disabled:</b> (default =
+              <code>false</code>) disable clicking on placemarks when true
+            </li>
+          </ul>
+        </li>
+        <li>
+          <b>onMarkerClick(marker):</b> (optional) callback function called with the map marker (tag/placemark) the user clicks
+          on
+        </li>
+        <li>
+          <b>onMapClick():</b> (optional) callback function called when the user clicks on the map background
+        </li>
+        <li>
+          <b>onTagsUpdate(tagsByID):</b> (optional) callback function called whenever any tags are updated, receiving all tags
+          in an object keyed by their IDs (capitalized MAC addresses without colons)
+        </li>
       </ul>
     </li>
   </ul>
@@ -138,6 +209,13 @@
       <b>update(options):</b> a method that merged the initial options and the options passed here and updates the map accordingly
     </li>
   </ul>
+
+  <p>
+    Note:
+    <code>locationID</code> and
+    <code>floorID</code> cannot be changed via
+    <code>update(options)</code> yet, but this is in development.
+  </p>
 
   <pre><code class="js">
     const element = document.getElementById("meridian-map");

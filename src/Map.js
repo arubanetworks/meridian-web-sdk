@@ -171,7 +171,11 @@ export default class Map extends Component {
       this.mapRef.isEqualNode(event.target) ||
       this.mapImage.isEqualNode(event.target);
     if (this.props.onMapClick && mapClicked) {
-      this.props.onMapClick(event);
+      // eslint-disable-next-line no-console
+      console.warn("onMapClick() is experimental, please do not use it");
+      setTimeout(() => {
+        this.props.onMapClick(event);
+      }, 0);
     } else {
       if (mapClicked) {
         this.setState({ selectedItem: {} });
@@ -181,7 +185,11 @@ export default class Map extends Component {
 
   onMarkerClick = ({ kind, data }) => {
     if (this.props.onMarkerClick) {
-      this.props.onMarkerClick(data);
+      // eslint-disable-next-line no-console
+      console.warn("onMarkerClick() is experimental, please do not use it");
+      setTimeout(() => {
+        this.props.onMarkerClick(data);
+      }, 0);
     } else {
       this.setState({ selectedItem: { kind, data } });
     }

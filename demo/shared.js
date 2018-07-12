@@ -74,12 +74,14 @@ $(function() {
     var perf = $("<button>")
       .text("Perf")
       .on("click", showPerf);
-    container
-      .append(back)
-      .append($("<span>").addClass("separator"))
-      .append(code)
-      .append($("<span>").addClass("separator"))
-      .append(perf);
+    container.append(back);
+    if (window.location.pathname !== "/docs/") {
+      container
+        .append($("<span>").addClass("separator"))
+        .append(code)
+        .append($("<span>").addClass("separator"))
+        .append(perf);
+    }
     $("body").append(container);
   }
 

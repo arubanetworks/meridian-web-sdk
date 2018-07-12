@@ -48,10 +48,10 @@ code {
   line-height: 1.35;
 }
 
-/* TODO: Use proper classes here instead of this hacky selector */
-li b {
+.parameter {
   font-family: Input, Menlo, Consolas, monospace;
   font-size: 90%;
+  font-weight: bold;
 }
 
 li,

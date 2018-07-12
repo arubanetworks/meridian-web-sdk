@@ -72,10 +72,10 @@
 
   <ul>
     <li>
-      <b>options:</b> an object with any of the following keys:
+      <span class="parameter">options:</span> an object with any of the following keys:
       <ul>
         <li>
-          <b>api:</b> the object returned from
+          <span class="parameter">api:</span> the object returned from
           <code>MeridianSDK.createAPI</code>
         </li>
       </ul>
@@ -127,75 +127,75 @@
 
   <ul>
     <li>
-      <b>element:</b> the DOM element where the map should be rendered
+      <span class="parameter">element:</span> the DOM element where the map should be rendered
     </li>
     <li>
-      <b>options:</b> an object with any of the following keys:
+      <span class="parameter">options:</span> an object with any of the following keys:
       <ul>
         <li>
-          <b>locationID:</b> (required) location ID
+          <span class="parameter">locationID:</span> (required) location ID
         </li>
         <li>
-          <b>mapID:</b> (required) map ID
+          <span class="parameter">mapID:</span> (required) map ID
         </li>
         <li>
-          <b>zoom:</b> (default =
+          <span class="parameter">zoom:</span> (default =
           <code>true</code>) allow map zooming when true
         </li>
         <li>
-          <b>width:</b> (default =
+          <span class="parameter">width:</span> (default =
           <code>"100%"</code>) map width as a CSS length string
         </li>
         <li>
-          <b>height:</b> (default =
+          <span class="parameter">height:</span> (default =
           <code>"400px"</code>) map height as a CSS length string
         </li>
         <li>
-          <b>api:</b> (default = the
+          <span class="parameter">api:</span> (default = the
           <code>api</code> object passed to
           <a href="#init">init</a>) the API object returned by
           <a href="#create-api">createAPI</a>
         </li>
         <li>
-          <b>tags:</b> (default =
+          <span class="parameter">tags:</span> (default =
           <code>{}</code>) an object with any of the following keys:
           <ul>
             <li>
-              <b>all:</b> (default =
+              <span class="parameter">all:</span> (default =
               <code>false</code>) show all tags when true
             </li>
             <li>
-              <b>ids:</b> (default =
+              <span class="parameter">ids:</span> (default =
               <code>[]</code>) show all tags which match the IDs in the list
             </li>
             <li>
-              <b>labels:</b> (default =
+              <span class="parameter">labels:</span> (default =
               <code>[]</code>) show all tags which have any of these named labels
             </li>
             <li>
-              <b>disabled:</b> (default =
+              <span class="parameter">disabled:</span> (default =
               <code>false</code>) disable clicking on tags when true
             </li>
           </ul>
         </li>
         <li>
-          <b>placemarks:</b> (default =
+          <span class="parameter">placemarks:</span> (default =
           <code>{}</code>) an object with any of the following keys:
           <ul>
             <li>
-              <b>all:</b> (default =
+              <span class="parameter">all:</span> (default =
               <code>false</code>) show all placemarks when true
             </li>
             <li>
-              <b>ids:</b> (default =
+              <span class="parameter">ids:</span> (default =
               <code>[]</code>) show all placemarks which match the IDs in the list
             </li>
             <li>
-              <b>types:</b> (default =
+              <span class="parameter">types:</span> (default =
               <code>[]</code>) show all placemarks matching the named types in the list
             </li>
             <li>
-              <b>disabled:</b> (default =
+              <span class="parameter">disabled:</span> (default =
               <code>false</code>) disable clicking on placemarks when true
             </li>
           </ul>
@@ -203,15 +203,15 @@
         <!-- TODO: Revisit the click handler API eventually -->
         <!--
         <li>
-          <b>onMarkerClick(marker):</b> (optional) callback function called with the map marker (tag/placemark) the user clicks
+          <span class="parameter">onMarkerClick(marker):</span> (optional) callback function called with the map marker (tag/placemark) the user clicks
           on
         </li>
         <li>
-          <b>onMapClick():</b> (optional) callback function called when the user clicks on the map background
+          <span class="parameter">onMapClick():</span> (optional) callback function called when the user clicks on the map background
         </li>
         -->
         <li>
-          <b>onTagsUpdate(tagsByID):</b> (optional) callback function called whenever any tags are updated, receiving all tags
+          <span class="parameter">onTagsUpdate(tagsByID):</span> (optional) callback function called whenever any tags are updated, receiving all tags
           in an object keyed by their IDs (capitalized MAC addresses without colons)
         </li>
       </ul>
@@ -222,7 +222,7 @@
 
   <ul>
     <li>
-      <b>update(options):</b> a method that merged the initial options and the options passed here and updates the map accordingly
+      <span class="parameter">update(options):</span> a method that merged the initial options and the options passed here and updates the map accordingly
     </li>
   </ul>
 
@@ -246,16 +246,16 @@
 
   <ul>
     <li>
-      <b>options:</b> an object with any of the following keys:
+      <span class="parameter">options:</span> an object with any of the following keys:
       <ul>
         <li>
-          <b>environment:</b> defaults to
+          <span class="parameter">environment:</span> defaults to
           <code>"production"</code>; valid values are any of the following:
           <code>"production"</code>
           <!-- TODO: Should we mention staging here? And eventually this needs to include eu in the list -->
         </li>
         <li>
-          <b>token:</b> a read-only API token obtained from the Meridian Editor
+          <span class="parameter">token:</span> a read-only API token obtained from the Meridian Editor
         </li>
       </ul>
     </li>
@@ -265,15 +265,15 @@
 
   <ul>
     <li>
-      <b>token:</b> the API token</li>
+      <span class="parameter">token:</span> the API token</li>
     <li>
-      <b>environment:</b> the API environment</li>
+      <span class="parameter">environment:</span> the API environment</li>
     <li>
-      <b>axios:</b> an instance of
+      <span class="parameter">axios:</span> an instance of
       <a target="_blank" href="https://github.com/axios/axios">axios</a> configured with a base URL for the current environment and including an HTTP header with the token
     </li>
     <li>
-      <b>openStream(options):</b> a function to
+      <span class="parameter">openStream(options):</span> a function to
       <a href="#open-stream">open a streaming connection</a> for real time tag updates
     </li>
   </ul>
@@ -311,30 +311,30 @@
 
   <ul>
     <li>
-      <b>options:</b> an object with any of the following keys:
+      <span class="parameter">options:</span> an object with any of the following keys:
       <ul>
         <li>
-          <b>locationID:</b> the location ID
+          <span class="parameter">locationID:</span> the location ID
         </li>
         <li>
-          <b>floorID:</b> the floor ID
+          <span class="parameter">floorID:</span> the floor ID
         </li>
         <li>
-          <b>onInitialTags:</b> an optional callback function called with an array of tag data after the stream connection is
+          <span class="parameter">onInitialTags:</span> an optional callback function called with an array of tag data after the stream connection is
           successful
         </li>
         <li>
-          <b>onTagUpdate:</b> an optional callback function called with a single tag data when that tag reports its position
+          <span class="parameter">onTagUpdate:</span> an optional callback function called with a single tag data when that tag reports its position
         </li>
         <li>
-          <b>onTagDisappear:</b> an optional callback function called with a single tag data when that tag exits its current
+          <span class="parameter">onTagDisappear:</span> an optional callback function called with a single tag data when that tag exits its current
           floor
         </li>
         <li>
-          <b>onClose:</b> an optional callback function called when the stream is closed
+          <span class="parameter">onClose:</span> an optional callback function called when the stream is closed
         </li>
         <li>
-          <b>onException:</b> an optional callback function called when the stream reports an error
+          <span class="parameter">onException:</span> an optional callback function called when the stream reports an error
         </li>
       </ul>
     </li>
@@ -344,7 +344,7 @@
 
   <ul>
     <li>
-      <b>close():</b> a method to close the stream
+      <span class="parameter">close():</span> a method to close the stream
     </li>
   </ul>
 

@@ -61,6 +61,15 @@
     <a href="#init">MeridianSDK.init(options)</a>
   </h2>
 
+  <pre><code class="js">
+    MeridianSDK.init({
+      api: MeridianSDK.createAPI({
+        environment: "production",
+        token: "Insert your readonly token here"
+      })
+    });
+  </code></pre>
+
   <ul>
     <li>
       <b>options:</b> an object with any of the following keys:
@@ -74,24 +83,23 @@
   </ul>
 
   <p>
-    If all your Meridian SDK calls will be for the same organization, you should call
-    <code>init</code> and save your API object here so you don't have to pass it to every
-    <code>createMap</code> call later in your app.
-  </p>
-
-  <p>
-    If you are using separate organizations on the same page, you can manually store the
-    <code>createMap</code> calls in variables and pass them as
-    <code>api</code> properties to
-    <code>createMap</code> elsewhere in your code.
+    Calling
+    <code>init</code> is optional. You can instead pass the API instance directly to
+    <a href="#create-map">createMap</a> if it better suits your use case.
   </p>
 
   <pre><code class="js">
-    MeridianSDK.init({
-      api: MeridianSDK.createAPI({
-        environment: "production",
-        token: "Insert your readonly token here"
-      })
+    var apiOrg1 = MeridianSDK.createAPI({ token: "Insert Org 1 token here" });
+    var apiOrg2 = MeridianSDK.createAPI({ token: "Insert Org 2 token here" });
+    MeridianSDK.createMap(elementOrg1, {
+      api: apiCustomer1,
+      locationID: "Insert Org 1 location ID here",
+      floorID: "Insert Org 1 floor ID here",
+    });
+    MeridianSDK.createMap(elementOrg2, {
+      api: apiCustomer2,
+      locationID: "Insert Org 2 location ID here",
+      floorID: "Insert Org 2 floor ID here",
     });
   </code></pre>
 
@@ -99,24 +107,28 @@
     <a href="#create-map">MeridianSDK.createMap(element, options)</a>
   </h2>
 
+  <pre><code class="js">
+    const element = document.getElementById("meridian-map");
+    const map = MeridianSDK.createMap(element, {
+      locationID: "Insert your location ID here",
+      floorID: "Insert your floor ID here",
+      tags: { all: false },
+      placemarks: { all: true }
+    });
+
+    // Toggle tags/placemarks after 10 seconds
+    setTimeout(() => {
+      map.update({
+        tags: { all: true },
+        placemarks: { all: false }
+      });
+    }, 10000)
+  </code></pre>
+
   <ul>
     <li>
       <b>element:</b> the DOM element where the map should be rendered
     </li>
-    <!--
-    tags: PropTypes.shape({
-      all: PropTypes.bool,
-      labels: PropTypes.arrayOf(PropTypes.string),
-      ids: PropTypes.arrayOf(PropTypes.string),
-      disabled: PropTypes.bool
-    }),
-    placemarks: PropTypes.shape({
-      all: PropTypes.bool,
-      types: PropTypes.arrayOf(PropTypes.string),
-      ids: PropTypes.arrayOf(PropTypes.string),
-      disabled: PropTypes.bool
-    }),
-    -->
     <li>
       <b>options:</b> an object with any of the following keys:
       <ul>
@@ -188,6 +200,8 @@
             </li>
           </ul>
         </li>
+        <!-- TODO: Revisit the click handler API eventually -->
+        <!--
         <li>
           <b>onMarkerClick(marker):</b> (optional) callback function called with the map marker (tag/placemark) the user clicks
           on
@@ -195,6 +209,7 @@
         <li>
           <b>onMapClick():</b> (optional) callback function called when the user clicks on the map background
         </li>
+        -->
         <li>
           <b>onTagsUpdate(tagsByID):</b> (optional) callback function called whenever any tags are updated, receiving all tags
           in an object keyed by their IDs (capitalized MAC addresses without colons)
@@ -218,28 +233,16 @@
     <code>update(options)</code> yet, but this is in development.
   </p>
 
-  <pre><code class="js">
-    const element = document.getElementById("meridian-map");
-    const map = MeridianSDK.createMap(element, {
-      locationID: "Insert your location ID here",
-      floorID: "Insert your floor ID here",
-      tags: { all: false },
-      placemarks: { all: true }
-    });
-
-    // Toggle tags/placemarks after 10 seconds
-    setTimeout(() => {
-      map.update({
-        tags: { all: true },
-        placemarks: { all: false }
-      });
-    }, 10000)
-  </code></pre>
-
-
   <h2 id="create-api">
     <a href="#create-api">MeridianSDK.createAPI(options)</a>
   </h2>
+
+  <pre><code class="js">
+    const api = MeridianSDK.createAPI({
+      environment: "production",
+      token: "Insert your readonly token here"
+    });
+  </code></pre>
 
   <ul>
     <li>
@@ -275,16 +278,36 @@
     </li>
   </ul>
 
-  <pre><code class="js">
-    const api = MeridianSDK.createAPI({
-      environment: "production",
-      token: "{{ INSERT_YOUR_READONLY_TOKEN_HERE }}"
-    });
-  </code></pre>
-
   <h2 id="open-stream">
     <a href="#open-stream">api.openStream(options)</a>
   </h2>
+
+  <pre><code class="js">
+    const connection = api.openStream({
+      locationID: locationID,
+      floorID: floorID,
+      onInitialTags: tagArray => {
+        console.log(tagArray);
+      },
+      onTagDisappear: tag => {
+        console.log(tag);
+      },
+      onTagUpdate: tag => {
+        console.log(tag);
+      },
+      onClose: () => {
+        console.log("Closing!");
+      },
+      onException: err => {
+        console.log("An error occurred:", err)
+      }
+    });
+
+    // Close connection after 10 seconds
+    setTimeout(() => {
+      connection.close();
+    }, 10000);
+  </code></pre>
 
   <ul>
     <li>
@@ -324,33 +347,6 @@
       <b>close():</b> a method to close the stream
     </li>
   </ul>
-
-  <pre><code class="js">
-    const connection = api.openStream({
-      locationID: locationID,
-      floorID: floorID,
-      onInitialTags: tagArray => {
-        console.log(tagArray);
-      },
-      onTagDisappear: tag => {
-        console.log(tag);
-      },
-      onTagUpdate: tag => {
-        console.log(tag);
-      },
-      onClose: () => {
-        console.log("Closing!");
-      },
-      onException: err => {
-        console.log("An error occurred:", err)
-      }
-    });
-
-    // Close connection after 10 seconds
-    setTimeout(() => {
-      connection.close();
-    }, 10000);
-  </code></pre>
 
   <script>
     (function () {

@@ -37,18 +37,17 @@
     });
     // ---^^^ SDK setup ^^^---
 
-
     // ---vvv UI controls vvv---
     class App extends React.Component {
       constructor(props) {
         super(props);
         this.state = {
           tagNames: [],
-          selectedTag: null,
+          selectedTag: null
         };
       }
 
-      initMeridianMap = (element) => {
+      initMeridianMap = element => {
         this.map = MeridianSDK.createMap(element, {
           locationID: "5198682008846336",
           floorID: "5755685136498688",
@@ -58,66 +57,69 @@
             all: true
           }
         });
-      }
+      };
 
-      onTagsUpdate = (tagsByMAC) => {
+      onTagsUpdate = tagsByMAC => {
         const opts = Object.keys(tagsByMAC).reduce((accumulator, mac) => {
           accumulator.push({ value: tagsByMAC[mac].name, mac });
           return accumulator;
         }, []);
         this.setState({ tagNames: opts });
-      }
+      };
 
-      onSelectChange = (event) => {
+      onSelectChange = event => {
         this.setState({ selectedTag: event.target.value }, () => {
-          const selectedTag = this.state.selectedTag
+          const selectedTag = this.state.selectedTag;
           if (selectedTag) {
             this.map.update({
               tags: {
                 ids: [selectedTag]
               }
-            })
+            });
           } else {
             this.map.update({
               tags: {
                 all: true
               }
-            })
+            });
           }
-        })
-      }
+        });
+      };
 
       renderSelectOptions = () => {
         return this.state.tagNames.map((item, index) => {
           return (
-            <option selected={item.mac === this.state.selectedTag} value={item.mac} key={item.mac}>
+            <option
+              selected={item.mac === this.state.selectedTag}
+              value={item.mac}
+              key={item.mac}
+            >
               {item.value}
             </option>
-          )
-
-        })
-      }
+          );
+        });
+      };
 
       render() {
         return (
           <div>
             <div className="map" id="map" ref={this.initMeridianMap} />
-            <div className="controls-container"  style={{ textAlign: "center" }}>
+            <div className="controls-container" style={{ textAlign: "center" }}>
               <div>
                 <select onChange={this.onSelectChange}>
                   <option value="">all</option>
                   {this.renderSelectOptions()}
                 </select>
               </div>
-              <p>
-                {this.state.tagNames.length} tags found
-              </p>
+              <p>{this.state.tagNames.length} tags found</p>
             </div>
           </div>
         );
       }
     }
+
     ReactDOM.render(<App />, document.getElementById("react-root"));
+
   </script>
 </body>
 

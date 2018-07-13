@@ -25,15 +25,16 @@
   </h2>
 
   <p>
-    You will need to obtain a
-    <strong class="highlighter">read-only</strong> API token from the Meridian Editor before you can use the Meridian Web SDK.
+    Before you can use the Meridian Web SDK, you'll need to obtain a
+    <strong class="highlighter">read-only</strong> API token from the Meridian Editor.
+    <a target="_blank" href="https://docs.meridianapps.com/article/374-token-authentication">Go here to learn more about Meridian's token authentication.</a>
   </p>
 
   <pre><code class="js">
     MeridianSDK.init({
       api: MeridianSDK.createAPI({
         environment: "production",
-        token: "Insert your readonly token here"
+        token: "Insert your read-only token here"
       })
     });
 
@@ -53,19 +54,30 @@
   </code></pre>
 
   <p>
-    You can obtain the location ID and floor ID for a given map by navigating to it in the Editor and grabbing the IDs from the
-    URL in your browser.
+    You can find the location and floor IDs for a specific map by opening that map in the Meridian Editor. The URL for the map
+    page contains the IDs:
   </p>
 
+  <p class="url flex flex-wrap">
+    <span>https://</span>
+    <span>edit.meridianapps.com</span>
+    <span>/apps/</span>
+    <span><strong class="highlighter">location ID</strong></span>
+    <span>/versions/1/maps/</span>
+    <span><strong class="highlighter">floor ID</strong></span>
+    <span>/placemarks</span>
+  </p>
+
+
   <h2 id="init">
-    <a href="#init">MeridianSDK.init(options)</a>
+    <a href="#init">MeridianSDK<wbr>.init(<wbr>options<wbr>)</a>
   </h2>
 
   <pre><code class="js">
     MeridianSDK.init({
       api: MeridianSDK.createAPI({
         environment: "production",
-        token: "Insert your readonly token here"
+        token: "Insert your read-only token here"
       })
     });
   </code></pre>
@@ -84,8 +96,8 @@
 
   <p>
     Calling
-    <code>init</code> is optional. You can instead pass the API instance directly to
-    <a href="#createMap">createMap</a> if it better suits your use case.
+    <code>init</code> is optional. Instead, you can pass the API instance directly to
+    <a href="#createMap">createMap</a>.
   </p>
 
   <pre><code class="js">
@@ -103,8 +115,20 @@
     });
   </code></pre>
 
+  <p>
+    To find your organization ID, in the Meridian Editor sidebar menu, click Organization, and then find the ID in the Organization
+    Details section. You can get it from the URL too:
+  </p>
+
+  <p class="url flex flex-wrap">
+    <span>https://</span>
+    <span>edit.meridianapps.com</span>
+    <span>/w/organization/</span>
+    <span><strong class="highlighter">organization ID</strong></span>
+  </p>
+
   <h2 id="createMap">
-    <a href="#createMap">MeridianSDK.createMap(element, options)</a>
+    <a href="#createMap">MeridianSDK<wbr>.createMap(<wbr>element, <wbr>options<wbr>)</a>
   </h2>
 
   <pre><code class="js">
@@ -133,10 +157,10 @@
       <span class="parameter">options:</span> an object with any of the following keys:
       <ul>
         <li>
-          <span class="parameter">locationID:</span> (required) location ID
+          <span class="parameter">locationID:</span> (required)
         </li>
         <li>
-          <span class="parameter">mapID:</span> (required) map ID
+          <span class="parameter">mapID:</span> (required) the floor ID
         </li>
         <li>
           <span class="parameter">zoom:</span> (default =
@@ -162,19 +186,19 @@
           <ul>
             <li>
               <span class="parameter">all:</span> (default =
-              <code>false</code>) show all tags when true
+              <code>false</code>) show all Tags when true
             </li>
             <li>
               <span class="parameter">ids:</span> (default =
-              <code>[]</code>) show all tags which match the IDs in the list
+              <code>[]</code>) show all Tags which match the IDs in the list
             </li>
             <li>
               <span class="parameter">labels:</span> (default =
-              <code>[]</code>) show all tags which have any of these named labels
+              <code>[]</code>) show all Tags which have any of these named labels
             </li>
             <li>
               <span class="parameter">disabled:</span> (default =
-              <code>false</code>) disable clicking on tags when true
+              <code>false</code>) disable clicking on Tags when true
             </li>
           </ul>
         </li>
@@ -196,7 +220,7 @@
             </li>
             <li>
               <span class="parameter">disabled:</span> (default =
-              <code>false</code>) disable clicking on placemarks when true
+              <code>false</code>) disable clicking placemarks when true
             </li>
           </ul>
         </li>
@@ -211,8 +235,8 @@
         </li>
         -->
         <li>
-          <span class="parameter">onTagsUpdate(tagsByID):</span> (optional) callback function called whenever any tags are updated, receiving all tags
-          in an object keyed by their IDs (capitalized MAC addresses without colons)
+          <span class="parameter">onTagsUpdate(tagsByID):</span> (optional) callback function called whenever any Tags are updated, receiving all
+          Tags in an object keyed by their IDs (capitalized MAC addresses without colons)
         </li>
       </ul>
     </li>
@@ -222,7 +246,7 @@
 
   <ul>
     <li>
-      <span class="parameter">update(options):</span> a method that merged the initial options and the options passed here and updates the map accordingly
+      <span class="parameter">update(options):</span> a method that merged the initial options and the options passed here and updates the map
     </li>
   </ul>
 
@@ -234,13 +258,13 @@
   </p>
 
   <h2 id="createAPI">
-    <a href="#createAPI">MeridianSDK.createAPI(options)</a>
+    <a href="#createAPI">MeridianSDK<wbr>.createAPI(<wbr>options<wbr>)</a>
   </h2>
 
   <pre><code class="js">
     const api = MeridianSDK.createAPI({
       environment: "production",
-      token: "Insert your readonly token here"
+      token: "Insert your read-only token here"
     });
   </code></pre>
 
@@ -279,13 +303,13 @@
   </ul>
 
   <h2 id="api.openStream">
-    <a href="#api.openStream">api.openStream(options)</a>
+    <a href="#api.openStream">api<wbr>.openStream(<wbr>options)</a>
   </h2>
 
   <pre><code class="js">
     const api = MeridianSDK.createAPI({
       environment: "production",
-      token: "Insert your readonly token here"
+      token: "Insert your read-only token here"
     });
 
     const connection = api.openStream({
@@ -325,15 +349,14 @@
           <span class="parameter">floorID:</span> the floor ID
         </li>
         <li>
-          <span class="parameter">onInitialTags:</span> an optional callback function called with an array of tag data after the stream connection is
-          successful
+          <span class="parameter">onInitialTags:</span> an optional callback function called with an array of Tag data after the stream connection
+          is successful
         </li>
         <li>
-          <span class="parameter">onTagUpdate:</span> an optional callback function called with a single tag data when that tag reports its position
+          <span class="parameter">onTagUpdate:</span> an optional callback function called with a single Tag's data when it reports its position
         </li>
         <li>
-          <span class="parameter">onTagDisappear:</span> an optional callback function called with a single tag data when that tag exits its current
-          floor
+          <span class="parameter">onTagDisappear:</span> an optional callback function called with a single Tag data when it exits its current floor
         </li>
         <li>
           <span class="parameter">onClose:</span> an optional callback function called when the stream is closed

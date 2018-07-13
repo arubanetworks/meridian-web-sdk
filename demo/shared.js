@@ -20,22 +20,36 @@ $(function() {
   }
 
   // Show the performance monitor on screen
-  function showPerf() {
-    var script = document.createElement("script");
-    script.onload = function() {
-      var stats = new Stats();
-      document.body.appendChild(stats.dom);
-      requestAnimationFrame(function loop() {
+  var stats;
+  function initPerf() {
+    var url = "https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js";
+    $.getScript(url, function() {
+      stats = new Stats();
+      $(document.body).append(stats.dom);
+      requestAnimationFrame(function perfLoop() {
         stats.update();
-        requestAnimationFrame(loop);
+        requestAnimationFrame(perfLoop);
       });
-    };
-    script.src = "//rawgit.com/mrdoob/stats.js/master/build/stats.min.js";
-    document.head.appendChild(script);
+    });
+  }
+
+  function togglePerf() {
+    if (stats) {
+      $(stats.dom).toggle();
+    } else {
+      initPerf();
+    }
+  }
+
+  function hidePerf() {
+    if (stats) {
+      $(stats.dom).hide();
+    }
   }
 
   // Show the code dialog
   function showTheCode() {
+    hidePerf();
     var dialog = $("<div>").addClass("dialog flex flex-column");
     var heading = $("<div>")
       .addClass("flex flex-center section top-bar")
@@ -73,7 +87,7 @@ $(function() {
       .on("click", showTheCode);
     var perf = $("<button>")
       .text("Perf")
-      .on("click", showPerf);
+      .on("click", togglePerf);
     container.append(back);
     if (window.location.pathname.indexOf("/docs/") === -1) {
       container

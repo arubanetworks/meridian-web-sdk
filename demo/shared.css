@@ -126,3 +126,7 @@
 .back > .separator {
   border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
+
+select {
+  font-size: 18px;
+}

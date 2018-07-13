@@ -1,0 +1,43 @@
+body {
+  font-family: sans-serif;
+}
+
+.container {
+  width: 900px;
+  margin: 0 auto;
+}
+
+.map {
+  border: 1px solid #ccc;
+  float: left;
+  width: 500px;
+}
+
+.controls-container {
+  float: left;
+  margin-left: 20px;
+  max-width: 350px;
+}
+
+@media only screen and (max-width: 900px) {
+  .container {
+    max-width: 340px;
+    width: auto;
+    margin: 0 auto;
+  }
+  .controls-container {
+    float: none;
+    margin: 10px 0 0 0;
+    width: 100%;
+    max-width: auto;
+  }
+
+  .map {
+    float: none;
+    width: 100%;
+  }
+}
+
+select {
+  min-width: 180px;
+}

@@ -93,6 +93,7 @@ p {
 
 h1 {
   margin-top: 0;
+  font-size: 44px;
 }
 
 h1,
@@ -106,6 +107,7 @@ h6 {
 }
 
 h2 {
+  font-size: 33px;
   border-top: 2px solid #ddd;
   margin: 0;
   margin-bottom: 10px;

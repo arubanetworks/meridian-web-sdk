@@ -37,3 +37,7 @@ body {
     width: 100%;
   }
 }
+
+select {
+  min-width: 180px;
+}

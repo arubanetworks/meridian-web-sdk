@@ -28,13 +28,25 @@ export function createMap(
   options = requiredParam("options")
 ) {
   let domRef = null;
+  let mapRef = null;
 
-  domRef = render(<Map api={context.api} {...options} />, node);
+  const setMapRef = component => {
+    mapRef = component;
+  };
+
+  domRef = render(<Map api={context.api} {...options} ref={setMapRef} />, node);
 
   return {
     update: updatedOptions => {
       options = { ...options, ...updatedOptions };
-      domRef = render(<Map api={context.api} {...options} />, node, domRef);
+      domRef = render(
+        <Map api={context.api} {...options} ref={setMapRef} />,
+        node,
+        domRef
+      );
+    },
+    resetZoom: () => {
+      mapRef.zoomToDefault();
     }
   };
 }

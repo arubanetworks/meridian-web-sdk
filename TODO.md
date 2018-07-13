@@ -21,6 +21,7 @@
 
 ### OTHER
 
+- (like tags app) add 'controlTags' to tag options (to show control tags, defaults to false)
 - Tag updates are coming in first (onTagUpdate)
 - Hit Escape to close overlay modal
 - Make a new hidden page with copy/paste API code

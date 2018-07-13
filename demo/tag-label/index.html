@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Tag Names | Meridian Web SDK</title>
+  <title>Tag Label | Meridian Web SDK</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -60,7 +60,6 @@
       };
 
       onTagsUpdate = tagsByMAC => {
-
         const labels = {};
         Object.keys(tagsByMAC).forEach(mac => {
           const tag = tagsByMAC[mac];
@@ -68,17 +67,6 @@
             labels[label] = true;
           });
         });
-
-        // console.info(Object.values(labels));
-        // return Object.keys(labels);
-
-        
-        // const opts = Object.keys(tagsByMAC).reduce((accumulator, mac) => {
-        //   accumulator.push({ value: tagsByMAC[mac].name, mac });
-        //   return accumulator;
-        // }, []);
-
-
         this.setState({ tagLabels: Object.keys(labels) });
       };
 

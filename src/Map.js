@@ -68,6 +68,7 @@ export default class Map extends Component {
     isPanningOrZooming: false,
     mapTransform: "",
     mapZoomFactor: 0.5,
+    floorsByBuilding: null,
     mapData: null,
     placemarksData: null,
     svgURL: null,
@@ -81,7 +82,19 @@ export default class Map extends Component {
     const mapURL = `locations/${locationID}/maps`;
     const { data } = await api.axios.get(mapURL);
     const mapData = data.results.filter(floor => floor.id === floorID)[0];
-    this.setState({ allMapData: data.results, mapData }, () => {
+    const floorsSortedByLevel = data.results
+      .slice()
+      .sort((a, b) => a.level - b.level);
+    const floorsByBuilding = floorsSortedByLevel.reduce((obj, floor) => {
+      const building = floor.group_name;
+      if (obj.hasOwnProperty(building)) {
+        obj[building].push(floor);
+      } else {
+        obj[building] = [floor];
+      }
+      return obj;
+    }, {});
+    this.setState({ floorsByBuilding, mapData }, () => {
       this.addZoomBehavior();
     });
   }

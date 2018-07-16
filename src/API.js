@@ -1,6 +1,8 @@
 import SocketIO from "socket.io-client";
 import axios from "axios";
 
+import { requiredParam } from "./util";
+
 const envToTagURL = {
   production: "https://tags.meridianapps.com",
   staging: "https://staging-tags.meridianapps.com"
@@ -14,7 +16,10 @@ const envToRestURL = {
 };
 
 export default class API {
-  constructor({ environment = "production", token }) {
+  constructor({
+    environment = "production",
+    token = requiredParam("API", "token")
+  }) {
     this.token = token;
     this.environment = environment;
     this.axios = axios.create({
@@ -30,8 +35,8 @@ export default class API {
   // - Subscribe to all events listed here: https://github.com/arubanetworks/asset-tracking-backend/blob/master/components/tag-tracker/API.md
   // - We should probably work on the names of these callback functions
   openStream({
-    locationID,
-    floorID,
+    locationID = requiredParam("openStream", "locationID"),
+    floorID = requiredParam("openStream", "floorID"),
     onInitialTags = () => {},
     onTagUpdate = () => {},
     onTagDisappear = () => {},

@@ -120,6 +120,7 @@
 
     function updateMap() {
       map.update(state);
+      map.resetZoom();
     }
 
     $("[name='placemark-filter']").on("change", function () {

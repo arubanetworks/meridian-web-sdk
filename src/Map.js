@@ -78,9 +78,10 @@ export default class Map extends Component {
 
   async componentDidMount() {
     const { locationID, floorID, api } = this.props;
-    const mapURL = `locations/${locationID}/maps/${floorID}`;
+    const mapURL = `locations/${locationID}/maps`;
     const { data } = await api.axios.get(mapURL);
-    this.setState({ mapData: data }, () => {
+    const mapData = data.results.filter(floor => floor.id === floorID)[0];
+    this.setState({ allMapData: data.results, mapData }, () => {
       this.addZoomBehavior();
     });
   }

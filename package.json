@@ -19,7 +19,7 @@
   },
   "keywords": [],
   "author": "Aruba, a Hewlett Packard Enterprise Company",
-  "license": "???",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/arubanetworks/meridian-web-components/issues"
   },

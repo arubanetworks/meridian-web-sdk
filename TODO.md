@@ -1,6 +1,5 @@
 ### NEXT
 
-- JS API documentation
 - Allow switching `floorID`s after loading (group by building)
 - Search for tag by name
 - Audit State usage
@@ -9,8 +8,6 @@
 ### NEED
 
 - `@meridian` namespace on npm
-- What license for the library?
-  - Put the license at the top of the JS bundle and index.js
 - Open source on GitHub or keep it private and only publish minified source on
   GCS and npm
 

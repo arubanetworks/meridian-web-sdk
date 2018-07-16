@@ -1,6 +1,7 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
+import objectValues from "lodash.values";
 
 import Watermark from "./Watermark";
 import ZoomButtons from "./ZoomButtons";
@@ -69,7 +70,6 @@ export default class Map extends Component {
     mapTransform: "",
     mapZoomFactor: 0.5,
     floorsByBuilding: null,
-    mapData: null,
     placemarksData: null,
     svgURL: null,
     tagsConnection: null,
@@ -88,10 +88,22 @@ export default class Map extends Component {
     return data.results;
   }
 
-  async initializeFloors() {
+  // TODO: We might want to memoize this based on floorID eventually
+  getMapData() {
     const { floorID } = this.props;
+    const { floorsByBuilding } = this.state;
+    for (const floors of objectValues(floorsByBuilding)) {
+      for (const floor of floors) {
+        if (floor.id === floorID) {
+          return floor;
+        }
+      }
+    }
+    return null;
+  }
+
+  async initializeFloors() {
     const floors = await this.getFloors();
-    const mapData = floors.filter(floor => floor.id === floorID)[0];
     const floorsSortedByLevel = floors
       .slice()
       .sort((a, b) => a.level - b.level);
@@ -104,7 +116,7 @@ export default class Map extends Component {
       }
       return obj;
     }, {});
-    this.setState({ floorsByBuilding, mapData }, () => {
+    this.setState({ floorsByBuilding }, () => {
       if (!this.zoomD3) {
         this.addZoomBehavior();
       }
@@ -145,7 +157,7 @@ export default class Map extends Component {
   }
 
   zoomToDefault() {
-    const { mapData } = this.state;
+    const mapData = this.getMapData();
     const mapSize = this.getMapRefSize();
     this.mapSelection.call(
       this.zoomD3.translateTo,
@@ -242,8 +254,8 @@ export default class Map extends Component {
   }
 
   render() {
+    const mapData = this.getMapData();
     const {
-      mapData,
       selectedItem,
       mapTransform,
       mapZoomFactor,

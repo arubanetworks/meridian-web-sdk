@@ -101,7 +101,6 @@ export default class Map extends Component {
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
-      const { mapData } = this.state;
       this.zoomD3 = d3
         .zoom()
         // TODO: We're gonna need to calculate reasonable extents here based on

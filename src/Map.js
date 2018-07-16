@@ -105,7 +105,10 @@ export default class Map extends Component {
       return obj;
     }, {});
     this.setState({ floorsByBuilding, mapData }, () => {
-      this.addZoomBehavior();
+      if (!this.zoomD3) {
+        this.addZoomBehavior();
+      }
+      this.zoomToDefault();
     });
   }
 
@@ -125,8 +128,6 @@ export default class Map extends Component {
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
-      const { mapData } = this.state;
-      const mapSize = this.getMapRefSize();
       this.zoomD3 = d3
         .zoom()
         // TODO: We're gonna need to calculate reasonable extents here based on
@@ -139,18 +140,24 @@ export default class Map extends Component {
         .on("end.zoom", onZoomEnd);
       this.mapSelection = d3.select(this.mapRef);
       this.mapSelection.call(this.zoomD3);
-      this.mapSelection.call(
-        this.zoomD3.translateTo,
-        mapData.width / 2,
-        mapData.height / 2
-      );
-      this.mapSelection.call(
-        this.zoomD3.scaleTo,
-        // TODO: Figure out the appropriate scale level to show the "whole" map.
-        // This is currently just a quick calculation that seems to work ok.
-        (0.5 * mapSize.width) / mapData.width
-      );
+      this.zoomToDefault();
     }
+  }
+
+  zoomToDefault() {
+    const { mapData } = this.state;
+    const mapSize = this.getMapRefSize();
+    this.mapSelection.call(
+      this.zoomD3.translateTo,
+      mapData.width / 2,
+      mapData.height / 2
+    );
+    this.mapSelection.call(
+      this.zoomD3.scaleTo,
+      // TODO: Figure out the appropriate scale level to show the "whole" map.
+      // This is currently just a quick calculation that seems to work ok.
+      (0.5 * mapSize.width) / mapData.width
+    );
   }
 
   mapSelection = null;

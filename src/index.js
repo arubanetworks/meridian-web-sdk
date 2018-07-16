@@ -6,31 +6,24 @@ import "preact/debug";
 
 import Map from "./Map";
 import API from "./API";
+import { requiredParam } from "./util";
 import Package from "../package.json";
 
 const context = {
   api: null
 };
 
-function requiredParam(argName) {
-  // eslint-disable-next-line no-console
-  console.error(`${argName} is required`);
-}
-
 export const version = Package.version;
 
-export function init({ api }) {
+export function init({ api } = requiredParam("init", "options")) {
   context.api = api;
 }
 
 export function createMap(
-  node = requiredParam("node"),
-  options = requiredParam("options")
+  node = requiredParam("createMap", "node"),
+  options = requiredParam("createMap", "options")
 ) {
-  let domRef = null;
-
-  domRef = render(<Map api={context.api} {...options} />, node);
-
+  let domRef = render(<Map api={context.api} {...options} />, node);
   return {
     update: updatedOptions => {
       options = { ...options, ...updatedOptions };
@@ -39,6 +32,6 @@ export function createMap(
   };
 }
 
-export function createAPI(options) {
+export function createAPI(options = requiredParam("createAPI", "options")) {
   return new API(options);
 }

@@ -15,7 +15,12 @@ const context = {
 
 export const version = Package.version;
 
-export function init({ api } = requiredParam("init", "options")) {
+export function init(
+  { api = requiredParam("init", "options.api") } = requiredParam(
+    "init",
+    "options"
+  )
+) {
   context.api = api;
 }
 

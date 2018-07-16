@@ -42,18 +42,22 @@ export default class TagLayer extends Component {
 
   shouldComponentUpdate(nextProps) {
     const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
-    // don't re-render when panning only (no zoom change)
+    // Don't re-render when panning only (no zoom change)
     if (this.props.isPanningOrZooming && !zoomChanged) {
       return false;
     }
     return true;
   }
 
-  componentWillUnmount() {
-    const { connection } = this.state;
-    if (connection) {
-      connection.close();
+  componentDidUpdate(prevProps) {
+    if (prevProps.floorID !== this.props.floorID) {
+      this.disconnect();
+      this.connect();
     }
+  }
+
+  componentWillUnmount() {
+    this.disconnect();
   }
 
   tagUpdates = {};
@@ -184,6 +188,15 @@ export default class TagLayer extends Component {
     this.setState({ connection }, () => {
       this.onUpdate();
     });
+  }
+
+  disconnect() {
+    const { connection } = this.state;
+    if (connection) {
+      connection.close();
+      this.tagUpdates = {};
+      this.setState({ tagsByMAC: {} });
+    }
   }
 
   render() {

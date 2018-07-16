@@ -78,11 +78,21 @@ export default class Map extends Component {
   };
 
   async componentDidMount() {
-    const { locationID, floorID, api } = this.props;
+    this.initializeFloors();
+  }
+
+  async getFloors() {
+    const { locationID, api } = this.props;
     const mapURL = `locations/${locationID}/maps`;
     const { data } = await api.axios.get(mapURL);
-    const mapData = data.results.filter(floor => floor.id === floorID)[0];
-    const floorsSortedByLevel = data.results
+    return data.results;
+  }
+
+  async initializeFloors() {
+    const { floorID } = this.props;
+    const floors = await this.getFloors();
+    const mapData = floors.filter(floor => floor.id === floorID)[0];
+    const floorsSortedByLevel = floors
       .slice()
       .sort((a, b) => a.level - b.level);
     const floorsByBuilding = floorsSortedByLevel.reduce((obj, floor) => {

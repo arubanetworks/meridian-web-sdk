@@ -19,6 +19,7 @@ const cssOverlay = css({
 });
 
 const cssOverlayImage = css({
+  label: "overlay-image",
   width: "100%",
   backgroundColor: "white",
   backgroundPosition: "center",
@@ -27,15 +28,17 @@ const cssOverlayImage = css({
 });
 
 const cssOverlayContent = css({
+  label: "overlay-content",
   padding: 20
 });
 
 const cssOverlayName = css({
+  label: "overlay-name",
   fontSize: 16
 });
 
 const cssClose = css({
-  label: "close",
+  label: "overlay-close",
   ...mixins.buttonReset,
   width: 26,
   height: 26,

@@ -5,7 +5,8 @@ import objectValues from "lodash.values";
 
 import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
-import Overlay from "./Overlay";
+import FloorOverlay from "./FloorOverlay";
+import InfoOverlay from "./InfoOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorControls from "./FloorControls";
@@ -35,6 +36,7 @@ const cssMap = css({
 
 export default class Map extends Component {
   static propTypes = {
+    update: PropTypes.func.isRequired,
     zoom: PropTypes.bool,
     width: PropTypes.string,
     height: PropTypes.string,
@@ -70,6 +72,7 @@ export default class Map extends Component {
   };
 
   state = {
+    isFloorOverlayOpen: false,
     isPanningOrZooming: false,
     mapTransform: "",
     mapZoomFactor: 0.5,
@@ -84,6 +87,18 @@ export default class Map extends Component {
   async componentDidMount() {
     this.initializeFloors();
   }
+
+  openFloorOverlay = () => {
+    this.setState({ isFloorOverlayOpen: true });
+  };
+
+  closeFloorOverlay = () => {
+    this.setState({ isFloorOverlayOpen: false });
+  };
+
+  selectFloorByID = floorID => {
+    this.props.update({ floorID });
+  };
 
   async getFloors() {
     const { locationID, api } = this.props;
@@ -259,11 +274,25 @@ export default class Map extends Component {
     return null;
   }
 
-  renderFloorSwitcher() {
+  renderFloorControls() {
     const { floorsByBuilding } = this.state;
     const floors = Object.keys(floorsByBuilding || {});
     if (floors.length > 0) {
-      return <FloorControls floorsByBuilding={floorsByBuilding} />;
+      return <FloorControls openFloorOverlay={this.openFloorOverlay} />;
+    }
+    return null;
+  }
+
+  renderFloorOverlay() {
+    const { isFloorOverlayOpen, floorsByBuilding } = this.state;
+    if (isFloorOverlayOpen) {
+      return (
+        <FloorOverlay
+          floorsByBuilding={floorsByBuilding}
+          closeFloorOverlay={this.closeFloorOverlay}
+          selectFloorByID={this.selectFloorByID}
+        />
+      );
     }
     return null;
   }
@@ -291,14 +320,15 @@ export default class Map extends Component {
         className={cx(cssMapContainer, "meridian-map-container")}
         style={{ width, height }}
       >
-        <Overlay
+        <InfoOverlay
           onClose={this.onOverlayClose}
           data={selectedItem.data}
           kind={selectedItem.kind}
         />
+        {this.renderFloorOverlay()}
         <Watermark />
         {this.renderZoomControls()}
-        {this.renderFloorSwitcher()}
+        {this.renderFloorControls()}
         <div
           ref={el => {
             this.mapRef = el;

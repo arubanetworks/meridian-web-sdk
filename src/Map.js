@@ -8,6 +8,7 @@ import ZoomButtons from "./ZoomButtons";
 import Overlay from "./Overlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
+import FloorSwitcher from "./FloorSwitcher";
 import { css, theme, cx } from "./style";
 import { asyncClientCall } from "./util";
 
@@ -258,6 +259,15 @@ export default class Map extends Component {
     return null;
   }
 
+  renderFloorSwitcher() {
+    const { floorsByBuilding } = this.state;
+    const floors = Object.keys(floorsByBuilding || {});
+    if (floors.length > 0) {
+      return <FloorSwitcher floorsByBuilding={floorsByBuilding} />;
+    }
+    return null;
+  }
+
   render() {
     const mapData = this.getMapData();
     const {
@@ -288,6 +298,7 @@ export default class Map extends Component {
         />
         <Watermark />
         {this.renderZoomControls()}
+        {this.renderFloorSwitcher()}
         <div
           ref={el => {
             this.mapRef = el;

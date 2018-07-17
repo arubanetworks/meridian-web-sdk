@@ -12,7 +12,7 @@ const cssZoomButtons = css({
   flexDirection: "column",
   zIndex: 1,
   right: 15,
-  top: 15
+  bottom: 15
 });
 
 const styleZoomButton = {

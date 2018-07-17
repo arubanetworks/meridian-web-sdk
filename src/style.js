@@ -1,7 +1,7 @@
 import createEmotion from "create-emotion";
 
 export const theme = {
-  fontFamily: "'Open Sans', helvetica, arial, sans-serif",
+  fontFamily: "'Open Sans', Helvetica, Arial, sans-serif",
   fontSize: "16px",
   black: "#000",
   white: "#fff",

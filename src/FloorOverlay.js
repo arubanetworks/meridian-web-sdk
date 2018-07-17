@@ -12,6 +12,8 @@ const cssOverlay = css({
   background: theme.white,
   fill: "#000",
   position: "absolute",
+  marginLeft: "auto",
+  maxWidth: 500,
   left: 10,
   top: 10,
   bottom: 10,

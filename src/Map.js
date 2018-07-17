@@ -4,11 +4,11 @@ import * as d3 from "d3";
 import objectValues from "lodash.values";
 
 import Watermark from "./Watermark";
-import ZoomButtons from "./ZoomButtons";
+import ZoomControls from "./ZoomControls";
 import Overlay from "./Overlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
-import FloorSwitcher from "./FloorSwitcher";
+import FloorControls from "./FloorControls";
 import { css, theme, cx } from "./style";
 import { asyncClientCall } from "./util";
 
@@ -254,7 +254,7 @@ export default class Map extends Component {
 
   renderZoomControls() {
     if (this.props.zoom) {
-      return <ZoomButtons onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />;
+      return <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />;
     }
     return null;
   }
@@ -263,7 +263,7 @@ export default class Map extends Component {
     const { floorsByBuilding } = this.state;
     const floors = Object.keys(floorsByBuilding || {});
     if (floors.length > 0) {
-      return <FloorSwitcher floorsByBuilding={floorsByBuilding} />;
+      return <FloorControls floorsByBuilding={floorsByBuilding} />;
     }
     return null;
   }

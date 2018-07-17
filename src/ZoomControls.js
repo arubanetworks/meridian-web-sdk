@@ -2,7 +2,7 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 import { css, theme, mixins, cx } from "./style";
 
-const cssZoomButtons = css({
+const cssZoomControls = css({
   ...mixins.shadow,
   ...mixins.rounded,
   background: "white",
@@ -77,16 +77,16 @@ ZoomButton.propTypes = {
   dir: PropTypes.oneOf(["in", "out"])
 };
 
-const ZoomButtons = ({ onZoomIn, onZoomOut }) => (
-  <div className={cx(cssZoomButtons, "meridian-zoom-buttons-container")}>
+const ZoomControls = ({ onZoomIn, onZoomOut }) => (
+  <div className={cx(cssZoomControls, "meridian-zoom-controls")}>
     <ZoomButton onClick={onZoomIn} dir="in" />
     <ZoomButton onClick={onZoomOut} dir="out" />
   </div>
 );
 
-ZoomButtons.propTypes = {
+ZoomControls.propTypes = {
   onZoomIn: PropTypes.func,
   onZoomOut: PropTypes.func
 };
 
-export default ZoomButtons;
+export default ZoomControls;

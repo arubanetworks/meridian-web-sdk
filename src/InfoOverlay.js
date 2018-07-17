@@ -40,6 +40,7 @@ const cssOverlayName = css({
 const cssClose = css({
   label: "overlay-close",
   ...mixins.buttonReset,
+  ...mixins.focusOutline,
   width: 26,
   height: 26,
   fontSize: 11,
@@ -50,7 +51,6 @@ const cssClose = css({
   borderRadius: "100%",
   fontWeight: "bold",
   boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
-  "&:focus": { outline: "none" },
   "&:hover": {
     background: theme.white,
     boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"

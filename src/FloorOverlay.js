@@ -31,14 +31,17 @@ const cssOverlayContent = css({
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
   fontWeight: "bold",
-  padding: 10
+  padding: 10,
+  marginBottom: 10,
+  borderBottom: `1px solid ${theme.borderColor}`
 });
 
 const cssOverlayFloorButton = css({
   label: "overlay-floor-button",
   ...mixins.buttonReset,
+  ...mixins.focusDarken,
+  ...mixins.rounded,
   color: theme.brandBrightBlue,
-  borderTop: `1px solid ${theme.borderColor}`,
   display: "block",
   width: "100%",
   textAlign: "left",
@@ -48,9 +51,15 @@ const cssOverlayFloorButton = css({
   }
 });
 
+const cssOverlayCurrentFloor = css({
+  label: "overlay-floor-button-curent-floor",
+  fontWeight: "bold"
+});
+
 const cssClose = css({
   label: "overlay-close",
   ...mixins.buttonReset,
+  ...mixins.focusOutline,
   position: "absolute",
   top: 0,
   right: 0,
@@ -64,7 +73,6 @@ const cssClose = css({
   borderRadius: "100%",
   fontWeight: "bold",
   boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
-  "&:focus": { outline: "none" },
   "&:hover": {
     background: theme.white,
     boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"
@@ -83,6 +91,7 @@ const sortedBuildingNames = floorsByBuilding => {
 };
 
 const FloorOverlay = ({
+  currentFloorID,
   floorsByBuilding,
   closeFloorOverlay,
   selectFloorByID
@@ -116,10 +125,15 @@ const FloorOverlay = ({
               }}
               className={cx(
                 cssOverlayFloorButton,
+                floor.id === currentFloorID && [
+                  cssOverlayCurrentFloor,
+                  "meridian-overlay-floor-button-curent-floor"
+                ],
                 "meridian-overlay-floor-button"
               )}
             >
               {floor.name}
+              {floor.id === currentFloorID ? " ✓" : null}
             </button>
           ))}
         </div>
@@ -129,9 +143,10 @@ const FloorOverlay = ({
 );
 
 FloorOverlay.propTypes = {
-  floorsByBuilding: PropTypes.object,
-  selectFloorByID: PropTypes.func,
-  closeFloorOverlay: PropTypes.func
+  currentFloorID: PropTypes.string.isRequired,
+  floorsByBuilding: PropTypes.object.isRequired,
+  selectFloorByID: PropTypes.func.isRequired,
+  closeFloorOverlay: PropTypes.func.isRequired
 };
 
 export default FloorOverlay;

@@ -284,10 +284,12 @@ export default class Map extends Component {
   }
 
   renderFloorOverlay() {
+    const { floorID } = this.props;
     const { isFloorOverlayOpen, floorsByBuilding } = this.state;
     if (isFloorOverlayOpen) {
       return (
         <FloorOverlay
+          currentFloorID={floorID}
           floorsByBuilding={floorsByBuilding}
           closeFloorOverlay={this.closeFloorOverlay}
           selectFloorByID={this.selectFloorByID}

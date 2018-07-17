@@ -20,6 +20,7 @@
       margin: auto;
       border: 1px solid #ccc;
     }
+
   </style>
 </head>
 
@@ -51,6 +52,9 @@
       },
       tags: {
         all: true
+      },
+      onFloorsUpdate: function (floorsByBuilding) {
+        console.log(floorsByBuilding);
       }
     });
   </script>

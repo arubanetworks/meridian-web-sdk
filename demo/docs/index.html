@@ -62,9 +62,13 @@
     <span>https://</span>
     <span>edit.meridianapps.com</span>
     <span>/apps/</span>
-    <span><strong class="highlighter">location ID</strong></span>
+    <span>
+      <strong class="highlighter">location ID</strong>
+    </span>
     <span>/versions/1/maps/</span>
-    <span><strong class="highlighter">floor ID</strong></span>
+    <span>
+      <strong class="highlighter">floor ID</strong>
+    </span>
     <span>/placemarks</span>
   </p>
 
@@ -124,7 +128,9 @@
     <span>https://</span>
     <span>edit.meridianapps.com</span>
     <span>/w/organization/</span>
-    <span><strong class="highlighter">organization ID</strong></span>
+    <span>
+      <strong class="highlighter">organization ID</strong>
+    </span>
   </p>
 
   <h2 id="createMap">
@@ -238,6 +244,11 @@
           <span class="parameter">onTagsUpdate(tagsByID):</span> (optional) callback function called whenever any Tags are updated, receiving all
           Tags in an object keyed by their IDs (capitalized MAC addresses without colons)
         </li>
+        <li>
+          <span class="parameter">onFloorsUpdate(floorsByBuilding):</span> (optional) callback function called when the Floors are loaded, receiving
+          all Floors in an object keyed by their building names
+        </li>
+
       </ul>
     </li>
   </ul>
@@ -249,13 +260,6 @@
       <span class="parameter">update(options):</span> a method that merged the initial options and the options passed here and updates the map
     </li>
   </ul>
-
-  <p>
-    Note:
-    <code>locationID</code> and
-    <code>floorID</code> cannot be changed via
-    <code>update(options)</code> yet, but this is in development.
-  </p>
 
   <h2 id="createAPI">
     <a href="#createAPI">MeridianSDK<wbr>.createAPI(<wbr>options<wbr>)</a>

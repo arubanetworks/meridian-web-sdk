@@ -9,6 +9,7 @@ import Overlay from "./Overlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import { css, theme, cx } from "./style";
+import { asyncClientCall } from "./util";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -53,7 +54,8 @@ export default class Map extends Component {
     }),
     onMarkerClick: PropTypes.func,
     onMapClick: PropTypes.func,
-    onTagsUpdate: PropTypes.func
+    onTagsUpdate: PropTypes.func,
+    onFloorsUpdate: PropTypes.func
   };
 
   static defaultProps = {
@@ -62,7 +64,8 @@ export default class Map extends Component {
     height: "400px",
     placemarks: {},
     tags: {},
-    onTagsUpdate: () => {}
+    onTagsUpdate: () => {},
+    onFloorsUpdate: () => {}
   };
 
   state = {
@@ -103,6 +106,7 @@ export default class Map extends Component {
   }
 
   async initializeFloors() {
+    const { onFloorsUpdate } = this.props;
     const floors = await this.getFloors();
     const floorsSortedByLevel = floors
       .slice()
@@ -121,6 +125,7 @@ export default class Map extends Component {
         this.addZoomBehavior();
       }
       this.zoomToDefault();
+      asyncClientCall(onFloorsUpdate, floorsByBuilding);
     });
   }
 

@@ -7,6 +7,7 @@ const cssOverlay = css({
   label: "overlay",
   ...mixins.shadow,
   ...mixins.rounded,
+  ...mixins.fontSize,
   overflow: "hidden",
   background: theme.white,
   fill: "#000",
@@ -27,8 +28,28 @@ const cssOverlayContent = css({
   overflowY: "auto"
 });
 
+const cssOverlayBuildingName = css({
+  label: "overlay-building-name",
+  fontWeight: "bold",
+  padding: 10
+});
+
+const cssOverlayFloorButton = css({
+  label: "overlay-floor-button",
+  ...mixins.buttonReset,
+  color: theme.brandBrightBlue,
+  borderTop: `1px solid ${theme.borderColor}`,
+  display: "block",
+  width: "100%",
+  textAlign: "left",
+  padding: 10,
+  "&:hover": {
+    background: theme.buttonHoverColor
+  }
+});
+
 const cssClose = css({
-  label: "close",
+  label: "overlay-close",
   ...mixins.buttonReset,
   position: "absolute",
   top: 0,
@@ -60,11 +81,6 @@ const sortedBuildingNames = floorsByBuilding => {
   // Uncomment for tons of fake data :)
   // return [...keys, ...keys, ...keys];
 };
-
-const cssOverlayBuildingName = css({
-  label: "overlay-building-name",
-  fontWeight: "bold"
-});
 
 const FloorOverlay = ({
   floorsByBuilding,
@@ -98,6 +114,10 @@ const FloorOverlay = ({
                 selectFloorByID(floor.id);
                 closeFloorOverlay();
               }}
+              className={cx(
+                cssOverlayFloorButton,
+                "meridian-overlay-floor-button"
+              )}
             >
               {floor.name}
             </button>

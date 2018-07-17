@@ -19,7 +19,7 @@ export const mixins = {
   buttonReset: {
     padding: 0,
     margin: 0,
-    fontFamily: "inherit",
+    font: "inherit",
     border: 0,
     borderRadius: 0,
     background: "transparent",

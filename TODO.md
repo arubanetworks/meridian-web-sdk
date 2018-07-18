@@ -4,6 +4,7 @@
 - Search for tag by name
 - Audit State usage
 - Culling! (openstreetmap/ID uses RBush)
+- Remove `zoom` prop?
 
 ### NEED
 

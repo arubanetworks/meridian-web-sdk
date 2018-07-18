@@ -1,13 +1,17 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
+import objectValues from "lodash.values";
 
 import Watermark from "./Watermark";
-import ZoomButtons from "./ZoomButtons";
-import Overlay from "./Overlay";
+import ZoomControls from "./ZoomControls";
+import FloorOverlay from "./FloorOverlay";
+import InfoOverlay from "./InfoOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
+import FloorControls from "./FloorControls";
 import { css, theme, cx } from "./style";
+import { asyncClientCall } from "./util";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -32,6 +36,7 @@ const cssMap = css({
 
 export default class Map extends Component {
   static propTypes = {
+    update: PropTypes.func.isRequired,
     zoom: PropTypes.bool,
     width: PropTypes.string,
     height: PropTypes.string,
@@ -52,7 +57,8 @@ export default class Map extends Component {
     }),
     onMarkerClick: PropTypes.func,
     onMapClick: PropTypes.func,
-    onTagsUpdate: PropTypes.func
+    onTagsUpdate: PropTypes.func,
+    onFloorsUpdate: PropTypes.func
   };
 
   static defaultProps = {
@@ -61,14 +67,16 @@ export default class Map extends Component {
     height: "400px",
     placemarks: {},
     tags: {},
-    onTagsUpdate: () => {}
+    onTagsUpdate: () => {},
+    onFloorsUpdate: () => {}
   };
 
   state = {
+    isFloorOverlayOpen: false,
     isPanningOrZooming: false,
     mapTransform: "",
     mapZoomFactor: 0.5,
-    mapData: null,
+    floorsByBuilding: null,
     placemarksData: null,
     svgURL: null,
     tagsConnection: null,
@@ -77,11 +85,63 @@ export default class Map extends Component {
   };
 
   async componentDidMount() {
-    const { locationID, floorID, api } = this.props;
-    const mapURL = `locations/${locationID}/maps/${floorID}`;
+    this.initializeFloors();
+  }
+
+  openFloorOverlay = () => {
+    this.setState({ isFloorOverlayOpen: true });
+  };
+
+  closeFloorOverlay = () => {
+    this.setState({ isFloorOverlayOpen: false });
+  };
+
+  selectFloorByID = floorID => {
+    this.props.update({ floorID });
+  };
+
+  async getFloors() {
+    const { locationID, api } = this.props;
+    const mapURL = `locations/${locationID}/maps`;
     const { data } = await api.axios.get(mapURL);
-    this.setState({ mapData: data }, () => {
-      this.addZoomBehavior();
+    return data.results;
+  }
+
+  // TODO: We might want to memoize this based on floorID eventually
+  getMapData() {
+    const { floorID } = this.props;
+    const { floorsByBuilding } = this.state;
+    for (const floors of objectValues(floorsByBuilding)) {
+      for (const floor of floors) {
+        if (floor.id === floorID) {
+          return floor;
+        }
+      }
+    }
+    return null;
+  }
+
+  async initializeFloors() {
+    const { onFloorsUpdate } = this.props;
+    const floors = await this.getFloors();
+    const floorsSortedByLevel = floors
+      .slice()
+      .sort((a, b) => a.level - b.level);
+    const floorsByBuilding = floorsSortedByLevel.reduce((obj, floor) => {
+      const building = floor.group_name;
+      if (obj.hasOwnProperty(building)) {
+        obj[building].push(floor);
+      } else {
+        obj[building] = [floor];
+      }
+      return obj;
+    }, {});
+    this.setState({ floorsByBuilding }, () => {
+      if (!this.zoomD3) {
+        this.addZoomBehavior();
+      }
+      this.zoomToDefault();
+      asyncClientCall(onFloorsUpdate, floorsByBuilding);
     });
   }
 
@@ -101,8 +161,6 @@ export default class Map extends Component {
       // TODO:
       // - Use `.filter(...)` to filter out mouse wheel events without a
       //   modifier key, depending on user settings
-      const { mapData } = this.state;
-      const mapSize = this.getMapRefSize();
       this.zoomD3 = d3
         .zoom()
         // TODO: We're gonna need to calculate reasonable extents here based on
@@ -115,18 +173,24 @@ export default class Map extends Component {
         .on("end.zoom", onZoomEnd);
       this.mapSelection = d3.select(this.mapRef);
       this.mapSelection.call(this.zoomD3);
-      this.mapSelection.call(
-        this.zoomD3.translateTo,
-        mapData.width / 2,
-        mapData.height / 2
-      );
-      this.mapSelection.call(
-        this.zoomD3.scaleTo,
-        // TODO: Figure out the appropriate scale level to show the "whole" map.
-        // This is currently just a quick calculation that seems to work ok.
-        (0.5 * mapSize.width) / mapData.width
-      );
+      this.zoomToDefault();
     }
+  }
+
+  zoomToDefault() {
+    const mapData = this.getMapData();
+    const mapSize = this.getMapRefSize();
+    this.mapSelection.call(
+      this.zoomD3.translateTo,
+      mapData.width / 2,
+      mapData.height / 2
+    );
+    this.mapSelection.call(
+      this.zoomD3.scaleTo,
+      // TODO: Figure out the appropriate scale level to show the "whole" map.
+      // This is currently just a quick calculation that seems to work ok.
+      (0.5 * mapSize.width) / mapData.width
+    );
   }
 
   mapSelection = null;
@@ -205,14 +269,39 @@ export default class Map extends Component {
 
   renderZoomControls() {
     if (this.props.zoom) {
-      return <ZoomButtons onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />;
+      return <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />;
+    }
+    return null;
+  }
+
+  renderFloorControls() {
+    const { floorsByBuilding } = this.state;
+    const floors = Object.keys(floorsByBuilding || {});
+    if (floors.length > 0) {
+      return <FloorControls openFloorOverlay={this.openFloorOverlay} />;
+    }
+    return null;
+  }
+
+  renderFloorOverlay() {
+    const { floorID } = this.props;
+    const { isFloorOverlayOpen, floorsByBuilding } = this.state;
+    if (isFloorOverlayOpen) {
+      return (
+        <FloorOverlay
+          currentFloorID={floorID}
+          floorsByBuilding={floorsByBuilding}
+          closeFloorOverlay={this.closeFloorOverlay}
+          selectFloorByID={this.selectFloorByID}
+        />
+      );
     }
     return null;
   }
 
   render() {
+    const mapData = this.getMapData();
     const {
-      mapData,
       selectedItem,
       mapTransform,
       mapZoomFactor,
@@ -233,13 +322,15 @@ export default class Map extends Component {
         className={cx(cssMapContainer, "meridian-map-container")}
         style={{ width, height }}
       >
-        <Overlay
+        <InfoOverlay
           onClose={this.onOverlayClose}
           data={selectedItem.data}
           kind={selectedItem.kind}
         />
+        {this.renderFloorOverlay()}
         <Watermark />
         {this.renderZoomControls()}
+        {this.renderFloorControls()}
         <div
           ref={el => {
             this.mapRef = el;

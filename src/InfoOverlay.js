@@ -19,6 +19,7 @@ const cssOverlay = css({
 });
 
 const cssOverlayImage = css({
+  label: "overlay-image",
   width: "100%",
   backgroundColor: "white",
   backgroundPosition: "center",
@@ -27,27 +28,31 @@ const cssOverlayImage = css({
 });
 
 const cssOverlayContent = css({
+  label: "overlay-content",
   padding: 20
 });
 
 const cssOverlayName = css({
+  label: "overlay-name",
   fontSize: 16
 });
 
 const cssClose = css({
-  label: "close",
+  label: "overlay-close",
   ...mixins.buttonReset,
+  ...mixins.focusOutline,
+  position: "absolute",
+  top: 10,
+  right: 10,
   width: 26,
   height: 26,
   fontSize: 11,
   textAlign: "center",
-  margin: 10,
   background: "rgba(255, 255, 255, 0.5)",
   color: theme.black,
   borderRadius: "100%",
   fontWeight: "bold",
   boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
-  "&:focus": { outline: "none" },
   "&:hover": {
     background: theme.white,
     boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"

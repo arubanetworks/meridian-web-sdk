@@ -1,7 +1,7 @@
 import createEmotion from "create-emotion";
 
 export const theme = {
-  fontFamily: "'Open Sans', helvetica, arial, sans-serif",
+  fontFamily: "'Open Sans', Helvetica, Arial, sans-serif",
   fontSize: "16px",
   black: "#000",
   white: "#fff",
@@ -19,7 +19,7 @@ export const mixins = {
   buttonReset: {
     padding: 0,
     margin: 0,
-    fontFamily: "inherit",
+    font: "inherit",
     border: 0,
     borderRadius: 0,
     background: "transparent",
@@ -27,6 +27,23 @@ export const mixins = {
   },
   borderBox: {
     boxSizing: "border-box"
+  },
+  focusOutline: {
+    "&:focus": {
+      outline: 0,
+      boxShadow: "0 0 0 2px white, 0 0 0 4px black"
+    }
+  },
+  focusDarken: {
+    "&:focus": {
+      outline: 0,
+      boxShadow: "inset 0 0 0 9999px rgba(0, 0, 0, 0.1)"
+    }
+  },
+  focusNone: {
+    "&:focus": {
+      outline: "none"
+    }
   },
   shadow: {
     boxShadow: "0 0 3px rgba(0, 0, 0, 0.25)"

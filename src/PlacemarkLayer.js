@@ -30,21 +30,32 @@ export default class PlacemarkLayer extends Component {
   };
 
   async componentDidMount() {
+    this.updatePlacemarks();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
+    // Don't re-render when panning only (no zoom change)
+    if (this.props.isPanningOrZooming && !zoomChanged) {
+      return false;
+    }
+    return true;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.floorID !== this.props.floorID) {
+      this.setState({ placemarksByID: {} });
+      this.updatePlacemarks();
+    }
+  }
+
+  async updatePlacemarks() {
     const { locationID, floorID, api } = this.props;
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const { data } = await api.axios.get(placemarksURL);
     // TODO: This data is paginated... do we want to fetch _all_ of it?
     const placemarksByID = this.groupPlacemarksByID(data.results);
     this.setState({ placemarksByID });
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
-    // don't re-render when panning only (no zoom change)
-    if (this.props.isPanningOrZooming && !zoomChanged) {
-      return false;
-    }
-    return true;
   }
 
   normalizePlacemark(placemark) {

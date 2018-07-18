@@ -48,13 +48,19 @@ export function createMap(
   node = requiredParam("createMap", "node"),
   options = requiredParam("createMap", "options")
 ) {
-  let domRef = render(<Map api={context.api} {...options} />, node);
-  return {
-    update: updatedOptions => {
-      options = { ...options, ...updatedOptions };
-      domRef = render(<Map api={context.api} {...options} />, node, domRef);
-    }
+  const update = updatedOptions => {
+    options = { ...options, ...updatedOptions };
+    domRef = render(
+      <Map api={context.api} update={update} {...options} />,
+      node,
+      domRef
+    );
   };
+  let domRef = render(
+    <Map api={context.api} update={update} {...options} />,
+    node
+  );
+  return { update };
 }
 
 export function createAPI(options = requiredParam("createAPI", "options")) {

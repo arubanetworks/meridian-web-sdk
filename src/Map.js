@@ -37,7 +37,6 @@ const cssMap = css({
 export default class Map extends Component {
   static propTypes = {
     update: PropTypes.func.isRequired,
-    zoom: PropTypes.bool,
     width: PropTypes.string,
     height: PropTypes.string,
     locationID: PropTypes.string.isRequired,
@@ -62,7 +61,6 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
-    zoom: true,
     width: "100%",
     height: "400px",
     placemarks: {},
@@ -146,7 +144,7 @@ export default class Map extends Component {
   }
 
   addZoomBehavior() {
-    if (this.props.zoom && this.mapRef) {
+    if (this.mapRef) {
       const onZoom = () => {
         const { k, x, y } = d3.zoomTransform(this.mapRef);
         const t = `translate(${x}px, ${y}px) scale(${k})`;
@@ -267,13 +265,6 @@ export default class Map extends Component {
     this.zoomToPoint(tag.x, tag.y, 2);
   };
 
-  renderZoomControls() {
-    if (this.props.zoom) {
-      return <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />;
-    }
-    return null;
-  }
-
   renderFloorControls() {
     const { floorsByBuilding } = this.state;
     const floors = Object.keys(floorsByBuilding || {});
@@ -322,14 +313,14 @@ export default class Map extends Component {
         className={cx(cssMapContainer, "meridian-map-container")}
         style={{ width, height }}
       >
+        <Watermark />
+        <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
         <InfoOverlay
           onClose={this.onOverlayClose}
           data={selectedItem.data}
           kind={selectedItem.kind}
         />
         {this.renderFloorOverlay()}
-        <Watermark />
-        {this.renderZoomControls()}
         {this.renderFloorControls()}
         <div
           ref={el => {

@@ -19,6 +19,7 @@
 
 - (like tags app) add 'controlTags' to tag options (to show control tags, defaults to false)
 - (like tags app) add location switching functionality
+- Add prop to hide floor switcher (we'd need that ourselves to consume the SDK in editor)
 - Tag updates are coming in first (onTagUpdate)
 - Make a new hidden page with copy/paste API code
 - Culling! (openstreetmap/ID uses RBush)

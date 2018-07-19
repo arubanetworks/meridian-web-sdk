@@ -71,6 +71,7 @@ export default class Map extends Component {
 
   state = {
     isFloorOverlayOpen: false,
+    isInfoOverlayOpen: false,
     isPanningOrZooming: false,
     mapTransform: "",
     mapZoomFactor: 0.5,
@@ -79,7 +80,7 @@ export default class Map extends Component {
     svgURL: null,
     tagsConnection: null,
     tagsStatus: "Connecting",
-    selectedItem: {}
+    selectedItem: null
   };
 
   async componentDidMount() {
@@ -92,6 +93,14 @@ export default class Map extends Component {
 
   closeFloorOverlay = () => {
     this.setState({ isFloorOverlayOpen: false });
+  };
+
+  openInfoOverlay = selectedItem => {
+    this.setState({ isInfoOverlayOpen: true, selectedItem });
+  };
+
+  closeInfoOverlay = () => {
+    this.setState({ isInfoOverlayOpen: false, selectedItem: null });
   };
 
   selectFloorByID = floorID => {
@@ -240,12 +249,12 @@ export default class Map extends Component {
       }, 0);
     } else {
       if (mapClicked) {
-        this.setState({ selectedItem: {} });
+        this.closeInfoOverlay();
       }
     }
   };
 
-  onMarkerClick = ({ kind, data }) => {
+  onMarkerClick = ({ data }) => {
     if (this.props.onMarkerClick) {
       // eslint-disable-next-line no-console
       console.warn("onMarkerClick() is experimental, please do not use it");
@@ -253,12 +262,8 @@ export default class Map extends Component {
         this.props.onMarkerClick(data);
       }, 0);
     } else {
-      this.setState({ selectedItem: { kind, data } });
+      this.openInfoOverlay({ data });
     }
-  };
-
-  onOverlayClose = () => {
-    this.setState({ selectedItem: {} });
   };
 
   onTagFound = tag => {
@@ -290,14 +295,22 @@ export default class Map extends Component {
     return null;
   }
 
+  renderInfoOverlay() {
+    const { isInfoOverlayOpen, selectedItem } = this.state;
+    if (isInfoOverlayOpen && selectedItem && selectedItem.data) {
+      return (
+        <InfoOverlay
+          closeInfoOverlay={this.closeInfoOverlay}
+          data={selectedItem.data}
+        />
+      );
+    }
+    return null;
+  }
+
   render() {
     const mapData = this.getMapData();
-    const {
-      selectedItem,
-      mapTransform,
-      mapZoomFactor,
-      isPanningOrZooming
-    } = this.state;
+    const { mapTransform, mapZoomFactor, isPanningOrZooming } = this.state;
     const {
       locationID,
       floorID,
@@ -315,11 +328,7 @@ export default class Map extends Component {
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
-        <InfoOverlay
-          onClose={this.onOverlayClose}
-          data={selectedItem.data}
-          kind={selectedItem.kind}
-        />
+        {this.renderInfoOverlay()}
         {this.renderFloorOverlay()}
         {this.renderFloorControls()}
         <div

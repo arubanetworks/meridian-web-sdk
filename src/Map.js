@@ -71,6 +71,7 @@ export default class Map extends Component {
 
   state = {
     isFloorOverlayOpen: false,
+    isInfoOverlayOpen: false,
     isPanningOrZooming: false,
     mapTransform: "",
     mapZoomFactor: 0.5,
@@ -92,6 +93,14 @@ export default class Map extends Component {
 
   closeFloorOverlay = () => {
     this.setState({ isFloorOverlayOpen: false });
+  };
+
+  openInfoOverlay = selectedItem => {
+    this.setState({ isInfoOverlayOpen: true, selectedItem });
+  };
+
+  closeInfoOverlay = () => {
+    this.setState({ isInfoOverlayOpen: false, selectedItem: null });
   };
 
   selectFloorByID = floorID => {
@@ -240,12 +249,12 @@ export default class Map extends Component {
       }, 0);
     } else {
       if (mapClicked) {
-        this.setState({ selectedItem: null });
+        this.closeInfoOverlay();
       }
     }
   };
 
-  onMarkerClick = ({ kind, data }) => {
+  onMarkerClick = ({ data }) => {
     if (this.props.onMarkerClick) {
       // eslint-disable-next-line no-console
       console.warn("onMarkerClick() is experimental, please do not use it");
@@ -253,12 +262,8 @@ export default class Map extends Component {
         this.props.onMarkerClick(data);
       }, 0);
     } else {
-      this.setState({ selectedItem: { kind, data } });
+      this.openInfoOverlay({ data });
     }
-  };
-
-  onOverlayClose = () => {
-    this.setState({ selectedItem: null });
   };
 
   onTagFound = tag => {
@@ -291,13 +296,12 @@ export default class Map extends Component {
   }
 
   renderInfoOverlay() {
-    const { selectedItem } = this.state;
-    if (selectedItem) {
+    const { isInfoOverlayOpen, selectedItem } = this.state;
+    if (isInfoOverlayOpen && selectedItem && selectedItem.data) {
       return (
         <InfoOverlay
-          onClose={this.onOverlayClose}
+          closeInfoOverlay={this.closeInfoOverlay}
           data={selectedItem.data}
-          kind={selectedItem.kind}
         />
       );
     }

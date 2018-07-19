@@ -59,7 +59,7 @@ const cssClose = css({
   }
 });
 
-const Overlay = ({ data, onClose }) => (
+const Overlay = ({ data, closeInfoOverlay }) => (
   <div className={cx(cssOverlay, "meridian-overlay")}>
     <div
       className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
@@ -70,7 +70,7 @@ const Overlay = ({ data, onClose }) => (
     >
       <button
         className={cx(cssClose, "meridian-overlay-close")}
-        onClick={onClose}
+        onClick={closeInfoOverlay}
       >
         <svg viewBox="0 0 36 36">
           <path d="M19.41 18l6.36-6.36a1 1 0 0 0-1.41-1.41L18 16.59l-6.36-6.36a1 1 0 0 0-1.41 1.41L16.59 18l-6.36 6.36a1 1 0 1 0 1.41 1.41L18 19.41l6.36 6.36a1 1 0 0 0 1.41-1.41z" />
@@ -87,8 +87,7 @@ const Overlay = ({ data, onClose }) => (
 
 Overlay.propTypes = {
   data: PropTypes.object,
-  kind: PropTypes.string,
-  onClose: PropTypes.object
+  closeInfoOverlay: PropTypes.object
 };
 
 export default Overlay;

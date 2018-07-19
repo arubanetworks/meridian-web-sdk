@@ -23,7 +23,7 @@ const MapMarker = ({
         y={y}
         data={data}
         onClick={() => {
-          onClick({ kind, data });
+          onClick({ data });
         }}
         disabled={disabled}
       />
@@ -37,7 +37,7 @@ const MapMarker = ({
         y={y}
         data={data}
         onClick={() => {
-          onClick({ kind, data });
+          onClick({ data });
         }}
         disabled={disabled}
       />

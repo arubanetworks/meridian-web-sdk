@@ -157,10 +157,11 @@ export default class Map extends Component {
       const onZoom = () => {
         const { k, x, y } = d3.zoomTransform(this.mapRef);
         const t = `translate(${x}px, ${y}px) scale(${k})`;
-        this.setState({ mapTransform: t, mapZoomFactor: k });
-      };
-      const onZoomStart = () => {
-        this.setState({ isPanningOrZooming: true });
+        this.setState({
+          mapTransform: t,
+          mapZoomFactor: k,
+          isPanningOrZooming: true
+        });
       };
       const onZoomEnd = () => {
         this.setState({ isPanningOrZooming: false });
@@ -175,12 +176,10 @@ export default class Map extends Component {
         .scaleExtent([1 / 16, 14])
         // TODO: Why is the translateExtent not working right?
         .duration(ZOOM_DURATION)
-        .on("start.zoom", onZoomStart)
         .on("zoom", onZoom)
         .on("end.zoom", onZoomEnd);
       this.mapSelection = d3.select(this.mapRef);
       this.mapSelection.call(this.zoomD3);
-      this.zoomToDefault();
     }
   }
 

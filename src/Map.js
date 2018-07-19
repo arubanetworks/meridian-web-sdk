@@ -79,7 +79,7 @@ export default class Map extends Component {
     svgURL: null,
     tagsConnection: null,
     tagsStatus: "Connecting",
-    selectedItem: {}
+    selectedItem: null
   };
 
   async componentDidMount() {
@@ -240,7 +240,7 @@ export default class Map extends Component {
       }, 0);
     } else {
       if (mapClicked) {
-        this.setState({ selectedItem: {} });
+        this.setState({ selectedItem: null });
       }
     }
   };
@@ -258,7 +258,7 @@ export default class Map extends Component {
   };
 
   onOverlayClose = () => {
-    this.setState({ selectedItem: {} });
+    this.setState({ selectedItem: null });
   };
 
   onTagFound = tag => {
@@ -290,14 +290,23 @@ export default class Map extends Component {
     return null;
   }
 
+  renderInfoOverlay() {
+    const { selectedItem } = this.state;
+    if (selectedItem) {
+      return (
+        <InfoOverlay
+          onClose={this.onOverlayClose}
+          data={selectedItem.data}
+          kind={selectedItem.kind}
+        />
+      );
+    }
+    return null;
+  }
+
   render() {
     const mapData = this.getMapData();
-    const {
-      selectedItem,
-      mapTransform,
-      mapZoomFactor,
-      isPanningOrZooming
-    } = this.state;
+    const { mapTransform, mapZoomFactor, isPanningOrZooming } = this.state;
     const {
       locationID,
       floorID,
@@ -315,11 +324,7 @@ export default class Map extends Component {
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
-        <InfoOverlay
-          onClose={this.onOverlayClose}
-          data={selectedItem.data}
-          kind={selectedItem.kind}
-        />
+        {this.renderInfoOverlay()}
         {this.renderFloorOverlay()}
         {this.renderFloorControls()}
         <div

@@ -1,5 +1,7 @@
 ### NEXT
-
+- IE testing (spotted a few issues today)
+- FF testing (icons don't get bigger when clicked, z-index is not reflected)
+- Safari testing (icons don't get bigger when clicked, z-index is not reflected)
 - Audit State usage
 - Audit render calls
 - Restore deploy to GCS script (as alternate deploy for regression and A/B testing)

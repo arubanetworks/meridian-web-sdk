@@ -2,7 +2,7 @@
 
 - Audit State usage
 - Audit render calls
-- Remove `zoom` prop?
+- Restore deploy to GCS script (as alternate deploy for regression and A/B testing)
 
 ### NEED
 

@@ -73,7 +73,7 @@ const Tag = ({
       style={style}
       disabled={disabled}
     >
-      <svg viewBox="0 0 36 36" style={{ margin: -8, display: "block" }}>
+      <svg viewBox="7 7 22 22" style={{ display: "block" }}>
         <path
           fill="black"
           d="M18.09,7c-0.01,0-0.01,0-0.02,0c0,0-0.01,0-0.01,0C18.04,7,18.02,7,18,7C11.93,7,7,11.93,7,18s4.93,11,11,11

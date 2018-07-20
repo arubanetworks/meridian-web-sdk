@@ -65,9 +65,8 @@ export const mixins = {
 // This doesn't seem strictly necessary based on the docs but idk
 const context = typeof global !== "undefined" ? global : {};
 
-// emotion creates a lot of different functions for us, but right now we're only
-// using the `css` function, and probably that's the only one we'll really need
-// to keep using?
+// Feel free to uncomment these as we need more functions from Emotion,
+// especially `keyframes` if we need to start doing animations.
 export const {
   // flush,
   // hydrate,

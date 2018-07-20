@@ -22,22 +22,30 @@
 
     body {
       max-width: 800px;
-      font-size: 22px;
       margin: 0 auto;
       padding: 16px;
+    }
+
+    body>p {
+      line-height: 1.7;
+      color: #aaa;
+      font-size: 22px;
       font-family: Georgia, serif;
     }
 
-    p {
-      line-height: 1.7;
-      color: #aaa;
-    }
-
     code {
-      color: hsl(0, 100%, 30%);
-      background: hsl(0, 100%, 98%);
+      background: hsla(0, 100%, 40%, 0.05);
+      color: hsla(0, 100%, 40%, 1);
       font-size: 90%;
       font-family: Menlo, Consolas, monospace;
+    }
+
+    a {
+      color: hsl(240, 100%, 40%);
+    }
+
+    a:hover {
+      color: hsla(240, 100%, 40%, 0.6);
     }
 
     h1,
@@ -85,7 +93,8 @@
   <p class="important">
     The next map has
     <code>restrictedPanZoom</code> on it, which prevents desktop zooming unless holding
-    <code>Alt</code>, as well as preventing mobile/touch panning unless using two fingers.
+    <code>Shift</code>, as well as preventing mobile/touch panning unless using two fingers. See
+    <a href="../docs/#createMap">createMap</a> for more information.
   </p>
   <p>
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto ullam vero quos modi repellendus quasi aperiam libero

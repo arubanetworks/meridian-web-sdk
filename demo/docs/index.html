@@ -244,7 +244,37 @@
           <span class="parameter">onFloorsUpdate(floorsByBuilding):</span> (optional) callback function called when the Floors are loaded, receiving
           all Floors in an object keyed by their building names
         </li>
+        <li>
+          <span class="parameter">shouldMapPanZoom(event):</span>
+          (optional) callback function called when the user attempts to pan or zoom the map
 
+          <p>
+            Return
+            <code>true</code> to allow the pan or zoom action,
+            <code>false</code> to prevent it. This should be used to require holding down a modifier key like
+            <code>alt</code> or require at least two fingers to pan the map, which is useful for areas where the map could easily interrupt
+            scrolling behavior. Use the function
+            <code>MeridianSDK.restrictedPanZoom</code> if you want this behavior, which is implemented as follows:
+          </p>
+
+          <pre><code class="js">
+            function restrictedPanZoom(event) {
+              if (event.type === "wheel" && !event.altKey) {
+                return false;
+              } else if (event.type === "touchstart") {
+                return event.touches.length >= 2;
+              }
+              return true;
+            }
+          </code></pre>
+
+          <p>
+            You should handle all three of these event types to manage pan and zoom across various devices:
+            <code>mousedown</code>,
+            <code>wheel</code>,
+            <code>touchstart</code>.
+          </p>
+        </li>
       </ul>
     </li>
   </ul>

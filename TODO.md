@@ -1,5 +1,8 @@
 ### NEXT
 
+- Clean up Jira tickets
+- Add webpack config for npm build
+- Add external UI for floor picker
 - When placemark has no image use placemark icon with type-based BG color
 - Change text colors to #1b1b1b
 - Get new close icon from design

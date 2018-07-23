@@ -35,6 +35,15 @@ const context = {
 
 export const version = Package.version;
 
+export function restrictedPanZoom({ type, touches, shiftKey }) {
+  if (type === "wheel" && !shiftKey) {
+    return false;
+  } else if (type === "touchstart") {
+    return touches.length >= 2;
+  }
+  return true;
+}
+
 export function init(
   { api = requiredParam("init", "options.api") } = requiredParam(
     "init",

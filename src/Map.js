@@ -36,6 +36,7 @@ const cssMap = css({
 
 export default class Map extends Component {
   static propTypes = {
+    shouldMapPanZoom: PropTypes.func,
     update: PropTypes.func.isRequired,
     width: PropTypes.string,
     height: PropTypes.string,
@@ -61,6 +62,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
+    shouldMapPanZoom: () => true,
     width: "100%",
     height: "400px",
     placemarks: {},
@@ -153,6 +155,7 @@ export default class Map extends Component {
   }
 
   addZoomBehavior() {
+    const { shouldMapPanZoom } = this.props;
     if (this.mapRef) {
       const onZoom = () => {
         const { k, x, y } = d3.zoomTransform(this.mapRef);
@@ -171,6 +174,7 @@ export default class Map extends Component {
       //   modifier key, depending on user settings
       this.zoomD3 = d3
         .zoom()
+        .filter(() => shouldMapPanZoom(d3.event))
         // TODO: We're gonna need to calculate reasonable extents here based on
         // the container size and the map size
         .scaleExtent([1 / 16, 14])

@@ -285,6 +285,23 @@
     <li>
       <span class="parameter">update(options):</span> a method that merged the initial options and the options passed here and updates the map
     </li>
+    <li>
+      <span class="parameter">zoomToDefault():</span> a method to zoom the map to the initial zoom level and position
+    </li>
+    <li>
+      <span class="parameter">zoomToPoint(options):</span> a method to pan and zoom to a specific point on the map, takes an object with
+      <code>x</code>,
+      <code>y</code>, and
+      <code>scale</code>, which are all numbers
+
+      <pre><code class="js">
+        map.zoomToPoint({
+          x: tag.x,
+          y: tag.y,
+          scale: 2
+        });
+      </code></pre>
+    </li>
   </ul>
 
   <h2 id="createAPI">

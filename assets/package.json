@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Aruba, a Hewlett Packard Enterprise Company",
+  "author": "Hewlett Packard Enterprise Development LP",
   "license": "???",
   "devDependencies": {
     "svgo": "^1.0.5"

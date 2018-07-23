@@ -7,8 +7,7 @@ import MapMarker from "./MapMarker";
 export default class TagLayer extends Component {
   static defaultProps = {
     markers: {},
-    onUpdate: () => {},
-    onFound: () => {}
+    onUpdate: () => {}
   };
 
   static propTypes = {
@@ -24,14 +23,17 @@ export default class TagLayer extends Component {
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
-    onUpdate: PropTypes.func,
-    onFound: PropTypes.func
+    onUpdate: PropTypes.func
   };
 
-  state = {
-    tagsByMAC: {},
-    connection: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      tagsByMAC: {},
+      connection: null
+    };
+    this.tagUpdates = {};
+  }
 
   componentDidMount() {
     const { markers } = this.props;
@@ -60,27 +62,9 @@ export default class TagLayer extends Component {
     this.disconnect();
   }
 
-  tagUpdates = {};
-
-  isSingleTagSearch() {
-    const { ids } = this.props.markers;
-    return ids && Array.isArray(ids) && ids.length === 1;
-  }
-
-  onFound = tag => {
-    this.props.onFound(tag);
-  };
-
   onUpdate = () => {
-    const { connection, tagsByMAC } = this.state;
-    const { markers, onUpdate } = this.props;
-    if (this.isSingleTagSearch() && connection) {
-      const mac = markers.ids[0];
-      const tag = tagsByMAC[mac];
-      if (tag) {
-        this.onFound(tag);
-      }
-    }
+    const { tagsByMAC } = this.state;
+    const { onUpdate } = this.props;
     onUpdate(tagsByMAC);
   };
 

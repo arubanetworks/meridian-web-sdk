@@ -57,19 +57,35 @@ export function createMap(
   node = requiredParam("createMap", "node"),
   options = requiredParam("createMap", "options")
 ) {
+  let mapRef = null;
+  const setMapRef = newMapRef => {
+    mapRef = newMapRef;
+  };
   const update = updatedOptions => {
     options = { ...options, ...updatedOptions };
     domRef = render(
-      <Map api={context.api} update={update} {...options} />,
+      <Map api={context.api} update={update} {...options} ref={setMapRef} />,
       node,
       domRef
     );
   };
+  const zoomToDefault = () => {
+    mapRef.zoomToDefault();
+  };
+  const zoomToPoint = (
+    {
+      x = requiredParam("map.zoomToPoint.options", "x"),
+      y = requiredParam("map.zoomToPoint.options", "y"),
+      scale = requiredParam("map.zoomToPoint.options", "scale")
+    } = requiredParam("map.zoomToPoint", "options")
+  ) => {
+    mapRef.zoomToPoint(x, y, scale);
+  };
   let domRef = render(
-    <Map api={context.api} update={update} {...options} />,
+    <Map api={context.api} update={update} {...options} ref={setMapRef} />,
     node
   );
-  return { update };
+  return { update, zoomToDefault, zoomToPoint };
 }
 
 export function createAPI(options = requiredParam("createAPI", "options")) {

@@ -62,10 +62,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
-    shouldMapPanZoom: event => {
-      console.log(event);
-      return true;
-    },
+    shouldMapPanZoom: () => true,
     width: "100%",
     height: "400px",
     placemarks: {},

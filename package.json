@@ -1,7 +1,7 @@
 {
   "name": "meridian-web-components",
   "private": true,
-  "version": "0.2.0-beta29",
+  "version": "0.2.0-beta30",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
   "main": "dist/meridian-sdk.js",
   "scripts": {

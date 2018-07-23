@@ -277,10 +277,6 @@ export default class Map extends Component {
     }
   };
 
-  onTagFound = tag => {
-    this.zoomToPoint(tag.x, tag.y, 2);
-  };
-
   renderFloorControls() {
     const { floorsByBuilding } = this.state;
     const floors = Object.keys(floorsByBuilding || {});
@@ -375,7 +371,6 @@ export default class Map extends Component {
               markers={tags}
               onMarkerClick={this.onMarkerClick}
               onUpdate={onTagsUpdate}
-              onFound={this.onTagFound}
             />
           </div>
         </div>

@@ -115,11 +115,18 @@
         labels: undefined,
         ids: undefined,
         disabled: false
+      },
+      onTagsUpdate: function(tagsByID) {
+        if (state.tags.ids.length === 1) {
+          var tag = tagsByID[state.tags.ids[0]];
+          map.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
+        }
       }
     };
 
     function updateMap() {
       map.update(state);
+      map.zoomToDefault();
     }
 
     $("[name='placemark-filter']").on("change", function () {

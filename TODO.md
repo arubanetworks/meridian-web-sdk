@@ -1,7 +1,6 @@
 ### NEXT
 
 - Option to hide floors control
-- Stop doing automatic zoom to tag, expose methods for clients to use instead
 - Clean up Jira tickets
 - Add webpack config for npm build
 - Add external UI for floor picker

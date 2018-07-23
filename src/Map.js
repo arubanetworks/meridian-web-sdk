@@ -71,22 +71,33 @@ export default class Map extends Component {
     onFloorsUpdate: () => {}
   };
 
-  state = {
-    isFloorOverlayOpen: false,
-    isInfoOverlayOpen: false,
-    isPanningOrZooming: false,
-    mapTransform: "",
-    mapZoomFactor: 0.5,
-    floorsByBuilding: null,
-    placemarksData: null,
-    svgURL: null,
-    tagsConnection: null,
-    tagsStatus: "Connecting",
-    selectedItem: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isFloorOverlayOpen: false,
+      isInfoOverlayOpen: false,
+      isPanningOrZooming: false,
+      mapTransform: "",
+      mapZoomFactor: 0.5,
+      floorsByBuilding: null,
+      placemarksData: null,
+      svgURL: null,
+      tagsConnection: null,
+      tagsStatus: "Connecting",
+      selectedItem: null
+    };
+    this.mapSelection = null;
+    this.mapRef = null;
+  }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.initializeFloors();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.floorID !== this.props.floorID) {
+      this.zoomToDefault();
+    }
   }
 
   openFloorOverlay = () => {
@@ -202,9 +213,6 @@ export default class Map extends Component {
       (0.5 * mapSize.width) / mapData.width
     );
   }
-
-  mapSelection = null;
-  mapRef = null;
 
   getMapRefSize() {
     return {

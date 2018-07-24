@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "meridian-web-sdk-assets",
-  "version": "0.0.1-beta3",
+  "version": "0.0.1-beta5",
   "description": "Assets for the Meridian Web SDK",
   "main": "index.js",
   "scripts": {

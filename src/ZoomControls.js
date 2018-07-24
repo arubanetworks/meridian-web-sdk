@@ -17,8 +17,9 @@ const cssZoomControls = css({
 
 const styleZoomButton = {
   ...mixins.buttonReset,
-  width: 32,
-  height: 32,
+  padding: 4,
+  width: 40,
+  height: 40,
   border: 0,
   borderRadius: 0,
   fontSize: 20,

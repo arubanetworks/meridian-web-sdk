@@ -10,6 +10,7 @@ const cssOverlay = css({
   ...mixins.fontSize,
   overflow: "hidden",
   background: theme.white,
+  color: theme.textColor,
   fill: "#000",
   position: "absolute",
   marginLeft: "auto",
@@ -65,18 +66,19 @@ const cssClose = css({
   position: "absolute",
   top: 0,
   right: 0,
-  width: 26,
-  height: 26,
+  padding: 4,
+  width: 32,
+  height: 32,
   fontSize: 11,
   textAlign: "center",
   margin: 10,
-  background: "rgba(255, 255, 255, 0.5)",
-  color: theme.black,
+  background: theme.white,
+  color: theme.textColor,
   borderRadius: "100%",
   fontWeight: "bold",
   boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
   "&:hover": {
-    background: theme.white,
+    background: theme.buttonHoverColor,
     boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"
   }
 });

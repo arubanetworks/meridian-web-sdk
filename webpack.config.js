@@ -2,6 +2,7 @@
 
 const path = require("path");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const nodeExternals = require("webpack-node-externals");
 
 const common = {
   module: {
@@ -39,19 +40,25 @@ const common = {
   }
 };
 
+// This bundles our code into one file but avoids bundling everything in
+// node_modules, so that consumers can use us like a normal npm package
+const npmConfig = {
+  ...common,
+  output: {
+    filename: "index.js",
+    libraryTarget: "commonjs-module",
+    path: path.resolve(__dirname, "dist")
+  },
+  target: "node",
+  externals: [nodeExternals()]
+};
+
 const development = {
   ...common
 };
 
-// TODO:
-// - `production` should actually be two configurations in an array so we can
-//   build a "node" bundle for publishing to npm and a "web" bundle for putting
-//   on GCS to be used with a script tag.
-// - We should investigate the `node:` key to disable Node polyfills we probably
-//   don't need
-const production = {
-  ...common
-};
+// Build the browser JS bundle as well as the npm bundle
+const production = [common, npmConfig];
 
 const analyze = {
   ...common,

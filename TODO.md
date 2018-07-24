@@ -1,6 +1,5 @@
 ### NEXT
 
-- Avoid bundling entire package.json just for version key using webpack plugin
 - Option to hide floors control
 - Clean up Jira tickets
 - Add webpack config for npm build

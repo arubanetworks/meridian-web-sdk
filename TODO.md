@@ -1,5 +1,7 @@
 ### NEXT
 
+- Fix how tags look on the map
+- Show floor/building info at the bottom
 - Make a new hidden page with copy/paste API code
 - Try dogfooding the SDK in the Editor tag monitoring page
   - Option to hide floors control

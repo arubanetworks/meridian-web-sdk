@@ -1,7 +1,9 @@
 ### NEXT
 
-- Option to hide floors control
-- Add external UI for floor picker
+- Make a new hidden page with copy/paste API code
+- Try dogfooding the SDK in the Editor tag monitoring page
+  - Option to hide floors control
+- Add external UI for floor picker demo
 - When placemark has no image use placemark icon with type-based BG color
 - IE testing (spotted a few issues today)
 - FF testing (icons don't get bigger when clicked, z-index is not reflected)
@@ -27,6 +29,5 @@
 - (like tags app) add location switching functionality
 - Add prop to hide floor switcher (we'd need that ourselves to consume the SDK in editor)
 - Tag updates are coming in first (onTagUpdate)
-- Make a new hidden page with copy/paste API code
 - Culling! (openstreetmap/ID uses RBush)
 - Map scale like `[_____] = 50 ft`

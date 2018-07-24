@@ -1,8 +1,15 @@
 "use strict";
 
 const path = require("path");
+const webpack = require("webpack");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const nodeExternals = require("webpack-node-externals");
+
+const Package = require("./package.json");
+
+const definePlugin = new webpack.DefinePlugin({
+  GLOBAL_VERSION: JSON.stringify(Package.version)
+});
 
 const common = {
   module: {
@@ -14,6 +21,7 @@ const common = {
       }
     ]
   },
+  plugins: [definePlugin],
   node: {
     __dirname: true,
     fs: "empty"
@@ -62,7 +70,7 @@ const production = [common, npmConfig];
 
 const analyze = {
   ...common,
-  plugins: [new BundleAnalyzerPlugin()]
+  plugins: [definePlugin, new BundleAnalyzerPlugin()]
 };
 
 const configs = {

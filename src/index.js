@@ -27,13 +27,17 @@ import "preact/debug";
 import Map from "./Map";
 import API from "./API";
 import { requiredParam } from "./util";
-import Package from "../package.json";
+
+// This is kinda irritating, but importing package.json just to get the version
+// is a waste of kilobytes, so we're using webpack's DefinePlugin to do a macro
+
+/* global GLOBAL_VERSION */
 
 const context = {
   api: null
 };
 
-export const version = Package.version;
+export const version = GLOBAL_VERSION;
 
 export function restrictedPanZoom({ type, touches, shiftKey }) {
   if (type === "wheel" && !shiftKey) {

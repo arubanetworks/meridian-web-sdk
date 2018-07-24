@@ -9,6 +9,7 @@ const cssOverlay = css({
   ...mixins.rounded,
   overflow: "hidden",
   background: theme.white,
+  color: theme.textColor,
   fill: "#000",
   position: "absolute",
   left: 10,
@@ -34,7 +35,7 @@ const cssOverlayContent = css({
 
 const cssOverlayName = css({
   label: "overlay-name",
-  fontSize: 16
+  fontSize: 24
 });
 
 const cssClose = css({
@@ -44,17 +45,18 @@ const cssClose = css({
   position: "absolute",
   top: 10,
   right: 10,
-  width: 26,
-  height: 26,
+  padding: 4,
+  width: 32,
+  height: 32,
   fontSize: 11,
   textAlign: "center",
-  background: "rgba(255, 255, 255, 0.5)",
-  color: theme.black,
+  background: theme.white,
+  color: theme.textColor,
   borderRadius: "100%",
   fontWeight: "bold",
   boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
   "&:hover": {
-    background: theme.white,
+    background: theme.buttonHoverColor,
     boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"
   }
 });

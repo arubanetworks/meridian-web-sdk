@@ -3,6 +3,7 @@ import createEmotion from "create-emotion";
 export const theme = {
   fontFamily: "'Open Sans', Helvetica, Arial, sans-serif",
   fontSize: "16px",
+  textColor: "#1b1b1b",
   black: "#000",
   white: "#fff",
   brandOrange: "#ff8300",

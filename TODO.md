@@ -1,12 +1,8 @@
 ### NEXT
 
 - Option to hide floors control
-- Clean up Jira tickets
-- Add webpack config for npm build
 - Add external UI for floor picker
 - When placemark has no image use placemark icon with type-based BG color
-- Change text colors to #1b1b1b
-- Get new close icon from design
 - IE testing (spotted a few issues today)
 - FF testing (icons don't get bigger when clicked, z-index is not reflected)
 - Safari testing (icons don't get bigger when clicked, z-index is not reflected)

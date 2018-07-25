@@ -1,13 +1,12 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
+import { getPlacemarkIconURL } from "./util";
 import { css, cx, mixins, theme } from "./style";
 
 const SIZE = 24;
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
-const ASSET_PREFIX =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
 
 const cssPlacemark = css({
   label: "meridian-placemark",
@@ -63,12 +62,12 @@ const cssLabelOnly = css({
 });
 
 const getIconStyle = data => {
-  const name = "placemark-" + data.type.replace(/_/g, "-");
   const color = "#" + data.color;
+  const iconURL = getPlacemarkIconURL(data.type);
   return {
     borderColor: color,
     backgroundColor: color,
-    backgroundImage: `url('${ASSET_PREFIX}/${name}.svg')`
+    backgroundImage: `url('${iconURL}')`
   };
 };
 

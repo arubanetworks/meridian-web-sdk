@@ -1,13 +1,13 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
+import { getAssetURL } from "./util";
 import { css, cx, mixins } from "./style";
 
 const SIZE = 48;
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
-const DEFAULT_TAG_IMAGE =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6/tags/tag.svg";
+const DEFAULT_TAG_IMAGE = getAssetURL("tags/tag.svg");
 
 const cssTag = css({
   label: "meridian-tag",

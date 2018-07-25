@@ -275,14 +275,6 @@ export default class Map extends Component {
     }
   };
 
-  getCurrentFloor() {
-    const { floorID } = this.props;
-    const { floorsByBuilding } = this.state;
-    return objectValues(floorsByBuilding)
-      .reduce((a, b) => [...a, ...b], [])
-      .filter(floor => floor.id === floorID)[0];
-  }
-
   renderFloorControls() {
     const { floorsByBuilding } = this.state;
     const floors = Object.keys(floorsByBuilding || {});
@@ -293,7 +285,7 @@ export default class Map extends Component {
   }
 
   renderFloorLabel() {
-    const floor = this.getCurrentFloor();
+    const floor = this.getMapData();
     if (floor) {
       return (
         <FloorLabel buildingName={floor.group_name} floorName={floor.name} />

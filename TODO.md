@@ -1,13 +1,11 @@
 ### NEXT
 
-- Fix how tags look on the map
 - Show floor/building info at the bottom
 - Make a new hidden page with copy/paste API code
-- Try dogfooding the SDK in the Editor tag monitoring page
+- Try having someone else on the team dogfooding the SDK in the Editor (tag monitoring page)
 - When placemark has no image use placemark icon with type-based BG color
-- IE testing (spotted a few issues today)
-- FF testing (icons don't get bigger when clicked, z-index is not reflected)
-- Safari testing (icons don't get bigger when clicked, z-index is not reflected)
+- Polyfill Promise
+- More IE testing (spotted a few issues today)
 - Audit State usage
 - Audit render calls
 - Restore deploy to GCS script (as alternate deploy for regression and A/B testing)

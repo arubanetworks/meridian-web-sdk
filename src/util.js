@@ -1,10 +1,10 @@
+const ASSETS_URL =
+  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6";
+
 export function requiredParam(funcName, argName) {
   // eslint-disable-next-line no-console
   console.error(`${funcName}: argument \`${argName}\` is required`);
 }
-
-export const ASSETS_URL =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6";
 
 // The point of asyncClientCall is that calls a callback on the next tick of the
 // event loop so that client callbacks don't cause errors within our code

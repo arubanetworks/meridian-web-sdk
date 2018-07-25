@@ -64,10 +64,9 @@ const cssClose = css({
 
 function getImageStyle({ image_url, color, type }) {
   if (type) {
-    const customImage = image_url;
-    const imageURL = customImage ? customImage : getPlacemarkIconURL(type);
+    const url = image_url || getPlacemarkIconURL(type);
     return {
-      backgroundImage: `url('${imageURL}')`,
+      backgroundImage: `url('${url}')`,
       backgroundColor: `#${color}`,
       height: 300
     };

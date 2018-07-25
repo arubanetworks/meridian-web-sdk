@@ -7,7 +7,7 @@ const cssFloorLabel = css({
   label: "floor-control",
   ...mixins.buttonReset,
   ...mixins.rounded,
-  ...mixins.elideText,
+  ...mixins.overflowEllipses,
   background: "rgba(0, 0, 0, 0.5)",
   color: "white",
   textShadow: "0 0 2px black",

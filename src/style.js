@@ -17,7 +17,7 @@ export const theme = {
 };
 
 export const mixins = {
-  elideText: {
+  overflowEllipses: {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis"

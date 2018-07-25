@@ -277,11 +277,21 @@ export default class Map extends Component {
     }
   };
 
-  renderFloorControls() {
-    const { showFloorsControl } = this.props;
+  getAllFloors() {
     const { floorsByBuilding } = this.state;
-    const floors = Object.keys(floorsByBuilding || {});
-    if (floors.length > 0 && showFloorsControl) {
+    return objectValues(floorsByBuilding).reduce((a, b) => [...a, ...b], []);
+  }
+
+  getFloorCount() {
+    return this.getAllFloors().length;
+  }
+
+  shouldShowFloors() {
+    return this.props.showFloorsControl && this.getFloorCount() > 1;
+  }
+
+  renderFloorControls() {
+    if (this.shouldShowFloors()) {
       return <FloorControls openFloorOverlay={this.openFloorOverlay} />;
     }
     return null;

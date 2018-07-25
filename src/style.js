@@ -17,6 +17,15 @@ export const theme = {
 };
 
 export const mixins = {
+  textStrokeWhite: {
+    WebkitFontSmoothing: "antialiased",
+    textShadow: `
+      rgba(255, 255, 255, 0.75) 0 0 1px,
+      rgba(255, 255, 255, 0.75) 0 0 1px,
+      rgba(255, 255, 255, 0.75) 0 0 1px,
+      rgba(255, 255, 255, 0.75) 0 0 1px
+    `
+  },
   buttonReset: {
     padding: 0,
     margin: 0,

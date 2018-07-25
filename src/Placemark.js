@@ -18,6 +18,7 @@ const cssPlacemarkIcon = css({
   label: "meridian-placemark-icon",
   ...mixins.buttonReset,
   ...mixins.pointer,
+  ...mixins.focusNoMozilla,
   transition: "width 80ms ease, height 80ms ease",
   display: "block",
   width: SIZE,
@@ -32,10 +33,10 @@ const cssPlacemarkIcon = css({
   zIndex: 1,
   boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.7)",
   "&:focus": {
+    outline: "none",
     zIndex: 3,
     width: SIZE * 1.25,
-    height: SIZE * 1.25,
-    outline: "none"
+    height: SIZE * 1.25
   }
 });
 
@@ -116,7 +117,10 @@ const Placemark = ({
       <button
         disabled={disabled}
         className={cx(cssPlacemarkIcon, "meridian-placemark-icon")}
-        onClick={onClick}
+        onClick={event => {
+          event.target.focus();
+          onClick(event);
+        }}
         style={getIconStyle(data)}
       />
       <div

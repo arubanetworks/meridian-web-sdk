@@ -3,17 +3,18 @@ import PropTypes from "prop-types";
 
 import { css, cx, mixins } from "./style";
 
-const SIZE = 26;
+const SIZE = 48;
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
 const DEFAULT_TAG_IMAGE =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta5/tags/tag.png";
+  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6/tags/tag.svg";
 
 const cssTag = css({
   label: "meridian-tag",
   ...mixins.shadow,
   ...mixins.buttonReset,
   ...mixins.pointer,
+  ...mixins.focusNoMozilla,
   width: SIZE,
   height: SIZE,
   borderRadius: "100%",
@@ -32,10 +33,10 @@ const cssTag = css({
   `,
   zIndex: 2,
   "&:focus": {
+    outline: "none",
     width: SIZE * 1.25,
     height: SIZE * 1.25,
     zIndex: 3,
-    outline: "none",
     boxShadow: "0 0 4px black"
   }
 });
@@ -62,7 +63,10 @@ const Tag = ({
     <button
       disabled={disabled}
       className={className}
-      onClick={onClick}
+      onClick={event => {
+        event.target.focus();
+        onClick(event);
+      }}
       style={style}
     />
   );

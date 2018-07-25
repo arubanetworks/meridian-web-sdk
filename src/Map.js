@@ -43,6 +43,7 @@ export default class Map extends Component {
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
+    showFloorsControl: PropTypes.bool,
     tags: PropTypes.shape({
       all: PropTypes.bool,
       labels: PropTypes.arrayOf(PropTypes.string),
@@ -62,6 +63,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
+    showFloorsControl: true,
     shouldMapPanZoom: () => true,
     width: "100%",
     height: "400px",
@@ -278,9 +280,10 @@ export default class Map extends Component {
   };
 
   renderFloorControls() {
+    const { showFloorsControl } = this.props;
     const { floorsByBuilding } = this.state;
     const floors = Object.keys(floorsByBuilding || {});
-    if (floors.length > 0) {
+    if (floors.length > 0 && showFloorsControl) {
       return <FloorControls openFloorOverlay={this.openFloorOverlay} />;
     }
     return null;

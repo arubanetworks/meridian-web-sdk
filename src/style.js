@@ -17,6 +17,11 @@ export const theme = {
 };
 
 export const mixins = {
+  elideText: {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
+  },
   buttonReset: {
     padding: 0,
     margin: 0,

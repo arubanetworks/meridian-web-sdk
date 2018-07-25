@@ -90,8 +90,6 @@ const sortedBuildingNames = floorsByBuilding => {
     keys.push(keys.shift());
   }
   return keys;
-  // Uncomment for tons of fake data :)
-  // return [...keys, ...keys, ...keys];
 };
 
 const FloorOverlay = ({

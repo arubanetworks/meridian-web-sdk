@@ -69,12 +69,12 @@ function getImageStyle({ image_url, color, type }) {
     return {
       backgroundImage: `url('${imageURL}')`,
       backgroundColor: `#${color}`,
-      height: "300px"
+      height: 300
     };
   }
   return {
     backgroundImage: `url('${image_url}')`,
-    height: image_url ? "300px" : "20px"
+    height: image_url ? 300 : 20
   };
 }
 

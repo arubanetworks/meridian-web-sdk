@@ -1,3 +1,6 @@
+const ASSETS_URL =
+  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6";
+
 export function requiredParam(funcName, argName) {
   // eslint-disable-next-line no-console
   console.error(`${funcName}: argument \`${argName}\` is required`);
@@ -14,4 +17,13 @@ export function requiredParam(funcName, argName) {
 // var bar = this.getBar();
 export function asyncClientCall(func, ...args) {
   setTimeout(func, 0, ...args);
+}
+
+export function getAssetURL(suffix) {
+  return `${ASSETS_URL}/${suffix}`;
+}
+
+export function getPlacemarkIconURL(type) {
+  const name = "placemark-" + type.replace(/_/g, "-");
+  return getAssetURL(`placemarks/${name}.svg`);
 }

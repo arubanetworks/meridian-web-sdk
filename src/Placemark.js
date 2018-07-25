@@ -1,13 +1,12 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
+import { getPlacemarkIconURL } from "./util";
 import { css, cx, mixins, theme } from "./style";
 
 const SIZE = 24;
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
-const ASSET_PREFIX =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1/placemarks";
 
 const cssPlacemark = css({
   label: "meridian-placemark",
@@ -18,6 +17,7 @@ const cssPlacemarkIcon = css({
   label: "meridian-placemark-icon",
   ...mixins.buttonReset,
   ...mixins.pointer,
+  ...mixins.focusNoMozilla,
   transition: "width 80ms ease, height 80ms ease",
   display: "block",
   width: SIZE,
@@ -30,17 +30,17 @@ const cssPlacemarkIcon = css({
   border: "2px solid transparent",
   overflow: "hidden",
   zIndex: 1,
-  boxShadow: "0 0 0 1px rgba(255, 255, 255, 0.7)",
   "&:focus": {
+    outline: "none",
     zIndex: 3,
     width: SIZE * 1.25,
-    height: SIZE * 1.25,
-    outline: "none"
+    height: SIZE * 1.25
   }
 });
 
 const cssLabel = css({
   label: "meridian-label",
+  ...mixins.textStrokeWhite,
   marginLeft: "50%",
   position: "absolute",
   minWidth: 55,
@@ -51,13 +51,7 @@ const cssLabel = css({
   color: "black",
   userSelect: "none",
   transform: "translate(-50%, 0)",
-  fontWeight: "bold",
-  textShadow: `
-    white 1px 0 1px,
-    white 0 1px 1px,
-    white -1px 0 1px,
-    white 0 -1px 1px
-  `
+  fontWeight: "bold"
 });
 
 const cssLabelOnly = css({
@@ -68,12 +62,12 @@ const cssLabelOnly = css({
 });
 
 const getIconStyle = data => {
-  const name = "placemark-" + data.type.replace(/_/g, "-");
   const color = "#" + data.color;
+  const iconURL = getPlacemarkIconURL(data.type);
   return {
     borderColor: color,
     backgroundColor: color,
-    backgroundImage: `url('${ASSET_PREFIX}/${name}.svg')`
+    backgroundImage: `url('${iconURL}')`
   };
 };
 
@@ -116,7 +110,10 @@ const Placemark = ({
       <button
         disabled={disabled}
         className={cx(cssPlacemarkIcon, "meridian-placemark-icon")}
-        onClick={onClick}
+        onClick={event => {
+          event.target.focus();
+          onClick(event);
+        }}
         style={getIconStyle(data)}
       />
       <div

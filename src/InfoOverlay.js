@@ -1,6 +1,7 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
+import { getPlacemarkIconURL } from "./util";
 import { css, theme, mixins, cx } from "./style";
 
 const cssOverlay = css({
@@ -61,14 +62,26 @@ const cssClose = css({
   }
 });
 
+function getImageStyle({ image_url, color, type }) {
+  if (type) {
+    const url = image_url || getPlacemarkIconURL(type);
+    return {
+      backgroundImage: `url('${url}')`,
+      backgroundColor: `#${color}`,
+      height: 300
+    };
+  }
+  return {
+    backgroundImage: `url('${image_url}')`,
+    height: image_url ? 300 : 20
+  };
+}
+
 const Overlay = ({ data, closeInfoOverlay }) => (
   <div className={cx(cssOverlay, "meridian-overlay")}>
     <div
       className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
-      style={{
-        backgroundImage: `url('${data.image_url}')`,
-        height: data.image_url ? "300px" : "20px"
-      }}
+      style={getImageStyle(data)}
     >
       <button
         className={cx(cssClose, "meridian-overlay-close")}

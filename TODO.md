@@ -4,7 +4,6 @@
 - Make a new hidden page with copy/paste API code
 - Try having someone else on the team dogfooding the SDK in the Editor (tag monitoring page)
 - Touch BROKEN on Surface Book
-- When placemark has no image use placemark icon with type-based BG color
 - Polyfill Promise
 - More IE testing (spotted a few issues today)
 - Audit State usage

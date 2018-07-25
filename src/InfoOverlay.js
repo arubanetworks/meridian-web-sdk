@@ -63,7 +63,6 @@ const cssClose = css({
 });
 
 function getImageStyle({ image_url, color, type }) {
-  // console.info({ image_url, color, type });
   if (type) {
     const customImage = image_url;
     const imageURL = customImage ? customImage : getPlacemarkIconURL(type);

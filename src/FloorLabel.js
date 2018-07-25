@@ -24,7 +24,6 @@ const cssFloorLabel = css({
   fontWeight: "bold"
 });
 
-// TODO: Actually allow switching floors
 const FloorLabel = ({ buildingName, floorName }) => (
   <div className={cx(cssFloorLabel, "meridian-floor-label")}>
     {buildingName} &ndash; {floorName}

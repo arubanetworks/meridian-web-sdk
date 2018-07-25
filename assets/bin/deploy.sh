@@ -27,6 +27,7 @@ echo
 
 echo "* Copying build files..."
 gsutil -m cp -r placemarks "$bucket/$version/"
+gsutil -m cp -r tags "$bucket/$version/"
 
 echo
 echo "--- Deployed ${npm_package_name} ${version} ---"

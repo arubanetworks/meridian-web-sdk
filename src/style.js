@@ -42,8 +42,16 @@ export const mixins = {
     }
   },
   focusNone: {
+    "&::-moz-focus-inner": {
+      border: 0
+    },
     "&:focus": {
       outline: "none"
+    }
+  },
+  focusNoMozilla: {
+    "&::-moz-focus-inner": {
+      border: 0
     }
   },
   shadow: {

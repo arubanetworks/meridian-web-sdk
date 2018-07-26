@@ -31,8 +31,8 @@ const FloorLabel = ({ buildingName, floorName }) => (
 );
 
 FloorLabel.propTypes = {
-  buildingName: PropTypes.string,
-  floorName: PropTypes.string
+  buildingName: PropTypes.string.isRequired,
+  floorName: PropTypes.string.isRequired
 };
 
 export default FloorLabel;

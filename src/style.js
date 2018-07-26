@@ -17,6 +17,11 @@ export const theme = {
 };
 
 export const mixins = {
+  overflowEllipses: {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
+  },
   textStrokeWhite: {
     WebkitFontSmoothing: "antialiased",
     textShadow: `

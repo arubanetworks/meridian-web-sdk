@@ -5,6 +5,7 @@ import objectValues from "lodash.values";
 
 import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
+import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
 import InfoOverlay from "./InfoOverlay";
 import TagLayer from "./TagLayer";
@@ -182,9 +183,6 @@ export default class Map extends Component {
       const onZoomEnd = () => {
         this.setState({ isPanningOrZooming: false });
       };
-      // TODO:
-      // - Use `.filter(...)` to filter out mouse wheel events without a
-      //   modifier key, depending on user settings
       this.zoomD3 = d3
         .zoom()
         .filter(() => shouldMapPanZoom(d3.event))
@@ -279,12 +277,32 @@ export default class Map extends Component {
     }
   };
 
-  renderFloorControls() {
-    const { showFloorsControl } = this.props;
+  getAllFloors() {
     const { floorsByBuilding } = this.state;
-    const floors = Object.keys(floorsByBuilding || {});
-    if (floors.length > 0 && showFloorsControl) {
+    return objectValues(floorsByBuilding).reduce((a, b) => [...a, ...b], []);
+  }
+
+  getFloorCount() {
+    return this.getAllFloors().length;
+  }
+
+  shouldShowFloors() {
+    return this.props.showFloorsControl && this.getFloorCount() > 1;
+  }
+
+  renderFloorControls() {
+    if (this.shouldShowFloors()) {
       return <FloorControls openFloorOverlay={this.openFloorOverlay} />;
+    }
+    return null;
+  }
+
+  renderFloorLabel() {
+    const floor = this.getMapData();
+    if (floor) {
+      return (
+        <FloorLabel buildingName={floor.group_name} floorName={floor.name} />
+      );
     }
     return null;
   }
@@ -341,6 +359,7 @@ export default class Map extends Component {
         {this.renderInfoOverlay()}
         {this.renderFloorOverlay()}
         {this.renderFloorControls()}
+        {this.renderFloorLabel()}
         <div
           ref={el => {
             this.mapRef = el;

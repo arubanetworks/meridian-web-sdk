@@ -25,7 +25,6 @@ const cssFloorControls = css({
   "&:focus": { outline: "none" }
 });
 
-// TODO: Actually allow switching floors
 const FloorControls = ({ openFloorOverlay }) => (
   <button
     className={cx(cssFloorControls, "meridian-floor-control")}

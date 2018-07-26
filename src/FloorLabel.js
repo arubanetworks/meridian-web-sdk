@@ -8,7 +8,7 @@ const cssFloorLabel = css({
   ...mixins.buttonReset,
   ...mixins.rounded,
   ...mixins.overflowEllipses,
-  background: "rgba(0, 0, 0, 0.5)",
+  background: "rgba(0, 0, 0, 0.4)",
   color: "white",
   textShadow: "0 0 2px black",
   position: "absolute",
@@ -20,8 +20,7 @@ const cssFloorLabel = css({
   maxWidth: 300,
   padding: "8px 16px",
   border: 0,
-  fontSize: 16,
-  fontWeight: "bold"
+  fontSize: 16
 });
 
 const FloorLabel = ({ buildingName, floorName }) => (

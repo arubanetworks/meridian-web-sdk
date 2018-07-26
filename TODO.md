@@ -29,3 +29,4 @@
 - Tag updates are coming in first (onTagUpdate)
 - Culling! (openstreetmap/ID uses RBush)
 - Map scale like `[_____] = 50 ft`
+- What about searching for a tag ON ANY FLOOR

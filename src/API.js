@@ -4,6 +4,7 @@ import axios from "axios";
 import { requiredParam } from "./util";
 
 const envToTagURL = {
+  development: "https://tags.meridianapps.com",
   production: "https://tags.meridianapps.com",
   staging: "https://staging-tags.meridianapps.com"
 };
@@ -11,6 +12,7 @@ const envToTagURL = {
 const tagPath = "/streams/v1beta2/tracking/websocket";
 
 const envToRestURL = {
+  development: "http://localhost:8091/api",
   production: "https://edit.meridianapps.com/api",
   staging: "https://staging-edit.meridianapps.com/api"
 };

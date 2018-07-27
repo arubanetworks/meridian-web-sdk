@@ -1,6 +1,7 @@
 ### NEXT
 
-- Loading..... (add a loading state)
+- Loading..... (add loading and error states)
+- We need to figure out what browsers we are going to support as we should document this
 - Should we output tags/labels withing the Tag info overlay?
 - Make a new hidden page with copy/paste API code
 - Try having someone else on the team dogfooding the SDK in the Editor (tag monitoring page)

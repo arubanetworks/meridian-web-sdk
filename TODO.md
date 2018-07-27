@@ -7,7 +7,6 @@
 - Try having someone else on the team dogfooding the SDK in the Editor (tag monitoring page)
 - Touch BROKEN on Surface Book
 - Polyfill Promise
-- More IE testing (spotted a few issues today)
 - Audit State usage
 - Audit render calls
 - Restore deploy to GCS script (as alternate deploy for regression and A/B testing)

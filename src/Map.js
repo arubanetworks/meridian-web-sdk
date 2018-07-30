@@ -11,7 +11,7 @@ import InfoOverlay from "./InfoOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorControls from "./FloorControls";
-import { css, theme, cx } from "./style";
+import { css, cx } from "./style";
 import { asyncClientCall } from "./util";
 
 const ZOOM_FACTOR = 0.5;
@@ -24,7 +24,7 @@ const cssMapContainer = css({
   borderRadius: "inherit",
   background: "#fafafa",
   color: "#000",
-  fontFamily: theme.fontFamily,
+  fontFamily: "inherit",
   textAlign: "left"
 });
 

@@ -43,7 +43,7 @@ function getImageStyle({ image_url, color, type }) {
 }
 
 const InfoOverlay = ({ data, closeInfoOverlay }) => (
-  <Overlay location="left" onCloseClicked={closeInfoOverlay}>
+  <Overlay position="left" onCloseClicked={closeInfoOverlay}>
     <div
       className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
       style={getImageStyle(data)}

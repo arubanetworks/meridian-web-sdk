@@ -11,19 +11,43 @@ const cssOverlayBuildingName = css({
   color: theme.brandBlue,
   borderTop: `1px solid ${theme.borderColor}`,
   fontSize: theme.fontSizeSmaller,
-  padding: 15,
-  paddingBottom: 10
+  padding: 10,
+  paddingTop: 15,
+  paddingBottom: 5
 });
 
 const cssFloorsList = css({
-  overflowY: "auto"
+  overflowY: "auto",
+  flex: "1 1 auto"
 });
 
-const cssOverlayFloorButton = css({
+const cssSearchBar = css({
+  label: "overlay-search-bar",
+  boxShadow: `0 1px 0 ${theme.borderColor}`,
+  flex: "0 0 auto",
+  display: "flex",
+  flexDirection: "column",
+  padding: 10,
+  height: 32
+});
+
+const cssSearchInput = css(
+  mixins.buttonReset,
+  mixins.rounded,
+  mixins.focusOutline,
+  {
+    label: "overlay-search-input",
+    flex: "1 1 auto",
+    marginRight: 32 + 10,
+    padding: "4px 8px",
+    background: theme.borderColor,
+    border: 0
+  }
+);
+
+const cssOverlayFloorButton = css(mixins.buttonReset, mixins.focusDarken, {
   label: "overlay-floor-button",
-  ...mixins.buttonReset,
-  ...mixins.focusDarken,
-  padding: 15,
+  padding: 10,
   display: "block",
   width: "100%",
   textAlign: "left",
@@ -52,7 +76,14 @@ const FloorOverlay = ({
   closeFloorOverlay,
   selectFloorByID
 }) => (
-  <Overlay location="right" onCloseClicked={closeFloorOverlay}>
+  <Overlay position="right" onCloseClicked={closeFloorOverlay}>
+    <div className={cx(cssSearchBar, "meridian-overlay-search-bar")}>
+      <input
+        type="text"
+        placeholder="Search"
+        className={cx(cssSearchInput, "meridian-overlay-search-input")}
+      />
+    </div>
     <div className={cx(cssFloorsList, "meridian-overlay-floor-list")}>
       {sortedBuildingNames(floorsByBuilding).map(buildingName => (
         <div key={buildingName}>

@@ -6,6 +6,8 @@ import { css, theme, mixins, cx } from "./style";
 const cssOverlay = css(mixins.shadow, mixins.rounded, {
   label: "overlay",
   overflow: "hidden",
+  display: "flex",
+  flexDirection: "column",
   background: theme.white,
   color: theme.textColor,
   fill: "#000",
@@ -60,12 +62,12 @@ CloseButton.propTypes = {
   onClick: PropTypes.func.isRequired
 };
 
-const Overlay = ({ location, onCloseClicked, children }) => (
+const Overlay = ({ position, onCloseClicked, children }) => (
   <div
     className={cx(
-      location === "left" ? cssOverlayLeft : cssOverlayRight,
+      position === "left" ? cssOverlayLeft : cssOverlayRight,
       "meridian-overlay",
-      `meridian-overlay-${location}`
+      `meridian-overlay-${position}`
     )}
   >
     <CloseButton onClick={onCloseClicked} />
@@ -74,7 +76,7 @@ const Overlay = ({ location, onCloseClicked, children }) => (
 );
 
 Overlay.propTypes = {
-  location: PropTypes.oneOf(["left", "right"]).isRequired,
+  position: PropTypes.oneOf(["left", "right"]).isRequired,
   children: PropTypes.node.isRequired,
   onCloseClicked: PropTypes.func.isRequired
 };

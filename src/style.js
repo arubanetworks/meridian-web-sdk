@@ -9,9 +9,9 @@ export const theme = {
   brandOrange: "#ff8300",
   brandBlue: "#004876",
   brandBrightBlue: "#297bc0",
-  borderColor: "#eaeaea",
-  buttonActiveColor: "#f0f0f0",
-  buttonHoverColor: "#f8f8f8",
+  borderColor: "#ebeef2",
+  buttonActiveColor: "hsl(214, 21%, 92%)",
+  buttonHoverColor: "hsl(214, 21%, 97%)",
   buttonSeparatorColor: "#f0f0f0",
   borderRadius: 6
 };
@@ -46,7 +46,7 @@ export const mixins = {
   focusOutline: {
     "&:focus": {
       outline: 0,
-      boxShadow: "0 0 0 2px white, 0 0 0 4px black"
+      boxShadow: "0 0 0 2px currentcolor"
     }
   },
   focusDarken: {

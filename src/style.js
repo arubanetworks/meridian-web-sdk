@@ -2,6 +2,7 @@ import createEmotion from "create-emotion";
 
 export const theme = {
   fontSize: "16px",
+  fontSizeSmaller: "14px",
   textColor: "#1b1b1b",
   black: "#000",
   white: "#fff",

@@ -1,54 +1,32 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
+import Overlay from "./Overlay";
 import { css, theme, mixins, cx } from "./style";
-
-const cssOverlay = css({
-  label: "overlay",
-  ...mixins.shadow,
-  ...mixins.rounded,
-  ...mixins.fontSize,
-  overflow: "hidden",
-  background: theme.white,
-  color: theme.textColor,
-  fill: "#000",
-  position: "absolute",
-  marginLeft: "auto",
-  maxWidth: 500,
-  left: 10,
-  top: 10,
-  bottom: 10,
-  right: 10,
-  zIndex: 2
-});
-
-const cssOverlayContent = css({
-  label: "overlay-content",
-  ...mixins.borderBox,
-  width: "100%",
-  height: "100%",
-  padding: 16,
-  overflowY: "auto"
-});
 
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
+  textTransform: "uppercase",
   fontWeight: "bold",
-  padding: 10,
-  marginBottom: 10,
-  borderBottom: `1px solid ${theme.borderColor}`
+  color: theme.brandBlue,
+  fontSize: theme.fontSizeSmaller,
+  padding: 20,
+  paddingBottom: 10
+});
+
+const cssFloorsList = css({
+  overflowY: "auto"
 });
 
 const cssOverlayFloorButton = css({
   label: "overlay-floor-button",
   ...mixins.buttonReset,
   ...mixins.focusDarken,
-  ...mixins.rounded,
-  color: theme.brandBrightBlue,
+  padding: 20,
+  borderBottom: `1px solid ${theme.borderColor}`,
   display: "block",
   width: "100%",
   textAlign: "left",
-  padding: 10,
   "&:hover": {
     background: theme.buttonHoverColor
   }
@@ -57,30 +35,6 @@ const cssOverlayFloorButton = css({
 const cssOverlayCurrentFloor = css({
   label: "overlay-floor-button-curent-floor",
   fontWeight: "bold"
-});
-
-const cssClose = css({
-  label: "overlay-close",
-  ...mixins.buttonReset,
-  ...mixins.focusOutline,
-  position: "absolute",
-  top: 0,
-  right: 0,
-  padding: 4,
-  width: 32,
-  height: 32,
-  fontSize: 11,
-  textAlign: "center",
-  margin: 10,
-  background: theme.white,
-  color: theme.textColor,
-  borderRadius: "100%",
-  fontWeight: "bold",
-  boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
-  "&:hover": {
-    background: theme.buttonHoverColor,
-    boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"
-  }
 });
 
 // Move "" to the end of the list (Unassigned)
@@ -98,16 +52,8 @@ const FloorOverlay = ({
   closeFloorOverlay,
   selectFloorByID
 }) => (
-  <div className={cx(cssOverlay, "meridian-overlay")}>
-    <button
-      className={cx(cssClose, "meridian-overlay-close")}
-      onClick={closeFloorOverlay}
-    >
-      <svg viewBox="0 0 36 36">
-        <path d="M19.41 18l6.36-6.36a1 1 0 0 0-1.41-1.41L18 16.59l-6.36-6.36a1 1 0 0 0-1.41 1.41L16.59 18l-6.36 6.36a1 1 0 1 0 1.41 1.41L18 19.41l6.36 6.36a1 1 0 0 0 1.41-1.41z" />
-      </svg>
-    </button>
-    <div className={cx(cssOverlayContent, "meridian-overlay-content")}>
+  <Overlay location="right" onCloseClicked={closeFloorOverlay}>
+    <div className={cx(cssFloorsList, "meridian-overlay-floor-list")}>
       {sortedBuildingNames(floorsByBuilding).map(buildingName => (
         <div key={buildingName}>
           <div
@@ -141,7 +87,7 @@ const FloorOverlay = ({
         </div>
       ))}
     </div>
-  </div>
+  </Overlay>
 );
 
 FloorOverlay.propTypes = {

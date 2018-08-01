@@ -3,10 +3,8 @@ import PropTypes from "prop-types";
 
 import { css, theme, mixins, cx } from "./style";
 
-const cssOverlay = css({
+const cssOverlay = css(mixins.shadow, mixins.rounded, {
   label: "overlay",
-  ...mixins.shadow,
-  ...mixins.rounded,
   overflow: "hidden",
   background: theme.white,
   color: theme.textColor,
@@ -29,10 +27,8 @@ const cssOverlayRight = css(cssOverlay, {
   marginLeft: "auto"
 });
 
-const cssClose = css({
+const cssClose = css(mixins.buttonReset, mixins.focusOutline, {
   label: "overlay-close",
-  ...mixins.buttonReset,
-  ...mixins.focusOutline,
   position: "absolute",
   top: 10,
   right: 10,

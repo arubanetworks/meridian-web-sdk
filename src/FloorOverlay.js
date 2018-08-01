@@ -9,8 +9,9 @@ const cssOverlayBuildingName = css({
   textTransform: "uppercase",
   fontWeight: "bold",
   color: theme.brandBlue,
+  borderTop: `1px solid ${theme.borderColor}`,
   fontSize: theme.fontSizeSmaller,
-  padding: 20,
+  padding: 15,
   paddingBottom: 10
 });
 
@@ -22,8 +23,7 @@ const cssOverlayFloorButton = css({
   label: "overlay-floor-button",
   ...mixins.buttonReset,
   ...mixins.focusDarken,
-  padding: 20,
-  borderBottom: `1px solid ${theme.borderColor}`,
+  padding: 15,
   display: "block",
   width: "100%",
   textAlign: "left",

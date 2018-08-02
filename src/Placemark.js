@@ -13,11 +13,8 @@ const cssPlacemark = css({
   position: "absolute"
 });
 
-const cssPlacemarkIcon = css({
+const cssPlacemarkIcon = css(mixins.buttonReset, mixins.pointer, {
   label: "meridian-placemark-icon",
-  ...mixins.buttonReset,
-  ...mixins.pointer,
-  ...mixins.focusNoMozilla,
   transition: "width 80ms ease, height 80ms ease",
   display: "block",
   width: SIZE,
@@ -38,9 +35,8 @@ const cssPlacemarkIcon = css({
   }
 });
 
-const cssLabel = css({
+const cssLabel = css(mixins.textStrokeWhite, {
   label: "meridian-label",
-  ...mixins.textStrokeWhite,
   marginLeft: "50%",
   position: "absolute",
   minWidth: 55,

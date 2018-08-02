@@ -2,15 +2,16 @@ import createEmotion from "create-emotion";
 
 export const theme = {
   fontSize: "16px",
+  fontSizeSmaller: "14px",
   textColor: "#1b1b1b",
   black: "#000",
   white: "#fff",
   brandOrange: "#ff8300",
   brandBlue: "#004876",
   brandBrightBlue: "#297bc0",
-  borderColor: "#eaeaea",
-  buttonActiveColor: "#f0f0f0",
-  buttonHoverColor: "#f8f8f8",
+  borderColor: "#ebeef2",
+  buttonActiveColor: "hsl(214, 21%, 92%)",
+  buttonHoverColor: "hsl(214, 21%, 97%)",
   buttonSeparatorColor: "#f0f0f0",
   borderRadius: 6
 };
@@ -37,7 +38,10 @@ export const mixins = {
     border: 0,
     borderRadius: 0,
     background: "transparent",
-    color: "inherit"
+    color: "inherit",
+    "&::-moz-focus-inner": {
+      border: 0
+    }
   },
   borderBox: {
     boxSizing: "border-box"
@@ -45,7 +49,7 @@ export const mixins = {
   focusOutline: {
     "&:focus": {
       outline: 0,
-      boxShadow: "0 0 0 2px white, 0 0 0 4px black"
+      boxShadow: "0 0 0 2px currentcolor"
     }
   },
   focusDarken: {
@@ -55,16 +59,8 @@ export const mixins = {
     }
   },
   focusNone: {
-    "&::-moz-focus-inner": {
-      border: 0
-    },
     "&:focus": {
       outline: "none"
-    }
-  },
-  focusNoMozilla: {
-    "&::-moz-focus-inner": {
-      border: 0
     }
   },
   shadow: {

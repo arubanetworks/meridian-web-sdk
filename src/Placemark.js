@@ -13,32 +13,27 @@ const cssPlacemark = css({
   position: "absolute"
 });
 
-const cssPlacemarkIcon = css(
-  mixins.buttonReset,
-  mixins.pointer,
-  mixins.focusNoMozilla,
-  {
-    label: "meridian-placemark-icon",
-    transition: "width 80ms ease, height 80ms ease",
-    display: "block",
-    width: SIZE,
-    height: SIZE,
-    borderRadius: "100%",
-    backgroundColor: theme.brandBlue,
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    border: "2px solid transparent",
-    overflow: "hidden",
-    zIndex: 1,
-    "&:focus": {
-      outline: "none",
-      zIndex: 3,
-      width: SIZE * 1.25,
-      height: SIZE * 1.25
-    }
+const cssPlacemarkIcon = css(mixins.buttonReset, mixins.pointer, {
+  label: "meridian-placemark-icon",
+  transition: "width 80ms ease, height 80ms ease",
+  display: "block",
+  width: SIZE,
+  height: SIZE,
+  borderRadius: "100%",
+  backgroundColor: theme.brandBlue,
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
+  border: "2px solid transparent",
+  overflow: "hidden",
+  zIndex: 1,
+  "&:focus": {
+    outline: "none",
+    zIndex: 3,
+    width: SIZE * 1.25,
+    height: SIZE * 1.25
   }
-);
+});
 
 const cssLabel = css(mixins.textStrokeWhite, {
   label: "meridian-label",

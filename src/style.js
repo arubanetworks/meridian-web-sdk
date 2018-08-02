@@ -38,7 +38,10 @@ export const mixins = {
     border: 0,
     borderRadius: 0,
     background: "transparent",
-    color: "inherit"
+    color: "inherit",
+    "&::-moz-focus-inner": {
+      border: 0
+    }
   },
   borderBox: {
     boxSizing: "border-box"
@@ -56,16 +59,8 @@ export const mixins = {
     }
   },
   focusNone: {
-    "&::-moz-focus-inner": {
-      border: 0
-    },
     "&:focus": {
       outline: "none"
-    }
-  },
-  focusNoMozilla: {
-    "&::-moz-focus-inner": {
-      border: 0
     }
   },
   shadow: {

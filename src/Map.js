@@ -127,6 +127,7 @@ export default class Map extends Component {
     const { locationID, api } = this.props;
     const mapURL = `locations/${locationID}/maps`;
     const { data } = await api.axios.get(mapURL);
+    // TODO: This data is paginated... do we want to fetch _all_ of it?
     return data.results;
   }
 

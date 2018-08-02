@@ -2,9 +2,7 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 import { css, theme, mixins, cx } from "./style";
 
-const cssZoomControls = css({
-  ...mixins.shadow,
-  ...mixins.rounded,
+const cssZoomControls = css(mixins.shadow, mixins.rounded, {
   background: "white",
   overflow: "hidden",
   position: "absolute",
@@ -15,8 +13,7 @@ const cssZoomControls = css({
   bottom: 15
 });
 
-const styleZoomButton = {
-  ...mixins.buttonReset,
+const cssZoomButton = css(mixins.buttonReset, {
   padding: 4,
   width: 40,
   height: 40,
@@ -28,16 +25,13 @@ const styleZoomButton = {
   "&:hover": { background: theme.buttonHoverColor },
   "&:active": { background: theme.buttonActiveColor },
   "&:focus": { outline: "none" }
-};
+});
 
-const cssZoomButtonIn = css({
-  ...styleZoomButton,
+const cssZoomButtonIn = css(cssZoomButton, {
   borderBottom: `1px solid ${theme.buttonSeparatorColor}`
 });
 
-const cssZoomButtonOut = css({
-  ...styleZoomButton
-});
+const cssZoomButtonOut = cssZoomButton;
 
 const ZoomButton = ({ onClick, dir }) => {
   if (dir === "in") {

@@ -1,54 +1,56 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
+import Overlay from "./Overlay";
 import { css, theme, mixins, cx } from "./style";
-
-const cssOverlay = css({
-  label: "overlay",
-  ...mixins.shadow,
-  ...mixins.rounded,
-  ...mixins.fontSize,
-  overflow: "hidden",
-  background: theme.white,
-  color: theme.textColor,
-  fill: "#000",
-  position: "absolute",
-  marginLeft: "auto",
-  maxWidth: 500,
-  left: 10,
-  top: 10,
-  bottom: 10,
-  right: 10,
-  zIndex: 2
-});
-
-const cssOverlayContent = css({
-  label: "overlay-content",
-  ...mixins.borderBox,
-  width: "100%",
-  height: "100%",
-  padding: 16,
-  overflowY: "auto"
-});
 
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
+  textTransform: "uppercase",
   fontWeight: "bold",
+  color: theme.brandBlue,
+  borderTop: `1px solid ${theme.borderColor}`,
+  fontSize: theme.fontSizeSmaller,
   padding: 10,
-  marginBottom: 10,
-  borderBottom: `1px solid ${theme.borderColor}`
+  paddingTop: 15,
+  paddingBottom: 5
 });
 
-const cssOverlayFloorButton = css({
+const cssFloorsList = css({
+  overflowY: "auto",
+  flex: "1 1 auto"
+});
+
+const cssSearchBar = css({
+  label: "overlay-search-bar",
+  boxShadow: `0 1px 0 ${theme.borderColor}`,
+  flex: "0 0 auto",
+  display: "flex",
+  flexDirection: "column",
+  padding: 10,
+  height: 32
+});
+
+const cssSearchInput = css(
+  mixins.buttonReset,
+  mixins.rounded,
+  mixins.focusOutline,
+  {
+    label: "overlay-search-input",
+    flex: "1 1 auto",
+    marginRight: 32 + 10,
+    padding: "4px 8px",
+    background: theme.borderColor,
+    border: 0
+  }
+);
+
+const cssOverlayFloorButton = css(mixins.buttonReset, mixins.focusDarken, {
   label: "overlay-floor-button",
-  ...mixins.buttonReset,
-  ...mixins.focusDarken,
-  ...mixins.rounded,
-  color: theme.brandBrightBlue,
+  padding: 10,
   display: "block",
   width: "100%",
   textAlign: "left",
-  padding: 10,
   "&:hover": {
     background: theme.buttonHoverColor
   }
@@ -57,30 +59,6 @@ const cssOverlayFloorButton = css({
 const cssOverlayCurrentFloor = css({
   label: "overlay-floor-button-curent-floor",
   fontWeight: "bold"
-});
-
-const cssClose = css({
-  label: "overlay-close",
-  ...mixins.buttonReset,
-  ...mixins.focusOutline,
-  position: "absolute",
-  top: 0,
-  right: 0,
-  padding: 4,
-  width: 32,
-  height: 32,
-  fontSize: 11,
-  textAlign: "center",
-  margin: 10,
-  background: theme.white,
-  color: theme.textColor,
-  borderRadius: "100%",
-  fontWeight: "bold",
-  boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
-  "&:hover": {
-    background: theme.buttonHoverColor,
-    boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"
-  }
 });
 
 // Move "" to the end of the list (Unassigned)
@@ -98,16 +76,16 @@ const FloorOverlay = ({
   closeFloorOverlay,
   selectFloorByID
 }) => (
-  <div className={cx(cssOverlay, "meridian-overlay")}>
-    <button
-      className={cx(cssClose, "meridian-overlay-close")}
-      onClick={closeFloorOverlay}
-    >
-      <svg viewBox="0 0 36 36">
-        <path d="M19.41 18l6.36-6.36a1 1 0 0 0-1.41-1.41L18 16.59l-6.36-6.36a1 1 0 0 0-1.41 1.41L16.59 18l-6.36 6.36a1 1 0 1 0 1.41 1.41L18 19.41l6.36 6.36a1 1 0 0 0 1.41-1.41z" />
-      </svg>
-    </button>
-    <div className={cx(cssOverlayContent, "meridian-overlay-content")}>
+  <Overlay position="right" onCloseClicked={closeFloorOverlay}>
+    <div className={cx(cssSearchBar, "meridian-overlay-search-bar")}>
+      <input
+        autoFocus
+        type="text"
+        placeholder="Search"
+        className={cx(cssSearchInput, "meridian-overlay-search-input")}
+      />
+    </div>
+    <div className={cx(cssFloorsList, "meridian-overlay-floor-list")}>
       {sortedBuildingNames(floorsByBuilding).map(buildingName => (
         <div key={buildingName}>
           <div
@@ -141,7 +119,7 @@ const FloorOverlay = ({
         </div>
       ))}
     </div>
-  </div>
+  </Overlay>
 );
 
 FloorOverlay.propTypes = {

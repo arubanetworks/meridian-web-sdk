@@ -69,9 +69,19 @@ const cssOverlayCurrentFloor = css({
 });
 
 class FloorOverlay extends Component {
-  state = {
-    searchFilter: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchFilter: ""
+    };
+    this.searchInput = null;
+  }
+
+  componentDidMount() {
+    if (this.searchInput) {
+      this.searchInput.focus();
+    }
+  }
 
   handleSearchFilterChange = event => {
     this.setState({ searchFilter: event.target.value });
@@ -104,6 +114,9 @@ class FloorOverlay extends Component {
       <Overlay position="right" onCloseClicked={closeFloorOverlay}>
         <div className={cx(cssSearchBar, "meridian-overlay-search-bar")}>
           <input
+            ref={element => {
+              this.searchInput = element;
+            }}
             value={searchFilter}
             onInput={this.handleSearchFilterChange}
             type="text"

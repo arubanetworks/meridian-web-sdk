@@ -1,5 +1,15 @@
+import objectValues from "lodash.values";
+
 const ASSETS_URL =
   "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6";
+
+export function ungroup(groupedData) {
+  return objectValues(groupedData).reduce((a, b) => a.concat(b), []);
+}
+
+export function doesSearchMatch(query, target) {
+  return target.toLowerCase().indexOf(query.toLowerCase()) >= 0;
+}
 
 export function requiredParam(funcName, argName) {
   // eslint-disable-next-line no-console

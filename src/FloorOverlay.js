@@ -19,6 +19,7 @@ const cssOverlayBuildingName = css({
 });
 
 const cssFloorsList = css({
+  label: "floors-list",
   overflowY: "auto",
   flex: "1 1 auto"
 });
@@ -53,6 +54,7 @@ const cssSearchInput = css(
 const cssOverlayFloorButton = css(mixins.buttonReset, mixins.focusDarken, {
   label: "overlay-floor-button",
   padding: 10,
+  paddingLeft: 20,
   display: "block",
   width: "100%",
   textAlign: "left",

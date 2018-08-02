@@ -3,27 +3,29 @@ import PropTypes from "prop-types";
 
 import { css, theme, mixins, cx } from "./style";
 
-const cssFloorControls = css({
-  label: "floor-control",
-  ...mixins.buttonReset,
-  ...mixins.shadow,
-  ...mixins.rounded,
-  background: "white",
-  position: "absolute",
-  zIndex: 1,
-  right: 15,
-  top: 15,
-  padding: 4,
-  width: 40,
-  height: 40,
-  border: 0,
-  fontSize: 20,
-  fontWeight: 200,
-  fill: theme.brandBrightBlue,
-  "&:hover": { background: theme.buttonHoverColor },
-  "&:active": { background: theme.buttonActiveColor },
-  "&:focus": { outline: "none" }
-});
+const cssFloorControls = css(
+  mixins.buttonReset,
+  mixins.shadow,
+  mixins.rounded,
+  {
+    label: "floor-control",
+    background: "white",
+    position: "absolute",
+    zIndex: 1,
+    right: 15,
+    top: 15,
+    padding: 4,
+    width: 40,
+    height: 40,
+    border: 0,
+    fontSize: 20,
+    fontWeight: 200,
+    fill: theme.brandBrightBlue,
+    "&:hover": { background: theme.buttonHoverColor },
+    "&:active": { background: theme.buttonActiveColor },
+    "&:focus": { outline: "none" }
+  }
+);
 
 const FloorControls = ({ openFloorOverlay }) => (
   <button

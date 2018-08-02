@@ -79,6 +79,7 @@ const FloorOverlay = ({
   <Overlay position="right" onCloseClicked={closeFloorOverlay}>
     <div className={cx(cssSearchBar, "meridian-overlay-search-bar")}>
       <input
+        autoFocus
         type="text"
         placeholder="Search"
         className={cx(cssSearchInput, "meridian-overlay-search-input")}

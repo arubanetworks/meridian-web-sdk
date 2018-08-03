@@ -3,9 +3,11 @@ import createEmotion from "create-emotion";
 export const theme = {
   fontSize: "16px",
   fontSizeSmaller: "14px",
+  fontSizeBigger: "18px",
   textColor: "#1b1b1b",
   black: "#000",
   white: "#fff",
+  textColorBluish: "hsl(208, 17%, 42%)",
   brandOrange: "#ff8300",
   brandBlue: "hsl(203, 100%, 23%)",
   brandBrightBlue: "hsl(207, 65%, 46%)",

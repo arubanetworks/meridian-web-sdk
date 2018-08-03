@@ -8,7 +8,7 @@ export function ungroup(groupedData) {
 }
 
 export function doesSearchMatch(query, target) {
-  return target.toLowerCase().indexOf(query.toLowerCase()) >= 0;
+  return target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
 }
 
 export function requiredParam(funcName, argName) {

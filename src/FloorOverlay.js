@@ -14,8 +14,6 @@ const cssOverlayBuildingName = css({
   borderTop: `1px solid ${theme.borderColor}`,
   fontSize: theme.fontSizeSmaller,
   padding: 10
-  // paddingTop: 15,
-  // paddingBottom: 5
 });
 
 const cssFloorsList = css({
@@ -48,7 +46,7 @@ const cssSearchInput = css(
     background: theme.borderColor,
     border: 0,
     "&::placeholder": {
-      color: "hsl(214, 21%, 50%)"
+      color: theme.textColorBluish
     }
   }
 );
@@ -68,6 +66,14 @@ const cssOverlayFloorButton = css(
     }
   }
 );
+
+const cssFloorsListEmpty = css({
+  label: "overlay-floor-list-empty",
+  padding: "60px 20px",
+  textAlign: "center",
+  fontSize: theme.fontSizeBigger,
+  color: theme.textColorBluish
+});
 
 const cssOverlayCurrentFloor = css({
   label: "overlay-floor-button-curent-floor",
@@ -105,8 +111,7 @@ class FloorOverlay extends Component {
     });
   }
 
-  render() {
-    const { searchFilter } = this.state;
+  renderList() {
     const { currentFloorID, closeFloorOverlay, selectFloorByID } = this.props;
     // TODO: Put "Unassigned" at the bottom of the results
     const floors = this.processedFloorsByBuilding();
@@ -116,20 +121,8 @@ class FloorOverlay extends Component {
     if (buildingNames[0] === "") {
       buildingNames.push(buildingNames.shift());
     }
-    return (
-      <Overlay position="right" onCloseClicked={closeFloorOverlay}>
-        <div className={cx(cssSearchBar, "meridian-overlay-search-bar")}>
-          <input
-            ref={element => {
-              this.searchInput = element;
-            }}
-            value={searchFilter}
-            onInput={this.handleSearchFilterChange}
-            type="text"
-            placeholder="Search"
-            className={cx(cssSearchInput, "meridian-overlay-search-input")}
-          />
-        </div>
+    if (buildingNames.length > 0) {
+      return (
         <div className={cx(cssFloorsList, "meridian-overlay-floor-list")}>
           {buildingNames.map(buildingName => (
             <div key={buildingName}>
@@ -164,6 +157,35 @@ class FloorOverlay extends Component {
             </div>
           ))}
         </div>
+      );
+    }
+    return (
+      <div
+        className={cx(cssFloorsListEmpty, "meridian-overlay-floor-list-empty")}
+      >
+        No results found.
+      </div>
+    );
+  }
+
+  render() {
+    const { searchFilter } = this.state;
+    const { closeFloorOverlay } = this.props;
+    return (
+      <Overlay position="right" onCloseClicked={closeFloorOverlay}>
+        <div className={cx(cssSearchBar, "meridian-overlay-search-bar")}>
+          <input
+            ref={element => {
+              this.searchInput = element;
+            }}
+            value={searchFilter}
+            onInput={this.handleSearchFilterChange}
+            type="text"
+            placeholder="Search"
+            className={cx(cssSearchInput, "meridian-overlay-search-input")}
+          />
+        </div>
+        {this.renderList()}
       </Overlay>
     );
   }

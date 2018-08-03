@@ -32,6 +32,7 @@ const cssOverlayRight = css(cssOverlay, {
 const cssClose = css(mixins.buttonReset, mixins.focusRing, {
   label: "overlay-close",
   position: "absolute",
+  zIndex: 2,
   top: 10,
   right: 10,
   padding: 4,

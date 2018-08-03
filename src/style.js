@@ -7,12 +7,12 @@ export const theme = {
   black: "#000",
   white: "#fff",
   brandOrange: "#ff8300",
-  brandBlue: "#004876",
-  brandBrightBlue: "#297bc0",
-  borderColor: "#ebeef2",
-  buttonActiveColor: "hsl(214, 21%, 92%)",
-  buttonHoverColor: "hsl(214, 21%, 97%)",
+  brandBlue: "hsl(203, 100%, 23%)",
+  brandBrightBlue: "hsl(207, 65%, 46%)",
+  buttonActiveColor: "hsl(201, 55%, 94%)",
+  buttonHoverColor: "hsl(200, 60%, 97%)",
   buttonSeparatorColor: "#f0f0f0",
+  borderColor: "#ebeef2",
   borderRadius: 6
 };
 
@@ -45,6 +45,21 @@ export const mixins = {
   },
   borderBox: {
     boxSizing: "border-box"
+  },
+  focusRing: {
+    "&:focus": {
+      outline: 0,
+      boxShadow: `inset 0 0 0 1px ${theme.brandBrightBlue}`
+    }
+  },
+  focusRingMenuItem: {
+    "&:focus": {
+      outline: 0,
+      boxShadow: `
+        inset 0 0 0 1px white,
+        inset 0 0 0 2px ${theme.brandBrightBlue}
+      `
+    }
   },
   focusOutline: {
     "&:focus": {

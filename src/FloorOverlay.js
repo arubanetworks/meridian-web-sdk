@@ -13,20 +13,22 @@ const cssOverlayBuildingName = css({
   color: theme.brandBlue,
   borderTop: `1px solid ${theme.borderColor}`,
   fontSize: theme.fontSizeSmaller,
-  padding: 10,
-  paddingTop: 15,
-  paddingBottom: 5
+  padding: 10
+  // paddingTop: 15,
+  // paddingBottom: 5
 });
 
 const cssFloorsList = css({
   label: "floors-list",
   overflowY: "auto",
+  paddingBottom: 10,
   flex: "1 1 auto"
 });
 
 const cssSearchBar = css({
   label: "overlay-search-bar",
   boxShadow: `0 1px 0 ${theme.borderColor}`,
+  zIndex: 1,
   flex: "0 0 auto",
   display: "flex",
   flexDirection: "column",
@@ -37,7 +39,7 @@ const cssSearchBar = css({
 const cssSearchInput = css(
   mixins.buttonReset,
   mixins.rounded,
-  mixins.focusOutline,
+  mixins.focusRing,
   {
     label: "overlay-search-input",
     flex: "1 1 auto",
@@ -51,21 +53,25 @@ const cssSearchInput = css(
   }
 );
 
-const cssOverlayFloorButton = css(mixins.buttonReset, mixins.focusDarken, {
-  label: "overlay-floor-button",
-  padding: 10,
-  paddingLeft: 20,
-  display: "block",
-  width: "100%",
-  textAlign: "left",
-  "&:hover": {
-    background: theme.buttonHoverColor
+const cssOverlayFloorButton = css(
+  mixins.buttonReset,
+  mixins.focusRingMenuItem,
+  {
+    label: "overlay-floor-button",
+    padding: 10,
+    paddingLeft: 20,
+    display: "block",
+    width: "100%",
+    textAlign: "left",
+    "&:hover": {
+      background: theme.buttonHoverColor
+    }
   }
-});
+);
 
 const cssOverlayCurrentFloor = css({
   label: "overlay-floor-button-curent-floor",
-  fontWeight: "bold"
+  color: theme.brandBrightBlue
 });
 
 class FloorOverlay extends Component {

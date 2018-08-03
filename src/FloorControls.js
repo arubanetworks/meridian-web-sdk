@@ -7,6 +7,7 @@ const cssFloorControls = css(
   mixins.buttonReset,
   mixins.shadow,
   mixins.rounded,
+  mixins.focusRing,
   {
     label: "floor-control",
     background: "white",

@@ -29,7 +29,7 @@ const cssOverlayRight = css(cssOverlay, {
   marginLeft: "auto"
 });
 
-const cssClose = css(mixins.buttonReset, mixins.focusOutline, {
+const cssClose = css(mixins.buttonReset, mixins.focusRing, {
   label: "overlay-close",
   position: "absolute",
   top: 10,
@@ -45,8 +45,7 @@ const cssClose = css(mixins.buttonReset, mixins.focusOutline, {
   fontWeight: "bold",
   boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
   "&:hover": {
-    background: theme.buttonHoverColor,
-    boxShadow: "0 0 3px rgba(0, 0, 0, 0.8)"
+    background: theme.buttonHoverColor
   }
 });
 

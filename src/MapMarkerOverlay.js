@@ -57,7 +57,7 @@ function renderTagData(data) {
   }
   return (
     <div className={cx(cssTagData, "meridian-overlay-marker-tagdata")}>
-      {labels ? <p>Labels: {labels}</p> : ""}
+      {labels ? <p>Labels: {labels}</p> : null}
       <p>MAC/ID: {data.id}</p>
     </div>
   );
@@ -74,7 +74,7 @@ const MapMarkerOverlay = ({ data, kind, closeMapMarkerOverlay }) => {
         <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
           {data.name || "–"}
         </p>
-        {kind === "tag" ? renderTagData(data) : ""}
+        {kind === "tag" ? renderTagData(data) : null}
       </div>
     </Overlay>
   );

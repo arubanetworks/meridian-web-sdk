@@ -42,21 +42,21 @@ function getImageStyle({ image_url, color, type }) {
   }
 }
 
-const InfoOverlay = ({ data, closeInfoOverlay }) => (
-  <Overlay position="left" onCloseClicked={closeInfoOverlay}>
+const MapMarkerOverlay = ({ data, kind, closeMapMarkerOverlay }) => (
+  <Overlay position="left" onCloseClicked={closeMapMarkerOverlay}>
     <div
       className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
       style={getImageStyle(data)}
     />
     <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
-      {data.name || "–"}
+      {data.name + kind || "–"}
     </p>
   </Overlay>
 );
 
-InfoOverlay.propTypes = {
+MapMarkerOverlay.propTypes = {
   data: PropTypes.object,
-  closeInfoOverlay: PropTypes.object
+  closeMapMarkerOverlay: PropTypes.object
 };
 
-export default InfoOverlay;
+export default MapMarkerOverlay;

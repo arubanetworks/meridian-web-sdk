@@ -7,7 +7,7 @@ import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
 import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
-import InfoOverlay from "./InfoOverlay";
+import MapMarkerOverlay from "./MapMarkerOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorControls from "./FloorControls";
@@ -78,7 +78,7 @@ export default class Map extends Component {
     super(props);
     this.state = {
       isFloorOverlayOpen: false,
-      isInfoOverlayOpen: false,
+      isMapMarkerOverlayOpen: false,
       isPanningOrZooming: false,
       mapTransform: "",
       mapZoomFactor: 0.5,
@@ -111,12 +111,12 @@ export default class Map extends Component {
     this.setState({ isFloorOverlayOpen: false });
   };
 
-  openInfoOverlay = selectedItem => {
-    this.setState({ isInfoOverlayOpen: true, selectedItem });
+  openMapMarkerOverlay = selectedItem => {
+    this.setState({ isMapMarkerOverlayOpen: true, selectedItem });
   };
 
-  closeInfoOverlay = () => {
-    this.setState({ isInfoOverlayOpen: false, selectedItem: null });
+  closeMapMarkerOverlay = () => {
+    this.setState({ isMapMarkerOverlayOpen: false, selectedItem: null });
   };
 
   selectFloorByID = floorID => {
@@ -267,20 +267,20 @@ export default class Map extends Component {
       }, 0);
     } else {
       if (mapClicked) {
-        this.closeInfoOverlay();
+        this.closeMapMarkerOverlay();
       }
     }
   };
 
-  onMarkerClick = ({ data }) => {
+  onMarkerClick = marker => {
     if (this.props.onMarkerClick) {
       // eslint-disable-next-line no-console
       console.warn("onMarkerClick() is experimental, please do not use it");
       setTimeout(() => {
-        this.props.onMarkerClick(data);
+        this.props.onMarkerClick(marker.data);
       }, 0);
     } else {
-      this.openInfoOverlay({ data });
+      this.openMapMarkerOverlay(marker);
     }
   };
 
@@ -330,13 +330,14 @@ export default class Map extends Component {
     return null;
   }
 
-  renderInfoOverlay() {
-    const { isInfoOverlayOpen, selectedItem } = this.state;
-    if (isInfoOverlayOpen && selectedItem && selectedItem.data) {
+  renderMapMarkerOverlay() {
+    const { isMapMarkerOverlayOpen, selectedItem } = this.state;
+    if (isMapMarkerOverlayOpen && selectedItem && selectedItem.data) {
       return (
-        <InfoOverlay
-          closeInfoOverlay={this.closeInfoOverlay}
+        <MapMarkerOverlay
+          closeMapMarkerOverlay={this.closeMapMarkerOverlay}
           data={selectedItem.data}
+          kind={selectedItem.kind}
         />
       );
     }
@@ -363,7 +364,7 @@ export default class Map extends Component {
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
-        {this.renderInfoOverlay()}
+        {this.renderMapMarkerOverlay()}
         {this.renderFloorOverlay()}
         {this.renderFloorControls()}
         {this.renderFloorLabel()}

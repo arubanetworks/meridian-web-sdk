@@ -137,7 +137,6 @@ export default class TagLayer extends Component {
   }, 1000);
 
   tagsByMAC(tags) {
-    // console.info("tagsByMAC");
     return tags.map(tag => this.normalizeTag(tag)).reduce((obj, tag) => {
       obj[tag.mac] = tag;
       return obj;

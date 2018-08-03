@@ -56,7 +56,8 @@ const MapMarkerOverlay = ({ data, kind, closeMapMarkerOverlay }) => (
 
 MapMarkerOverlay.propTypes = {
   data: PropTypes.object,
-  closeMapMarkerOverlay: PropTypes.object
+  kind: PropTypes.oneOf(["placemark", "tag"]),
+  closeMapMarkerOverlay: PropTypes.func
 };
 
 export default MapMarkerOverlay;

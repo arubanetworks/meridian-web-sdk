@@ -2,6 +2,7 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
 import objectValues from "lodash.values";
+import groupBy from "lodash.groupby";
 
 import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
@@ -152,15 +153,7 @@ export default class Map extends Component {
     const floorsSortedByLevel = floors
       .slice()
       .sort((a, b) => a.level - b.level);
-    const floorsByBuilding = floorsSortedByLevel.reduce((obj, floor) => {
-      const building = floor.group_name;
-      if (obj.hasOwnProperty(building)) {
-        obj[building].push(floor);
-      } else {
-        obj[building] = [floor];
-      }
-      return obj;
-    }, {});
+    const floorsByBuilding = groupBy(floorsSortedByLevel, "group_name");
     this.setState({ floorsByBuilding }, () => {
       if (!this.zoomD3) {
         this.addZoomBehavior();

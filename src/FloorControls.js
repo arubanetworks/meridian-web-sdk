@@ -7,6 +7,8 @@ const cssFloorControls = css(
   mixins.buttonReset,
   mixins.shadow,
   mixins.rounded,
+  mixins.buttonHoverActive,
+  mixins.focusRing,
   {
     label: "floor-control",
     background: "white",
@@ -20,10 +22,7 @@ const cssFloorControls = css(
     border: 0,
     fontSize: 20,
     fontWeight: 200,
-    fill: theme.brandBrightBlue,
-    "&:hover": { background: theme.buttonHoverColor },
-    "&:active": { background: theme.buttonActiveColor },
-    "&:focus": { outline: "none" }
+    fill: theme.brandBrightBlue
   }
 );
 

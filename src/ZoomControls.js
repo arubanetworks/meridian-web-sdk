@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import { css, theme, mixins, cx } from "./style";
 
 const cssZoomControls = css(mixins.shadow, mixins.rounded, {
-  background: "white",
-  overflow: "hidden",
   position: "absolute",
   display: "flex",
   flexDirection: "column",
@@ -13,25 +11,33 @@ const cssZoomControls = css(mixins.shadow, mixins.rounded, {
   bottom: 15
 });
 
-const cssZoomButton = css(mixins.buttonReset, {
-  padding: 4,
-  width: 40,
-  height: 40,
-  border: 0,
-  borderRadius: 0,
-  fontSize: 20,
-  fontWeight: 200,
-  fill: theme.brandBrightBlue,
-  "&:hover": { background: theme.buttonHoverColor },
-  "&:active": { background: theme.buttonActiveColor },
-  "&:focus": { outline: "none" }
-});
+const cssZoomButton = css(
+  mixins.buttonReset,
+  mixins.focusRing,
+  mixins.buttonHoverActive,
+  mixins.rounded,
+  {
+    padding: 4,
+    width: 40,
+    height: 40,
+    border: 0,
+    fontSize: 20,
+    fontWeight: 200,
+    fill: theme.brandBrightBlue,
+    background: "white"
+  }
+);
 
 const cssZoomButtonIn = css(cssZoomButton, {
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 0,
   borderBottom: `1px solid ${theme.buttonSeparatorColor}`
 });
 
-const cssZoomButtonOut = cssZoomButton;
+const cssZoomButtonOut = css(cssZoomButton, {
+  borderTopLeftRadius: 0,
+  borderTopRightRadius: 0
+});
 
 const ZoomButton = ({ onClick, dir }) => {
   if (dir === "in") {

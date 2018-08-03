@@ -2,6 +2,7 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 
 import MapMarker from "./MapMarker";
+import { fetchAllPaginatedData } from "./util";
 
 export default class PlacemarkLayer extends Component {
   static defaultProps = {
@@ -52,9 +53,8 @@ export default class PlacemarkLayer extends Component {
   async updatePlacemarks() {
     const { locationID, floorID, api } = this.props;
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
-    const { data } = await api.axios.get(placemarksURL);
-    // TODO: This data is paginated... do we want to fetch _all_ of it?
-    const placemarksByID = this.groupPlacemarksByID(data.results);
+    const results = await fetchAllPaginatedData(api, placemarksURL);
+    const placemarksByID = this.groupPlacemarksByID(results);
     this.setState({ placemarksByID });
   }
 

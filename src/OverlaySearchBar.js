@@ -58,6 +58,17 @@ const cssSearchBar = css({
 });
 
 class OverlaySearchBar extends Component {
+  constructor(props) {
+    super(props);
+    this.input = null;
+  }
+
+  componentDidMount() {
+    if (this.input) {
+      this.input.focus();
+    }
+  }
+
   render() {
     const { value, onChange = () => {} } = this.props;
     return (
@@ -74,7 +85,7 @@ class OverlaySearchBar extends Component {
             onChange(event.target.value);
           }}
           ref={element => {
-            this.searchInput = element;
+            this.input = element;
           }}
         />
       </div>

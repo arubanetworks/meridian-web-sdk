@@ -69,6 +69,10 @@
       </div>
       <div class="controls">
         <label class="controls__item">
+          <input type="checkbox" id="show-control-tags">
+          <span>Show Control Tags</span>
+        </label>
+        <label class="controls__item">
           <input type="checkbox" id="disable-placemarks">
           <span>Disable clicking on placemarks</span>
         </label>
@@ -116,8 +120,8 @@
         ids: undefined,
         disabled: false
       },
-      onTagsUpdate: function(tagsByID) {
-        if (state.tags.ids.length === 1) {
+      onTagsUpdate: function (tagsByID) {
+        if (state.tags.ids && state.tags.ids.length === 1) {
           var tag = tagsByID[state.tags.ids[0]];
           map.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
         }
@@ -181,6 +185,10 @@
       updateMap();
     });
 
+    $("#show-control-tags").on("change", function () {
+      state.tags.showControlTags = this.checked;
+      updateMap();
+    });
     $("#disable-placemarks").on("change", function () {
       state.placemarks.disabled = this.checked;
       updateMap();

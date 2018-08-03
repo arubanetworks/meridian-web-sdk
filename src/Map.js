@@ -352,7 +352,6 @@ export default class Map extends Component {
       height,
       onTagsUpdate
     } = this.props;
-    console.info(tags);
     return (
       <div
         className={cx(cssMapContainer, "meridian-map-container")}

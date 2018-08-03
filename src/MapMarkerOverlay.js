@@ -49,7 +49,7 @@ const MapMarkerOverlay = ({ data, kind, closeMapMarkerOverlay }) => (
       style={getImageStyle(data)}
     />
     <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
-      {data.name + kind || "–"}
+      {data.name || "–"}
     </p>
   </Overlay>
 );

@@ -183,7 +183,6 @@ export default class TagLayer extends Component {
   }
 
   render() {
-    // console.info("Render > TagLayer", Math.floor(Date.now() / 1000));
     const { tagsByMAC } = this.state;
     const { markers, onMarkerClick, mapZoomFactor } = this.props;
     const filter = this.getFilterFunction();

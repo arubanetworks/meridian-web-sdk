@@ -48,7 +48,7 @@ const cssClose = css(
     color: theme.textColor,
     borderRadius: "100%",
     fontWeight: "bold",
-    boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)"
+    boxShadow: "0 0 2px rgba(0, 0, 0, 0.4)"
   }
 );
 

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import groupBy from "lodash.groupby";
 
 import Overlay from "./Overlay";
+import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
 import { doesSearchMatch, ungroup } from "./util";
 
@@ -22,34 +23,6 @@ const cssFloorsList = css({
   paddingBottom: 10,
   flex: "1 1 auto"
 });
-
-const cssSearchBar = css({
-  label: "overlay-search-bar",
-  boxShadow: `0 1px 0 ${theme.borderColor}`,
-  zIndex: 1,
-  flex: "0 0 auto",
-  display: "flex",
-  flexDirection: "column",
-  padding: 10,
-  height: 32
-});
-
-const cssSearchInput = css(
-  mixins.buttonReset,
-  mixins.rounded,
-  mixins.focusRing,
-  {
-    label: "overlay-search-input",
-    flex: "1 1 auto",
-    marginRight: 32 + 10,
-    padding: "4px 8px",
-    background: theme.borderColor,
-    border: 0,
-    "&::placeholder": {
-      color: theme.textColorBluish
-    }
-  }
-);
 
 const cssOverlayFloorButton = css(
   mixins.buttonReset,
@@ -192,18 +165,12 @@ class FloorOverlay extends Component {
     const { closeFloorOverlay } = this.props;
     return (
       <Overlay position="right" onCloseClicked={closeFloorOverlay}>
-        <div className={cx(cssSearchBar, "meridian-overlay-search-bar")}>
-          <input
-            ref={element => {
-              this.searchInput = element;
-            }}
-            value={searchFilter}
-            onInput={this.handleSearchFilterChange}
-            type="text"
-            placeholder="Search"
-            className={cx(cssSearchInput, "meridian-overlay-search-input")}
-          />
-        </div>
+        <OverlaySearchBar
+          value={searchFilter}
+          onChange={searchFilter => {
+            this.setState({ searchFilter });
+          }}
+        />
         {this.renderList()}
       </Overlay>
     );

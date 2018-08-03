@@ -79,9 +79,23 @@ const cssOverlayCurrentFloor = css({
   fill: "currentcolor"
 });
 
+const cssFloorCheckmark = css({
+  label: "floor-checkmark",
+  verticalAlign: "middle",
+  marginLeft: "0.5em",
+  width: "0.8em",
+  height: "0.8em"
+});
+
 const FloorCheckmark = () => (
-  <svg width="36" height="36" viewBox="0 0 36 36">
-    <path d="M16.94 21.52a1 1 0 0 1-.71-.29l-2.91-2.91a1 1 0 1 1 1.41-1.41l2.21 2.2 4.33-4.33a1 1 0 1 1 1.41 1.41l-5 5a1 1 0 0 1-.71.29" />
+  <svg
+    viewBox="0 0 10 7"
+    className={cx(
+      cssFloorCheckmark,
+      "meridian-overlay-current-floor-checkmark"
+    )}
+  >
+    <path d="M3.9 7C3.7 7 3.4 6.9 3.2 6.7L0.3 3.8C-0.1 3.4 -0.1 2.8 0.3 2.4C0.7 2 1.3 2 1.7 2.4L3.9 4.6L8.2 0.3C8.6 -0.1 9.2 -0.1 9.6 0.3C10 0.7 10 1.3 9.6 1.7L4.6 6.7C4.4 6.9 4.2 7 3.9 7Z" />
   </svg>
 );
 

@@ -54,16 +54,14 @@ const cssSearchInput = css(
 const cssOverlayFloorButton = css(
   mixins.buttonReset,
   mixins.focusRingMenuItem,
+  mixins.buttonHoverActive,
   {
     label: "overlay-floor-button",
     padding: 10,
     paddingLeft: 20,
     display: "block",
     width: "100%",
-    textAlign: "left",
-    "&:hover": {
-      background: theme.buttonHoverColor
-    }
+    textAlign: "left"
   }
 );
 
@@ -77,8 +75,15 @@ const cssFloorsListEmpty = css({
 
 const cssOverlayCurrentFloor = css({
   label: "overlay-floor-button-curent-floor",
-  color: theme.brandBrightBlue
+  color: theme.brandBrightBlue,
+  fill: "currentcolor"
 });
+
+const FloorCheckmark = () => (
+  <svg width="36" height="36" viewBox="0 0 36 36">
+    <path d="M16.94 21.52a1 1 0 0 1-.71-.29l-2.91-2.91a1 1 0 1 1 1.41-1.41l2.21 2.2 4.33-4.33a1 1 0 1 1 1.41 1.41l-5 5a1 1 0 0 1-.71.29" />
+  </svg>
+);
 
 class FloorOverlay extends Component {
   constructor(props) {
@@ -151,7 +156,7 @@ class FloorOverlay extends Component {
                   )}
                 >
                   {floor.name}
-                  {floor.id === currentFloorID ? " ✓" : null}
+                  {floor.id === currentFloorID ? <FloorCheckmark /> : null}
                 </button>
               ))}
             </div>

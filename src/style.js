@@ -45,6 +45,10 @@ export const mixins = {
       border: 0
     }
   },
+  buttonHoverActive: {
+    "&:hover": { background: theme.buttonHoverColor },
+    "&:active": { background: theme.buttonActiveColor }
+  },
   borderBox: {
     boxSizing: "border-box"
   },

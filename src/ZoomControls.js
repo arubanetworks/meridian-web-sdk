@@ -14,6 +14,7 @@ const cssZoomControls = css(mixins.shadow, mixins.rounded, {
 const cssZoomButton = css(
   mixins.buttonReset,
   mixins.focusRing,
+  mixins.buttonHoverActive,
   mixins.rounded,
   {
     padding: 4,
@@ -23,9 +24,7 @@ const cssZoomButton = css(
     fontSize: 20,
     fontWeight: 200,
     fill: theme.brandBrightBlue,
-    background: "white",
-    "&:hover": { background: theme.buttonHoverColor },
-    "&:active": { background: theme.buttonActiveColor }
+    background: "white"
   }
 );
 

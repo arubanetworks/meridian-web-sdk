@@ -29,26 +29,28 @@ const cssOverlayRight = css(cssOverlay, {
   marginLeft: "auto"
 });
 
-const cssClose = css(mixins.buttonReset, mixins.focusRing, {
-  label: "overlay-close",
-  position: "absolute",
-  zIndex: 2,
-  top: 10,
-  right: 10,
-  padding: 4,
-  width: 32,
-  height: 32,
-  fontSize: 11,
-  textAlign: "center",
-  background: theme.white,
-  color: theme.textColor,
-  borderRadius: "100%",
-  fontWeight: "bold",
-  boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)",
-  "&:hover": {
-    background: theme.buttonHoverColor
+const cssClose = css(
+  mixins.buttonReset,
+  mixins.buttonHoverActive,
+  mixins.focusRing,
+  {
+    label: "overlay-close",
+    position: "absolute",
+    zIndex: 2,
+    top: 10,
+    right: 10,
+    padding: 4,
+    width: 32,
+    height: 32,
+    fontSize: 11,
+    textAlign: "center",
+    background: theme.white,
+    color: theme.textColor,
+    borderRadius: "100%",
+    fontWeight: "bold",
+    boxShadow: "0 0 1px rgba(0, 0, 0, 0.8)"
   }
-});
+);
 
 const CloseButton = ({ onClick }) => (
   <button className={cx(cssClose, "meridian-overlay-close")} onClick={onClick}>

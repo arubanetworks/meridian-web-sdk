@@ -47,6 +47,7 @@ export default class Map extends Component {
     api: PropTypes.object,
     showFloorsControl: PropTypes.bool,
     tags: PropTypes.shape({
+      showControlTags: PropTypes.bool,
       all: PropTypes.bool,
       labels: PropTypes.arrayOf(PropTypes.string),
       ids: PropTypes.arrayOf(PropTypes.string),
@@ -351,6 +352,7 @@ export default class Map extends Component {
       height,
       onTagsUpdate
     } = this.props;
+    console.info(tags);
     return (
       <div
         className={cx(cssMapContainer, "meridian-map-container")}

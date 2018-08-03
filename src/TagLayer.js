@@ -18,6 +18,7 @@ export default class TagLayer extends Component {
     api: PropTypes.object,
     markers: PropTypes.shape({
       all: PropTypes.bool,
+      showControlTags: PropTypes.bool,
       labels: PropTypes.arrayOf(PropTypes.string),
       ids: PropTypes.arrayOf(PropTypes.string),
       disabled: PropTypes.bool
@@ -136,13 +137,11 @@ export default class TagLayer extends Component {
   }, 1000);
 
   tagsByMAC(tags) {
-    return tags
-      .map(tag => this.normalizeTag(tag))
-      .filter(tag => !tag.data.is_control_tag)
-      .reduce((obj, tag) => {
-        obj[tag.mac] = tag;
-        return obj;
-      }, {});
+    // console.info("tagsByMAC");
+    return tags.map(tag => this.normalizeTag(tag)).reduce((obj, tag) => {
+      obj[tag.mac] = tag;
+      return obj;
+    }, {});
   }
 
   setInitialTags(tags) {
@@ -190,6 +189,12 @@ export default class TagLayer extends Component {
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(tagsByMAC)
       .map(mac => tagsByMAC[mac])
+      .filter(tag => {
+        if (markers.showControlTags !== true) {
+          return !tag.data.is_control_tag;
+        }
+        return true;
+      })
       .filter(filter)
       .map(tag => (
         <MapMarker

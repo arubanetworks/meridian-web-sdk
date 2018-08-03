@@ -16,8 +16,16 @@ const cssOverlayImage = css({
 
 const cssOverlayName = css({
   label: "overlay-name",
-  padding: "0 20px",
   fontSize: 24
+});
+
+const cssOverlayContent = css({
+  label: "overlay-content",
+  padding: "0 20px 10px 20px"
+});
+
+const cssTagData = css({
+  fontSize: 14
 });
 
 function getImageStyle({ image_url, color, type }) {
@@ -42,17 +50,35 @@ function getImageStyle({ image_url, color, type }) {
   }
 }
 
-const MapMarkerOverlay = ({ data, kind, closeMapMarkerOverlay }) => (
-  <Overlay position="left" onCloseClicked={closeMapMarkerOverlay}>
-    <div
-      className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
-      style={getImageStyle(data)}
-    />
-    <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
-      {data.name || "–"}
-    </p>
-  </Overlay>
-);
+function renderTagData(data) {
+  let labels = null;
+  if (data.tags.length) {
+    labels = data.tags.map(tag => tag.name).join(", ");
+  }
+  return (
+    <div className={cx(cssTagData, "meridian-overlay-marker-tagdata")}>
+      {labels ? <p>Labels: {labels}</p> : ""}
+      <p>MAC/ID: {data.id}</p>
+    </div>
+  );
+}
+
+const MapMarkerOverlay = ({ data, kind, closeMapMarkerOverlay }) => {
+  return (
+    <Overlay position="left" onCloseClicked={closeMapMarkerOverlay}>
+      <div
+        className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
+        style={getImageStyle(data)}
+      />
+      <div className={cx(cssOverlayContent, "meridian-overlay-marker-content")}>
+        <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
+          {data.name || "–"}
+        </p>
+        {kind === "tag" ? renderTagData(data) : ""}
+      </div>
+    </Overlay>
+  );
+};
 
 MapMarkerOverlay.propTypes = {
   data: PropTypes.object,

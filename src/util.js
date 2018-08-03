@@ -27,3 +27,15 @@ export function getPlacemarkIconURL(type) {
   const name = "placemark-" + type.replace(/_/g, "-");
   return getAssetURL(`placemarks/${name}.svg`);
 }
+
+export async function fetchAllPaginatedData(api, url) {
+  const { data } = await api.axios.get(url);
+  const results = data.results;
+  let next = data.next;
+  while (next) {
+    const { data } = await api.axios.get(next);
+    results.push(...data.results);
+    next = data.next;
+  }
+  return results;
+}

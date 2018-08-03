@@ -12,6 +12,7 @@ import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorControls from "./FloorControls";
 import { css, cx } from "./style";
+import { fetchAllPaginatedData } from "./util";
 import { asyncClientCall } from "./util";
 
 const ZOOM_FACTOR = 0.5;
@@ -126,14 +127,7 @@ export default class Map extends Component {
   async getFloors() {
     const { locationID, api } = this.props;
     const mapURL = `locations/${locationID}/maps`;
-    const { data } = await api.axios.get(mapURL);
-    const results = data.results;
-    let next = data.next;
-    while (next) {
-      const { data } = await api.axios.get(next);
-      results.push(...data.results);
-      next = data.next;
-    }
+    const results = await fetchAllPaginatedData(api, mapURL);
     return results;
   }
 

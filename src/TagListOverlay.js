@@ -1,3 +1,5 @@
+// TODO: This code is copy/pasted from FloorOverlay! Fix the variable names
+
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import groupBy from "lodash.groupby";
@@ -20,7 +22,6 @@ const cssOverlayBuildingName = css({
 const cssFloorsList = css({
   label: "floors-list",
   overflowY: "auto",
-  paddingBottom: 10,
   flex: "1 1 auto"
 });
 
@@ -170,8 +171,32 @@ class FloorOverlay extends Component {
     );
   }
 
+  renderTagList() {
+    const { searchFilter, loading, tags } = this.state;
+    if (loading) {
+      return <div className={cssFloorsListEmpty}>Loading...</div>;
+    }
+    // TODO: Actually search the tags list
+    const filteredTags = tags.filter(tag => true);
+    return (
+      <div className={cssFloorsList}>
+        {filteredTags.map(tag => (
+          <button
+            key={tag.id}
+            className={cssOverlayFloorButton}
+            onClick={() => {
+              console.log(tag);
+            }}
+          >
+            {tag.name}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
   render() {
-    const { searchFilter, loading } = this.state;
+    const { searchFilter } = this.state;
     const { closeTagListOverlay } = this.props;
     return (
       <Overlay position="right" onCloseClicked={closeTagListOverlay}>
@@ -181,13 +206,7 @@ class FloorOverlay extends Component {
             this.setState({ searchFilter });
           }}
         />
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <pre className={cssFloorsList}>
-            {JSON.stringify(this.state.tags, null, 2)}
-          </pre>
-        )}
+        {this.renderTagList()}
       </Overlay>
     );
   }

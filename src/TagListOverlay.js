@@ -77,6 +77,7 @@ class FloorOverlay extends Component {
     super(props);
     this.state = {
       searchFilter: "",
+      loading: true,
       tags: null
     };
     this.searchInput = null;
@@ -93,7 +94,7 @@ class FloorOverlay extends Component {
     const { api, locationID } = this.props;
     const url = `locations/${locationID}/asset-beacons`;
     const tags = await fetchAllPaginatedData(api, url);
-    this.setState({ tags });
+    this.setState({ tags, loading: false });
   }
 
   handleSearchFilterChange = event => {
@@ -170,7 +171,7 @@ class FloorOverlay extends Component {
   }
 
   render() {
-    const { searchFilter } = this.state;
+    const { searchFilter, loading } = this.state;
     const { closeTagListOverlay } = this.props;
     return (
       <Overlay position="right" onCloseClicked={closeTagListOverlay}>
@@ -180,7 +181,11 @@ class FloorOverlay extends Component {
             this.setState({ searchFilter });
           }}
         />
-        <pre>{JSON.stringify(this.state.tags, null, 2)}</pre>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <pre>{JSON.stringify(this.state.tags, null, 2)}</pre>
+        )}
       </Overlay>
     );
   }

@@ -100,7 +100,7 @@ class FloorOverlay extends Component {
         doesSearchMatch(searchFilter, floor.name || "") ||
         doesSearchMatch(
           searchFilter,
-          floor.group_name || STRINGS.UNNAMED_BUILDING
+          floor.group_name || STRINGS.unnamedBuilding
         )
       );
     });
@@ -127,7 +127,7 @@ class FloorOverlay extends Component {
                   "meridian-overlay-building-name"
                 )}
               >
-                {buildingName || STRINGS.UNNAMED_BUILDING}
+                {buildingName || STRINGS.unnamedBuilding}
               </div>
               {groupedFloors[buildingName].map(floor => (
                 <button

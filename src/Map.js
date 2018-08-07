@@ -8,10 +8,11 @@ import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
 import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
+import TagListOverlay from "./TagListOverlay";
 import MapMarkerOverlay from "./MapMarkerOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
-import FloorControls from "./FloorControls";
+import FloorAndTagControls from "./FloorAndTagControls";
 import { css, cx } from "./style";
 import { fetchAllPaginatedData } from "./util";
 import { asyncClientCall } from "./util";
@@ -81,6 +82,7 @@ export default class Map extends Component {
     super(props);
     this.state = {
       isFloorOverlayOpen: false,
+      isTagListOverlayOpen: false,
       isMapMarkerOverlayOpen: false,
       isPanningOrZooming: false,
       mapTransform: "",
@@ -105,6 +107,14 @@ export default class Map extends Component {
       this.zoomToDefault();
     }
   }
+
+  openTagListOverlay = () => {
+    this.setState({ isTagListOverlayOpen: true });
+  };
+
+  closeTagListOverlay = () => {
+    this.setState({ isTagListOverlayOpen: false });
+  };
 
   openFloorOverlay = () => {
     this.setState({ isFloorOverlayOpen: true });
@@ -285,13 +295,6 @@ export default class Map extends Component {
     return this.props.showFloorsControl && this.getFloorCount() > 1;
   }
 
-  renderFloorControls() {
-    if (this.shouldShowFloors()) {
-      return <FloorControls openFloorOverlay={this.openFloorOverlay} />;
-    }
-    return null;
-  }
-
   renderFloorLabel() {
     const floor = this.getMapData();
     if (floor) {
@@ -314,6 +317,15 @@ export default class Map extends Component {
           selectFloorByID={this.selectFloorByID}
         />
       );
+    }
+    return null;
+  }
+
+  renderTagListOverlay() {
+    const { floorID } = this.props;
+    const { isTagListOverlayOpen, tagsByFloor } = this.state;
+    if (isTagListOverlayOpen) {
+      return <TagListOverlay closeTagListOverlay={this.closeTagListOverlay} />;
     }
     return null;
   }
@@ -354,7 +366,14 @@ export default class Map extends Component {
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
         {this.renderMapMarkerOverlay()}
         {this.renderFloorOverlay()}
-        {this.renderFloorControls()}
+        {this.renderTagListOverlay()}
+        <FloorAndTagControls
+          showFloors={this.shouldShowFloors()}
+          // TODO: Allow them to configure this
+          showTagList={true}
+          openFloorOverlay={this.openFloorOverlay}
+          openTagListOverlay={this.openTagListOverlay}
+        />
         {this.renderFloorLabel()}
         <div
           ref={el => {

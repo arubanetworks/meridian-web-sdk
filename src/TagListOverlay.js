@@ -5,7 +5,7 @@ import groupBy from "lodash.groupby";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
-import { doesSearchMatch, ungroup } from "./util";
+import { doesSearchMatch, ungroup, fetchAllPaginatedData } from "./util";
 
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
@@ -76,7 +76,8 @@ class FloorOverlay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchFilter: ""
+      searchFilter: "",
+      tags: null
     };
     this.searchInput = null;
   }
@@ -85,6 +86,14 @@ class FloorOverlay extends Component {
     if (this.searchInput) {
       this.searchInput.focus();
     }
+    this.loadTags();
+  }
+
+  async loadTags() {
+    const { api, locationID } = this.props;
+    const url = `locations/${locationID}/asset-beacons`;
+    const tags = await fetchAllPaginatedData(api, url);
+    this.setState({ tags });
   }
 
   handleSearchFilterChange = event => {
@@ -171,18 +180,16 @@ class FloorOverlay extends Component {
             this.setState({ searchFilter });
           }}
         />
-        TODO
-        {/* {this.renderList()} */}
+        <pre>{JSON.stringify(this.state.tags, null, 2)}</pre>
       </Overlay>
     );
   }
 }
 
 FloorOverlay.propTypes = {
+  api: PropTypes.object.isRequired,
+  locationID: PropTypes.string.isRequired,
   currentFloorID: PropTypes.string.isRequired,
-  floorsByBuilding: PropTypes.object.isRequired,
-  selectFloorByID: PropTypes.func.isRequired,
-  closeFloorOverlay: PropTypes.func.isRequired,
   closeTagListOverlay: PropTypes.func.isRequired
 };
 

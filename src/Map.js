@@ -14,8 +14,7 @@ import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
 import { css, cx } from "./style";
-import { fetchAllPaginatedData } from "./util";
-import { asyncClientCall } from "./util";
+import { fetchAllPaginatedData, asyncClientCall } from "./util";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -322,10 +321,17 @@ export default class Map extends Component {
   }
 
   renderTagListOverlay() {
-    const { floorID } = this.props;
-    const { isTagListOverlayOpen, tagsByFloor } = this.state;
+    const { locationID, floorID, api } = this.props;
+    const { isTagListOverlayOpen } = this.state;
     if (isTagListOverlayOpen) {
-      return <TagListOverlay closeTagListOverlay={this.closeTagListOverlay} />;
+      return (
+        <TagListOverlay
+          api={api}
+          locationID={locationID}
+          currentFloorID={floorID}
+          closeTagListOverlay={this.closeTagListOverlay}
+        />
+      );
     }
     return null;
   }

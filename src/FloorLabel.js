@@ -2,6 +2,7 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 
 import { css, mixins, cx } from "./style";
+import { STRINGS } from "./util";
 
 const cssFloorLabel = css(
   mixins.buttonReset,
@@ -27,7 +28,7 @@ const cssFloorLabel = css(
 
 const FloorLabel = ({ buildingName, floorName }) => (
   <div className={cx(cssFloorLabel, "meridian-floor-label")}>
-    {buildingName ? `${buildingName} – ${floorName}` : floorName}
+    {`${buildingName || STRINGS.unnamedBuilding} – ${floorName}`}
   </div>
 );
 

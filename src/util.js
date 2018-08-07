@@ -3,6 +3,10 @@ import objectValues from "lodash.values";
 const ASSETS_URL =
   "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6";
 
+export const STRINGS = {
+  UNNAMED_BUILDING: "Unassigned"
+};
+
 export function ungroup(groupedData) {
   return objectValues(groupedData).reduce((a, b) => a.concat(b), []);
 }

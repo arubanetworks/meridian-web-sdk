@@ -184,7 +184,9 @@ class FloorOverlay extends Component {
         {loading ? (
           <p>Loading...</p>
         ) : (
-          <pre>{JSON.stringify(this.state.tags, null, 2)}</pre>
+          <pre className={cssFloorsList}>
+            {JSON.stringify(this.state.tags, null, 2)}
+          </pre>
         )}
       </Overlay>
     );

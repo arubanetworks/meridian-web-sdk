@@ -166,7 +166,9 @@ class TagListOverlay extends Component {
                 }}
               >
                 <div>{tag.name}</div>
-                <div>{tag.labels.join(" | ") || "."}</div>
+                <div style={{ opacity: 0.6 }}>
+                  {tag.labels.join(" • ") || "."}
+                </div>
               </button>
             ))}
           </div>

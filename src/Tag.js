@@ -59,11 +59,14 @@ const Tag = ({
     <button
       disabled={disabled}
       className={className}
+      style={style}
       onClick={event => {
         event.target.focus();
         onClick(event);
       }}
-      style={style}
+      onMouseDown={event => {
+        event.stopPropagation();
+      }}
     />
   );
 };

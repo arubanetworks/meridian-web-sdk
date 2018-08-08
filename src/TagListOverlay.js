@@ -3,11 +3,13 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import groupBy from "lodash.groupby";
+import keyBy from "lodash.keyby";
 
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
-import { doesSearchMatch, ungroup, fetchAllPaginatedData } from "./util";
+import { doesSearchMatch, ungroup, fetchAllTags, normalizeTag } from "./util";
+import { STREAM_ALL_FLOORS } from "./API";
 
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
@@ -19,13 +21,13 @@ const cssOverlayBuildingName = css({
   padding: 10
 });
 
-const cssFloorsList = css({
+const cssTagList = css({
   label: "floors-list",
   overflowY: "auto",
   flex: "1 1 auto"
 });
 
-const cssOverlayFloorButton = css(
+const cssOverlayTagButton = css(
   mixins.buttonReset,
   mixins.focusRingMenuItem,
   mixins.buttonHoverActive,
@@ -39,7 +41,7 @@ const cssOverlayFloorButton = css(
   }
 );
 
-const cssFloorsListEmpty = css({
+const cssTagListEmpty = css({
   label: "overlay-floor-list-empty",
   padding: "60px 20px",
   textAlign: "center",
@@ -47,33 +49,7 @@ const cssFloorsListEmpty = css({
   color: theme.textColorBluish
 });
 
-const cssOverlayCurrentFloor = css({
-  label: "overlay-floor-button-curent-floor",
-  color: theme.brandBrightBlue,
-  fill: "currentcolor"
-});
-
-const cssFloorCheckmark = css({
-  label: "floor-checkmark",
-  verticalAlign: "middle",
-  marginLeft: "0.5em",
-  width: "0.8em",
-  height: "0.8em"
-});
-
-const FloorCheckmark = () => (
-  <svg
-    viewBox="0 0 10 7"
-    className={cx(
-      cssFloorCheckmark,
-      "meridian-overlay-current-floor-checkmark"
-    )}
-  >
-    <path d="M3.9 7C3.7 7 3.4 6.9 3.2 6.7L0.3 3.8C-0.1 3.4 -0.1 2.8 0.3 2.4C0.7 2 1.3 2 1.7 2.4L3.9 4.6L8.2 0.3C8.6 -0.1 9.2 -0.1 9.6 0.3C10 0.7 10 1.3 9.6 1.7L4.6 6.7C4.4 6.9 4.2 7 3.9 7Z" />
-  </svg>
-);
-
-class FloorOverlay extends Component {
+class TagListOverlay extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -93,14 +69,39 @@ class FloorOverlay extends Component {
 
   async loadTags() {
     const { api, locationID } = this.props;
-    const url = `locations/${locationID}/asset-beacons`;
-    const tags = await fetchAllPaginatedData(api, url);
-    this.setState({ tags, loading: false });
+    const floorID = STREAM_ALL_FLOORS;
+    const rawTags = await fetchAllTags({ api, locationID, floorID });
+    const normalizedTags = rawTags.map(normalizeTag);
+    this.setState({ tags: normalizedTags, loading: false });
+  }
+
+  getFloorToBuilding() {
+    const { floorsByBuilding } = this.props;
+    const floorToBuilding = {};
+    for (const floor of ungroup(floorsByBuilding)) {
+      floorToBuilding[floor.id] = floor.group_name;
+    }
+    return floorToBuilding;
+  }
+
+  getOrganizedTags(tags) {
+    const floorToBuilding = this.getFloorToBuilding();
+    const organizedTags = groupBy(tags, tag => floorToBuilding[tag.floorID]);
+    // TODO: Sort the tags within here by level
+    console.log({ tags });
+    console.log({ floorToBuilding });
+    console.log({ organizedTags });
+    return organizedTags;
   }
 
   handleSearchFilterChange = event => {
     this.setState({ searchFilter: event.target.value });
   };
+
+  getFloorsByID() {
+    const { floorsByBuilding } = this.props;
+    return keyBy(ungroup(floorsByBuilding), "id");
+  }
 
   // Move "" to the end of the list (Unassigned)
   processedFloorsByBuilding() {
@@ -114,82 +115,61 @@ class FloorOverlay extends Component {
     });
   }
 
-  renderList() {
-    const { currentFloorID, closeFloorOverlay, selectFloorByID } = this.props;
-    // TODO: Put "Unassigned" at the bottom of the results
-    const floors = this.processedFloorsByBuilding();
-    const groupedFloors = groupBy(floors, "group_name");
-    // TODO: Put "" at the bottom
-    const buildingNames = Object.keys(groupedFloors).sort();
-    if (buildingNames[0] === "") {
-      buildingNames.push(buildingNames.shift());
-    }
-    if (buildingNames.length > 0) {
-      return (
-        <div className={cx(cssFloorsList, "meridian-overlay-floor-list")}>
-          {buildingNames.map(buildingName => (
-            <div key={buildingName}>
-              <div
-                className={cx(
-                  cssOverlayBuildingName,
-                  "meridian-overlay-building-name"
-                )}
-              >
-                {buildingName || "Unassigned"}
-              </div>
-              {groupedFloors[buildingName].map(floor => (
-                <button
-                  key={floor.name}
-                  onClick={() => {
-                    selectFloorByID(floor.id);
-                    closeFloorOverlay();
-                  }}
-                  className={cx(
-                    cssOverlayFloorButton,
-                    floor.id === currentFloorID && [
-                      cssOverlayCurrentFloor,
-                      "meridian-overlay-floor-button-curent-floor"
-                    ],
-                    "meridian-overlay-floor-button"
-                  )}
-                >
-                  {floor.name}
-                  {floor.id === currentFloorID ? <FloorCheckmark /> : null}
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
-      );
-    }
-    return (
-      <div
-        className={cx(cssFloorsListEmpty, "meridian-overlay-floor-list-empty")}
-      >
-        No results found.
-      </div>
-    );
+  getSortedBuildingNames(organizedTags) {
+    // TODO: Sort the current floor above all the others
+    return Object.keys(organizedTags);
   }
 
   renderTagList() {
+    const { update, tagOptions } = this.props;
     const { searchFilter, loading, tags } = this.state;
     if (loading) {
-      return <div className={cssFloorsListEmpty}>Loading...</div>;
+      return <div className={cssTagListEmpty}>Loading...</div>;
     }
     // TODO: Actually search the tags list
-    const filteredTags = tags.filter(tag => true);
+    const processedTags = tags
+      .filter(tag => {
+        const match = x => doesSearchMatch(searchFilter, x);
+        return match(tag.name) || tag.labels.some(match);
+      })
+      .sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+    const organizedTags = this.getOrganizedTags(processedTags);
+    const sortedBuildingNames = this.getSortedBuildingNames(organizedTags);
     return (
-      <div className={cssFloorsList}>
-        {filteredTags.map(tag => (
-          <button
-            key={tag.id}
-            className={cssOverlayFloorButton}
-            onClick={() => {
-              console.log(tag);
-            }}
-          >
-            {tag.name}
-          </button>
+      <div className={cssTagList}>
+        {sortedBuildingNames.map(buildingName => (
+          <div key={buildingName}>
+            <div className={cssOverlayBuildingName}>{buildingName}</div>
+            {organizedTags[buildingName].map(tag => (
+              <button
+                key={tag.id}
+                className={cssOverlayTagButton}
+                onClick={() => {
+                  // TODO: We should stop using objects in the props since they
+                  // don't merge cleanly... It's such a pain
+                  update({
+                    tags: {
+                      ...tagOptions,
+                      all: false,
+                      labels: [],
+                      ids: [tag.id]
+                    }
+                  });
+                }}
+              >
+                <div>{tag.name}</div>
+                <div>{tag.labels.join(" | ") || "."}</div>
+              </button>
+            ))}
+          </div>
         ))}
       </div>
     );
@@ -212,11 +192,14 @@ class FloorOverlay extends Component {
   }
 }
 
-FloorOverlay.propTypes = {
+TagListOverlay.propTypes = {
+  floorsByBuilding: PropTypes.object.isRequired,
+  tagOptions: PropTypes.object.isRequired,
+  update: PropTypes.func.isRequired,
   api: PropTypes.object.isRequired,
   locationID: PropTypes.string.isRequired,
   currentFloorID: PropTypes.string.isRequired,
   closeTagListOverlay: PropTypes.func.isRequired
 };
 
-export default FloorOverlay;
+export default TagListOverlay;

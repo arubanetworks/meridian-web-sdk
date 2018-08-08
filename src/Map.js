@@ -321,11 +321,14 @@ export default class Map extends Component {
   }
 
   renderTagListOverlay() {
-    const { locationID, floorID, api } = this.props;
-    const { isTagListOverlayOpen } = this.state;
+    const { locationID, floorID, api, update, tags } = this.props;
+    const { isTagListOverlayOpen, floorsByBuilding } = this.state;
     if (isTagListOverlayOpen) {
       return (
         <TagListOverlay
+          floorsByBuilding={floorsByBuilding}
+          tagOptions={tags}
+          update={update}
           api={api}
           locationID={locationID}
           currentFloorID={floorID}

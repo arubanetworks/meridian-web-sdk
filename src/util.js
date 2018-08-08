@@ -38,6 +38,19 @@ export function getPlacemarkIconURL(type) {
   return getAssetURL(`placemarks/${name}.svg`);
 }
 
+export function normalizeTag(tag) {
+  const { mac, editor_data: data } = tag;
+  const { name } = data;
+  const {
+    x,
+    y,
+    location_id: locationID,
+    map_id: floorID
+  } = tag.calculations.default.location;
+  const labels = tag.editor_data.tags.map(x => x.name);
+  return { name, mac, x, y, locationID, floorID, labels, data, rawData: tag };
+}
+
 export async function fetchAllPaginatedData(api, url) {
   const { data } = await api.axios.get(url);
   const results = data.results;
@@ -48,4 +61,17 @@ export async function fetchAllPaginatedData(api, url) {
     next = data.next;
   }
   return results;
+}
+
+export async function fetchAllTags({ api, locationID, floorID }) {
+  return new Promise(resolve => {
+    const stream = api.openStream({
+      locationID,
+      floorID,
+      onInitialTags: tags => {
+        resolve(tags);
+        stream.close();
+      }
+    });
+  });
 }

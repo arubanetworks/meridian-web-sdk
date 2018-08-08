@@ -40,7 +40,7 @@ export function getPlacemarkIconURL(type) {
 
 export function normalizeTag(tag) {
   const { mac, editor_data: data } = tag;
-  const { name } = data;
+  const { name, image_url: imageURL } = data;
   const {
     x,
     y,
@@ -48,7 +48,18 @@ export function normalizeTag(tag) {
     map_id: floorID
   } = tag.calculations.default.location;
   const labels = tag.editor_data.tags.map(x => x.name);
-  return { name, mac, x, y, locationID, floorID, labels, data, rawData: tag };
+  return {
+    name,
+    mac,
+    x,
+    y,
+    imageURL,
+    locationID,
+    floorID,
+    labels,
+    data,
+    rawData: tag
+  };
 }
 
 export async function fetchAllPaginatedData(api, url) {

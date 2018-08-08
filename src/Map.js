@@ -18,6 +18,10 @@ import { asyncClientCall } from "./util";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
+const isIE =
+  window.navigator.userAgent.indexOf("MSIE ") !== -1 ||
+  window.navigator.userAgent.indexOf("Trident/") !== -1 ||
+  window.navigator.userAgent.indexOf("Edge/") !== -1;
 
 const cssMapContainer = css({
   label: "map-container",
@@ -35,6 +39,10 @@ const cssMap = css({
   borderRadius: "inherit",
   display: "block",
   overflow: "hidden"
+});
+
+const cssNoTouchZoom = css({
+  touchAction: "none"
 });
 
 export default class Map extends Component {
@@ -347,7 +355,11 @@ export default class Map extends Component {
     } = this.props;
     return (
       <div
-        className={cx(cssMapContainer, "meridian-map-container")}
+        className={cx(
+          cssMapContainer,
+          isIE && cssNoTouchZoom,
+          "meridian-map-container"
+        )}
         style={{ width, height }}
       >
         <Watermark />

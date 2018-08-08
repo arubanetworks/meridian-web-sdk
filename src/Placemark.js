@@ -106,11 +106,14 @@ const Placemark = ({
       <button
         disabled={disabled}
         className={cx(cssPlacemarkIcon, "meridian-placemark-icon")}
+        style={getIconStyle(data)}
         onClick={event => {
           event.target.focus();
           onClick(event);
         }}
-        style={getIconStyle(data)}
+        onMouseDown={event => {
+          event.stopPropagation();
+        }}
       />
       <div
         className={cx(cssLabel, "meridian-label")}

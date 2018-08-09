@@ -47,6 +47,7 @@ export default class Map extends Component {
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
     showFloorsControl: PropTypes.bool,
+    showTagsControl: PropTypes.bool,
     tags: PropTypes.shape({
       showControlTags: PropTypes.bool,
       all: PropTypes.bool,
@@ -67,6 +68,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
+    showTagsControl: true,
     showFloorsControl: true,
     shouldMapPanZoom: () => true,
     width: "100%",
@@ -326,6 +328,7 @@ export default class Map extends Component {
     if (isTagListOverlayOpen) {
       return (
         <TagListOverlay
+          showControlTags={tags.showControlTags}
           floorsByBuilding={floorsByBuilding}
           tagOptions={tags}
           update={update}
@@ -357,6 +360,7 @@ export default class Map extends Component {
     const mapData = this.getMapData();
     const { mapTransform, mapZoomFactor, isPanningOrZooming } = this.state;
     const {
+      showTagsControl,
       locationID,
       floorID,
       api,
@@ -378,8 +382,7 @@ export default class Map extends Component {
         {this.renderTagListOverlay()}
         <FloorAndTagControls
           showFloors={this.shouldShowFloors()}
-          // TODO: Allow them to configure this
-          showTagList={true}
+          showTagList={showTagsControl}
           openFloorOverlay={this.openFloorOverlay}
           openTagListOverlay={this.openTagListOverlay}
         />

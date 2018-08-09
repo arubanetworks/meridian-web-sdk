@@ -40,7 +40,7 @@ export function getPlacemarkIconURL(type) {
 
 export function normalizeTag(tag) {
   const { mac, editor_data: data } = tag;
-  const { name, image_url: imageURL } = data;
+  const { name, image_url: imageURL, is_control_tag: isControlTag } = data;
   const {
     x,
     y,
@@ -57,6 +57,7 @@ export function normalizeTag(tag) {
     locationID,
     floorID,
     labels,
+    isControlTag,
     data,
     rawData: tag
   };

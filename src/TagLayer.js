@@ -182,7 +182,7 @@ export default class TagLayer extends Component {
       .map(mac => tagsByMAC[mac])
       .filter(tag => {
         if (markers.showControlTags !== true) {
-          return !tag.data.is_control_tag;
+          return !tag.isControlTag;
         }
         return true;
       })

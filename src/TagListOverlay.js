@@ -1,4 +1,7 @@
-// TODO: This code is copy/pasted from FloorOverlay! Fix the variable names
+// TODO:
+// - This code is copy/pasted from FloorOverlay! Fix the variable names
+// - Add CSS hook classes
+// - Probably share some code with FloorOverlay eventually
 
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
@@ -68,10 +71,12 @@ class TagListOverlay extends Component {
   }
 
   async loadTags() {
-    const { api, locationID } = this.props;
+    const { api, locationID, showControlTags } = this.props;
     const floorID = STREAM_ALL_FLOORS;
     const rawTags = await fetchAllTags({ api, locationID, floorID });
-    const normalizedTags = rawTags.map(normalizeTag);
+    const normalizedTags = rawTags
+      .map(normalizeTag)
+      .filter(tag => showControlTags === true || !tag.isControlTag);
     this.setState({ tags: normalizedTags, loading: false });
   }
 
@@ -153,6 +158,7 @@ class TagListOverlay extends Component {
                 key={tag.id}
                 className={cssOverlayTagButton}
                 onClick={() => {
+                  console.log(tag);
                   // TODO: We should stop using objects in the props since they
                   // don't merge cleanly... It's such a pain
                   update({
@@ -167,7 +173,7 @@ class TagListOverlay extends Component {
               >
                 <div>{tag.name}</div>
                 <div style={{ opacity: 0.6 }}>
-                  {tag.labels.join(" • ") || "."}
+                  {tag.labels.join(" • ") || "\xa0"}
                 </div>
               </button>
             ))}
@@ -195,6 +201,7 @@ class TagListOverlay extends Component {
 }
 
 TagListOverlay.propTypes = {
+  showControlTags: PropTypes.bool.isRequired,
   floorsByBuilding: PropTypes.object.isRequired,
   tagOptions: PropTypes.object.isRequired,
   update: PropTypes.func.isRequired,

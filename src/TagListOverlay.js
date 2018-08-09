@@ -16,9 +16,12 @@ import { STREAM_ALL_FLOORS } from "./API";
 
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
+  top: 0,
+  position: "sticky",
   textTransform: "uppercase",
   fontWeight: "bold",
   color: theme.brandBlue,
+  background: theme.white,
   borderTop: `1px solid ${theme.borderColor}`,
   fontSize: theme.fontSizeSmaller,
   padding: 10
@@ -93,9 +96,6 @@ class TagListOverlay extends Component {
     const floorToBuilding = this.getFloorToBuilding();
     const organizedTags = groupBy(tags, tag => floorToBuilding[tag.floorID]);
     // TODO: Sort the tags within here by level
-    console.log({ tags });
-    console.log({ floorToBuilding });
-    console.log({ organizedTags });
     return organizedTags;
   }
 
@@ -172,7 +172,7 @@ class TagListOverlay extends Component {
                 }}
               >
                 <div>{tag.name}</div>
-                <div style={{ opacity: 0.6 }}>
+                <div style={{ color: "rgba(0, 0, 0, 0.6)" }}>
                   {tag.labels.join(" • ") || "\xa0"}
                 </div>
               </button>

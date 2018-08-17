@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
 
 import MapMarker from "./MapMarker";
+import { normalizeTag } from "./util";
 
 export default class TagLayer extends Component {
   static defaultProps = {
@@ -69,14 +70,6 @@ export default class TagLayer extends Component {
     onUpdate(tagsByMAC);
   };
 
-  normalizeTag(tag) {
-    const { mac, editor_data: data } = tag;
-    const { name } = data;
-    const { x, y } = tag.calculations.default.location;
-    const labels = tag.editor_data.tags.map(x => x.name);
-    return { name, mac, x, y, labels, data };
-  }
-
   getFilterFunction() {
     const { markers } = this.props;
     const { ids, labels, all } = markers;
@@ -137,7 +130,7 @@ export default class TagLayer extends Component {
   }, 1000);
 
   tagsByMAC(tags) {
-    return tags.map(tag => this.normalizeTag(tag)).reduce((obj, tag) => {
+    return tags.map(tag => normalizeTag(tag)).reduce((obj, tag) => {
       obj[tag.mac] = tag;
       return obj;
     }, {});
@@ -189,7 +182,7 @@ export default class TagLayer extends Component {
       .map(mac => tagsByMAC[mac])
       .filter(tag => {
         if (markers.showControlTags !== true) {
-          return !tag.data.is_control_tag;
+          return !tag.isControlTag;
         }
         return true;
       })

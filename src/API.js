@@ -17,6 +17,13 @@ const envToRestURL = {
   staging: "https://staging-edit.meridianapps.com/api"
 };
 
+// We're not sure if we wanna expose streaming for all floors as an option
+// externally, and we're only using it for lack of a REST endpoint internally.
+// We could just use a string here, I guess. Personally I would want to use a
+// Symbol() here but I don't want anything to do with Symbol "polyfills" in
+// non-ES6 browsers.
+export const STREAM_ALL_FLOORS = { const: "STREAM_ALL_FLOORS" };
+
 export default class API {
   constructor({
     environment = "production",
@@ -56,10 +63,15 @@ export default class API {
       });
     };
     const subscribe = () => {
-      connection.emit("subscribe", {
-        locationID,
-        mapID: floorID
-      });
+      // Make sure you have to explicitly opt-in to streaming all floors data
+      if (floorID === STREAM_ALL_FLOORS) {
+        connection.emit("subscribe", { locationID });
+      } else {
+        connection.emit("subscribe", {
+          locationID,
+          mapID: floorID
+        });
+      }
     };
     connection.on("connect", authenticate);
     connection.on("connect_error", onClose);

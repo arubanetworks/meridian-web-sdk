@@ -76,7 +76,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
-    showTagsControl: true,
+    showTagsControl: false,
     showFloorsControl: true,
     shouldMapPanZoom: () => true,
     width: "100%",

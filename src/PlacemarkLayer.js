@@ -52,7 +52,9 @@ export default class PlacemarkLayer extends Component {
 
   async updatePlacemarks() {
     const { locationID, floorID, api } = this.props;
-    const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
+    // 2018/08/21 - found a bug with the quadtree endpoint below, will revert when that's fixed
+    // const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
+    const placemarksURL = `locations/${locationID}/placemarks?map=${floorID}`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
     const placemarksByID = this.groupPlacemarksByID(results);
     this.setState({ placemarksByID });

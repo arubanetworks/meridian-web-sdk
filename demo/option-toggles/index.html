@@ -73,6 +73,10 @@
           <span>Show Control Tags</span>
         </label>
         <label class="controls__item">
+          <input type="checkbox" id="show-hidden-placemarks">
+          <span>Show Hidden Placemarks</span>
+        </label>
+        <label class="controls__item">
           <input type="checkbox" id="disable-placemarks">
           <span>Disable clicking on placemarks</span>
         </label>
@@ -187,6 +191,10 @@
 
     $("#show-control-tags").on("change", function () {
       state.tags.showControlTags = this.checked;
+      updateMap();
+    });
+    $("#show-hidden-placemarks").on("change", function () {
+      state.placemarks.showHiddenPlacemarks = this.checked;
       updateMap();
     });
     $("#disable-placemarks").on("change", function () {

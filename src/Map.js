@@ -64,6 +64,7 @@ export default class Map extends Component {
       disabled: PropTypes.bool
     }),
     placemarks: PropTypes.shape({
+      showHiddenPlacemarks: PropTypes.bool,
       all: PropTypes.bool,
       types: PropTypes.arrayOf(PropTypes.string),
       ids: PropTypes.arrayOf(PropTypes.string),

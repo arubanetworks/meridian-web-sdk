@@ -19,6 +19,7 @@ export default class PlacemarkLayer extends Component {
     api: PropTypes.object,
     markers: PropTypes.shape({
       all: PropTypes.bool,
+      showHiddenPlacemarks: PropTypes.bool,
       types: PropTypes.arrayOf(PropTypes.string),
       ids: PropTypes.arrayOf(PropTypes.string),
       disabled: PropTypes.bool
@@ -99,6 +100,12 @@ export default class PlacemarkLayer extends Component {
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(placemarksByID)
       .map(id => placemarksByID[id])
+      .filter(placemark => {
+        if (markers.showHiddenPlacemarks !== true) {
+          return !placemark.hide_on_map;
+        }
+        return true;
+      })
       .filter(filter);
     const culledMarkers = this.cullMarkers(filteredMarkers);
     const finalMarkers = culledMarkers.map(placemark => (

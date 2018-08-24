@@ -106,7 +106,7 @@ class FloorOverlay extends Component {
   }
 
   renderList() {
-    const { currentFloorID, closeFloorOverlay, selectFloorByID } = this.props;
+    const { currentFloorID, toggleFloorOverlay, selectFloorByID } = this.props;
     // TODO: Put "Unassigned" at the bottom of the results
     const floors = this.processedFloorsByBuilding();
     const groupedFloors = groupBy(floors, "group_name");
@@ -133,7 +133,7 @@ class FloorOverlay extends Component {
                   key={floor.name}
                   onClick={() => {
                     selectFloorByID(floor.id);
-                    closeFloorOverlay();
+                    toggleFloorOverlay({ open: false });
                   }}
                   className={cx(
                     cssOverlayFloorButton,
@@ -164,9 +164,14 @@ class FloorOverlay extends Component {
 
   render() {
     const { searchFilter } = this.state;
-    const { closeFloorOverlay } = this.props;
+    const { toggleFloorOverlay } = this.props;
     return (
-      <Overlay position="right" onCloseClicked={closeFloorOverlay}>
+      <Overlay
+        position="right"
+        onCloseClicked={() => {
+          toggleFloorOverlay({ open: false });
+        }}
+      >
         <OverlaySearchBar
           value={searchFilter}
           onChange={searchFilter => {

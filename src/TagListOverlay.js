@@ -185,9 +185,14 @@ class TagListOverlay extends Component {
 
   render() {
     const { searchFilter } = this.state;
-    const { closeTagListOverlay } = this.props;
+    const { toggleTagListOverlay } = this.props;
     return (
-      <Overlay position="right" onCloseClicked={closeTagListOverlay}>
+      <Overlay
+        position="right"
+        onCloseClicked={() => {
+          toggleTagListOverlay({ open: false });
+        }}
+      >
         <OverlaySearchBar
           value={searchFilter}
           onChange={searchFilter => {
@@ -208,7 +213,7 @@ TagListOverlay.propTypes = {
   api: PropTypes.object.isRequired,
   locationID: PropTypes.string.isRequired,
   currentFloorID: PropTypes.string.isRequired,
-  closeTagListOverlay: PropTypes.func.isRequired
+  toggleTagListOverlay: PropTypes.func.isRequired
 };
 
 export default TagListOverlay;

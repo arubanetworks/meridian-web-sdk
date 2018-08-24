@@ -63,9 +63,14 @@ function renderTagData(data) {
   );
 }
 
-const MapMarkerOverlay = ({ data, kind, closeMapMarkerOverlay }) => {
+const MapMarkerOverlay = ({ data, kind, toggleMapMarkerOverlay }) => {
   return (
-    <Overlay position="left" onCloseClicked={closeMapMarkerOverlay}>
+    <Overlay
+      position="left"
+      onCloseClicked={() => {
+        toggleMapMarkerOverlay({ open: false });
+      }}
+    >
       <div
         className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
         style={getImageStyle(data)}
@@ -83,7 +88,7 @@ const MapMarkerOverlay = ({ data, kind, closeMapMarkerOverlay }) => {
 MapMarkerOverlay.propTypes = {
   data: PropTypes.object,
   kind: PropTypes.oneOf(["placemark", "tag"]),
-  closeMapMarkerOverlay: PropTypes.func
+  toggleMapMarkerOverlay: PropTypes.func
 };
 
 export default MapMarkerOverlay;

@@ -122,20 +122,12 @@ export default class Map extends Component {
     }
   }
 
-  openTagListOverlay = () => {
-    this.setState({ isTagListOverlayOpen: true });
+  toggleTagListOverlay = ({ open }) => {
+    this.setState({ isTagListOverlayOpen: open });
   };
 
-  closeTagListOverlay = () => {
-    this.setState({ isTagListOverlayOpen: false });
-  };
-
-  openFloorOverlay = () => {
-    this.setState({ isFloorOverlayOpen: true });
-  };
-
-  closeFloorOverlay = () => {
-    this.setState({ isFloorOverlayOpen: false });
+  toggleFloorOverlay = ({ open }) => {
+    this.setState({ isFloorOverlayOpen: open });
   };
 
   toggleErrorOverlay = ({ open }) => {
@@ -146,12 +138,8 @@ export default class Map extends Component {
     this.setState({ showLoadingSpinner: show });
   };
 
-  openMapMarkerOverlay = selectedItem => {
-    this.setState({ isMapMarkerOverlayOpen: true, selectedItem });
-  };
-
-  closeMapMarkerOverlay = () => {
-    this.setState({ isMapMarkerOverlayOpen: false, selectedItem: null });
+  toggleMapMarkerOverlay = ({ open, selectedItem = null }) => {
+    this.setState({ isMapMarkerOverlayOpen: open, selectedItem: selectedItem });
   };
 
   selectFloorByID = floorID => {
@@ -287,7 +275,7 @@ export default class Map extends Component {
       }, 0);
     } else {
       if (mapClicked) {
-        this.closeMapMarkerOverlay();
+        this.toggleMapMarkerOverlay({ open: false });
       }
     }
   };
@@ -300,7 +288,7 @@ export default class Map extends Component {
         this.props.onMarkerClick(marker.data);
       }, 0);
     } else {
-      this.openMapMarkerOverlay(marker);
+      this.toggleMapMarkerOverlay({ open: true, selectedItem: marker });
     }
   };
 
@@ -335,7 +323,7 @@ export default class Map extends Component {
         <FloorOverlay
           currentFloorID={floorID}
           floorsByBuilding={floorsByBuilding}
-          closeFloorOverlay={this.closeFloorOverlay}
+          toggleFloorOverlay={this.toggleFloorOverlay}
           selectFloorByID={this.selectFloorByID}
         />
       );
@@ -356,7 +344,7 @@ export default class Map extends Component {
           api={api}
           locationID={locationID}
           currentFloorID={floorID}
-          closeTagListOverlay={this.closeTagListOverlay}
+          toggleTagListOverlay={this.toggleTagListOverlay}
         />
       );
     }
@@ -368,7 +356,7 @@ export default class Map extends Component {
     if (isMapMarkerOverlayOpen && selectedItem && selectedItem.data) {
       return (
         <MapMarkerOverlay
-          closeMapMarkerOverlay={this.closeMapMarkerOverlay}
+          toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
           data={selectedItem.data}
           kind={selectedItem.kind}
         />
@@ -424,8 +412,8 @@ export default class Map extends Component {
         <FloorAndTagControls
           showFloors={this.shouldShowFloors()}
           showTagList={showTagsControl}
-          openFloorOverlay={this.openFloorOverlay}
-          openTagListOverlay={this.openTagListOverlay}
+          toggleFloorOverlay={this.toggleFloorOverlay}
+          toggleTagListOverlay={this.toggleTagListOverlay}
           toggleLoadingSpinner={this.toggleLoadingSpinner}
           toggleErrorOverlay={this.toggleErrorOverlay}
         />

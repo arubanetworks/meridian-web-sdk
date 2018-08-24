@@ -11,7 +11,10 @@ const cssLoadingSpinner = css({
   top: "45%",
   right: 0,
   zIndex: 3,
-  textAlign: "center"
+  textAlign: "center",
+  width: 36,
+  margin: "0 auto",
+  pointerEvents: "none"
 });
 
 const spin = keyframes`

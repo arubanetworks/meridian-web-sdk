@@ -10,7 +10,7 @@ const cssLoadingSpinner = css({
   left: 0,
   top: "48%",
   right: 0,
-  zIndex: 4,
+  zIndex: 3,
   textAlign: "center"
 });
 

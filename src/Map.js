@@ -402,9 +402,9 @@ export default class Map extends Component {
         )}
         style={{ width, height }}
       >
-        {this.renderLoadingSpinner()}
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
+        {this.renderLoadingSpinner()}
         {this.renderErrorOverlay()}
         {this.renderMapMarkerOverlay()}
         {this.renderFloorOverlay()}

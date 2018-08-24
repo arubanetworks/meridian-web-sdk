@@ -10,6 +10,8 @@ import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
 import TagListOverlay from "./TagListOverlay";
 import MapMarkerOverlay from "./MapMarkerOverlay";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorOverlay from "./ErrorOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
@@ -94,6 +96,8 @@ export default class Map extends Component {
       isFloorOverlayOpen: false,
       isTagListOverlayOpen: false,
       isMapMarkerOverlayOpen: false,
+      isErrorOverlayOpen: false,
+      showLoadingSpinner: false,
       isPanningOrZooming: false,
       mapTransform: "",
       mapZoomFactor: 0.5,
@@ -132,6 +136,14 @@ export default class Map extends Component {
 
   closeFloorOverlay = () => {
     this.setState({ isFloorOverlayOpen: false });
+  };
+
+  toggleErrorOverlay = ({ open }) => {
+    this.setState({ isErrorOverlayOpen: open });
+  };
+
+  toggleLoadingSpinner = ({ show }) => {
+    this.setState({ showLoadingSpinner: show });
   };
 
   openMapMarkerOverlay = selectedItem => {
@@ -365,6 +377,20 @@ export default class Map extends Component {
     return null;
   }
 
+  renderLoadingSpinner() {
+    if (this.state.showLoadingSpinner) {
+      return <LoadingSpinner />;
+    }
+    return null;
+  }
+
+  renderErrorOverlay() {
+    if (this.state.isErrorOverlayOpen) {
+      return <ErrorOverlay toggleErrorOverlay={this.toggleErrorOverlay} />;
+    }
+    return null;
+  }
+
   render() {
     const mapData = this.getMapData();
     const { mapTransform, mapZoomFactor, isPanningOrZooming } = this.state;
@@ -388,8 +414,10 @@ export default class Map extends Component {
         )}
         style={{ width, height }}
       >
+        {this.renderLoadingSpinner()}
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
+        {this.renderErrorOverlay()}
         {this.renderMapMarkerOverlay()}
         {this.renderFloorOverlay()}
         {this.renderTagListOverlay()}
@@ -398,6 +426,8 @@ export default class Map extends Component {
           showTagList={showTagsControl}
           openFloorOverlay={this.openFloorOverlay}
           openTagListOverlay={this.openTagListOverlay}
+          toggleLoadingSpinner={this.toggleLoadingSpinner}
+          toggleErrorOverlay={this.toggleErrorOverlay}
         />
         {this.renderFloorLabel()}
         <div

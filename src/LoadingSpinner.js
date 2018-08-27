@@ -12,7 +12,7 @@ const cssLoadingSpinner = css({
   right: 0,
   zIndex: 3,
   textAlign: "center",
-  width: 36,
+  width: 32,
   margin: "0 auto",
   pointerEvents: "none"
 });
@@ -23,8 +23,8 @@ const spin = keyframes`
 `;
 
 const cssSpinner = css({
-  width: 28,
-  height: 28,
+  width: 24,
+  height: 24,
   margin: "0 auto",
   border: "4px rgba(0,0,0,0.25) solid",
   borderTop: "4px rgba(0,0,0,1) solid",

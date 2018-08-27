@@ -25,7 +25,8 @@ export default class TagLayer extends Component {
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
-    onUpdate: PropTypes.func
+    onUpdate: PropTypes.func,
+    toggleLoadingSpinner: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -137,11 +138,15 @@ export default class TagLayer extends Component {
   }
 
   setInitialTags(tags) {
-    this.setState({ tagsByMAC: this.tagsByMAC(tags) }, () => this.onUpdate());
+    this.setState({ tagsByMAC: this.tagsByMAC(tags) }, () => {
+      this.onUpdate();
+      this.props.toggleLoadingSpinner({ show: false, source: "tags" });
+    });
   }
 
   connect() {
-    const { floorID, locationID, api } = this.props;
+    const { floorID, locationID, api, toggleLoadingSpinner } = this.props;
+    toggleLoadingSpinner({ show: true, source: "tags" });
     const connection = api.openStream({
       locationID,
       floorID,

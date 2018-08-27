@@ -24,7 +24,8 @@ export default class PlacemarkLayer extends Component {
       ids: PropTypes.arrayOf(PropTypes.string),
       disabled: PropTypes.bool
     }),
-    onMarkerClick: PropTypes.func
+    onMarkerClick: PropTypes.func,
+    toggleLoadingSpinner: PropTypes.func.isRequired
   };
 
   state = {
@@ -52,13 +53,16 @@ export default class PlacemarkLayer extends Component {
   }
 
   async updatePlacemarks() {
-    const { locationID, floorID, api } = this.props;
+    const { locationID, floorID, api, toggleLoadingSpinner } = this.props;
+    toggleLoadingSpinner({ show: true, source: "placemarks" });
     // 2018/08/21 - found a bug with the quadtree endpoint below, will revert when that's fixed
     // const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const placemarksURL = `locations/${locationID}/placemarks?map=${floorID}`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
     const placemarksByID = this.groupPlacemarksByID(results);
-    this.setState({ placemarksByID });
+    this.setState({ placemarksByID }, () => {
+      toggleLoadingSpinner({ show: false, source: "placemarks" });
+    });
   }
 
   normalizePlacemark(placemark) {

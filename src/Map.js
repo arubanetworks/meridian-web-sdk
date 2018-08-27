@@ -97,8 +97,9 @@ export default class Map extends Component {
       isTagListOverlayOpen: false,
       isMapMarkerOverlayOpen: false,
       isErrorOverlayOpen: false,
-      showLoadingSpinner: false,
       isPanningOrZooming: false,
+      showLoadingSpinner: false,
+      loadingSources: {},
       mapTransform: "",
       mapZoomFactor: 0.5,
       floorsByBuilding: null,
@@ -134,8 +135,26 @@ export default class Map extends Component {
     this.setState({ isErrorOverlayOpen: open });
   };
 
-  toggleLoadingSpinner = ({ show }) => {
-    this.setState({ showLoadingSpinner: show });
+  toggleLoadingSpinner = ({ show, source = "unknown" }) => {
+    const { showLoadingSpinner } = this.state;
+    this.setState(
+      prevState => ({
+        loadingSources: { ...prevState.loadingSources, [source]: show }
+      }),
+      () => {
+        if (show && !showLoadingSpinner) {
+          this.setState({ showLoadingSpinner: show });
+        } else if (!show) {
+          const { loadingSources } = this.state;
+          const isSourceLoading = Object.keys(loadingSources).some(item => {
+            return loadingSources[item] === true;
+          });
+          if (!isSourceLoading) {
+            this.setState({ showLoadingSpinner: false });
+          }
+        }
+      }
+    );
   };
 
   toggleMapMarkerOverlay = ({ open, selectedItem = null }) => {
@@ -168,6 +187,7 @@ export default class Map extends Component {
   }
 
   async initializeFloors() {
+    this.toggleLoadingSpinner({ show: true, source: "map" });
     const { onFloorsUpdate } = this.props;
     const floors = await this.getFloors();
     const floorsSortedByLevel = floors
@@ -179,6 +199,7 @@ export default class Map extends Component {
         this.addZoomBehavior();
       }
       this.zoomToDefault();
+      this.toggleLoadingSpinner({ show: false, source: "map" });
       asyncClientCall(onFloorsUpdate, floorsByBuilding);
     });
   }
@@ -441,6 +462,7 @@ export default class Map extends Component {
               api={api}
               markers={placemarks}
               onMarkerClick={this.onMarkerClick}
+              toggleLoadingSpinner={this.toggleLoadingSpinner}
             />
             <TagLayer
               isPanningOrZooming={isPanningOrZooming}
@@ -451,6 +473,7 @@ export default class Map extends Component {
               markers={tags}
               onMarkerClick={this.onMarkerClick}
               onUpdate={onTagsUpdate}
+              toggleLoadingSpinner={this.toggleLoadingSpinner}
             />
           </div>
         </div>

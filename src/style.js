@@ -113,7 +113,7 @@ export const {
   // merge,
   // getRegisteredStyles,
   // injectGlobal,
-  // keyframes,
+  keyframes,
   css
   // sheet,
   // caches

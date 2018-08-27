@@ -10,6 +10,8 @@ import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
 import TagListOverlay from "./TagListOverlay";
 import MapMarkerOverlay from "./MapMarkerOverlay";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorOverlay from "./ErrorOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
@@ -94,7 +96,10 @@ export default class Map extends Component {
       isFloorOverlayOpen: false,
       isTagListOverlayOpen: false,
       isMapMarkerOverlayOpen: false,
+      isErrorOverlayOpen: false,
       isPanningOrZooming: false,
+      showLoadingSpinner: false,
+      loadingSources: {},
       mapTransform: "",
       mapZoomFactor: 0.5,
       floorsByBuilding: null,
@@ -118,28 +123,42 @@ export default class Map extends Component {
     }
   }
 
-  openTagListOverlay = () => {
-    this.setState({ isTagListOverlayOpen: true });
+  toggleTagListOverlay = ({ open }) => {
+    this.setState({ isTagListOverlayOpen: open });
   };
 
-  closeTagListOverlay = () => {
-    this.setState({ isTagListOverlayOpen: false });
+  toggleFloorOverlay = ({ open }) => {
+    this.setState({ isFloorOverlayOpen: open });
   };
 
-  openFloorOverlay = () => {
-    this.setState({ isFloorOverlayOpen: true });
+  toggleErrorOverlay = ({ open }) => {
+    this.setState({ isErrorOverlayOpen: open });
   };
 
-  closeFloorOverlay = () => {
-    this.setState({ isFloorOverlayOpen: false });
+  toggleLoadingSpinner = ({ show, source = "unknown" }) => {
+    const { showLoadingSpinner } = this.state;
+    this.setState(
+      prevState => ({
+        loadingSources: { ...prevState.loadingSources, [source]: show }
+      }),
+      () => {
+        if (show && !showLoadingSpinner) {
+          this.setState({ showLoadingSpinner: show });
+        } else if (!show) {
+          const { loadingSources } = this.state;
+          const isSourceLoading = Object.keys(loadingSources).some(item => {
+            return loadingSources[item] === true;
+          });
+          if (!isSourceLoading) {
+            this.setState({ showLoadingSpinner: false });
+          }
+        }
+      }
+    );
   };
 
-  openMapMarkerOverlay = selectedItem => {
-    this.setState({ isMapMarkerOverlayOpen: true, selectedItem });
-  };
-
-  closeMapMarkerOverlay = () => {
-    this.setState({ isMapMarkerOverlayOpen: false, selectedItem: null });
+  toggleMapMarkerOverlay = ({ open, selectedItem = null }) => {
+    this.setState({ isMapMarkerOverlayOpen: open, selectedItem: selectedItem });
   };
 
   selectFloorByID = floorID => {
@@ -168,6 +187,7 @@ export default class Map extends Component {
   }
 
   async initializeFloors() {
+    this.toggleLoadingSpinner({ show: true, source: "map" });
     const { onFloorsUpdate } = this.props;
     const floors = await this.getFloors();
     const floorsSortedByLevel = floors
@@ -179,6 +199,7 @@ export default class Map extends Component {
         this.addZoomBehavior();
       }
       this.zoomToDefault();
+      this.toggleLoadingSpinner({ show: false, source: "map" });
       asyncClientCall(onFloorsUpdate, floorsByBuilding);
     });
   }
@@ -275,7 +296,7 @@ export default class Map extends Component {
       }, 0);
     } else {
       if (mapClicked) {
-        this.closeMapMarkerOverlay();
+        this.toggleMapMarkerOverlay({ open: false });
       }
     }
   };
@@ -288,7 +309,7 @@ export default class Map extends Component {
         this.props.onMarkerClick(marker.data);
       }, 0);
     } else {
-      this.openMapMarkerOverlay(marker);
+      this.toggleMapMarkerOverlay({ open: true, selectedItem: marker });
     }
   };
 
@@ -323,7 +344,7 @@ export default class Map extends Component {
         <FloorOverlay
           currentFloorID={floorID}
           floorsByBuilding={floorsByBuilding}
-          closeFloorOverlay={this.closeFloorOverlay}
+          toggleFloorOverlay={this.toggleFloorOverlay}
           selectFloorByID={this.selectFloorByID}
         />
       );
@@ -344,7 +365,7 @@ export default class Map extends Component {
           api={api}
           locationID={locationID}
           currentFloorID={floorID}
-          closeTagListOverlay={this.closeTagListOverlay}
+          toggleTagListOverlay={this.toggleTagListOverlay}
         />
       );
     }
@@ -356,11 +377,25 @@ export default class Map extends Component {
     if (isMapMarkerOverlayOpen && selectedItem && selectedItem.data) {
       return (
         <MapMarkerOverlay
-          closeMapMarkerOverlay={this.closeMapMarkerOverlay}
+          toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
           data={selectedItem.data}
           kind={selectedItem.kind}
         />
       );
+    }
+    return null;
+  }
+
+  renderLoadingSpinner() {
+    if (this.state.showLoadingSpinner) {
+      return <LoadingSpinner />;
+    }
+    return null;
+  }
+
+  renderErrorOverlay() {
+    if (this.state.isErrorOverlayOpen) {
+      return <ErrorOverlay toggleErrorOverlay={this.toggleErrorOverlay} />;
     }
     return null;
   }
@@ -390,14 +425,18 @@ export default class Map extends Component {
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
+        {this.renderLoadingSpinner()}
+        {this.renderErrorOverlay()}
         {this.renderMapMarkerOverlay()}
         {this.renderFloorOverlay()}
         {this.renderTagListOverlay()}
         <FloorAndTagControls
           showFloors={this.shouldShowFloors()}
           showTagList={showTagsControl}
-          openFloorOverlay={this.openFloorOverlay}
-          openTagListOverlay={this.openTagListOverlay}
+          toggleFloorOverlay={this.toggleFloorOverlay}
+          toggleTagListOverlay={this.toggleTagListOverlay}
+          toggleLoadingSpinner={this.toggleLoadingSpinner}
+          toggleErrorOverlay={this.toggleErrorOverlay}
         />
         {this.renderFloorLabel()}
         <div
@@ -423,6 +462,7 @@ export default class Map extends Component {
               api={api}
               markers={placemarks}
               onMarkerClick={this.onMarkerClick}
+              toggleLoadingSpinner={this.toggleLoadingSpinner}
             />
             <TagLayer
               isPanningOrZooming={isPanningOrZooming}
@@ -433,6 +473,7 @@ export default class Map extends Component {
               markers={tags}
               onMarkerClick={this.onMarkerClick}
               onUpdate={onTagsUpdate}
+              toggleLoadingSpinner={this.toggleLoadingSpinner}
             />
           </div>
         </div>

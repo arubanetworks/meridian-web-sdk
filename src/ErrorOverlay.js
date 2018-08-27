@@ -6,22 +6,21 @@ import IconClose from "./IconClose";
 
 const cssErrorOverlay = css(mixins.rounded, {
   label: "error",
-  background: theme.white,
-  color: theme.textColor,
   position: "absolute",
+  zIndex: 4,
   top: "35%",
   left: 0,
   right: 0,
   margin: "0 auto",
-  boxShadow: "0 0 1px rgba(0, 0, 0, 0.15), inset 4px 0 0 #D82E1F",
-  zIndex: 4,
-  maxWidth: 400,
   minWidth: 300,
+  maxWidth: 400,
+  border: "1px solid #DFE1EF",
   paddingTop: 15,
   paddingRight: 20,
   paddingBottom: 15,
   paddingLeft: 25,
-  border: "1px solid #DFE1EF"
+  background: theme.white,
+  boxShadow: "0 0 1px rgba(0, 0, 0, 0.15), inset 4px 0 0 #D82E1F"
 });
 
 const cssCloseButton = css(mixins.buttonReset, {
@@ -29,12 +28,9 @@ const cssCloseButton = css(mixins.buttonReset, {
   float: "right",
   width: 38,
   height: 38,
-  fill: "#C3C5C8",
-  padding: 4,
   marginLeft: 15,
-  background: theme.white,
-  textAlign: "center",
-  fontWeight: "bold",
+  padding: 4,
+  fill: "#C3C5C8",
   "&:hover": { fill: theme.textColorBluish, cursor: "pointer" },
   "&:focus": {
     outline: 0

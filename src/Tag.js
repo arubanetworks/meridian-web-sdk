@@ -48,7 +48,11 @@ const Tag = ({
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
   const imageURL = data.image_url || DEFAULT_TAG_IMAGE;
-  const className = cx(cssTag, "meridian-tag");
+  const labelClassNames = data.tags
+    .map(tag => "label-" + tag.name.replace(" ", ""))
+    .join(" ")
+    .toLowerCase();
+  const className = cx(cssTag, labelClassNames, "meridian-tag");
   const style = {
     left: x,
     top: y,

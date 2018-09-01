@@ -16,7 +16,11 @@ import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
 import { css, cx } from "./style";
-import { fetchAllPaginatedData, asyncClientCall } from "./util";
+import {
+  fetchAllPaginatedData,
+  asyncClientCall,
+  validateEnvironment
+} from "./util";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -100,6 +104,7 @@ export default class Map extends Component {
       isPanningOrZooming: false,
       showLoadingSpinner: false,
       loadingSources: {},
+      errors: [],
       mapTransform: "",
       mapZoomFactor: 0.5,
       floorsByBuilding: null,
@@ -114,7 +119,16 @@ export default class Map extends Component {
   }
 
   componentDidMount() {
-    this.initializeFloors();
+    const { api } = this.props;
+    const isEnvironmentValid = validateEnvironment(api.environment);
+    if (!isEnvironmentValid) {
+      this.toggleErrorOverlay({
+        open: true,
+        message: `API errror: "${api.environment}" is not a valid environment`
+      });
+    } else {
+      this.initializeFloors();
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -131,8 +145,15 @@ export default class Map extends Component {
     this.setState({ isFloorOverlayOpen: open });
   };
 
-  toggleErrorOverlay = ({ open }) => {
-    this.setState({ isErrorOverlayOpen: open });
+  toggleErrorOverlay = ({ open, message = "Unknown" }) => {
+    if (open) {
+      this.setState(prevState => ({
+        errors: [...prevState.errors, message],
+        isErrorOverlayOpen: true
+      }));
+    } else {
+      this.setState({ isErrorOverlayOpen: false, errors: [] });
+    }
   };
 
   toggleLoadingSpinner = ({ show, source = "unknown" }) => {
@@ -168,7 +189,24 @@ export default class Map extends Component {
   async getFloors() {
     const { locationID, api } = this.props;
     const mapURL = `locations/${locationID}/maps`;
-    const results = await fetchAllPaginatedData(api, mapURL);
+    let results;
+    try {
+      results = await fetchAllPaginatedData(api, mapURL);
+    } catch (e) {
+      // TODO: compare with other error objects, similar?
+      if (e.response && e.response.data && e.response.data.detail) {
+        this.toggleErrorOverlay({
+          open: true,
+          message: e.response.data.detail
+        });
+      }
+    }
+    if (!results || !results.length) {
+      this.toggleErrorOverlay({
+        open: true,
+        message: "Floor data could not be found."
+      });
+    }
     return results;
   }
 
@@ -190,18 +228,20 @@ export default class Map extends Component {
     this.toggleLoadingSpinner({ show: true, source: "map" });
     const { onFloorsUpdate } = this.props;
     const floors = await this.getFloors();
-    const floorsSortedByLevel = floors
-      .slice()
-      .sort((a, b) => a.level - b.level);
-    const floorsByBuilding = groupBy(floorsSortedByLevel, "group_name");
-    this.setState({ floorsByBuilding }, () => {
-      if (!this.zoomD3) {
-        this.addZoomBehavior();
-      }
-      this.zoomToDefault();
-      this.toggleLoadingSpinner({ show: false, source: "map" });
-      asyncClientCall(onFloorsUpdate, floorsByBuilding);
-    });
+    if (floors && floors.length) {
+      const floorsSortedByLevel = floors
+        .slice()
+        .sort((a, b) => a.level - b.level);
+      const floorsByBuilding = groupBy(floorsSortedByLevel, "group_name");
+      this.setState({ floorsByBuilding }, () => {
+        if (!this.zoomD3) {
+          this.addZoomBehavior();
+        }
+        this.zoomToDefault();
+        asyncClientCall(onFloorsUpdate, floorsByBuilding);
+      });
+    }
+    this.toggleLoadingSpinner({ show: false, source: "map" });
   }
 
   addZoomBehavior() {
@@ -237,17 +277,19 @@ export default class Map extends Component {
   zoomToDefault() {
     const mapData = this.getMapData();
     const mapSize = this.getMapRefSize();
-    this.mapSelection.call(
-      this.zoomD3.translateTo,
-      mapData.width / 2,
-      mapData.height / 2
-    );
-    this.mapSelection.call(
-      this.zoomD3.scaleTo,
-      // TODO: Figure out the appropriate scale level to show the "whole" map.
-      // This is currently just a quick calculation that seems to work ok.
-      (0.5 * mapSize.width) / mapData.width
-    );
+    if (mapData) {
+      this.mapSelection.call(
+        this.zoomD3.translateTo,
+        mapData.width / 2,
+        mapData.height / 2
+      );
+      this.mapSelection.call(
+        this.zoomD3.scaleTo,
+        // TODO: Figure out the appropriate scale level to show the "whole" map.
+        // This is currently just a quick calculation that seems to work ok.
+        (0.5 * mapSize.width) / mapData.width
+      );
+    }
   }
 
   getMapRefSize() {
@@ -395,14 +437,24 @@ export default class Map extends Component {
 
   renderErrorOverlay() {
     if (this.state.isErrorOverlayOpen) {
-      return <ErrorOverlay toggleErrorOverlay={this.toggleErrorOverlay} />;
+      return (
+        <ErrorOverlay
+          toggleErrorOverlay={this.toggleErrorOverlay}
+          messages={this.state.errors}
+        />
+      );
     }
     return null;
   }
 
   render() {
     const mapData = this.getMapData();
-    const { mapTransform, mapZoomFactor, isPanningOrZooming } = this.state;
+    const {
+      mapTransform,
+      mapZoomFactor,
+      isPanningOrZooming,
+      errors
+    } = this.state;
     const {
       showTagsControl,
       locationID,
@@ -454,27 +506,32 @@ export default class Map extends Component {
                 this.mapImage = el;
               }}
             />
-            <PlacemarkLayer
-              isPanningOrZooming={isPanningOrZooming}
-              mapZoomFactor={mapZoomFactor}
-              locationID={locationID}
-              floorID={floorID}
-              api={api}
-              markers={placemarks}
-              onMarkerClick={this.onMarkerClick}
-              toggleLoadingSpinner={this.toggleLoadingSpinner}
-            />
-            <TagLayer
-              isPanningOrZooming={isPanningOrZooming}
-              mapZoomFactor={mapZoomFactor}
-              locationID={locationID}
-              floorID={floorID}
-              api={api}
-              markers={tags}
-              onMarkerClick={this.onMarkerClick}
-              onUpdate={onTagsUpdate}
-              toggleLoadingSpinner={this.toggleLoadingSpinner}
-            />
+            {!errors.length && mapData ? (
+              <PlacemarkLayer
+                isPanningOrZooming={isPanningOrZooming}
+                mapZoomFactor={mapZoomFactor}
+                locationID={locationID}
+                floorID={floorID}
+                api={api}
+                markers={placemarks}
+                onMarkerClick={this.onMarkerClick}
+                toggleLoadingSpinner={this.toggleLoadingSpinner}
+              />
+            ) : null}
+
+            {!errors.length && mapData ? (
+              <TagLayer
+                isPanningOrZooming={isPanningOrZooming}
+                mapZoomFactor={mapZoomFactor}
+                locationID={locationID}
+                floorID={floorID}
+                api={api}
+                markers={tags}
+                onMarkerClick={this.onMarkerClick}
+                onUpdate={onTagsUpdate}
+                toggleLoadingSpinner={this.toggleLoadingSpinner}
+              />
+            ) : null}
           </div>
         </div>
       </div>

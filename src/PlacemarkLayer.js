@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 
 import MapMarker from "./MapMarker";
-import { fetchAllPaginatedData } from "./util";
+import { fetchAllPaginatedData, filterAll } from "./util";
 
 export default class PlacemarkLayer extends Component {
   static defaultProps = {
@@ -18,10 +18,8 @@ export default class PlacemarkLayer extends Component {
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
     markers: PropTypes.shape({
-      all: PropTypes.bool,
       showHiddenPlacemarks: PropTypes.bool,
-      types: PropTypes.arrayOf(PropTypes.string),
-      ids: PropTypes.arrayOf(PropTypes.string),
+      filter: PropTypes.func,
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
@@ -80,15 +78,9 @@ export default class PlacemarkLayer extends Component {
   }
 
   getFilterFunction() {
-    const { ids, types, all } = this.props.markers;
-    if (all) {
-      return () => true;
-    } else if (ids && Array.isArray(ids) && ids.length > 0) {
-      return placemark => ids.includes(placemark.id);
-    } else if (types && Array.isArray(types) && types.length > 0) {
-      return placemark => types.includes(placemark.type);
-    }
-    return () => false;
+    const { markers } = this.props;
+    const { filter = filterAll } = markers;
+    return filter;
   }
 
   cullMarkers(markers) {

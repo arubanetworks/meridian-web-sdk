@@ -114,14 +114,11 @@
     // ---vvv UI controls vvv---
     var state = {
       placemarks: {
-        all: false,
-        labels: undefined,
+        filter: MeridianSDK.filterAll,
         disabled: false
       },
       tags: {
-        all: true,
-        labels: undefined,
-        ids: undefined,
+        filter: MeridianSDK.filterAll,
         disabled: false
       },
       onTagsUpdate: function (tagsByID) {
@@ -140,20 +137,16 @@
     $("[name='placemark-filter']").on("change", function () {
       switch (this.value) {
         case "filter-none":
-          state.placemarks.all = false;
-          state.placemarks.types = [];
+          state.placemarks.filter = MeridianSDK.filterNone;
           break;
         case "filter-all":
-          state.placemarks.all = true;
-          state.placemarks.types = [];
+        state.placemarks.filter = MeridianSDK.filterAll;
           break;
         case "filter-cafe":
-          state.placemarks.all = false;
-          state.placemarks.types = ["cafe"];
+          state.placemarks.filter = MeridianSDK.filterByTypes(["cafe"]);
           break;
         case "filter-water_fountain":
-          state.placemarks.all = false;
-          state.placemarks.types = ["water_fountain"];
+          state.placemarks.filter = MeridianSDK.filterByTypes(["water_fountain"]);
           break;
         default:
           throw new Error("unexpected option " + this.value);
@@ -164,24 +157,16 @@
     $("[name='tag-filter']").on("change", function () {
       switch (this.value) {
         case "filter-none":
-          state.tags.all = false;
-          state.tags.labels = [];
-          state.tags.ids = [];
+          state.tags.filter = MeridianSDK.filterNone;
           break;
         case "filter-all":
-          state.tags.all = true;
-          state.tags.labels = [];
-          state.tags.ids = [];
+        state.tags.filter = MeridianSDK.filterAll;
           break;
         case "filter-Jamboard":
-          state.tags.all = false;
-          state.tags.labels = ["Jamboard"];
-          state.tags.ids = [];
+          state.tags.filter = MeridianSDK.filterByLabels(["Jamboard"]);
           break;
         case "filter-CC78ABC6CB63":
-          state.tags.all = false;
-          state.tags.labels = [];
-          state.tags.ids = ["CC78ABC6CB63"];
+          state.tags.filter = MeridianSDK.filterByIDs(["CC78ABC6CB63"]);
           break;
         default:
           throw new Error("unexpected option " + this.value);

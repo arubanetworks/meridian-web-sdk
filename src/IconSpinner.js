@@ -3,7 +3,7 @@ import { css, keyframes, cx } from "./style";
 
 const cssSpin = keyframes`
   from { transform: rotate(0deg); }
-  to { transform: rotate(359deg); }
+  to { transform: rotate(360deg); }
 `;
 
 const cssSpinner = css({
@@ -11,10 +11,10 @@ const cssSpinner = css({
   width: 22,
   height: 22,
   margin: "0 auto",
-  border: "2px rgba(227,227,227,.90) solid",
-  borderTop: "2px #2E7CBE solid",
+  border: "2px rgba(227, 227, 227, 0.9) solid",
+  borderTop: "2px #2e7cbe solid",
   borderRadius: "50%",
-  animation: `${cssSpin} .6s infinite linear`
+  animation: `${cssSpin} 600ms infinite linear`
 });
 
 const IconSpinner = () => (

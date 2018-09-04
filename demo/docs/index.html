@@ -42,15 +42,13 @@
     var element = document.getElementById("meridian-map");
     var map = MeridianSDK.createMap(element, {
       locationID: "Insert your location ID here",
-      floorID: "Insert your floor ID here",
-      placemarks: { all: true },
-      tags: { all: false }
+      floorID: "Insert your floor ID here"
     });
 
     // Later on...
     map.update({
-      placemarks: { all: false },
-      tags: { all: true }
+      placemarks: { filter: MeridianSDK.filterNone },
+      tags: { filter: MeridianSDK.filterNone }
     });
   </code></pre>
 
@@ -142,16 +140,14 @@
     var element = document.getElementById("meridian-map");
     var map = MeridianSDK.createMap(element, {
       locationID: "Insert your location ID here",
-      floorID: "Insert your floor ID here",
-      tags: { all: false },
-      placemarks: { all: true }
+      floorID: "Insert your floor ID here"
     });
 
     // Toggle tags/placemarks after 10 seconds
     setTimeout(function() {
       map.update({
-        tags: { all: true },
-        placemarks: { all: false }
+        placemarks: { filter: MeridianSDK.filterNone },
+        tags: { filter: MeridianSDK.filterNone }
       });
     }, 10000)
   </code></pre>
@@ -198,7 +194,7 @@
             <li>
               <span class="parameter">filter:</span> (default =
               <code>MeridianSDK<wbr>.filterAll</code>) boolean predicate function passed to array <code>.filter</code> to
-              filter the list of tags
+              filter the array of tags (see <a href="#filterAll">the filter section</a> for more details)
             </li>
             <li>
               <span class="parameter">showControlTags:</span> (default =
@@ -215,24 +211,17 @@
           <code>{}</code>) an object with any of the following keys:
           <ul>
             <li>
-              <span class="parameter">all:</span> (default =
-              <code>false</code>) show all placemarks when true
-            </li>
-            <li>
-              <span class="parameter">ids:</span> (default =
-              <code>[]</code>) show all placemarks which match the IDs in the list
-            </li>
-            <li>
-              <span class="parameter">types:</span> (default =
-              <code>[]</code>) show all placemarks matching the named types in the list
-            </li>
-            <li>
-              <span class="parameter">disabled:</span> (default =
-              <code>false</code>) disable clicking placemarks when true
+              <span class="parameter">filter:</span> (default =
+              <code>MeridianSDK<wbr>.filterAll</code>) boolean predicate function passed to array <code>.filter</code> to
+              filter the array of placemarks (see <a href="#filterAll">the filter section</a> for more details)
             </li>
             <li>
               <span class="parameter">showHiddenPlacemarks:</span> (default =
               <code>false</code>) hidden placemarks are shown when true
+            </li>
+            <li>
+              <span class="parameter">disabled:</span> (default =
+              <code>false</code>) disable clicking placemarks when true
             </li>
           </ul>
         </li>

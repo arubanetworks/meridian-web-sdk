@@ -164,9 +164,7 @@ class TagListOverlay extends Component {
                   update({
                     tags: {
                       ...tagOptions,
-                      all: false,
-                      labels: [],
-                      ids: [tag.id]
+                      filter: t => t.id === tag.id
                     }
                   });
                 }}

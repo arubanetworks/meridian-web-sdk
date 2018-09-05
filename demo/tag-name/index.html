@@ -54,7 +54,7 @@
           height: "360px",
           onTagsUpdate: this.onTagsUpdate,
           tags: {
-            filter: function() { return true; }
+            filter: () => true
           }
         });
       };
@@ -79,7 +79,7 @@
           } else {
             this.map.update({
               tags: {
-                filter: function() { return true; }
+                filter: () => true
               }
             });
           }

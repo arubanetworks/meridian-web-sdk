@@ -47,8 +47,8 @@
 
     // Later on...
     map.update({
-      placemarks: { filter: MeridianSDK.filterNone },
-      tags: { filter: MeridianSDK.filterNone }
+      placemarks: { filter: function() { return false; } },
+      tags: { filter: function() { return false; } }
     });
   </code></pre>
 
@@ -146,8 +146,8 @@
     // Toggle tags/placemarks after 10 seconds
     setTimeout(function() {
       map.update({
-        placemarks: { filter: MeridianSDK.filterNone },
-        tags: { filter: MeridianSDK.filterNone }
+        placemarks: { filter: function() { return false; } },
+        tags: { filter: function() { return false; } }
       });
     }, 10000)
   </code></pre>
@@ -193,8 +193,20 @@
           <ul>
             <li>
               <span class="parameter">filter:</span> (default =
-              <code>MeridianSDK<wbr>.filterAll</code>) boolean predicate function passed to array <code>.filter</code> to
-              filter the array of tags (see <a href="#filterAll">the filter section</a> for more details)
+              <code>function() { return true; }</code>) boolean predicate function passed to array <code>.filter</code> to filter the array of tags
+
+              <pre><code class="js">
+                var element = document.getElementById("meridian-map");
+                var map = MeridianSDK.createMap(element, {
+                  locationID: "INSERT YOUR LOCATION ID HERE",
+                  floorID: "INSERT YOUR FLOOR ID HERE",
+                  tags: {
+                    filter: function(tag) {
+                      return tag.mac === "CC78ABC6CB63";
+                    }
+                  }
+                });
+              </code></pre>
             </li>
             <li>
               <span class="parameter">showControlTags:</span> (default =
@@ -212,8 +224,21 @@
           <ul>
             <li>
               <span class="parameter">filter:</span> (default =
-              <code>MeridianSDK<wbr>.filterAll</code>) boolean predicate function passed to array <code>.filter</code> to
-              filter the array of placemarks (see <a href="#filterAll">the filter section</a> for more details)
+              <code>function() { return true; }</code>) boolean predicate function passed to array <code>.filter</code> to
+              filter the array of placemarks
+
+              <pre><code class="js">
+                var element = document.getElementById("meridian-map");
+                var map = MeridianSDK.createMap(element, {
+                  locationID: "INSERT YOUR LOCATION ID HERE",
+                  floorID: "INSERT YOUR FLOOR ID HERE",
+                  placemarks: {
+                    filter: function(placemark) {
+                      return placemark.type === "water_fountain";
+                    }
+                  }
+                });
+              </code></pre>
             </li>
             <li>
               <span class="parameter">showHiddenPlacemarks:</span> (default =
@@ -426,153 +451,6 @@
       <span class="parameter">close():</span> a method to close the stream
     </li>
   </ul>
-
-  <h2 id="filterAll">
-    <a href="#filterAll">MeridianSDK<wbr>.filterAll</a>
-  </h2>
-
-  <pre><code class="js">
-    var element = document.getElementById("meridian-map");
-    var map = MeridianSDK.createMap(element, {
-      locationID: "INSERT YOUR LOCATION ID HERE",
-      floorID: "INSERT YOUR FLOOR ID HERE",
-      tags: {
-        filter: MeridianSDK.filterAll
-      },
-      placemarks: {
-        filter: MeridianSDK.filterAll
-      }
-    });
-  </code></pre>
-
-  <p>
-    A function that always returns true. Used with the <code>filter</code> property on <code>tags</code> or <code>placemarks</code>    to
-    show everything.
-  </p>
-
-  <h2 id="filterNone">
-    <a href="#filterNone">MeridianSDK<wbr>.filterNone</a>
-  </h2>
-
-  <pre><code class="js">
-    var element = document.getElementById("meridian-map");
-    var map = MeridianSDK.createMap(element, {
-      locationID: "INSERT YOUR LOCATION ID HERE",
-      floorID: "INSERT YOUR FLOOR ID HERE",
-      tags: {
-        filter: MeridianSDK.filterNone
-      },
-      placemarks: {
-        filter: MeridianSDK.filterNone
-      }
-    });
-  </code></pre>
-
-  <p>
-    A function that always returns false. Used with the <code>filter</code> property on <code>tags</code> or <code>placemarks</code>    to
-    hide everything
-  </p>
-
-  <h2 id="filterByIDs">
-    <a href="#filterByIDs">MeridianSDK<wbr>.filterByIDs(<wbr>ids<wbr>)</a>
-  </h2>
-
-  <pre><code class="js">
-    var element = document.getElementById("meridian-map");
-    var map = MeridianSDK.createMap(element, {
-      locationID: "INSERT YOUR LOCATION ID HERE",
-      floorID: "INSERT YOUR FLOOR ID HERE",
-      placemarks: {
-        filter: MeridianSDK.filterByIDs(["CC78ABC6CB63"])
-      }
-    });
-  </code></pre>
-
-  <p>
-    Returns a function that returns true if the tag's ID matches any ID in the array. Used with the <code>filter</code> property
-    on <code>tags</code>.
-  </p>
-
-  <h2 id="filterByMACs">
-    <a href="#filterByMACs">MeridianSDK<wbr>.filterByMACs(<wbr>macs<wbr>)</a>
-  </h2>
-
-  <pre><code class="js">
-    var element = document.getElementById("meridian-map");
-    var map = MeridianSDK.createMap(element, {
-      locationID: "INSERT YOUR LOCATION ID HERE",
-      floorID: "INSERT YOUR FLOOR ID HERE",
-      tags: {
-        filter: MeridianSDK.filterByMACs(["CC78ABC6CB63"])
-      }
-    });
-  </code></pre>
-
-  <p>
-    Returns a function that returns true if the placemark's MAC matches any MAC in the array. Used with the <code>filter</code> property
-    on <code>placemarks</code>.
-  </p>
-
-  <h2 id="filterByTypes">
-    <a href="#filterByTypes">MeridianSDK<wbr>.filterByTypes(<wbr>types<wbr>)</a>
-  </h2>
-
-  <pre><code class="js">
-    var element = document.getElementById("meridian-map");
-    var map = MeridianSDK.createMap(element, {
-      locationID: "INSERT YOUR LOCATION ID HERE",
-      floorID: "INSERT YOUR FLOOR ID HERE",
-      placemarks: {
-        filter: MeridianSDK.filterByTypes(["cafe", "water_fountain"])
-      }
-    });
-  </code></pre>
-
-  <p>
-    Returns a function that returns true if the tag's labels matches any label in the array. Used with the <code>filter</code> property
-    on <code>tags</code>.
-  </p>
-
-  <h2 id="filterByLabels">
-    <a href="#filterByLabels">MeridianSDK<wbr>.filterByLabels(<wbr>labels<wbr>)</a>
-  </h2>
-
-  <pre><code class="js">
-    var element = document.getElementById("meridian-map");
-    var map = MeridianSDK.createMap(element, {
-      locationID: "INSERT YOUR LOCATION ID HERE",
-      floorID: "INSERT YOUR FLOOR ID HERE",
-      placemarks: {
-        filter: MeridianSDK.filterByLabels(["Mobile Whiteboard", "Bean Bag Chair"])
-      }
-    });
-  </code></pre>
-
-  <p>
-    Returns a function that returns true if the placemark or tag has at least one of the labels in the array. Used with the <code>filter</code> property
-    on <code>tags</code> and <code>placemarks</code>.
-  </p>
-
-  <h2 id="filterByLabels">
-    <a href="#custom-filters">Custom Filters</a>
-  </h2>
-
-  <p>
-    Custom filters can be supplied as well. A filter function is a function that takes a placemark or tag as its only argument and returns true or false.
-  </p>
-
-  <pre><code class="js">
-    var element = document.getElementById("meridian-map");
-    var map = MeridianSDK.createMap(element, {
-      locationID: "INSERT YOUR LOCATION ID HERE",
-      floorID: "INSERT YOUR FLOOR ID HERE",
-      tags: {
-        filter: function(tag) {
-          return tag.mac === "CC78ABC6CB63" || tag.labels.includes("Example");
-        }
-      }
-    });
-  </code></pre>
 
   <script>
     (function () {

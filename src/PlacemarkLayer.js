@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 
 import MapMarker from "./MapMarker";
-import { fetchAllPaginatedData, filterAll } from "./util";
+import { fetchAllPaginatedData } from "./util";
 
 export default class PlacemarkLayer extends Component {
   static defaultProps = {
@@ -79,7 +79,7 @@ export default class PlacemarkLayer extends Component {
 
   getFilterFunction() {
     const { markers } = this.props;
-    const { filter = filterAll } = markers;
+    const { filter = () => true } = markers;
     return filter;
   }
 

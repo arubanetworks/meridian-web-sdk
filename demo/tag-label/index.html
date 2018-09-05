@@ -73,13 +73,13 @@
           if (selectedLabel) {
             this.map.update({
               tags: {
-                filter: MeridianSDK.filterByLabels([selectedLabel])
+                filter: tag => tag.labels.includes(selectedLabel),
               }
             });
           } else {
             this.map.update({
               tags: {
-                filter: MeridianSDK.filterAll
+                filter: () => true
               }
             });
           }

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
 
 import MapMarker from "./MapMarker";
-import { normalizeTag, filterAll } from "./util";
+import { normalizeTag } from "./util";
 
 export default class TagLayer extends Component {
   static defaultProps = {
@@ -70,7 +70,7 @@ export default class TagLayer extends Component {
 
   getFilterFunction() {
     const { markers } = this.props;
-    const { filter = filterAll } = markers;
+    const { filter = () => true } = markers;
     return filter;
   }
 

@@ -54,7 +54,7 @@
           height: "360px",
           onTagsUpdate: this.onTagsUpdate,
           tags: {
-            filter: MeridianSDK.filterAll
+            filter: function() { return true; }
           }
         });
       };
@@ -73,13 +73,13 @@
           if (selectedTag) {
             this.map.update({
               tags: {
-                filter: MeridianSDK.filterByIDs([selectedTag])
+                filter: tag => tag.id === selectedLabel,
               }
             });
           } else {
             this.map.update({
               tags: {
-                filter: MeridianSDK.filterAll
+                filter: function() { return true; }
               }
             });
           }

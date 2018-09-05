@@ -111,11 +111,11 @@
     // ---vvv UI controls vvv---
     var state = {
       placemarks: {
-        filter: MeridianSDK.filterAll,
+        filter: function() { return true; },
         disabled: false
       },
       tags: {
-        filter: MeridianSDK.filterAll,
+        filter: function() { return true; },
         disabled: false
       },
       onTagsUpdate: function (tagsByID) {
@@ -134,16 +134,20 @@
     $("[name='placemark-filter']").on("change", function () {
       switch (this.value) {
         case "filter-none":
-          state.placemarks.filter = MeridianSDK.filterNone;
+          state.placemarks.filter = function() { return false; };
           break;
         case "filter-all":
-        state.placemarks.filter = MeridianSDK.filterAll;
+        state.placemarks.filter = function() { return true; };
           break;
         case "filter-cafe":
-          state.placemarks.filter = MeridianSDK.filterByTypes(["cafe"]);
+          state.placemarks.filter = function(placemark) {
+            return placemark.type === "cafe";
+          };
           break;
         case "filter-water_fountain":
-          state.placemarks.filter = MeridianSDK.filterByTypes(["water_fountain"]);
+          state.placemarks.filter = function(placemark) {
+            return placemark.type === "water_fountain";
+          };
           break;
         default:
           throw new Error("unexpected option " + this.value);
@@ -154,16 +158,20 @@
     $("[name='tag-filter']").on("change", function () {
       switch (this.value) {
         case "filter-none":
-          state.tags.filter = MeridianSDK.filterNone;
+          state.tags.filter = function() { return false; };
           break;
         case "filter-all":
-        state.tags.filter = MeridianSDK.filterAll;
+        state.tags.filter = function() { return true; };
           break;
         case "filter-Jamboard":
-          state.tags.filter = MeridianSDK.filterByLabels(["Jamboard"]);
+          state.tags.filter = function(tag) {
+            return tag.labels.includes("Jamboard");
+          };
           break;
         case "filter-CC78ABC6CB63":
-          state.tags.filter = MeridianSDK.filterByIDs(["CC78ABC6CB63"]);
+          state.tags.filter = function(tag) {
+            return tag.mac === "CC78ABC6CB63";
+          };
           break;
         default:
           throw new Error("unexpected option " + this.value);

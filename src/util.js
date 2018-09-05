@@ -7,30 +7,6 @@ export const STRINGS = {
   unnamedBuilding: "Unassigned"
 };
 
-export function filterAll() {
-  return true;
-}
-
-export function filterNone() {
-  return false;
-}
-
-export function filterByIDs(ids) {
-  return placemark => ids.includes(placemark.id);
-}
-
-export function filterByMACs(macs) {
-  return placemark => macs.includes(placemark.mac);
-}
-
-export function filterByTypes(types) {
-  return placemark => types.includes(placemark.type);
-}
-
-export function filterByLabels(labels) {
-  return placemark => labels.some(l => l === placemark.labels.includes(l));
-}
-
 export function ungroup(groupedData) {
   return objectValues(groupedData).reduce((a, b) => a.concat(b), []);
 }

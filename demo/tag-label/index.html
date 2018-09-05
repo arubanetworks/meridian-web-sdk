@@ -56,10 +56,9 @@
         });
       };
 
-      onTagsUpdate = tagsByMAC => {
+      onTagsUpdate = tags => {
         const labels = {};
-        Object.keys(tagsByMAC).forEach(mac => {
-          const tag = tagsByMAC[mac];
+        tags.forEach(tag => {
           tag.labels.forEach(label => {
             labels[label] = true;
           });

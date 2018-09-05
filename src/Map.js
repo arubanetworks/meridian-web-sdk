@@ -1,8 +1,6 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
-import objectValues from "lodash.values";
-import groupBy from "lodash.groupby";
 
 import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
@@ -103,7 +101,7 @@ export default class Map extends Component {
       errors: [],
       mapTransform: "",
       mapZoomFactor: 0.5,
-      floorsByBuilding: null,
+      floors: [],
       placemarksData: null,
       svgURL: null,
       tagsConnection: null,
@@ -209,12 +207,10 @@ export default class Map extends Component {
   // TODO: We might want to memoize this based on floorID eventually
   getMapData() {
     const { floorID } = this.props;
-    const { floorsByBuilding } = this.state;
-    for (const floors of objectValues(floorsByBuilding)) {
-      for (const floor of floors) {
-        if (floor.id === floorID) {
-          return floor;
-        }
+    const { floors } = this.state;
+    for (const floor of floors) {
+      if (floor.id === floorID) {
+        return floor;
       }
     }
     return null;
@@ -224,17 +220,13 @@ export default class Map extends Component {
     this.toggleLoadingSpinner({ show: true, source: "map" });
     const { onFloorsUpdate } = this.props;
     const floors = await this.getFloors();
-    if (floors && floors.length) {
-      const floorsSortedByLevel = floors
-        .slice()
-        .sort((a, b) => a.level - b.level);
-      const floorsByBuilding = groupBy(floorsSortedByLevel, "group_name");
-      this.setState({ floorsByBuilding }, () => {
+    if (floors && floors.length > 0) {
+      this.setState({ floors }, () => {
         if (!this.zoomD3) {
           this.addZoomBehavior();
         }
         this.zoomToDefault();
-        asyncClientCall(onFloorsUpdate, floorsByBuilding);
+        asyncClientCall(onFloorsUpdate, floors);
       });
     }
     this.toggleLoadingSpinner({ show: false, source: "map" });
@@ -351,17 +343,10 @@ export default class Map extends Component {
     }
   };
 
-  getAllFloors() {
-    const { floorsByBuilding } = this.state;
-    return objectValues(floorsByBuilding).reduce((a, b) => [...a, ...b], []);
-  }
-
-  getFloorCount() {
-    return this.getAllFloors().length;
-  }
-
   shouldShowFloors() {
-    return this.props.showFloorsControl && this.getFloorCount() > 1;
+    const { showFloorsControl } = this.props;
+    const { floors } = this.state;
+    return showFloorsControl && floors.length > 1;
   }
 
   renderFloorLabel() {
@@ -376,12 +361,12 @@ export default class Map extends Component {
 
   renderFloorOverlay() {
     const { floorID } = this.props;
-    const { isFloorOverlayOpen, floorsByBuilding } = this.state;
+    const { isFloorOverlayOpen, floors } = this.state;
     if (isFloorOverlayOpen) {
       return (
         <FloorOverlay
           currentFloorID={floorID}
-          floorsByBuilding={floorsByBuilding}
+          floors={floors}
           toggleFloorOverlay={this.toggleFloorOverlay}
           selectFloorByID={this.selectFloorByID}
         />
@@ -392,12 +377,12 @@ export default class Map extends Component {
 
   renderTagListOverlay() {
     const { locationID, floorID, api, update, tags } = this.props;
-    const { isTagListOverlayOpen, floorsByBuilding } = this.state;
+    const { isTagListOverlayOpen, floors } = this.state;
     if (isTagListOverlayOpen) {
       return (
         <TagListOverlay
           showControlTags={tags.showControlTags}
-          floorsByBuilding={floorsByBuilding}
+          floors={floors}
           tagOptions={tags}
           update={update}
           api={api}

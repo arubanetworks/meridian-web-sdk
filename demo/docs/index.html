@@ -261,12 +261,11 @@
         </li>
         -->
         <li>
-          <span class="parameter">onTagsUpdate(tagsByID):</span> (optional) callback function called whenever any Tags are
-          updated, receiving all Tags in an object keyed by their IDs (capitalized MAC addresses without colons)
+          <span class="parameter">onTagsUpdate(tags):</span> (optional) callback function called whenever any Tags are updated, receiving all Tags in an unsorted array
         </li>
         <li>
-          <span class="parameter">onFloorsUpdate(floorsByBuilding):</span> (optional) callback function called when the Floors
-          are loaded, receiving all Floors in an object keyed by their building names
+          <span class="parameter">onFloorsUpdate(floors):</span> (optional) callback function called when the Floors
+          are loaded, receiving all Floors in an unsorted array
         </li>
         <li>
           <span class="parameter">shouldMapPanZoom(event):</span>

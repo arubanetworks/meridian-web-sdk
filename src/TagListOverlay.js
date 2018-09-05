@@ -11,7 +11,7 @@ import keyBy from "lodash.keyby";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
-import { doesSearchMatch, ungroup, fetchAllTags, normalizeTag } from "./util";
+import { doesSearchMatch, fetchAllTags, normalizeTag } from "./util";
 import { STREAM_ALL_FLOORS } from "./API";
 
 const cssOverlayBuildingName = css({
@@ -84,9 +84,9 @@ class TagListOverlay extends Component {
   }
 
   getFloorToBuilding() {
-    const { floorsByBuilding } = this.props;
+    const { floors } = this.props;
     const floorToBuilding = {};
-    for (const floor of ungroup(floorsByBuilding)) {
+    for (const floor of floors) {
       floorToBuilding[floor.id] = floor.group_name;
     }
     return floorToBuilding;
@@ -104,15 +104,15 @@ class TagListOverlay extends Component {
   };
 
   getFloorsByID() {
-    const { floorsByBuilding } = this.props;
-    return keyBy(ungroup(floorsByBuilding), "id");
+    const { floors } = this.props;
+    return keyBy(floors, "id");
   }
 
   // Move "" to the end of the list (Unassigned)
   processedFloorsByBuilding() {
     const { searchFilter } = this.state;
-    const { floorsByBuilding } = this.props;
-    return ungroup(floorsByBuilding).filter(floor => {
+    const { floors } = this.props;
+    return floors.filter(floor => {
       return (
         doesSearchMatch(searchFilter, floor.name || "") ||
         doesSearchMatch(searchFilter, floor.group_name || "Unassigned")
@@ -205,7 +205,7 @@ class TagListOverlay extends Component {
 
 TagListOverlay.propTypes = {
   showControlTags: PropTypes.bool.isRequired,
-  floorsByBuilding: PropTypes.object.isRequired,
+  floors: PropTypes.object.isRequired,
   tagOptions: PropTypes.object.isRequired,
   update: PropTypes.func.isRequired,
   api: PropTypes.object.isRequired,

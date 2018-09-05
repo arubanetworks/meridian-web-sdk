@@ -59,12 +59,13 @@
         });
       };
 
-      onTagsUpdate = tagsByMAC => {
-        const opts = Object.keys(tagsByMAC).reduce((accumulator, mac) => {
-          accumulator.push({ value: tagsByMAC[mac].name, mac });
-          return accumulator;
-        }, []);
-        this.setState({ tagNames: opts });
+      onTagsUpdate = tags => {
+        this.setState({
+          tagNames: tags.map(t => ({
+            value: t.name,
+            mac: t.mac
+          }))
+        });
       };
 
       onSelectChange = event => {

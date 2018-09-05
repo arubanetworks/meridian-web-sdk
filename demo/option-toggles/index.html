@@ -61,9 +61,9 @@
           </span>
         </label>
         <label class="controls__item">
-          <input type="radio" name="tag-filter" value="filter-CC78ABC6CB63">
-          <span>Show tag with ID
-            <b>CC78ABC6CB63</b>
+          <input type="radio" name="tag-filter" value="filter-Dolly">
+          <span>Show tag
+            <b>CC78ABC6CB63</b> (Dolly)
           </span>
         </label>
       </div>
@@ -118,12 +118,19 @@
         filter: function() { return true; },
         disabled: false
       },
-      onTagsUpdate: function (tagsByID) {
-        if (state.tags.ids && state.tags.ids.length === 1) {
-          var tag = tagsByID[state.tags.ids[0]];
+      onTagsUpdate: function (tags) {
+        console.log(tags);
+        if (state.tags.filter === filterDolly) {
+          var tag = tags.filter(t => t.mac === dollyMAC)[0];
           map.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
         }
       }
+    };
+
+    var dollyMAC = "CC78ABC6CB63";
+
+    function filterDolly(tag) {
+      return tag.mac === dollyMAC;
     };
 
     function updateMap() {
@@ -168,10 +175,8 @@
             return tag.labels.includes("Jamboard");
           };
           break;
-        case "filter-CC78ABC6CB63":
-          state.tags.filter = function(tag) {
-            return tag.mac === "CC78ABC6CB63";
-          };
+        case "filter-Dolly":
+          state.tags.filter = filterDolly
           break;
         default:
           throw new Error("unexpected option " + this.value);

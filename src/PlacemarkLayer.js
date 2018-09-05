@@ -6,9 +6,7 @@ import { fetchAllPaginatedData } from "./util";
 
 export default class PlacemarkLayer extends Component {
   static defaultProps = {
-    markers: {},
-    onUpdate: () => {},
-    onFound: () => {}
+    markers: {}
   };
 
   static propTypes = {
@@ -90,7 +88,6 @@ export default class PlacemarkLayer extends Component {
   }
 
   render() {
-    // console.info("Render > PlacemarkLayer", Math.floor(Date.now() / 1000));
     const { placemarksByID } = this.state;
     const { markers, onMarkerClick, mapZoomFactor } = this.props;
     const filter = this.getFilterFunction();

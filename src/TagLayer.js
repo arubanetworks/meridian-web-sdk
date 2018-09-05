@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
 
 import MapMarker from "./MapMarker";
-import { normalizeTag } from "./util";
+import { normalizeTag, asyncClientCall } from "./util";
 
 export default class TagLayer extends Component {
   static defaultProps = {
@@ -62,10 +62,18 @@ export default class TagLayer extends Component {
     this.disconnect();
   }
 
-  onUpdate = () => {
+  getTags() {
     const { tagsByMAC } = this.state;
+    const tags = [];
+    for (const mac of Object.keys(tagsByMAC)) {
+      tags.push(tagsByMAC[mac]);
+    }
+    return tags;
+  }
+
+  onUpdate = () => {
     const { onUpdate } = this.props;
-    onUpdate(tagsByMAC);
+    onUpdate(this.getTags());
   };
 
   getFilterFunction() {

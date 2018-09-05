@@ -59,15 +59,13 @@ class App extends React.Component {
     });
   }
 
-  onTagsUpdate(tagsByMAC) {
-    const labels = this.getLabels(tagsByMAC);
-    this.setState({ tagLabels: labels });
+  onTagsUpdate(tags) {
+    this.setState({ tagLabels: this.getLabels(tags) });
   }
 
-  getLabels(tagsByMAC) {
+  getLabels(tags) {
     const labels = {};
-    Object.keys(tagsByMAC).forEach(mac => {
-      const tag = tagsByMAC[mac];
+    tags.forEach(tag => {
       tag.labels.forEach(label => {
         labels[label] = true;
       });
@@ -96,9 +94,8 @@ class App extends React.Component {
   }
 
   getVisibleLabels() {
-    return this.state.tagLabels.filter(
-      label => this.state.showTagsWithLabel[label]
-    );
+    const { tagLabels, showTagsWithLabel } = this.state;
+    return tagLabels.filter(label => showTagsWithLabel[label]);
   }
 
   render() {

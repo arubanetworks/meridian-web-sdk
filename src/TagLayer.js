@@ -18,10 +18,7 @@ export default class TagLayer extends Component {
     floorID: PropTypes.string.isRequired,
     api: PropTypes.object,
     markers: PropTypes.shape({
-      all: PropTypes.bool,
-      showControlTags: PropTypes.bool,
-      labels: PropTypes.arrayOf(PropTypes.string),
-      ids: PropTypes.arrayOf(PropTypes.string),
+      filter: PropTypes.func,
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
@@ -73,22 +70,8 @@ export default class TagLayer extends Component {
 
   getFilterFunction() {
     const { markers } = this.props;
-    const { ids, labels, all } = markers;
-    if (all) {
-      return () => true;
-    } else if (ids && Array.isArray(ids) && ids.length > 0) {
-      return tag => markers.ids.includes(tag.mac);
-    } else if (labels && Array.isArray(labels) && labels.length > 0) {
-      return tag => {
-        const tagCatObjects = tag.data.tags;
-        if (tagCatObjects.length) {
-          const tagCats = tagCatObjects.map(obj => obj.name);
-          return tagCats.some(category => markers.labels.includes(category));
-        }
-        return false;
-      };
-    }
-    return () => false;
+    const { filter = () => true } = markers;
+    return filter;
   }
 
   removeTag(data) {

@@ -118,5 +118,5 @@ export const {
   // sheet,
   // caches
 } = createEmotion(context, {
-  key: "meridian-sdk"
+  key: "meridian--private-"
 });

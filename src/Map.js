@@ -64,16 +64,12 @@ export default class Map extends Component {
     showTagsControl: PropTypes.bool,
     tags: PropTypes.shape({
       showControlTags: PropTypes.bool,
-      all: PropTypes.bool,
-      labels: PropTypes.arrayOf(PropTypes.string),
-      ids: PropTypes.arrayOf(PropTypes.string),
+      filter: PropTypes.func,
       disabled: PropTypes.bool
     }),
     placemarks: PropTypes.shape({
       showHiddenPlacemarks: PropTypes.bool,
-      all: PropTypes.bool,
-      types: PropTypes.arrayOf(PropTypes.string),
-      ids: PropTypes.arrayOf(PropTypes.string),
+      filter: PropTypes.func,
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,

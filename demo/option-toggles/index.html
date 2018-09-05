@@ -104,24 +104,18 @@
     var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
       locationID: "5198682008846336",
       floorID: "5755685136498688",
-      height: "360px",
-      tags: {
-        all: true
-      }
+      height: "360px"
     });
     // ---^^^ SDK setup ^^^---
 
     // ---vvv UI controls vvv---
     var state = {
       placemarks: {
-        all: false,
-        labels: undefined,
+        filter: function() { return true; },
         disabled: false
       },
       tags: {
-        all: true,
-        labels: undefined,
-        ids: undefined,
+        filter: function() { return true; },
         disabled: false
       },
       onTagsUpdate: function (tagsByID) {
@@ -140,20 +134,20 @@
     $("[name='placemark-filter']").on("change", function () {
       switch (this.value) {
         case "filter-none":
-          state.placemarks.all = false;
-          state.placemarks.types = [];
+          state.placemarks.filter = function() { return false; };
           break;
         case "filter-all":
-          state.placemarks.all = true;
-          state.placemarks.types = [];
+        state.placemarks.filter = function() { return true; };
           break;
         case "filter-cafe":
-          state.placemarks.all = false;
-          state.placemarks.types = ["cafe"];
+          state.placemarks.filter = function(placemark) {
+            return placemark.type === "cafe";
+          };
           break;
         case "filter-water_fountain":
-          state.placemarks.all = false;
-          state.placemarks.types = ["water_fountain"];
+          state.placemarks.filter = function(placemark) {
+            return placemark.type === "water_fountain";
+          };
           break;
         default:
           throw new Error("unexpected option " + this.value);
@@ -164,24 +158,20 @@
     $("[name='tag-filter']").on("change", function () {
       switch (this.value) {
         case "filter-none":
-          state.tags.all = false;
-          state.tags.labels = [];
-          state.tags.ids = [];
+          state.tags.filter = function() { return false; };
           break;
         case "filter-all":
-          state.tags.all = true;
-          state.tags.labels = [];
-          state.tags.ids = [];
+        state.tags.filter = function() { return true; };
           break;
         case "filter-Jamboard":
-          state.tags.all = false;
-          state.tags.labels = ["Jamboard"];
-          state.tags.ids = [];
+          state.tags.filter = function(tag) {
+            return tag.labels.includes("Jamboard");
+          };
           break;
         case "filter-CC78ABC6CB63":
-          state.tags.all = false;
-          state.tags.labels = [];
-          state.tags.ids = ["CC78ABC6CB63"];
+          state.tags.filter = function(tag) {
+            return tag.mac === "CC78ABC6CB63";
+          };
           break;
         default:
           throw new Error("unexpected option " + this.value);

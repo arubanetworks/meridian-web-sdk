@@ -54,7 +54,7 @@
           height: "360px",
           onTagsUpdate: this.onTagsUpdate,
           tags: {
-            all: true
+            filter: () => true
           }
         });
       };
@@ -73,13 +73,13 @@
           if (selectedTag) {
             this.map.update({
               tags: {
-                ids: [selectedTag]
+                filter: tag => tag.id === selectedLabel,
               }
             });
           } else {
             this.map.update({
               tags: {
-                all: true
+                filter: () => true
               }
             });
           }

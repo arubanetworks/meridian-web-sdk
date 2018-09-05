@@ -27,7 +27,8 @@
   <p>
     Before you can use the Meridian Web SDK, you'll need to obtain a
     <strong class="highlighter">read-only</strong> API token from the Meridian Editor.
-    <a target="_blank" href="https://docs.meridianapps.com/article/374-token-authentication">Go here to learn more about Meridian's token authentication.</a>
+    <a target="_blank" href="https://docs.meridianapps.com/article/374-token-authentication">Go here to learn more about
+      Meridian's token authentication.</a>
   </p>
 
   <pre><code class="js">
@@ -38,18 +39,16 @@
       })
     });
 
-    const element = document.getElementById("meridian-map");
-    const map = MeridianSDK.createMap(element, {
+    var element = document.getElementById("meridian-map");
+    var map = MeridianSDK.createMap(element, {
       locationID: "Insert your location ID here",
-      floorID: "Insert your floor ID here",
-      placemarks: { all: true },
-      tags: { all: false }
+      floorID: "Insert your floor ID here"
     });
 
     // Later on...
     map.update({
-      placemarks: { all: false },
-      tags: { all: true }
+      placemarks: { filter: function() { return false; } },
+      tags: { filter: function() { return false; } }
     });
   </code></pre>
 
@@ -138,19 +137,17 @@
   </h2>
 
   <pre><code class="js">
-    const element = document.getElementById("meridian-map");
-    const map = MeridianSDK.createMap(element, {
+    var element = document.getElementById("meridian-map");
+    var map = MeridianSDK.createMap(element, {
       locationID: "Insert your location ID here",
-      floorID: "Insert your floor ID here",
-      tags: { all: false },
-      placemarks: { all: true }
+      floorID: "Insert your floor ID here"
     });
 
     // Toggle tags/placemarks after 10 seconds
-    setTimeout(() => {
+    setTimeout(function() {
       map.update({
-        tags: { all: true },
-        placemarks: { all: false }
+        placemarks: { filter: function() { return false; } },
+        tags: { filter: function() { return false; } }
       });
     }, 10000)
   </code></pre>
@@ -195,24 +192,25 @@
           <code>{}</code>) an object with any of the following keys:
           <ul>
             <li>
-              <span class="parameter">all:</span> (default =
-              <code>false</code>) show all Tags when true
-            </li>
-            <li>
-              <span class="parameter">ids:</span> (default =
-              <code>[]</code>) show all Tags which match the IDs in the list
-            </li>
-            <li>
-              <span class="parameter">labels:</span> (default =
-              <code>[]</code>) show all Tags which have any of these named labels
+              <span class="parameter">filter:</span> (default =
+              <code>function() { return true; }</code>) boolean predicate function passed to array <code>.filter</code> to filter the array of tags
+
+              <pre><code class="js">
+                var element = document.getElementById("meridian-map");
+                var map = MeridianSDK.createMap(element, {
+                  locationID: "INSERT YOUR LOCATION ID HERE",
+                  floorID: "INSERT YOUR FLOOR ID HERE",
+                  tags: {
+                    filter: function(tag) {
+                      return tag.mac === "CC78ABC6CB63";
+                    }
+                  }
+                });
+              </code></pre>
             </li>
             <li>
               <span class="parameter">showControlTags:</span> (default =
               <code>false</code>) control tags are shown when true
-            </li>
-            <li>
-              <span class="parameter">showHiddenPlacemarks:</span> (default =
-              <code>false</code>) hidden placemarks are shown when true
             </li>
             <li>
               <span class="parameter">disabled:</span> (default =
@@ -225,16 +223,26 @@
           <code>{}</code>) an object with any of the following keys:
           <ul>
             <li>
-              <span class="parameter">all:</span> (default =
-              <code>false</code>) show all placemarks when true
+              <span class="parameter">filter:</span> (default =
+              <code>function() { return true; }</code>) boolean predicate function passed to array <code>.filter</code> to
+              filter the array of placemarks
+
+              <pre><code class="js">
+                var element = document.getElementById("meridian-map");
+                var map = MeridianSDK.createMap(element, {
+                  locationID: "INSERT YOUR LOCATION ID HERE",
+                  floorID: "INSERT YOUR FLOOR ID HERE",
+                  placemarks: {
+                    filter: function(placemark) {
+                      return placemark.type === "water_fountain";
+                    }
+                  }
+                });
+              </code></pre>
             </li>
             <li>
-              <span class="parameter">ids:</span> (default =
-              <code>[]</code>) show all placemarks which match the IDs in the list
-            </li>
-            <li>
-              <span class="parameter">types:</span> (default =
-              <code>[]</code>) show all placemarks matching the named types in the list
+              <span class="parameter">showHiddenPlacemarks:</span> (default =
+              <code>false</code>) hidden placemarks are shown when true
             </li>
             <li>
               <span class="parameter">disabled:</span> (default =
@@ -253,12 +261,12 @@
         </li>
         -->
         <li>
-          <span class="parameter">onTagsUpdate(tagsByID):</span> (optional) callback function called whenever any Tags are updated, receiving all
-          Tags in an object keyed by their IDs (capitalized MAC addresses without colons)
+          <span class="parameter">onTagsUpdate(tagsByID):</span> (optional) callback function called whenever any Tags are
+          updated, receiving all Tags in an object keyed by their IDs (capitalized MAC addresses without colons)
         </li>
         <li>
-          <span class="parameter">onFloorsUpdate(floorsByBuilding):</span> (optional) callback function called when the Floors are loaded, receiving
-          all Floors in an object keyed by their building names
+          <span class="parameter">onFloorsUpdate(floorsByBuilding):</span> (optional) callback function called when the Floors
+          are loaded, receiving all Floors in an object keyed by their building names
         </li>
         <li>
           <span class="parameter">shouldMapPanZoom(event):</span>
@@ -268,8 +276,8 @@
             Return
             <code>true</code> to allow the pan or zoom action,
             <code>false</code> to prevent it. This should be used to require holding down a modifier key like
-            <code>alt</code> or require at least two fingers to pan the map, which is useful for areas where the map could easily interrupt
-            scrolling behavior. Use the function
+            <code>alt</code> or require at least two fingers to pan the map, which is useful for areas where the map could
+            easily interrupt scrolling behavior. Use the function
             <code>MeridianSDK.restrictedPanZoom</code> if you want this behavior, which is implemented as follows:
           </p>
 
@@ -299,13 +307,15 @@
 
   <ul>
     <li>
-      <span class="parameter">update(options):</span> a method that merged the initial options and the options passed here and updates the map
+      <span class="parameter">update(options):</span> a method that merged the initial options and the options passed here
+      and updates the map
     </li>
     <li>
       <span class="parameter">zoomToDefault():</span> a method to zoom the map to the initial zoom level and position
     </li>
     <li>
-      <span class="parameter">zoomToPoint(options):</span> a method to pan and zoom to a specific point on the map, takes an object with
+      <span class="parameter">zoomToPoint(options):</span> a method to pan and zoom to a specific point on the map, takes
+      an object with
       <code>x</code>,
       <code>y</code>, and
       <code>scale</code>, which are all numbers
@@ -325,7 +335,7 @@
   </h2>
 
   <pre><code class="js">
-    const api = MeridianSDK.createAPI({
+    var api = MeridianSDK.createAPI({
       environment: "production",
       token: "Insert your read-only token here"
     });
@@ -357,7 +367,8 @@
       <span class="parameter">environment:</span> the API environment</li>
     <li>
       <span class="parameter">axios:</span> an instance of
-      <a target="_blank" href="https://github.com/axios/axios">axios</a> configured with a base URL for the current environment and including an HTTP header with the token
+      <a target="_blank" href="https://github.com/axios/axios">axios</a> configured with a base URL for the current environment
+      and including an HTTP header with the token
     </li>
     <li>
       <span class="parameter">openStream(options):</span> a function to
@@ -370,33 +381,33 @@
   </h2>
 
   <pre><code class="js">
-    const api = MeridianSDK.createAPI({
+    var api = MeridianSDK.createAPI({
       environment: "production",
       token: "Insert your read-only token here"
     });
 
-    const connection = api.openStream({
+    var connection = api.openStream({
       locationID: "Insert your location ID here",
       floorID: "Insert your floor ID here",
-      onInitialTags: tagArray => {
+      onInitialTags: function(tagArray) {
         console.log(tagArray);
       },
-      onTagDisappear: tag => {
+      onTagDisappear: function(tag) {
         console.log(tag);
       },
-      onTagUpdate: tag => {
+      onTagUpdate: function(tag) {
         console.log(tag);
       },
-      onClose: () => {
+      onClose: function() {
         console.log("Closing!");
       },
-      onException: err => {
+      onException: function(err) {
         console.log("An error occurred:", err)
       }
     });
 
     // Close connection after 10 seconds
-    setTimeout(() => {
+    setTimeout(function() {
       connection.close();
     }, 10000);
   </code></pre>
@@ -412,14 +423,16 @@
           <span class="parameter">floorID:</span> the floor ID
         </li>
         <li>
-          <span class="parameter">onInitialTags:</span> an optional callback function called with an array of Tag data after the stream connection
-          is successful
+          <span class="parameter">onInitialTags:</span> an optional callback function called with an array of Tag data after
+          the stream connection is successful
         </li>
         <li>
-          <span class="parameter">onTagUpdate:</span> an optional callback function called with a single Tag's data when it reports its position
+          <span class="parameter">onTagUpdate:</span> an optional callback function called with a single Tag's data when
+          it reports its position
         </li>
         <li>
-          <span class="parameter">onTagDisappear:</span> an optional callback function called with a single Tag data when it exits its current floor
+          <span class="parameter">onTagDisappear:</span> an optional callback function called with a single Tag data when
+          it exits its current floor
         </li>
         <li>
           <span class="parameter">onClose:</span> an optional callback function called when the stream is closed

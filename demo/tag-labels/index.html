@@ -54,7 +54,8 @@ class App extends React.Component {
       locationID: "5198682008846336",
       floorID: "5708313257836544",
       height: "360px",
-      onTagsUpdate: this.onTagsUpdate
+      onTagsUpdate: this.onTagsUpdate,
+      filter: () => false
     });
   }
 
@@ -84,9 +85,10 @@ class App extends React.Component {
         }
       }),
       () => {
+        const labels = this.getVisibleLabels();
         this.map.update({
           tags: {
-            labels: this.getVisibleLabels()
+            filter: tag => tag.labels.some(label => labels.includes(label))
           }
         });
       }

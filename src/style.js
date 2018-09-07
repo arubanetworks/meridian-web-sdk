@@ -7,6 +7,7 @@ export const theme = {
   textColor: "#1b1b1b",
   black: "#000",
   white: "#fff",
+  almostWhite: "#fafafa",
   textColorBluish: "hsl(208, 17%, 42%)",
   brandOrange: "#ff8300",
   brandBlue: "hsl(203, 100%, 23%)",

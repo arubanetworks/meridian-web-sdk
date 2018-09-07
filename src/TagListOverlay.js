@@ -23,8 +23,7 @@ const cssOverlayBuildingName = css({
   textTransform: "uppercase",
   fontWeight: "bold",
   color: theme.brandBlue,
-  background: theme.white,
-  borderTop: `1px solid ${theme.borderColor}`,
+  background: theme.almostWhite,
   fontSize: theme.fontSizeSmaller,
   padding: 10
 });

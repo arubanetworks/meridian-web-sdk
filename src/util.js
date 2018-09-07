@@ -2,6 +2,7 @@ const ASSETS_URL =
   "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6";
 
 export const STRINGS = {
+  enDash: "–",
   unnamedBuilding: "Unassigned"
 };
 

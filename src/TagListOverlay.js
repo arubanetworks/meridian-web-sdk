@@ -15,6 +15,7 @@ import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
 import { doesSearchMatch, fetchAllTags, normalizeTag } from "./util";
 import { STREAM_ALL_FLOORS } from "./API";
+import LabelList from "./LabelList";
 
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
@@ -39,7 +40,8 @@ const cssOverlayTagButton = css(
   mixins.focusRingMenuItem,
   mixins.buttonHoverActive,
   {
-    label: "overlay-floor-button",
+    label: "overlay-tags-button",
+    minHeight: 60,
     padding: 10,
     paddingLeft: 20,
     display: "block",
@@ -49,7 +51,7 @@ const cssOverlayTagButton = css(
 );
 
 const cssTagListEmpty = css({
-  label: "overlay-floor-list-empty",
+  label: "overlay-tags-list-empty",
   padding: "60px 20px",
   textAlign: "center",
   fontSize: theme.fontSizeBigger,
@@ -178,9 +180,7 @@ class TagListOverlay extends Component {
                 }}
               >
                 <div>{tag.name}</div>
-                <div style={{ color: "rgba(0, 0, 0, 0.6)" }}>
-                  {tag.labels.join(" • ") || "\xa0"}
-                </div>
+                <LabelList labels={tag.labels || []} />
               </button>
             ))}
           </div>

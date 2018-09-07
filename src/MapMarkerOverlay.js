@@ -2,7 +2,7 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 
 import Overlay from "./Overlay";
-import { getPlacemarkIconURL } from "./util";
+import { getPlacemarkIconURL, STRINGS } from "./util";
 import { css, theme, cx } from "./style";
 
 const cssOverlayImage = css({
@@ -77,7 +77,7 @@ const MapMarkerOverlay = ({ data, kind, toggleMapMarkerOverlay }) => {
       />
       <div className={cx(cssOverlayContent, "meridian-overlay-marker-content")}>
         <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
-          {data.name || "–"}
+          {data.name || STRINGS.enDash}
         </p>
         {kind === "tag" ? renderTagData(data) : null}
       </div>

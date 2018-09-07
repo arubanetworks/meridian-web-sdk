@@ -80,6 +80,7 @@ const Placemark = ({
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
+  const typeClassName = data.type;
   const style = {
     left: x,
     top: y,
@@ -87,7 +88,10 @@ const Placemark = ({
   };
   if (labelOnly) {
     return (
-      <div className={cx(cssPlacemark, "meridian-placemark")} style={style}>
+      <div
+        className={cx(cssPlacemark, typeClassName, "meridian-placemark")}
+        style={style}
+      >
         <div
           className={cx(
             cssLabel,
@@ -105,7 +109,11 @@ const Placemark = ({
     <div className={cx(cssPlacemark, "meridian-placemark")} style={style}>
       <button
         disabled={disabled}
-        className={cx(cssPlacemarkIcon, "meridian-placemark-icon")}
+        className={cx(
+          cssPlacemarkIcon,
+          typeClassName,
+          "meridian-placemark-icon"
+        )}
         style={getIconStyle(data)}
         onClick={event => {
           event.target.focus();

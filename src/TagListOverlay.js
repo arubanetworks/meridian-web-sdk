@@ -7,7 +7,9 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import groupBy from "lodash.groupby";
 import keyBy from "lodash.keyby";
+import throttle from "lodash.throttle";
 
+import IconSpinner from "./IconSpinner";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
@@ -55,6 +57,9 @@ const cssTagListEmpty = css({
   color: theme.textColorBluish
 });
 
+// TODO: Cache the results for 5 minutes, I guess, since it's slow
+const throttledFetchAllTags = throttle(fetchAllTags, 5 * 60 * 1000);
+
 class TagListOverlay extends Component {
   constructor(props) {
     super(props);
@@ -76,7 +81,7 @@ class TagListOverlay extends Component {
   async loadTags() {
     const { api, locationID, showControlTags } = this.props;
     const floorID = STREAM_ALL_FLOORS;
-    const rawTags = await fetchAllTags({ api, locationID, floorID });
+    const rawTags = await throttledFetchAllTags({ api, locationID, floorID });
     const normalizedTags = rawTags
       .map(normalizeTag)
       .filter(tag => showControlTags === true || !tag.isControlTag);
@@ -129,7 +134,11 @@ class TagListOverlay extends Component {
     const { update, tagOptions } = this.props;
     const { searchFilter, loading, tags } = this.state;
     if (loading) {
-      return <div className={cssTagListEmpty}>Loading...</div>;
+      return (
+        <div className={cssTagListEmpty}>
+          <IconSpinner />
+        </div>
+      );
     }
     // TODO: Actually search the tags list
     const processedTags = tags
@@ -149,6 +158,7 @@ class TagListOverlay extends Component {
     const organizedTags = this.getOrganizedTags(processedTags);
     const sortedBuildingNames = this.getSortedBuildingNames(organizedTags);
     return (
+      // TODO: We need an empty state here for when the search filter is bad
       <div className={cssTagList}>
         {sortedBuildingNames.map(buildingName => (
           <div key={buildingName}>
@@ -158,10 +168,9 @@ class TagListOverlay extends Component {
                 key={tag.id}
                 className={cssOverlayTagButton}
                 onClick={() => {
-                  console.log(tag);
-                  // TODO: We should stop using objects in the props since they
-                  // don't merge cleanly... It's such a pain
                   update({
+                    locationID: tag.locationID,
+                    floorID: tag.floorID,
                     tags: {
                       ...tagOptions,
                       filter: t => t.id === tag.id

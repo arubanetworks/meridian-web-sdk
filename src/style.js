@@ -16,10 +16,19 @@ export const theme = {
   buttonHoverColor: "hsl(200, 60%, 97%)",
   buttonSeparatorColor: "#f0f0f0",
   borderColor: "#ebeef2",
+  borderColorDarker: "#dfe1e5",
   borderRadius: 6
 };
 
 export const mixins = {
+  flexRow: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  flexColumn: {
+    display: "flex",
+    flexDirection: "column"
+  },
   overflowEllipses: {
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -90,6 +99,9 @@ export const mixins = {
   },
   rounded: {
     borderRadius: theme.borderRadius
+  },
+  maxRounded: {
+    borderRadius: 99999
   },
   paddingMedium: {
     padding: "20px"

@@ -13,7 +13,7 @@ import IconSpinner from "./IconSpinner";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
-import { doesSearchMatch, fetchAllTags, normalizeTag } from "./util";
+import { doesSearchMatch, fetchAllTags, normalizeTag, STRINGS } from "./util";
 import { STREAM_ALL_FLOORS } from "./API";
 import LabelList from "./LabelList";
 
@@ -41,7 +41,7 @@ const cssOverlayTagButton = css(
   mixins.buttonHoverActive,
   {
     label: "overlay-tags-button",
-    minHeight: 60,
+    minHeight: 52,
     padding: 10,
     paddingLeft: 20,
     display: "block",
@@ -49,6 +49,15 @@ const cssOverlayTagButton = css(
     textAlign: "left"
   }
 );
+
+const cssOverlayTagButtonInner = css(mixins.flexRow, {
+  label: "overlay-tags-button-inner"
+});
+
+const cssOverlayTagButtonName = css({
+  label: "overlay-tags-button-name",
+  flex: "1 0 auto"
+});
 
 const cssTagListEmpty = css({
   label: "overlay-tags-list-empty",
@@ -89,18 +98,22 @@ class TagListOverlay extends Component {
     this.setState({ tags: normalizedTags, loading: false });
   }
 
-  getFloorToBuilding() {
+  getFloorToGroup() {
     const { floors } = this.props;
-    const floorToBuilding = {};
+    const floorToGroup = {};
     for (const floor of floors) {
-      floorToBuilding[floor.id] = floor.group_name;
+      floorToGroup[floor.id] = [
+        floor.group_name,
+        STRINGS.enDash,
+        floor.name
+      ].join(" ");
     }
-    return floorToBuilding;
+    return floorToGroup;
   }
 
   getOrganizedTags(tags) {
-    const floorToBuilding = this.getFloorToBuilding();
-    const organizedTags = groupBy(tags, tag => floorToBuilding[tag.floorID]);
+    const floorToGroup = this.getFloorToGroup();
+    const organizedTags = groupBy(tags, tag => floorToGroup[tag.floorID]);
     // TODO: Sort the tags within here by level
     return organizedTags;
   }
@@ -121,14 +134,17 @@ class TagListOverlay extends Component {
     return floors.filter(floor => {
       return (
         doesSearchMatch(searchFilter, floor.name || "") ||
-        doesSearchMatch(searchFilter, floor.group_name || "Unassigned")
+        doesSearchMatch(
+          searchFilter,
+          floor.group_name || STRINGS.unnamedBuilding
+        )
       );
     });
   }
 
-  getSortedBuildingNames(organizedTags) {
+  getSortedGroups(organizedTags) {
     // TODO: Sort the current floor above all the others
-    return Object.keys(organizedTags);
+    return Object.keys(organizedTags).sort();
   }
 
   renderTagList() {
@@ -141,7 +157,6 @@ class TagListOverlay extends Component {
         </div>
       );
     }
-    // TODO: Actually search the tags list
     const processedTags = tags
       .filter(tag => {
         const match = x => doesSearchMatch(searchFilter, x);
@@ -157,11 +172,11 @@ class TagListOverlay extends Component {
         return 0;
       });
     const organizedTags = this.getOrganizedTags(processedTags);
-    const sortedBuildingNames = this.getSortedBuildingNames(organizedTags);
+    const sortedGroups = this.getSortedGroups(organizedTags);
     return (
       // TODO: We need an empty state here for when the search filter is bad
       <div className={cssTagList}>
-        {sortedBuildingNames.map(buildingName => (
+        {sortedGroups.map(buildingName => (
           <div key={buildingName}>
             <div className={cssOverlayBuildingName}>{buildingName}</div>
             {organizedTags[buildingName].map(tag => (
@@ -179,8 +194,10 @@ class TagListOverlay extends Component {
                   });
                 }}
               >
-                <div>{tag.name}</div>
-                <LabelList labels={tag.labels || []} />
+                <div className={cssOverlayTagButtonInner}>
+                  <div className={cssOverlayTagButtonName}>{tag.name}</div>
+                  <LabelList labels={tag.labels || []} />
+                </div>
               </button>
             ))}
           </div>

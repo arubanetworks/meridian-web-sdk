@@ -3,13 +3,16 @@ import PropTypes from "prop-types";
 
 import { mixins, theme, css, cx } from "./style";
 
-const cssLabel = css(mixins.rounded, {
+const cssLabel = css(mixins.maxRounded, {
   label: "label",
   display: "inline-block",
-  padding: "2px 6px",
-  marginRight: "8px",
-  background: theme.borderColor,
-  color: theme.black
+  padding: "3px 8px",
+  border: `1px solid ${theme.borderColorDarker}`,
+  marginBottom: 8,
+  marginRight: 8,
+  fontSize: theme.fontSizeSmaller,
+  background: theme.white,
+  color: "#3b3b3b"
 });
 
 const Label = ({ name }) => (
@@ -20,8 +23,14 @@ Label.propTypes = {
   name: PropTypes.string.isRequired
 };
 
+const cssLabelList = css({
+  label: "label-list",
+  textAlign: "right",
+  flex: "1 1 auto"
+});
+
 const LabelList = ({ labels }) => (
-  <div>
+  <div className={cx("meridian-label-list", cssLabelList)}>
     {labels.map((l, i) => (
       <Label key={i} name={l} />
     ))}

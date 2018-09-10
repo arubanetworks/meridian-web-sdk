@@ -174,7 +174,7 @@ class TagListOverlay extends Component {
               >
                 <div className={cssOverlayTagButtonInner}>
                   <div className={cssOverlayTagButtonName}>{tag.name}</div>
-                  <LabelList labels={tag.labels || []} />
+                  <LabelList align="right" labels={tag.labels || []} />
                 </div>
               </button>
             ))}

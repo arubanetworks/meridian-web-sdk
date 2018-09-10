@@ -23,14 +23,15 @@ Label.propTypes = {
   name: PropTypes.string.isRequired
 };
 
-const cssLabelList = css({
-  label: "label-list",
-  textAlign: "right",
-  flex: "1 1 auto"
-});
+const getCSSLabelList = ({ align }) =>
+  css({
+    label: "label-list",
+    textAlign: align,
+    flex: "1 1 auto"
+  });
 
-const LabelList = ({ labels }) => (
-  <div className={cx("meridian-label-list", cssLabelList)}>
+const LabelList = ({ align, labels }) => (
+  <div className={cx("meridian-label-list", getCSSLabelList({ align }))}>
     {labels.map((l, i) => (
       <Label key={i} name={l} />
     ))}
@@ -38,6 +39,7 @@ const LabelList = ({ labels }) => (
 );
 
 LabelList.propTypes = {
+  align: PropTypes.oneOf(["left", "right"]).isRequired,
   labels: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 

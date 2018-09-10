@@ -3,7 +3,8 @@ const ASSETS_URL =
 
 export const STRINGS = {
   enDash: "–",
-  unnamedBuilding: "Unassigned"
+  unnamedBuilding: "Unassigned",
+  noResultsFound: "No results found."
 };
 
 export function doesSearchMatch(query, target) {

@@ -160,7 +160,7 @@ class FloorOverlay extends Component {
       <div
         className={cx(cssFloorsListEmpty, "meridian-overlay-floor-list-empty")}
       >
-        No results found.
+        {STRINGS.noResultsFound}
       </div>
     );
   }

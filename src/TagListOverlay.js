@@ -171,6 +171,9 @@ class TagListOverlay extends Component {
         }
         return 0;
       });
+    if (processedTags.length === 0) {
+      return <div className={cssTagListEmpty}>{STRINGS.noResultsFound}</div>;
+    }
     const organizedTags = this.getOrganizedTags(processedTags);
     const sortedGroups = this.getSortedGroups(organizedTags);
     return (

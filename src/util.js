@@ -89,8 +89,5 @@ export async function fetchAllTags({ api, locationID, floorID }) {
 }
 
 export function validateEnvironment(env) {
-  if (env === "staging" || env === "production" || env === "eu") {
-    return true;
-  }
-  return false;
+  return env === "staging" || env === "production" || env === "eu";
 }

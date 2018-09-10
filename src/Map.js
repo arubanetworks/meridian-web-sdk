@@ -13,11 +13,14 @@ import ErrorOverlay from "./ErrorOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
+import { STREAM_ALL_FLOORS } from "./API";
 import { css, cx } from "./style";
 import {
   fetchAllPaginatedData,
   asyncClientCall,
-  validateEnvironment
+  validateEnvironment,
+  fetchAllTags,
+  normalizeTag
 } from "./util";
 
 const ZOOM_FACTOR = 0.5;
@@ -106,8 +109,11 @@ export default class Map extends Component {
       svgURL: null,
       tagsConnection: null,
       tagsStatus: "Connecting",
-      selectedItem: null
+      selectedItem: null,
+      areTagsLoading: true,
+      allTagData: []
     };
+    this.tagsTimeout = null;
     this.mapSelection = null;
     this.mapRef = null;
   }
@@ -122,6 +128,7 @@ export default class Map extends Component {
       });
     } else {
       this.initializeFloors();
+      this.initializeTags();
     }
   }
 
@@ -129,6 +136,35 @@ export default class Map extends Component {
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
     }
+  }
+
+  componentWillUnmount() {
+    if (this.tagsTimeout) {
+      clearTimeout(this.tagsTimeout);
+    }
+  }
+
+  initializeTags() {
+    // TODO: We should update this to not poll for updates unless the tab is
+    // active. In that case it would also make since to ask for an update when
+    // they switch back. Might even make sense to block updates while the tag
+    // list is open?
+    const loop = async () => {
+      const { api, locationID, showControlTags } = this.props;
+      const floorID = STREAM_ALL_FLOORS;
+      const rawTags = await fetchAllTags({ api, locationID, floorID });
+      const normalizedTags = rawTags
+        .map(normalizeTag)
+        .filter(tag => showControlTags === true || !tag.isControlTag);
+      this.setState({
+        areTagsLoading: false,
+        allTagData: normalizedTags
+      });
+      this.tagsTimeout = setTimeout(loop, 5 * 6 * 1000);
+    };
+    loop();
+    // We're not using setInterval for this because we want to wait on the async
+    // function to complete to avoid race conditions
   }
 
   toggleTagListOverlay = ({ open }) => {
@@ -377,12 +413,20 @@ export default class Map extends Component {
 
   renderTagListOverlay() {
     const { locationID, floorID, api, update, tags } = this.props;
-    const { isTagListOverlayOpen, floors } = this.state;
+    const {
+      isTagListOverlayOpen,
+      floors,
+      allTagData,
+      areTagsLoading
+    } = this.state;
     if (isTagListOverlayOpen) {
       return (
         <TagListOverlay
+          onMarkerClick={this.onMarkerClick}
           showControlTags={tags.showControlTags}
           floors={floors}
+          loading={areTagsLoading}
+          tags={allTagData}
           tagOptions={tags}
           update={update}
           api={api}

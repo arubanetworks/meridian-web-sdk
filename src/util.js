@@ -7,8 +7,9 @@ export const STRINGS = {
   noResultsFound: "No results found."
 };
 
-export function doesSearchMatch(query, target) {
-  return target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
+export function createSearchMatcher(query) {
+  return target =>
+    target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
 }
 
 export function requiredParam(funcName, argName) {

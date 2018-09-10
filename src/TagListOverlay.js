@@ -7,14 +7,12 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import groupBy from "lodash.groupby";
 import keyBy from "lodash.keyby";
-import throttle from "lodash.throttle";
 
 import IconSpinner from "./IconSpinner";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
-import { doesSearchMatch, fetchAllTags, normalizeTag, STRINGS } from "./util";
-import { STREAM_ALL_FLOORS } from "./API";
+import { createSearchMatcher, STRINGS } from "./util";
 import LabelList from "./LabelList";
 
 const cssOverlayBuildingName = css({
@@ -67,16 +65,11 @@ const cssTagListEmpty = css({
   color: theme.textColorBluish
 });
 
-// TODO: Cache the results for 5 minutes, I guess, since it's slow
-const throttledFetchAllTags = throttle(fetchAllTags, 5 * 60 * 1000);
-
 class TagListOverlay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchFilter: "",
-      loading: true,
-      tags: null
+      searchFilter: ""
     };
     this.searchInput = null;
   }
@@ -85,17 +78,6 @@ class TagListOverlay extends Component {
     if (this.searchInput) {
       this.searchInput.focus();
     }
-    this.loadTags();
-  }
-
-  async loadTags() {
-    const { api, locationID, showControlTags } = this.props;
-    const floorID = STREAM_ALL_FLOORS;
-    const rawTags = await throttledFetchAllTags({ api, locationID, floorID });
-    const normalizedTags = rawTags
-      .map(normalizeTag)
-      .filter(tag => showControlTags === true || !tag.isControlTag);
-    this.setState({ tags: normalizedTags, loading: false });
   }
 
   getFloorToGroup() {
@@ -113,9 +95,7 @@ class TagListOverlay extends Component {
 
   getOrganizedTags(tags) {
     const floorToGroup = this.getFloorToGroup();
-    const organizedTags = groupBy(tags, tag => floorToGroup[tag.floorID]);
-    // TODO: Sort the tags within here by level
-    return organizedTags;
+    return groupBy(tags, tag => floorToGroup[tag.floorID]);
   }
 
   handleSearchFilterChange = event => {
@@ -131,15 +111,12 @@ class TagListOverlay extends Component {
   processedFloorsByBuilding() {
     const { searchFilter } = this.state;
     const { floors } = this.props;
-    return floors.filter(floor => {
-      return (
-        doesSearchMatch(searchFilter, floor.name || "") ||
-        doesSearchMatch(
-          searchFilter,
-          floor.group_name || STRINGS.unnamedBuilding
-        )
-      );
-    });
+    const match = createSearchMatcher(searchFilter);
+    return floors.filter(
+      floor =>
+        match(floor.name || "") ||
+        match(floor.group_name || STRINGS.unnamedBuilding)
+    );
   }
 
   getSortedGroups(organizedTags) {
@@ -148,8 +125,8 @@ class TagListOverlay extends Component {
   }
 
   renderTagList() {
-    const { update, tagOptions } = this.props;
-    const { searchFilter, loading, tags } = this.state;
+    const { update, tagOptions, tags, loading, onMarkerClick } = this.props;
+    const { searchFilter } = this.state;
     if (loading) {
       return (
         <div className={cssTagListEmpty}>
@@ -157,11 +134,9 @@ class TagListOverlay extends Component {
         </div>
       );
     }
+    const match = createSearchMatcher(searchFilter);
     const processedTags = tags
-      .filter(tag => {
-        const match = x => doesSearchMatch(searchFilter, x);
-        return match(tag.name) || tag.labels.some(match);
-      })
+      .filter(tag => match(tag.name) || tag.labels.some(match))
       .sort((a, b) => {
         if (a.name < b.name) {
           return -1;
@@ -177,7 +152,6 @@ class TagListOverlay extends Component {
     const organizedTags = this.getOrganizedTags(processedTags);
     const sortedGroups = this.getSortedGroups(organizedTags);
     return (
-      // TODO: We need an empty state here for when the search filter is bad
       <div className={cssTagList}>
         {sortedGroups.map(buildingName => (
           <div key={buildingName}>
@@ -195,6 +169,7 @@ class TagListOverlay extends Component {
                       filter: t => t.id === tag.id
                     }
                   });
+                  onMarkerClick(tag);
                 }}
               >
                 <div className={cssOverlayTagButtonInner}>
@@ -232,6 +207,9 @@ class TagListOverlay extends Component {
 }
 
 TagListOverlay.propTypes = {
+  onMarkerClick: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.object).isRequired,
   showControlTags: PropTypes.bool.isRequired,
   floors: PropTypes.object.isRequired,
   tagOptions: PropTypes.object.isRequired,

@@ -5,7 +5,7 @@ import groupBy from "lodash.groupby";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
-import { doesSearchMatch, STRINGS } from "./util";
+import { createSearchMatcher, STRINGS } from "./util";
 
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
@@ -94,15 +94,12 @@ class FloorOverlay extends Component {
   processedFloorsByBuilding() {
     const { searchFilter } = this.state;
     const { floors } = this.props;
-    return floors.filter(floor => {
-      return (
-        doesSearchMatch(searchFilter, floor.name || "") ||
-        doesSearchMatch(
-          searchFilter,
-          floor.group_name || STRINGS.unnamedBuilding
-        )
-      );
-    });
+    const match = createSearchMatcher(searchFilter);
+    return floors.filter(
+      floor =>
+        match(floor.name || "") ||
+        match(floor.group_name || STRINGS.unnamedBuilding)
+    );
   }
 
   renderList() {

@@ -62,8 +62,11 @@ export default class PlacemarkLayer extends Component {
   }
 
   normalizePlacemark(placemark) {
-    // TODO: Strip off excess data
-    return placemark;
+    // TODO: Strip off excess data, maybe?
+    return {
+      kind: "placemark",
+      ...placemark
+    };
   }
 
   groupPlacemarksByID(tags) {

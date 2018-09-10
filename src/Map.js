@@ -441,12 +441,11 @@ export default class Map extends Component {
 
   renderMapMarkerOverlay() {
     const { isMapMarkerOverlayOpen, selectedItem } = this.state;
-    if (isMapMarkerOverlayOpen && selectedItem && selectedItem.data) {
+    if (isMapMarkerOverlayOpen && selectedItem) {
       return (
         <MapMarkerOverlay
           toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
-          data={selectedItem.data}
-          kind={selectedItem.kind}
+          item={selectedItem}
         />
       );
     }

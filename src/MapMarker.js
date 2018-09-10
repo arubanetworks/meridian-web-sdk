@@ -2,48 +2,22 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 
 import Tag from "./Tag";
-import Placemark from "./Placemark";
 
-const MapMarker = ({
-  kind,
-  id,
-  x,
-  y,
-  data,
-  mapZoomFactor,
-  onClick = () => {},
-  disabled
-}) => {
-  if (kind === "tag") {
-    return (
-      <Tag
-        mapZoomFactor={mapZoomFactor}
-        id={id}
-        x={x}
-        y={y}
-        data={data}
-        onClick={() => {
-          onClick({ data, kind });
-        }}
-        disabled={disabled}
-      />
-    );
-  } else if (kind === "placemark") {
-    return (
-      <Placemark
-        mapZoomFactor={mapZoomFactor}
-        id={id}
-        x={x}
-        y={y}
-        data={data}
-        onClick={() => {
-          onClick({ data, kind });
-        }}
-        disabled={disabled}
-      />
-    );
-  }
-  return null;
+const MapMarker = item => {
+  const { id, x, y, data, mapZoomFactor, disabled, onClick = () => {} } = item;
+  return (
+    <Tag
+      mapZoomFactor={mapZoomFactor}
+      id={id}
+      x={x}
+      y={y}
+      data={data}
+      onClick={() => {
+        onClick(item);
+      }}
+      disabled={disabled}
+    />
+  );
 };
 
 MapMarker.propTypes = {

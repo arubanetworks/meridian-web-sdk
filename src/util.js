@@ -50,6 +50,7 @@ export function normalizeTag(tag) {
   } = tag.calculations.default.location;
   const labels = tag.editor_data.tags.map(x => x.name);
   return {
+    kind: "tag",
     name,
     mac,
     x,

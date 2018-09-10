@@ -50,44 +50,33 @@ function getImageStyle({ image_url, color, type }) {
   }
 }
 
-function renderTagData(data) {
-  let labels = null;
-  if (data.tags.length) {
-    labels = data.tags.map(tag => tag.name).join(", ");
-  }
-  return (
-    <div className={cx(cssTagData, "meridian-overlay-marker-tagdata")}>
-      {labels ? <p>Labels: {labels}</p> : null}
-      <p>MAC/ID: {data.id}</p>
+const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
+  <Overlay
+    position="left"
+    onCloseClicked={() => {
+      toggleMapMarkerOverlay({ open: false });
+    }}
+  >
+    <div
+      className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
+      style={getImageStyle(item)}
+    />
+    <div className={cx(cssOverlayContent, "meridian-overlay-marker-conte nt")}>
+      <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
+        {item.name || STRINGS.enDash}
+      </p>
+      {item.kind === "tag" ? (
+        <div className={cx(cssTagData, "meridian-overlay-marker-tagdata")}>
+          {item.labels ? <p>Labels: {item.labels}</p> : null}
+          <p>MAC/ID: {item.mac || item.id}</p>
+        </div>
+      ) : null}
     </div>
-  );
-}
-
-const MapMarkerOverlay = ({ data, kind, toggleMapMarkerOverlay }) => {
-  return (
-    <Overlay
-      position="left"
-      onCloseClicked={() => {
-        toggleMapMarkerOverlay({ open: false });
-      }}
-    >
-      <div
-        className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
-        style={getImageStyle(data)}
-      />
-      <div className={cx(cssOverlayContent, "meridian-overlay-marker-content")}>
-        <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
-          {data.name || STRINGS.enDash}
-        </p>
-        {kind === "tag" ? renderTagData(data) : null}
-      </div>
-    </Overlay>
-  );
-};
+  </Overlay>
+);
 
 MapMarkerOverlay.propTypes = {
-  data: PropTypes.object,
-  kind: PropTypes.oneOf(["placemark", "tag"]),
+  item: PropTypes.object,
   toggleMapMarkerOverlay: PropTypes.func
 };
 

@@ -52,6 +52,7 @@ export function normalizeTag(tag) {
   return {
     kind: "tag",
     name,
+    id: mac,
     mac,
     x,
     y,

@@ -29,9 +29,10 @@ const cssTagData = css({
   fontSize: 14
 });
 
-function getImageStyle({ image_url, color, type }) {
-  if (type) {
-    const url = image_url || getPlacemarkIconURL(type);
+function getImageStyle({ data }) {
+  const { image_url, type, color } = data;
+  if (!image_url && type) {
+    const url = getPlacemarkIconURL(type);
     return {
       backgroundSize: "70%",
       backgroundImage: `url('${url}')`,
@@ -62,14 +63,14 @@ const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
       className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
       style={getImageStyle(item)}
     />
-    <div className={cx(cssOverlayContent, "meridian-overlay-marker-conte nt")}>
+    <div className={cx(cssOverlayContent, "meridian-overlay-marker-content")}>
       <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
         {item.name || STRINGS.enDash}
       </p>
       {item.kind === "tag" ? (
         <div className={cx(cssTagData, "meridian-overlay-marker-tagdata")}>
           {item.labels ? <LabelList align="left" labels={item.labels} /> : null}
-          <p>MAC/ID: {item.mac || item.id}</p>
+          <p>MAC: {item.mac}</p>
         </div>
       ) : null}
     </div>
@@ -77,8 +78,8 @@ const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
 );
 
 MapMarkerOverlay.propTypes = {
-  item: PropTypes.object,
-  toggleMapMarkerOverlay: PropTypes.func
+  item: PropTypes.object.isRequired,
+  toggleMapMarkerOverlay: PropTypes.func.isRequired
 };
 
 export default MapMarkerOverlay;

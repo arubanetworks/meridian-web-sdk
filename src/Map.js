@@ -533,6 +533,7 @@ export default class Map extends Component {
             />
             {!errors.length && mapData ? (
               <PlacemarkLayer
+                selectedItem={selectedItem}
                 isPanningOrZooming={isPanningOrZooming}
                 mapZoomFactor={mapZoomFactor}
                 locationID={locationID}

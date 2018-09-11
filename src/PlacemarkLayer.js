@@ -10,6 +10,7 @@ export default class PlacemarkLayer extends Component {
   };
 
   static propTypes = {
+    selectedItem: PropTypes.object.isRequired,
     isPanningOrZooming: PropTypes.bool.isRequired,
     mapZoomFactor: PropTypes.number.isRequired,
     locationID: PropTypes.string.isRequired,
@@ -92,7 +93,7 @@ export default class PlacemarkLayer extends Component {
 
   render() {
     const { placemarksByID } = this.state;
-    const { markers, onMarkerClick, mapZoomFactor } = this.props;
+    const { markers, onMarkerClick, mapZoomFactor, selectedItem } = this.props;
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(placemarksByID)
       .map(id => placemarksByID[id])
@@ -106,6 +107,7 @@ export default class PlacemarkLayer extends Component {
     const culledMarkers = this.cullMarkers(filteredMarkers);
     const finalMarkers = culledMarkers.map(placemark => (
       <MapMarker
+        selectedItem={selectedItem}
         mapZoomFactor={mapZoomFactor}
         key={placemark.id}
         kind="placemark"

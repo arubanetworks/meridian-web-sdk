@@ -25,6 +25,7 @@ const cssErrorOverlay = css(mixins.rounded, {
 
 const cssCloseButton = css(mixins.buttonReset, {
   label: "close",
+  cursor: "pointer",
   float: "right",
   width: 38,
   height: 38,

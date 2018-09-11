@@ -36,6 +36,7 @@ const cssClose = css(
   mixins.focusRing,
   {
     label: "overlay-close",
+    cursor: "pointer",
     position: "absolute",
     zIndex: 2,
     top: 10,

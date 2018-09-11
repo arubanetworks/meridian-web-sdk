@@ -38,7 +38,6 @@ const cssPlacemarkIconSelected = css(cssPlacemarkIcon, {
   zIndex: 3,
   width: SIZE * 1.25,
   height: SIZE * 1.25,
-  // boxShadow: "0 0 0 2px white, 0 0 4px 2px black"
   boxShadow: "0 0 4px black"
 });
 

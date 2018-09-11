@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
 
 import MapMarker from "./MapMarker";
-import { normalizeTag, asyncClientCall } from "./util";
+import { normalizeTag } from "./util";
 
 export default class TagLayer extends Component {
   static defaultProps = {

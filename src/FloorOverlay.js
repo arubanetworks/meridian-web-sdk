@@ -11,6 +11,8 @@ const cssOverlayBuildingName = css({
   label: "overlay-building-name",
   textTransform: "uppercase",
   fontWeight: "bold",
+  top: 0,
+  position: "sticky",
   color: theme.brandBlue,
   background: theme.almostWhite,
   fontSize: theme.fontSizeSmaller,
@@ -19,8 +21,8 @@ const cssOverlayBuildingName = css({
 
 const cssFloorsList = css({
   label: "floors-list",
-  overflowY: "auto",
-  flex: "1 1 auto"
+  overflowY: "auto"
+  // flex: "1 1 auto"
 });
 
 const cssOverlayFloorButton = css(

@@ -137,6 +137,13 @@ class TagListOverlay extends Component {
     const match = createSearchMatcher(searchFilter);
     const processedTags = tags
       .filter(tag => match(tag.name) || tag.labels.some(match))
+      // TODO: Should we show hidden tags?
+      .filter(tag => {
+        if (tagOptions.showControlTags !== true) {
+          return !tag.isControlTag;
+        }
+        return true;
+      })
       .sort((a, b) => {
         if (a.name < b.name) {
           return -1;
@@ -161,12 +168,13 @@ class TagListOverlay extends Component {
                 key={tag.id}
                 className={cssOverlayTagButton}
                 onClick={() => {
+                  console.log(tag);
                   update({
                     locationID: tag.locationID,
                     floorID: tag.floorID,
                     tags: {
                       ...tagOptions,
-                      filter: t => t.id === tag.id
+                      filter: () => true
                     }
                   });
                   onMarkerClick(tag);

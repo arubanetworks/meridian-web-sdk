@@ -39,11 +39,10 @@ const cssTag = css(
 );
 
 const cssTagSelected = css(cssTag, {
-  outline: "none",
   width: SIZE * 1.25,
   height: SIZE * 1.25,
   zIndex: 3,
-  boxShadow: "0 0 4px black"
+  boxShadow: "0 0 0 2px white, 0 0 4px black"
 });
 
 const Tag = ({

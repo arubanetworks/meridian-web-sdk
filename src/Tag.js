@@ -29,11 +29,11 @@ const cssTag = css(
     border: "2px solid white",
     overflow: "hidden",
     transition: `
-    width 80ms ease,
-    height 80ms ease,
-    top 500ms ease,
-    left 500ms ease
-  `,
+      width 80ms ease,
+      height 80ms ease,
+      top 500ms ease,
+      left 500ms ease
+    `,
     zIndex: 2
   }
 );

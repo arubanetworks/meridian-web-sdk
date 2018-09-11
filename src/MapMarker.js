@@ -16,7 +16,6 @@ const MapMarker = item => {
     disabled,
     onClick = () => {}
   } = item;
-  console.log({ id, mac: item.mac }, selectedItem);
   const props = {
     isSelected: selectedItem ? selectedItem.id === id : false,
     mapZoomFactor,

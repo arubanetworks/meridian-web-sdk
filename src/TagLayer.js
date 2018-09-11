@@ -19,6 +19,7 @@ export default class TagLayer extends Component {
     api: PropTypes.object,
     markers: PropTypes.shape({
       filter: PropTypes.func,
+      showControlTags: PropTypes.bool,
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,

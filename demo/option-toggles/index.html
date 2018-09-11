@@ -119,7 +119,6 @@
         disabled: false
       },
       onTagsUpdate: function (tags) {
-        console.log(tags);
         if (state.tags.filter === filterDolly) {
           var tag = tags.filter(t => t.mac === dollyMAC)[0];
           map.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });

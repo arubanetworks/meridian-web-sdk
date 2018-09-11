@@ -6,6 +6,7 @@ import Placemark from "./Placemark";
 
 const MapMarker = item => {
   const {
+    selectedItem,
     kind,
     id,
     x,
@@ -15,7 +16,9 @@ const MapMarker = item => {
     disabled,
     onClick = () => {}
   } = item;
+  console.log({ id, mac: item.mac }, selectedItem);
   const props = {
+    isSelected: selectedItem ? selectedItem.id === id : false,
     mapZoomFactor,
     id,
     x,

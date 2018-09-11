@@ -12,6 +12,7 @@ export default class TagLayer extends Component {
   };
 
   static propTypes = {
+    selectedItem: PropTypes.object.isRequired,
     isPanningOrZooming: PropTypes.bool.isRequired,
     mapZoomFactor: PropTypes.number.isRequired,
     locationID: PropTypes.string.isRequired,
@@ -172,7 +173,7 @@ export default class TagLayer extends Component {
 
   render() {
     const { tagsByMAC } = this.state;
-    const { markers, onMarkerClick, mapZoomFactor } = this.props;
+    const { selectedItem, markers, onMarkerClick, mapZoomFactor } = this.props;
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(tagsByMAC)
       .map(mac => tagsByMAC[mac])
@@ -185,10 +186,11 @@ export default class TagLayer extends Component {
       .filter(filter)
       .map(tag => (
         <MapMarker
+          selectedItem={selectedItem}
           mapZoomFactor={mapZoomFactor}
           key={tag.mac}
           kind="tag"
-          mac={tag.mac}
+          id={tag.mac}
           x={tag.x}
           y={tag.y}
           name={tag.name}

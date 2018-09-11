@@ -474,6 +474,7 @@ export default class Map extends Component {
   render() {
     const mapData = this.getMapData();
     const {
+      selectedItem,
       mapTransform,
       mapZoomFactor,
       isPanningOrZooming,
@@ -545,6 +546,7 @@ export default class Map extends Component {
 
             {!errors.length && mapData ? (
               <TagLayer
+                selectedItem={selectedItem}
                 isPanningOrZooming={isPanningOrZooming}
                 mapZoomFactor={mapZoomFactor}
                 locationID={locationID}

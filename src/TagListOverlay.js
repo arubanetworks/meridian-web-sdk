@@ -168,7 +168,6 @@ class TagListOverlay extends Component {
                 key={tag.id}
                 className={cssOverlayTagButton}
                 onClick={() => {
-                  console.log(tag);
                   update({
                     locationID: tag.locationID,
                     floorID: tag.floorID,

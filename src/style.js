@@ -1,8 +1,9 @@
 import createEmotion from "create-emotion";
 
 export const theme = {
-  fontSize: "16px",
+  fontSizeSmallest: "12px",
   fontSizeSmaller: "14px",
+  fontSize: "16px",
   fontSizeBigger: "18px",
   textColor: "#1b1b1b",
   black: "#000",

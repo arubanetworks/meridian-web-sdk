@@ -136,7 +136,9 @@ class TagListOverlay extends Component {
     }
     const match = createSearchMatcher(searchFilter);
     const processedTags = tags
-      .filter(tag => match(tag.name) || tag.labels.some(match))
+      .filter(
+        tag => match(tag.name) || match(tag.mac) || tag.labels.some(match)
+      )
       // TODO: Should we show hidden tags?
       .filter(tag => {
         if (tagOptions.showControlTags !== true) {
@@ -181,7 +183,11 @@ class TagListOverlay extends Component {
               >
                 <div className={cssOverlayTagButtonInner}>
                   <div className={cssOverlayTagButtonName}>{tag.name}</div>
-                  <LabelList align="right" labels={tag.labels || []} />
+                  <LabelList
+                    align="right"
+                    labels={tag.labels || []}
+                    fontSize={theme.fontSizeSmallest}
+                  />
                 </div>
               </button>
             ))}

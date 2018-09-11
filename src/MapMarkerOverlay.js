@@ -69,7 +69,13 @@ const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
       </p>
       {item.kind === "tag" ? (
         <div className={cx(cssTagData, "meridian-overlay-marker-tagdata")}>
-          {item.labels ? <LabelList align="left" labels={item.labels} /> : null}
+          {item.labels ? (
+            <LabelList
+              align="left"
+              labels={item.labels}
+              fontSize={theme.fontSize}
+            />
+          ) : null}
           <p>MAC: {item.mac}</p>
         </div>
       ) : null}

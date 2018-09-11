@@ -7,11 +7,9 @@ const cssLabel = css(mixins.maxRounded, {
   label: "label",
   display: "inline-block",
   padding: "3px 8px",
-  border: `1px solid ${theme.borderColorDarker}`,
   marginBottom: 8,
   marginRight: 8,
-  fontSize: theme.fontSizeSmaller,
-  background: theme.white,
+  background: "rgba(0, 0, 0, 0.035)",
   color: "#3b3b3b"
 });
 
@@ -23,15 +21,18 @@ Label.propTypes = {
   name: PropTypes.string.isRequired
 };
 
-const getCSSLabelList = ({ align }) =>
+const getCSSLabelList = ({ align, fontSize }) =>
   css({
+    fontSize,
     label: "label-list",
     textAlign: align,
     flex: "1 1 auto"
   });
 
-const LabelList = ({ align, labels }) => (
-  <div className={cx("meridian-label-list", getCSSLabelList({ align }))}>
+const LabelList = ({ align, labels, fontSize = theme.fontSize }) => (
+  <div
+    className={cx("meridian-label-list", getCSSLabelList({ align, fontSize }))}
+  >
     {labels.map((l, i) => (
       <Label key={i} name={l} />
     ))}
@@ -39,6 +40,7 @@ const LabelList = ({ align, labels }) => (
 );
 
 LabelList.propTypes = {
+  fontSize: PropTypes.string,
   align: PropTypes.oneOf(["left", "right"]).isRequired,
   labels: PropTypes.arrayOf(PropTypes.string).isRequired
 };

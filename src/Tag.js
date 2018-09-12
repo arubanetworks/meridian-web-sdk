@@ -57,7 +57,7 @@ const Tag = ({
   const k = 1 / mapZoomFactor / shrinkFactor;
   const labelClassNames = labels.map(label => {
     const s = label.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
-    return `meridian-tag-label--${s}`;
+    return `meridian-tag-label-${s}`;
   });
   const className = isSelected
     ? cx("meridian-tag-selected", labelClassNames, cssTagSelected)

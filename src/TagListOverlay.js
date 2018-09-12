@@ -39,7 +39,7 @@ const cssOverlayTagButton = css(
   mixins.buttonHoverActive,
   {
     label: "overlay-tags-button",
-    minHeight: 52,
+    minHeight: 56,
     padding: 10,
     paddingLeft: 20,
     display: "block",
@@ -49,7 +49,8 @@ const cssOverlayTagButton = css(
 );
 
 const cssOverlayTagButtonInner = css(mixins.flexRow, {
-  label: "overlay-tags-button-inner"
+  label: "overlay-tags-button-inner",
+  alignItems: "center"
 });
 
 const cssOverlayTagButtonName = css({

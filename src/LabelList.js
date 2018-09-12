@@ -23,8 +23,9 @@ Label.propTypes = {
 
 const getCSSLabelList = ({ align, fontSize }) =>
   css({
-    fontSize,
     label: "label-list",
+    fontSize,
+    marginTop: 8,
     textAlign: align,
     flex: "1 1 auto"
   });

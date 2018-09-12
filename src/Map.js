@@ -520,7 +520,7 @@ export default class Map extends Component {
           ref={el => {
             this.mapRef = el;
           }}
-          className={cx(cssMap, "meridian-map-background")}
+          className={cx("meridian-map-background", cssMap)}
           onClick={this.onClick}
           style={{ width, height }}
         >

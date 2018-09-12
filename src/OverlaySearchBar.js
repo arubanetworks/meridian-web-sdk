@@ -71,15 +71,15 @@ class OverlaySearchBar extends Component {
   render() {
     const { value, onChange = () => {} } = this.props;
     return (
-      <div className={cx(cssSearchBar, "meridian-overlay-search-bar")}>
+      <div className={cx("meridian-overlay-search-bar", cssSearchBar)}>
         <SearchIcon
-          className={cx(cssSearchIcon, "meridian-overlay-search-icon")}
+          className={cx("meridian-overlay-search-icon", cssSearchIcon)}
         />
         <input
           value={value}
           type="text"
           placeholder="Search"
-          className={cx(cssSearchInput, "meridian-overlay-search-input")}
+          className={cx("meridian-overlay-search-input", cssSearchInput)}
           onInput={event => {
             onChange(event.target.value);
           }}

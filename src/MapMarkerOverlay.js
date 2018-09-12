@@ -59,15 +59,15 @@ const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
     }}
   >
     <div
-      className={cx(cssOverlayImage, "meridian-overlay-marker-image")}
+      className={cx("meridian-overlay-marker-image", cssOverlayImage)}
       style={getImageStyle(item)}
     />
-    <div className={cx(cssOverlayContent, "meridian-overlay-marker-content")}>
-      <p className={cx(cssOverlayName, "meridian-overlay-marker-name")}>
+    <div className={cx("meridian-overlay-marker-content", cssOverlayContent)}>
+      <p className={cx("meridian-overlay-marker-name", cssOverlayName)}>
         {item.name || STRINGS.enDash}
       </p>
       {item.kind === "tag" ? (
-        <div className={cx(cssTagData, "meridian-overlay-marker-tagdata")}>
+        <div className={cx("meridian-overlay-marker-tagdata", cssTagData)}>
           {item.labels ? (
             <LabelList
               align="left"

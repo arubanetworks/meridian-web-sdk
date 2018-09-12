@@ -118,13 +118,13 @@ class FloorOverlay extends Component {
     }
     if (buildingNames.length > 0) {
       return (
-        <div className={cx(cssFloorsList, "meridian-overlay-floor-list")}>
+        <div className={cx("meridian-overlay-floor-list", cssFloorsList)}>
           {buildingNames.map(buildingName => (
             <div key={buildingName}>
               <div
                 className={cx(
-                  cssOverlayBuildingName,
-                  "meridian-overlay-building-name"
+                  "meridian-overlay-building-name",
+                  cssOverlayBuildingName
                 )}
               >
                 {buildingName || STRINGS.unnamedBuilding}

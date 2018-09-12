@@ -18,7 +18,7 @@ const cssLoadingSpinner = css({
 });
 
 const LoadingOverlay = () => (
-  <div className={cx(cssLoadingSpinner, "meridian-loading-spinner")}>
+  <div className={cx("meridian-loading-spinner", cssLoadingSpinner)}>
     <IconSpinner />
   </div>
 );

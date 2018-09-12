@@ -9,8 +9,6 @@ const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
 const DEFAULT_TAG_IMAGE = getAssetURL("tags/tag.svg");
 
-window.css = css;
-
 const cssTag = css(
   mixins.shadow,
   mixins.buttonReset,

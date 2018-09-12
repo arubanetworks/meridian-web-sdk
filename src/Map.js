@@ -160,7 +160,7 @@ export default class Map extends Component {
         areTagsLoading: false,
         allTagData: normalizedTags
       });
-      this.tagsTimeout = setTimeout(loop, 5 * 6 * 1000);
+      this.tagsTimeout = setTimeout(loop, 5 * 60 * 1000);
     };
     loop();
     // We're not using setInterval for this because we want to wait on the async

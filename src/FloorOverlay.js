@@ -22,7 +22,6 @@ const cssOverlayBuildingName = css({
 const cssFloorsList = css({
   label: "floors-list",
   overflowY: "auto"
-  // flex: "1 1 auto"
 });
 
 const cssOverlayFloorButton = css(

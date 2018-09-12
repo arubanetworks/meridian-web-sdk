@@ -13,7 +13,7 @@ const cssErrorOverlay = css(mixins.rounded, {
   right: 0,
   margin: "0 auto",
   minWidth: 300,
-  maxWidth: 400,
+  maxWidth: 420,
   border: "1px solid #dfe1ef",
   paddingTop: 15,
   paddingRight: 20,
@@ -43,7 +43,7 @@ const cssCloseButton = css(mixins.buttonReset, {
 
 const CloseButton = ({ toggleErrorOverlay }) => (
   <button
-    className={cx(cssCloseButton, "meridian-error-close")}
+    className={cx("meridian-error-close", cssCloseButton)}
     onClick={() => {
       toggleErrorOverlay({ open: false });
     }}
@@ -57,7 +57,7 @@ CloseButton.propTypes = {
 };
 
 const ErrorOverlay = ({ toggleErrorOverlay, messages }) => (
-  <div className={cx(cssErrorOverlay, "meridian-error-overlay")}>
+  <div className={cx("meridian-error-overlay", cssErrorOverlay)}>
     <CloseButton toggleErrorOverlay={toggleErrorOverlay} />
     <div style={{ paddingBottom: 0 }}>
       <p>Sorry, something went wrong. It might be related to:</p>

@@ -14,13 +14,13 @@ const cssErrorOverlay = css(mixins.rounded, {
   margin: "0 auto",
   minWidth: 300,
   maxWidth: 400,
-  border: "1px solid #DFE1EF",
+  border: "1px solid #dfe1ef",
   paddingTop: 15,
   paddingRight: 20,
   paddingBottom: 15,
   paddingLeft: 25,
   background: theme.white,
-  boxShadow: "0 0 1px rgba(0, 0, 0, 0.15), inset 4px 0 0 #D82E1F"
+  boxShadow: "0 0 1px rgba(0, 0, 0, 0.15), inset 4px 0 0 #d82e1f"
 });
 
 const cssCloseButton = css(mixins.buttonReset, {
@@ -31,8 +31,11 @@ const cssCloseButton = css(mixins.buttonReset, {
   height: 38,
   marginLeft: 15,
   padding: 4,
-  fill: "#C3C5C8",
-  "&:hover": { fill: theme.textColorBluish, cursor: "pointer" },
+  fill: "#c3c5c8",
+  "&:hover": {
+    fill: theme.textColorBluish,
+    cursor: "pointer"
+  },
   "&:focus": {
     outline: 0
   }
@@ -57,7 +60,7 @@ const ErrorOverlay = ({ toggleErrorOverlay, messages }) => (
   <div className={cx(cssErrorOverlay, "meridian-error-overlay")}>
     <CloseButton toggleErrorOverlay={toggleErrorOverlay} />
     <div style={{ paddingBottom: 0 }}>
-      <p>Oops, we got problems: </p>
+      <p>Sorry, something went wrong. It might be related to:</p>
       <ul>
         {messages.map((msg, i) => (
           <li key={i}>{msg}</li>

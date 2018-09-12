@@ -87,9 +87,14 @@ const Placemark = ({
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
+  const cssTypeName = `meridian-placemark-type-${data.type}`;
   const iconClassName = isSelected
-    ? cx("meridian-placemark-icon-selected", cssPlacemarkIconSelected)
-    : cx("meridian-placemark-icon", cssPlacemarkIcon);
+    ? cx(
+        "meridian-placemark-icon-selected",
+        cssTypeName,
+        cssPlacemarkIconSelected
+      )
+    : cx("meridian-placemark-icon", cssTypeName, cssPlacemarkIcon);
   const style = {
     left: x,
     top: y,

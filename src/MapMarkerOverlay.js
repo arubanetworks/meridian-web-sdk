@@ -29,19 +29,18 @@ const cssTagData = css({
   fontSize: 14
 });
 
-function getImageStyle({ data }) {
-  const { image_url, type, color } = data;
-  if (!image_url && type) {
-    const url = getPlacemarkIconURL(type);
+function getImageStyle(item) {
+  if (item.kind === "placemark") {
+    const url = getPlacemarkIconURL(item.type);
     return {
       backgroundSize: "70%",
       backgroundImage: `url('${url}')`,
-      backgroundColor: `#${color}`,
+      backgroundColor: `#${item.color}`,
       height: 300
     };
-  } else if (image_url) {
+  } else if (item.kind === "tag" && item.imageURL) {
     return {
-      backgroundImage: `url('${image_url}')`,
+      backgroundImage: `url('${item.imageURL}')`,
       height: 300
     };
   } else {

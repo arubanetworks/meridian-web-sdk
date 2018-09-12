@@ -61,8 +61,7 @@ export function normalizeTag(tag) {
     floorID,
     labels,
     isControlTag,
-    data,
-    rawData: tag
+    data
   };
 }
 

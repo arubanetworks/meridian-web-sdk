@@ -8,11 +8,12 @@ import PropTypes from "prop-types";
 import groupBy from "lodash.groupby";
 import keyBy from "lodash.keyby";
 
+import IconSpinner from "./IconSpinner";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins, cx } from "./style";
-import { doesSearchMatch, fetchAllTags, normalizeTag } from "./util";
-import { STREAM_ALL_FLOORS } from "./API";
+import { createSearchMatcher, STRINGS } from "./util";
+import LabelList from "./LabelList";
 
 const cssOverlayBuildingName = css({
   label: "overlay-building-name",
@@ -21,8 +22,7 @@ const cssOverlayBuildingName = css({
   textTransform: "uppercase",
   fontWeight: "bold",
   color: theme.brandBlue,
-  background: theme.white,
-  borderTop: `1px solid ${theme.borderColor}`,
+  background: theme.almostWhite,
   fontSize: theme.fontSizeSmaller,
   padding: 10
 });
@@ -38,7 +38,8 @@ const cssOverlayTagButton = css(
   mixins.focusRingMenuItem,
   mixins.buttonHoverActive,
   {
-    label: "overlay-floor-button",
+    label: "overlay-tags-button",
+    minHeight: 56,
     padding: 10,
     paddingLeft: 20,
     display: "block",
@@ -47,8 +48,18 @@ const cssOverlayTagButton = css(
   }
 );
 
+const cssOverlayTagButtonInner = css(mixins.flexRow, {
+  label: "overlay-tags-button-inner",
+  alignItems: "center"
+});
+
+const cssOverlayTagButtonName = css({
+  label: "overlay-tags-button-name",
+  flex: "1 0 auto"
+});
+
 const cssTagListEmpty = css({
-  label: "overlay-floor-list-empty",
+  label: "overlay-tags-list-empty",
   padding: "60px 20px",
   textAlign: "center",
   fontSize: theme.fontSizeBigger,
@@ -59,9 +70,7 @@ class TagListOverlay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchFilter: "",
-      loading: true,
-      tags: null
+      searchFilter: ""
     };
     this.searchInput = null;
   }
@@ -70,33 +79,24 @@ class TagListOverlay extends Component {
     if (this.searchInput) {
       this.searchInput.focus();
     }
-    this.loadTags();
   }
 
-  async loadTags() {
-    const { api, locationID, showControlTags } = this.props;
-    const floorID = STREAM_ALL_FLOORS;
-    const rawTags = await fetchAllTags({ api, locationID, floorID });
-    const normalizedTags = rawTags
-      .map(normalizeTag)
-      .filter(tag => showControlTags === true || !tag.isControlTag);
-    this.setState({ tags: normalizedTags, loading: false });
-  }
-
-  getFloorToBuilding() {
+  getFloorToGroup() {
     const { floors } = this.props;
-    const floorToBuilding = {};
+    const floorToGroup = {};
     for (const floor of floors) {
-      floorToBuilding[floor.id] = floor.group_name;
+      floorToGroup[floor.id] = [
+        floor.group_name,
+        STRINGS.enDash,
+        floor.name
+      ].join(" ");
     }
-    return floorToBuilding;
+    return floorToGroup;
   }
 
   getOrganizedTags(tags) {
-    const floorToBuilding = this.getFloorToBuilding();
-    const organizedTags = groupBy(tags, tag => floorToBuilding[tag.floorID]);
-    // TODO: Sort the tags within here by level
-    return organizedTags;
+    const floorToGroup = this.getFloorToGroup();
+    return groupBy(tags, tag => floorToGroup[tag.floorID]);
   }
 
   handleSearchFilterChange = event => {
@@ -112,30 +112,40 @@ class TagListOverlay extends Component {
   processedFloorsByBuilding() {
     const { searchFilter } = this.state;
     const { floors } = this.props;
-    return floors.filter(floor => {
-      return (
-        doesSearchMatch(searchFilter, floor.name || "") ||
-        doesSearchMatch(searchFilter, floor.group_name || "Unassigned")
-      );
-    });
+    const match = createSearchMatcher(searchFilter);
+    return floors.filter(
+      floor =>
+        match(floor.name || "") ||
+        match(floor.group_name || STRINGS.unnamedBuilding)
+    );
   }
 
-  getSortedBuildingNames(organizedTags) {
+  getSortedGroups(organizedTags) {
     // TODO: Sort the current floor above all the others
-    return Object.keys(organizedTags);
+    return Object.keys(organizedTags).sort();
   }
 
   renderTagList() {
-    const { update, tagOptions } = this.props;
-    const { searchFilter, loading, tags } = this.state;
+    const { update, tagOptions, tags, loading, onMarkerClick } = this.props;
+    const { searchFilter } = this.state;
     if (loading) {
-      return <div className={cssTagListEmpty}>Loading...</div>;
+      return (
+        <div className={cssTagListEmpty}>
+          <IconSpinner />
+        </div>
+      );
     }
-    // TODO: Actually search the tags list
+    const match = createSearchMatcher(searchFilter);
     const processedTags = tags
+      .filter(
+        tag => match(tag.name) || match(tag.mac) || tag.labels.some(match)
+      )
+      // TODO: Should we show hidden tags?
       .filter(tag => {
-        const match = x => doesSearchMatch(searchFilter, x);
-        return match(tag.name) || tag.labels.some(match);
+        if (tagOptions.showControlTags !== true) {
+          return !tag.isControlTag;
+        }
+        return true;
       })
       .sort((a, b) => {
         if (a.name < b.name) {
@@ -146,11 +156,14 @@ class TagListOverlay extends Component {
         }
         return 0;
       });
+    if (processedTags.length === 0) {
+      return <div className={cssTagListEmpty}>{STRINGS.noResultsFound}</div>;
+    }
     const organizedTags = this.getOrganizedTags(processedTags);
-    const sortedBuildingNames = this.getSortedBuildingNames(organizedTags);
+    const sortedGroups = this.getSortedGroups(organizedTags);
     return (
       <div className={cssTagList}>
-        {sortedBuildingNames.map(buildingName => (
+        {sortedGroups.map(buildingName => (
           <div key={buildingName}>
             <div className={cssOverlayBuildingName}>{buildingName}</div>
             {organizedTags[buildingName].map(tag => (
@@ -158,20 +171,24 @@ class TagListOverlay extends Component {
                 key={tag.id}
                 className={cssOverlayTagButton}
                 onClick={() => {
-                  console.log(tag);
-                  // TODO: We should stop using objects in the props since they
-                  // don't merge cleanly... It's such a pain
                   update({
+                    locationID: tag.locationID,
+                    floorID: tag.floorID,
                     tags: {
                       ...tagOptions,
-                      filter: t => t.id === tag.id
+                      filter: () => true
                     }
                   });
+                  onMarkerClick(tag);
                 }}
               >
-                <div>{tag.name}</div>
-                <div style={{ color: "rgba(0, 0, 0, 0.6)" }}>
-                  {tag.labels.join(" • ") || "\xa0"}
+                <div className={cssOverlayTagButtonInner}>
+                  <div className={cssOverlayTagButtonName}>{tag.name}</div>
+                  <LabelList
+                    align="right"
+                    labels={tag.labels || []}
+                    fontSize={theme.fontSizeSmallest}
+                  />
                 </div>
               </button>
             ))}
@@ -204,6 +221,9 @@ class TagListOverlay extends Component {
 }
 
 TagListOverlay.propTypes = {
+  onMarkerClick: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
+  tags: PropTypes.arrayOf(PropTypes.object).isRequired,
   showControlTags: PropTypes.bool.isRequired,
   floors: PropTypes.object.isRequired,
   tagOptions: PropTypes.object.isRequired,

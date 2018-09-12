@@ -17,6 +17,7 @@ const cssZoomButton = css(
   mixins.buttonHoverActive,
   mixins.rounded,
   {
+    cursor: "pointer",
     padding: 4,
     width: 40,
     height: 40,

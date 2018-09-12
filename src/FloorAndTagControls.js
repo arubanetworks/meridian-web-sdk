@@ -21,6 +21,7 @@ const cssControl = css(
   mixins.focusRing,
   {
     label: "control",
+    cursor: "pointer",
     background: "white",
     padding: 4,
     width: 40,

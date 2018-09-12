@@ -47,7 +47,6 @@ const SearchIcon = props => (
 
 const cssSearchBar = css({
   label: "overlay-search-bar",
-  boxShadow: `0 1px 0 ${theme.borderColor}`,
   position: "relative",
   zIndex: 1,
   flex: "0 0 auto",

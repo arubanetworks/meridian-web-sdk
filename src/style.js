@@ -1,12 +1,14 @@
 import createEmotion from "create-emotion";
 
 export const theme = {
-  fontSize: "16px",
+  fontSizeSmallest: "12px",
   fontSizeSmaller: "14px",
+  fontSize: "16px",
   fontSizeBigger: "18px",
   textColor: "#1b1b1b",
   black: "#000",
   white: "#fff",
+  almostWhite: "#fafafa",
   textColorBluish: "hsl(208, 17%, 42%)",
   brandOrange: "#ff8300",
   brandBlue: "hsl(203, 100%, 23%)",
@@ -15,10 +17,19 @@ export const theme = {
   buttonHoverColor: "hsl(200, 60%, 97%)",
   buttonSeparatorColor: "#f0f0f0",
   borderColor: "#ebeef2",
+  borderColorDarker: "#dfe1e5",
   borderRadius: 6
 };
 
 export const mixins = {
+  flexRow: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  flexColumn: {
+    display: "flex",
+    flexDirection: "column"
+  },
   overflowEllipses: {
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -89,6 +100,9 @@ export const mixins = {
   },
   rounded: {
     borderRadius: theme.borderRadius
+  },
+  maxRounded: {
+    borderRadius: 99999
   },
   paddingMedium: {
     padding: "20px"

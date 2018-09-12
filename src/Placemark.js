@@ -13,26 +13,32 @@ const cssPlacemark = css({
   position: "absolute"
 });
 
-const cssPlacemarkIcon = css(mixins.buttonReset, mixins.pointer, {
-  label: "meridian-placemark-icon",
-  transition: "width 80ms ease, height 80ms ease",
-  display: "block",
-  width: SIZE,
-  height: SIZE,
-  borderRadius: "100%",
-  backgroundColor: theme.brandBlue,
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
-  backgroundSize: "cover",
-  border: "2px solid transparent",
-  overflow: "hidden",
-  zIndex: 1,
-  "&:focus": {
-    outline: "none",
-    zIndex: 3,
-    width: SIZE * 1.25,
-    height: SIZE * 1.25
+const cssPlacemarkIcon = css(
+  mixins.buttonReset,
+  mixins.pointer,
+  mixins.focusNone,
+  {
+    label: "meridian-placemark-icon",
+    transition: "width 80ms ease, height 80ms ease",
+    display: "block",
+    width: SIZE,
+    height: SIZE,
+    borderRadius: "100%",
+    backgroundColor: theme.brandBlue,
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    border: "2px solid transparent",
+    overflow: "hidden",
+    zIndex: 1
   }
+);
+
+const cssPlacemarkIconSelected = css(cssPlacemarkIcon, {
+  zIndex: 3,
+  width: SIZE * 1.25,
+  height: SIZE * 1.25,
+  boxShadow: "0 0 4px black"
 });
 
 const cssLabel = css(mixins.textStrokeWhite, {
@@ -68,6 +74,7 @@ const getIconStyle = data => {
 };
 
 const Placemark = ({
+  isSelected,
   x,
   y,
   data,
@@ -80,6 +87,9 @@ const Placemark = ({
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
+  const iconClassName = isSelected
+    ? cx("meridian-placemark-icon-selected", cssPlacemarkIconSelected)
+    : cx("meridian-placemark-icon", cssPlacemarkIcon);
   const style = {
     left: x,
     top: y,
@@ -87,7 +97,7 @@ const Placemark = ({
   };
   if (labelOnly) {
     return (
-      <div className={cx(cssPlacemark, "meridian-placemark")} style={style}>
+      <div className={cx("meridian-placemark", cssPlacemark)} style={style}>
         <div
           className={cx(
             cssLabel,
@@ -102,10 +112,10 @@ const Placemark = ({
     );
   }
   return (
-    <div className={cx(cssPlacemark, "meridian-placemark")} style={style}>
+    <div className={cx("meridian-placemark", cssPlacemark)} style={style}>
       <button
         disabled={disabled}
-        className={cx(cssPlacemarkIcon, "meridian-placemark-icon")}
+        className={iconClassName}
         style={getIconStyle(data)}
         onClick={event => {
           event.target.focus();
@@ -116,7 +126,7 @@ const Placemark = ({
         }}
       />
       <div
-        className={cx(cssLabel, "meridian-label")}
+        className={cx("meridian-label", cssLabel)}
         style={{
           visibility: mapZoomFactor < SHRINK_POINT ? "hidden" : ""
         }}
@@ -128,6 +138,7 @@ const Placemark = ({
 };
 
 Placemark.propTypes = {
+  isSelected: PropTypes.bool.isRequired,
   mapZoomFactor: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,

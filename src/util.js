@@ -2,11 +2,14 @@ const ASSETS_URL =
   "https://storage.googleapis.com/meridian-web-sdk-assets/0.0.1-beta6";
 
 export const STRINGS = {
-  unnamedBuilding: "Unassigned"
+  enDash: "–",
+  unnamedBuilding: "Unassigned",
+  noResultsFound: "No results found."
 };
 
-export function doesSearchMatch(query, target) {
-  return target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
+export function createSearchMatcher(query) {
+  return target =>
+    target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
 }
 
 export function requiredParam(funcName, argName) {
@@ -47,7 +50,9 @@ export function normalizeTag(tag) {
   } = tag.calculations.default.location;
   const labels = tag.editor_data.tags.map(x => x.name);
   return {
+    kind: "tag",
     name,
+    id: mac,
     mac,
     x,
     y,
@@ -87,8 +92,5 @@ export async function fetchAllTags({ api, locationID, floorID }) {
 }
 
 export function validateEnvironment(env) {
-  if (env === "staging" || env === "production" || env === "eu") {
-    return true;
-  }
-  return false;
+  return env === "staging" || env === "production" || env === "eu";
 }

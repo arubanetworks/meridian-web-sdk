@@ -56,7 +56,7 @@ CloseButton.propTypes = {
   toggleErrorOverlay: PropTypes.func.isRequired
 };
 
-const ErrorOverlay = ({ toggleErrorOverlay, messages }) => (
+const ErrorOverlay = ({ toggleErrorOverlay, messages = ["Unknown"] }) => (
   <div className={cx("meridian-error-overlay", cssErrorOverlay)}>
     <CloseButton toggleErrorOverlay={toggleErrorOverlay} />
     <div style={{ paddingBottom: 0 }}>
@@ -73,9 +73,6 @@ const ErrorOverlay = ({ toggleErrorOverlay, messages }) => (
 ErrorOverlay.propTypes = {
   toggleErrorOverlay: PropTypes.func.isRequired,
   messages: PropTypes.array
-};
-ErrorOverlay.defaultProps = {
-  messages: ["Unknown"]
 };
 
 export default ErrorOverlay;

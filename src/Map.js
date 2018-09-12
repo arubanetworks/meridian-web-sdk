@@ -494,9 +494,9 @@ export default class Map extends Component {
     return (
       <div
         className={cx(
+          "meridian-map-container",
           cssMapContainer,
-          isIE && cssNoTouchZoom,
-          "meridian-map-container"
+          isIE && cssNoTouchZoom
         )}
         style={{ width, height }}
       >

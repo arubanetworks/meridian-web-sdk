@@ -64,8 +64,8 @@ const FloorCheckmark = () => (
   <svg
     viewBox="0 0 10 7"
     className={cx(
-      cssFloorCheckmark,
-      "meridian-overlay-current-floor-checkmark"
+      "meridian-overlay-current-floor-checkmark",
+      cssFloorCheckmark
     )}
   >
     <path d="M3.9 7C3.7 7 3.4 6.9 3.2 6.7L0.3 3.8C-0.1 3.4 -0.1 2.8 0.3 2.4C0.7 2 1.3 2 1.7 2.4L3.9 4.6L8.2 0.3C8.6 -0.1 9.2 -0.1 9.6 0.3C10 0.7 10 1.3 9.6 1.7L4.6 6.7C4.4 6.9 4.2 7 3.9 7Z" />
@@ -156,7 +156,7 @@ class FloorOverlay extends Component {
     }
     return (
       <div
-        className={cx(cssFloorsListEmpty, "meridian-overlay-floor-list-empty")}
+        className={cx("meridian-overlay-floor-list-empty", cssFloorsListEmpty)}
       >
         {STRINGS.noResultsFound}
       </div>

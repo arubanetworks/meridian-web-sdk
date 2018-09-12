@@ -59,14 +59,12 @@ CloseButton.propTypes = {
 const ErrorOverlay = ({ toggleErrorOverlay, messages = ["Unknown"] }) => (
   <div className={cx("meridian-error-overlay", cssErrorOverlay)}>
     <CloseButton toggleErrorOverlay={toggleErrorOverlay} />
-    <div style={{ paddingBottom: 0 }}>
-      <p>Sorry, something went wrong. It might be related to:</p>
-      <ul>
-        {messages.map((msg, i) => (
-          <li key={i}>{msg}</li>
-        ))}
-      </ul>
-    </div>
+    <p>Sorry, something went wrong. It might be related to:</p>
+    <ul>
+      {messages.map((msg, i) => (
+        <li key={i}>{msg}</li>
+      ))}
+    </ul>
   </div>
 );
 

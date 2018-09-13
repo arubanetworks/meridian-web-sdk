@@ -121,8 +121,16 @@ class TagListOverlay extends Component {
   }
 
   getSortedGroups(organizedTags) {
-    // TODO: Sort the current floor above all the others
-    return Object.keys(organizedTags).sort();
+    const { currentFloorID } = this.props;
+    const groups = Object.keys(organizedTags).sort();
+    groups.forEach((group, index) => {
+      const floors = organizedTags[group];
+      if (floors[0].floorID === currentFloorID) {
+        const [currentGroup] = groups.splice(index, 1);
+        groups.unshift(currentGroup);
+      }
+    });
+    return groups;
   }
 
   renderTagList() {

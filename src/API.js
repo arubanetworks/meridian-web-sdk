@@ -48,7 +48,7 @@ export default class API {
     floorID = requiredParam("openStream", "floorID"),
     onInitialTags = () => {},
     onTagUpdate = () => {},
-    onTagDisappear = () => {},
+    onTagLeave = () => {},
     onClose = () => {},
     onException = () => {}
   }) {
@@ -81,7 +81,7 @@ export default class API {
     connection.on("unauthenticated", onClose);
     connection.on("assets", onInitialTags);
     connection.on("asset_update", onTagUpdate);
-    connection.on("asset_delete", onTagDisappear);
+    connection.on("asset_delete", onTagLeave);
     return {
       close: () => connection.close()
     };

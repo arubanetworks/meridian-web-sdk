@@ -27,7 +27,7 @@ const cssFloorLabel = css(
 );
 
 const FloorLabel = ({ buildingName, floorName }) => (
-  <div className={cx(cssFloorLabel, "meridian-floor-label")}>
+  <div className={cx("meridian-floor-label", cssFloorLabel)}>
     {buildingName || STRINGS.unnamedBuilding} {STRINGS.enDash} {floorName}
   </div>
 );

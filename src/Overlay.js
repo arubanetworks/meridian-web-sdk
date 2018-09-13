@@ -55,7 +55,7 @@ const cssClose = css(
 );
 
 const CloseButton = ({ onClick }) => (
-  <button className={cx(cssClose, "meridian-overlay-close")} onClick={onClick}>
+  <button className={cx("meridian-overlay-close", cssClose)} onClick={onClick}>
     <IconClose />
   </button>
 );
@@ -67,9 +67,9 @@ CloseButton.propTypes = {
 const Overlay = ({ position, onCloseClicked, children }) => (
   <div
     className={cx(
-      position === "left" ? cssOverlayLeft : cssOverlayRight,
       "meridian-overlay",
-      `meridian-overlay-${position}`
+      `meridian-overlay-${position}`,
+      position === "left" ? cssOverlayLeft : cssOverlayRight
     )}
   >
     <CloseButton onClick={onCloseClicked} />

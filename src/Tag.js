@@ -44,6 +44,7 @@ const cssTagSelected = css(cssTag, {
 });
 
 const Tag = ({
+  labels,
   isSelected,
   x,
   y,
@@ -54,15 +55,18 @@ const Tag = ({
 }) => {
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
-  const imageURL = data.image_url || DEFAULT_TAG_IMAGE;
+  const labelClassNames = labels.map(label => {
+    const s = label.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
+    return `meridian-tag-label-${s}`;
+  });
   const className = isSelected
-    ? cx(cssTagSelected, "meridian-tag-selected")
-    : cx(cssTag, "meridian-tag");
+    ? cx("meridian-tag-selected", labelClassNames, cssTagSelected)
+    : cx("meridian-tag", labelClassNames, cssTag);
   const style = {
     left: x,
     top: y,
     transform: `translate(-50%, -50%) scale(${k})`,
-    backgroundImage: `url('${imageURL}')`
+    backgroundImage: `url('${data.imageURL || DEFAULT_TAG_IMAGE}')`
   };
   return (
     <button
@@ -81,6 +85,7 @@ const Tag = ({
 };
 
 Tag.propTypes = {
+  labels: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,
   mapZoomFactor: PropTypes.number.isRequired,
   x: PropTypes.number.isRequired,

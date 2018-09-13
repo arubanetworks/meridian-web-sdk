@@ -18,7 +18,7 @@ const cssSpinner = css({
 });
 
 const IconSpinner = () => (
-  <div className={cx(cssSpinner, "meridian-spinner")} />
+  <div className={cx("meridian-spinner", cssSpinner)} />
 );
 
 export default IconSpinner;

@@ -195,7 +195,7 @@ export default class TagLayer extends Component {
           x={tag.x}
           y={tag.y}
           name={tag.name}
-          data={tag.data}
+          data={tag}
           onClick={onMarkerClick}
           disabled={markers.disabled}
         />

@@ -45,9 +45,9 @@ const ZoomButton = ({ onClick, dir }) => {
     return (
       <button
         className={cx(
-          cssZoomButtonIn,
           "meridian-zoom-button",
-          "meridian-zoom-button-in"
+          "meridian-zoom-button-in",
+          cssZoomButtonIn
         )}
         onClick={onClick}
       >
@@ -60,9 +60,9 @@ const ZoomButton = ({ onClick, dir }) => {
     return (
       <button
         className={cx(
-          cssZoomButtonOut,
           "meridian-zoom-button",
-          "meridian-zoom-button-out"
+          "meridian-zoom-button-out",
+          cssZoomButtonOut
         )}
         onClick={onClick}
       >
@@ -80,7 +80,7 @@ ZoomButton.propTypes = {
 };
 
 const ZoomControls = ({ onZoomIn, onZoomOut }) => (
-  <div className={cx(cssZoomControls, "meridian-zoom-controls")}>
+  <div className={cx("meridian-zoom-controls", cssZoomControls)}>
     <ZoomButton onClick={onZoomIn} dir="in" />
     <ZoomButton onClick={onZoomOut} dir="out" />
   </div>

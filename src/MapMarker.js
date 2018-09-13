@@ -4,19 +4,18 @@ import PropTypes from "prop-types";
 import Tag from "./Tag";
 import Placemark from "./Placemark";
 
-const MapMarker = item => {
-  const {
-    selectedItem,
-    kind,
-    id,
-    x,
-    y,
-    data,
-    mapZoomFactor,
-    disabled,
-    onClick = () => {}
-  } = item;
-  const props = {
+const MapMarker = ({
+  selectedItem,
+  kind,
+  id,
+  x,
+  y,
+  data,
+  mapZoomFactor,
+  disabled,
+  onClick = () => {}
+}) => {
+  const childProps = {
     isSelected: selectedItem ? selectedItem.id === id : false,
     mapZoomFactor,
     id,
@@ -25,18 +24,19 @@ const MapMarker = item => {
     data,
     disabled,
     onClick: () => {
-      onClick(item);
+      onClick(data);
     }
   };
   if (kind === "tag") {
-    return <Tag {...props} />;
+    return <Tag {...childProps} labels={data.labels} />;
   } else if (kind === "placemark") {
-    return <Placemark {...props} />;
+    return <Placemark {...childProps} />;
   }
   return null;
 };
 
 MapMarker.propTypes = {
+  selectedItem: PropTypes.object.isRequired,
   mapZoomFactor: PropTypes.number.isRequired,
   kind: PropTypes.string.isRequired,
   id: PropTypes.string,

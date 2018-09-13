@@ -178,9 +178,6 @@ export default class TagLayer extends Component {
     return tags
       .filter(tag => {
         if (markers.showControlTags !== true) {
-          if (tag.isControlTag) {
-            console.log(tag.isControlTag);
-          }
           return !tag.isControlTag;
         }
         return true;

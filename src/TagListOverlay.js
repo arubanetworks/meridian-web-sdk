@@ -11,7 +11,7 @@ import keyBy from "lodash.keyby";
 import IconSpinner from "./IconSpinner";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
-import { css, theme, mixins, cx } from "./style";
+import { css, theme, mixins } from "./style";
 import { createSearchMatcher, STRINGS } from "./util";
 import LabelList from "./LabelList";
 

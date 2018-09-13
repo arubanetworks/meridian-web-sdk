@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import Overlay from "./Overlay";
 import { getPlacemarkIconURL, STRINGS } from "./util";
-import { css, theme, cx } from "./style";
+import { css, theme } from "./style";
 import LabelList from "./LabelList";
 
 const cssOverlayImage = css({
@@ -58,16 +58,11 @@ const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
       toggleMapMarkerOverlay({ open: false });
     }}
   >
-    <div
-      className={cx("meridian-overlay-marker-image", cssOverlayImage)}
-      style={getImageStyle(item)}
-    />
-    <div className={cx("meridian-overlay-marker-content", cssOverlayContent)}>
-      <p className={cx("meridian-overlay-marker-name", cssOverlayName)}>
-        {item.name || STRINGS.enDash}
-      </p>
+    <div className={cssOverlayImage} style={getImageStyle(item)} />
+    <div className={cssOverlayContent}>
+      <p className={cssOverlayName}>{item.name || STRINGS.enDash}</p>
       {item.kind === "tag" ? (
-        <div className={cx("meridian-overlay-marker-tagdata", cssTagData)}>
+        <div className={cssTagData}>
           {item.labels ? (
             <LabelList
               align="left"

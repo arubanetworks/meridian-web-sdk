@@ -1,7 +1,7 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
-import { css, theme, mixins, cx } from "./style";
+import { css, theme, mixins } from "./style";
 import IconClose from "./IconClose";
 
 const cssOverlay = css(mixins.shadow, mixins.rounded, {
@@ -55,7 +55,7 @@ const cssClose = css(
 );
 
 const CloseButton = ({ onClick }) => (
-  <button className={cx("meridian-overlay-close", cssClose)} onClick={onClick}>
+  <button className={cssClose} onClick={onClick}>
     <IconClose />
   </button>
 );
@@ -65,13 +65,7 @@ CloseButton.propTypes = {
 };
 
 const Overlay = ({ position, onCloseClicked, children }) => (
-  <div
-    className={cx(
-      "meridian-overlay",
-      `meridian-overlay-${position}`,
-      position === "left" ? cssOverlayLeft : cssOverlayRight
-    )}
-  >
+  <div className={position === "left" ? cssOverlayLeft : cssOverlayRight}>
     <CloseButton onClick={onCloseClicked} />
     {children}
   </div>

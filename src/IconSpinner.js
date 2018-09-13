@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { css, keyframes, cx } from "./style";
+import { css, keyframes } from "./style";
 
 const cssSpin = keyframes`
   from { transform: rotate(0deg); }
@@ -17,8 +17,6 @@ const cssSpinner = css({
   animation: `${cssSpin} 600ms infinite linear`
 });
 
-const IconSpinner = () => (
-  <div className={cx("meridian-spinner", cssSpinner)} />
-);
+const IconSpinner = () => <div className={cssSpinner} />;
 
 export default IconSpinner;

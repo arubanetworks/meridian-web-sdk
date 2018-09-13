@@ -75,7 +75,7 @@ export default class TagLayer extends Component {
 
   onUpdate = () => {
     const { onUpdate } = this.props;
-    onUpdate(this.getTags());
+    onUpdate(this.filterTags(this.getTags()).map(tag => tag.data));
   };
 
   getFilterFunction() {
@@ -172,34 +172,37 @@ export default class TagLayer extends Component {
     }
   }
 
-  render() {
-    const { tagsByMAC } = this.state;
-    const { selectedItem, markers, onMarkerClick, mapZoomFactor } = this.props;
+  filterTags(tags) {
+    const { markers } = this.props;
     const filter = this.getFilterFunction();
-    const filteredMarkers = Object.keys(tagsByMAC)
-      .map(mac => tagsByMAC[mac])
+    return tags
       .filter(tag => {
         if (markers.showControlTags !== true) {
           return !tag.isControlTag;
         }
         return true;
       })
-      .filter(filter)
-      .map(tag => (
-        <MapMarker
-          selectedItem={selectedItem}
-          mapZoomFactor={mapZoomFactor}
-          key={tag.mac}
-          kind="tag"
-          id={tag.mac}
-          x={tag.x}
-          y={tag.y}
-          name={tag.name}
-          data={tag}
-          onClick={onMarkerClick}
-          disabled={markers.disabled}
-        />
-      ));
+      .filter(filter);
+  }
+
+  render() {
+    const { selectedItem, markers, onMarkerClick, mapZoomFactor } = this.props;
+    const filteredTags = this.filterTags(this.getTags());
+    const filteredMarkers = filteredTags.map(tag => (
+      <MapMarker
+        selectedItem={selectedItem}
+        mapZoomFactor={mapZoomFactor}
+        key={tag.mac}
+        kind="tag"
+        id={tag.mac}
+        x={tag.x}
+        y={tag.y}
+        name={tag.name}
+        data={tag}
+        onClick={onMarkerClick}
+        disabled={markers.disabled}
+      />
+    ));
     return <div>{filteredMarkers}</div>;
   }
 }

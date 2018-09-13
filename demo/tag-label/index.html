@@ -59,8 +59,9 @@
       onTagsUpdate = tags => {
         const labels = {};
         tags.forEach(tag => {
-          tag.labels.forEach(label => {
-            labels[label] = true;
+          // Labels used to be called tags
+          tag.editor_data.tags.forEach(t => {
+            labels[t.name] = true;
           });
         });
         this.setState({ tagLabels: Object.keys(labels) });

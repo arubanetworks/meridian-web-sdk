@@ -1,7 +1,7 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
-import { css, theme, cx, mixins } from "./style";
+import { css, theme, mixins } from "./style";
 import IconClose from "./IconClose";
 
 const cssErrorOverlay = css(mixins.rounded, {
@@ -43,7 +43,7 @@ const cssCloseButton = css(mixins.buttonReset, {
 
 const CloseButton = ({ toggleErrorOverlay }) => (
   <button
-    className={cx("meridian-error-close", cssCloseButton)}
+    className={cssCloseButton}
     onClick={() => {
       toggleErrorOverlay({ open: false });
     }}
@@ -57,7 +57,7 @@ CloseButton.propTypes = {
 };
 
 const ErrorOverlay = ({ toggleErrorOverlay, messages = ["Unknown"] }) => (
-  <div className={cx("meridian-error-overlay", cssErrorOverlay)}>
+  <div className={cssErrorOverlay}>
     <CloseButton toggleErrorOverlay={toggleErrorOverlay} />
     <p>Sorry, something went wrong. It might be related to:</p>
     <ul>

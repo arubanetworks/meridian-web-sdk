@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { css, theme, cx } from "./style";
+import { css, theme } from "./style";
 import IconSpinner from "./IconSpinner";
 
 const cssLoadingSpinner = css({
@@ -18,7 +18,7 @@ const cssLoadingSpinner = css({
 });
 
 const LoadingOverlay = () => (
-  <div className={cx("meridian-loading-spinner", cssLoadingSpinner)}>
+  <div className={cssLoadingSpinner}>
     <IconSpinner />
   </div>
 );

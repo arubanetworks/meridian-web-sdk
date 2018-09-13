@@ -1,7 +1,7 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
-import { mixins, theme, css, cx } from "./style";
+import { mixins, theme, css } from "./style";
 
 const cssLabel = css(mixins.maxRounded, {
   label: "label",
@@ -13,9 +13,7 @@ const cssLabel = css(mixins.maxRounded, {
   color: "#3b3b3b"
 });
 
-const Label = ({ name }) => (
-  <div className={cx("meridian-label", cssLabel)}>{name}</div>
-);
+const Label = ({ name }) => <div className={cssLabel}>{name}</div>;
 
 Label.propTypes = {
   name: PropTypes.string.isRequired
@@ -31,9 +29,7 @@ const getCSSLabelList = ({ align, fontSize }) =>
   });
 
 const LabelList = ({ align, labels, fontSize = theme.fontSize }) => (
-  <div
-    className={cx("meridian-label-list", getCSSLabelList({ align, fontSize }))}
-  >
+  <div className={getCSSLabelList({ align, fontSize })}>
     {labels.map((l, i) => (
       <Label key={i} name={l} />
     ))}

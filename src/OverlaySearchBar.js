@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 
-import { css, theme, mixins, cx } from "./style";
+import { css, theme, mixins } from "./style";
 
 const cssSearchInput = css(
   mixins.buttonReset,
@@ -71,15 +71,13 @@ class OverlaySearchBar extends Component {
   render() {
     const { value, onChange = () => {} } = this.props;
     return (
-      <div className={cx("meridian-overlay-search-bar", cssSearchBar)}>
-        <SearchIcon
-          className={cx("meridian-overlay-search-icon", cssSearchIcon)}
-        />
+      <div className={cssSearchBar}>
+        <SearchIcon className={cssSearchIcon} />
         <input
           value={value}
           type="text"
           placeholder="Search"
-          className={cx("meridian-overlay-search-input", cssSearchInput)}
+          className={cssSearchInput}
           onInput={event => {
             onChange(event.target.value);
           }}

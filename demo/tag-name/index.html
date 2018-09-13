@@ -62,9 +62,17 @@
       onTagsUpdate = tags => {
         this.setState({
           tagNames: tags.map(t => ({
-            value: t.name,
+            value: t.editor_data.name,
             mac: t.mac
-          }))
+          })).sort((a, b) => {
+            if (a.value < b.value) {
+              return -1;
+            }
+            if (a.value > b.value) {
+              return 1;
+            }
+            return 0;
+          })
         });
       };
 
@@ -74,7 +82,7 @@
           if (selectedTag) {
             this.map.update({
               tags: {
-                filter: tag => tag.id === selectedLabel,
+                filter: tag => tag.id === selectedTag,
               }
             });
           } else {

@@ -95,5 +95,10 @@ export async function fetchAllTags({ api, locationID, floorID }) {
 }
 
 export function validateEnvironment(env) {
-  return env === "staging" || env === "production" || env === "eu";
+  return (
+    env === "staging" ||
+    env === "production" ||
+    env === "eu" ||
+    env === "development"
+  );
 }

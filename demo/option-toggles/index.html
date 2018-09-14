@@ -104,20 +104,17 @@
     var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
       locationID: "5198682008846336",
       floorID: "5755685136498688",
-      height: "360px"
+      height: "360px",
+      placemarks: {
+        filter: function() { return false; }
+      },
     });
     // ---^^^ SDK setup ^^^---
 
     // ---vvv UI controls vvv---
     var state = {
-      placemarks: {
-        filter: function() { return true; },
-        disabled: false
-      },
-      tags: {
-        filter: function() { return true; },
-        disabled: false
-      },
+      placemarks: {},
+      tags: {},
       onTagsUpdate: function (tags) {
         if (state.tags.filter === filterDolly) {
           var tag = tags.filter(t => t.mac === dollyMAC)[0];

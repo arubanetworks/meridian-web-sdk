@@ -55,12 +55,14 @@ class App extends React.Component {
       floorID: "5708313257836544",
       height: "360px",
       onTagsUpdate: this.onTagsUpdate,
-      filter: () => false
+      tags: {
+        filter: () => false
+      }
     });
   }
 
   onTagsUpdate(tags) {
-    this.setState({ tagLabels: this.getLabels(tags) });
+    this.setState({ tagLabels: this.getLabels(tags.allTags) });
   }
 
   getLabels(tags) {

@@ -61,7 +61,7 @@
 
       onTagsUpdate = tags => {
         this.setState({
-          tagNames: tags.map(t => ({
+          tagNames: tags.allTags.map(t => ({
             value: t.editor_data.name,
             mac: t.mac
           })).sort((a, b) => {

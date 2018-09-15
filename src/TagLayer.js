@@ -73,17 +73,6 @@ export default class TagLayer extends Component {
     return tags;
   }
 
-  onUpdate = () => {
-    const { onUpdate } = this.props;
-    onUpdate(this.filterTags(this.getTags()).map(tag => tag.data));
-  };
-
-  getFilterFunction() {
-    const { markers } = this.props;
-    const { filter = () => true } = markers;
-    return filter;
-  }
-
   removeTag(data) {
     this.setState(prevState => {
       const { tagsByMAC } = prevState;
@@ -172,18 +161,32 @@ export default class TagLayer extends Component {
     }
   }
 
+  filterControlTags(tags) {
+    const { markers } = this.props;
+    return tags.filter(tag => {
+      if (markers.showControlTags !== true) {
+        return !tag.isControlTag;
+      }
+      return true;
+    });
+  }
+
   filterTags(tags) {
     const { markers } = this.props;
-    const filter = this.getFilterFunction();
-    return tags
-      .filter(tag => {
-        if (markers.showControlTags !== true) {
-          return !tag.isControlTag;
-        }
-        return true;
-      })
-      .filter(filter);
+    const { filter = () => true } = markers;
+    return this.filterControlTags(tags).filter(filter);
   }
+
+  onUpdate = () => {
+    const { onUpdate, markers } = this.props;
+    const { filter = () => true } = markers;
+    const allTags = this.filterControlTags(this.getTags());
+    const filteredTags = allTags.filter(filter);
+    onUpdate({
+      allTags: allTags.map(tag => tag.data),
+      filteredTags: filteredTags.map(tag => tag.data)
+    });
+  };
 
   render() {
     const { selectedItem, markers, onMarkerClick, mapZoomFactor } = this.props;

@@ -269,7 +269,6 @@ export default class Map extends Component {
   }
 
   addZoomBehavior() {
-    const { shouldMapPanZoom } = this.props;
     if (this.mapRef) {
       const onZoom = () => {
         const { k, x, y } = d3.zoomTransform(this.mapRef);
@@ -285,7 +284,10 @@ export default class Map extends Component {
       };
       this.zoomD3 = d3
         .zoom()
-        .filter(() => shouldMapPanZoom(d3.event))
+        // Don't destructure this at the top of the file because we need d3 to
+        // hook until whatever the latest version of the function is, even if it
+        // has changed since this callback was registered
+        .filter(() => this.props.shouldMapPanZoom(d3.event))
         // TODO: We're gonna need to calculate reasonable extents here based on
         // the container size and the map size
         .scaleExtent([1 / 16, 14])

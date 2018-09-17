@@ -38,9 +38,9 @@ function getImageStyle(item) {
       backgroundColor: `#${item.color}`,
       height: 300
     };
-  } else if (item.kind === "tag" && item.imageURL) {
+  } else if (item.kind === "tag" && item.editor_data.image_url) {
     return {
-      backgroundImage: `url('${item.imageURL}')`,
+      backgroundImage: `url('${item.editor_data.image_url}')`,
       height: 300
     };
   } else {
@@ -63,10 +63,10 @@ const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
       <p className={cssOverlayName}>{item.name || STRINGS.enDash}</p>
       {item.kind === "tag" ? (
         <div className={cssTagData}>
-          {item.labels ? (
+          {item.editor_data.tags ? (
             <LabelList
               align="left"
-              labels={item.labels}
+              labels={item.editor_data.tags}
               fontSize={theme.fontSize}
             />
           ) : null}

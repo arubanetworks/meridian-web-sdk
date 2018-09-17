@@ -39,36 +39,6 @@ export function getPlacemarkIconURL(type) {
   return getAssetURL(`placemarks/${name}.svg`);
 }
 
-export function normalizeTag(tag) {
-  const { mac } = tag;
-  const {
-    name,
-    image_url: imageURL,
-    is_control_tag: isControlTag
-  } = tag.editor_data;
-  const {
-    x,
-    y,
-    location_id: locationID,
-    map_id: floorID
-  } = tag.calculations.default.location;
-  const labels = tag.editor_data.tags.map(x => x.name);
-  return {
-    kind: "tag",
-    name,
-    id: mac,
-    mac,
-    x,
-    y,
-    imageURL,
-    locationID,
-    floorID,
-    labels,
-    isControlTag,
-    data: tag
-  };
-}
-
 export async function fetchAllPaginatedData(api, url) {
   const { data } = await api.axios.get(url);
   const results = data.results;

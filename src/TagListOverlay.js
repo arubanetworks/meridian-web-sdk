@@ -96,7 +96,10 @@ class TagListOverlay extends Component {
 
   getOrganizedTags(tags) {
     const floorToGroup = this.getFloorToGroup();
-    return groupBy(tags, tag => floorToGroup[tag.floorID]);
+    return groupBy(
+      tags,
+      tag => floorToGroup[tag.calculations.default.location.floor_id]
+    );
   }
 
   handleSearchFilterChange = event => {
@@ -125,7 +128,9 @@ class TagListOverlay extends Component {
     const groups = Object.keys(organizedTags).sort();
     groups.forEach((group, index) => {
       const floors = organizedTags[group];
-      if (floors[0].floorID === currentFloorID) {
+      if (
+        floors[0].tag.calculations.default.location.floor_id === currentFloorID
+      ) {
         const [currentGroup] = groups.splice(index, 1);
         groups.unshift(currentGroup);
       }
@@ -146,12 +151,15 @@ class TagListOverlay extends Component {
     const match = createSearchMatcher(searchFilter);
     const processedTags = tags
       .filter(
-        tag => match(tag.name) || match(tag.mac) || tag.labels.some(match)
+        tag =>
+          match(tag.name) ||
+          match(tag.mac) ||
+          tag.editor_data.tags.map(x => x.name).some(match)
       )
       // TODO: Should we show hidden tags?
       .filter(tag => {
         if (tagOptions.showControlTags !== true) {
-          return !tag.isControlTag;
+          return !tag.editor_data.is_control_tag;
         }
         return true;
       })
@@ -180,8 +188,8 @@ class TagListOverlay extends Component {
                 className={cssOverlayTagButton}
                 onClick={() => {
                   update({
-                    locationID: tag.locationID,
-                    floorID: tag.floorID,
+                    locationID: tag.calculations.default.location.location_id,
+                    floorID: tag.calculations.default.location.floor_id,
                     tags: {
                       ...tagOptions,
                       filter: () => true
@@ -194,7 +202,7 @@ class TagListOverlay extends Component {
                   <div className={cssOverlayTagButtonName}>{tag.name}</div>
                   <LabelList
                     align="right"
-                    labels={tag.labels || []}
+                    labels={tag.editor_data.tags || []}
                     fontSize={theme.fontSizeSmallest}
                   />
                 </div>

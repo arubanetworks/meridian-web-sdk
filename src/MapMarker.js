@@ -7,30 +7,31 @@ import Placemark from "./Placemark";
 const MapMarker = ({
   selectedItem,
   kind,
-  id,
-  x,
-  y,
   data,
   mapZoomFactor,
   disabled,
   onClick = () => {}
 }) => {
-  const childProps = {
-    isSelected: selectedItem ? selectedItem.id === id : false,
-    mapZoomFactor,
-    id,
-    x,
-    y,
-    data,
-    disabled,
-    onClick: () => {
-      onClick(data);
-    }
-  };
   if (kind === "tag") {
-    return <Tag {...childProps} labels={data.labels} />;
+    return (
+      <Tag
+        isSelected={selectedItem ? selectedItem.mac === data.mac : false}
+        mapZoomFactor={mapZoomFactor}
+        data={data}
+        onClick={onClick}
+        disabled={disabled}
+      />
+    );
   } else if (kind === "placemark") {
-    return <Placemark {...childProps} />;
+    return (
+      <Placemark
+        isSelected={selectedItem ? selectedItem.id === data.id : false}
+        mapZoomFactor={mapZoomFactor}
+        data={data}
+        onClick={onClick}
+        disabled={disabled}
+      />
+    );
   }
   return null;
 };
@@ -39,10 +40,6 @@ MapMarker.propTypes = {
   selectedItem: PropTypes.object.isRequired,
   mapZoomFactor: PropTypes.number.isRequired,
   kind: PropTypes.string.isRequired,
-  id: PropTypes.string,
-  name: PropTypes.string,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   disabled: PropTypes.bool

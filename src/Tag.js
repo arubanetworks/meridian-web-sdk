@@ -44,10 +44,7 @@ const cssTagSelected = css(cssTag, {
 });
 
 const Tag = ({
-  labels,
   isSelected,
-  x,
-  y,
   data,
   mapZoomFactor,
   onClick = () => {},
@@ -55,18 +52,18 @@ const Tag = ({
 }) => {
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
-  const labelClassNames = labels.map(label => {
-    const s = label.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
+  const labelClassNames = data.editor_data.tags.map(label => {
+    const s = label.name.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
     return `meridian-tag-label-${s}`;
   });
   const className = isSelected
     ? cx("meridian-tag-selected", labelClassNames, cssTagSelected)
     : cx("meridian-tag", labelClassNames, cssTag);
   const style = {
-    left: x,
-    top: y,
+    left: data.calculations.default.location.x,
+    top: data.calculations.default.location.y,
     transform: `translate(-50%, -50%) scale(${k})`,
-    backgroundImage: `url('${data.imageURL || DEFAULT_TAG_IMAGE}')`
+    backgroundImage: `url('${data.editor_data.image_url || DEFAULT_TAG_IMAGE}')`
   };
   return (
     <button
@@ -85,11 +82,8 @@ const Tag = ({
 };
 
 Tag.propTypes = {
-  labels: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,
   mapZoomFactor: PropTypes.number.isRequired,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   disabled: PropTypes.bool

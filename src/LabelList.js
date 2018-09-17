@@ -28,13 +28,14 @@ const getCSSLabelList = ({ align, fontSize }) =>
     flex: "1 1 auto"
   });
 
-const LabelList = ({ align, labels, fontSize = theme.fontSize }) => (
-  <div className={getCSSLabelList({ align, fontSize })}>
-    {labels.map((l, i) => (
-      <Label key={i} name={l} />
-    ))}
-  </div>
-);
+const LabelList = ({ align, labels, fontSize = theme.fontSize }) =>
+  labels.length === 0 ? null : (
+    <div className={getCSSLabelList({ align, fontSize })}>
+      {labels.map((l, i) => (
+        <Label key={i} name={l} />
+      ))}
+    </div>
+  );
 
 LabelList.propTypes = {
   fontSize: PropTypes.string,

@@ -9,7 +9,7 @@ import IconSpinner from "./IconSpinner";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, theme, mixins } from "./style";
-import { createSearchMatcher, STRINGS } from "./util";
+import { createSearchMatcher, STRINGS, getTagLabels } from "./util";
 import LabelList from "./LabelList";
 
 const cssOverlayBuildingName = css({
@@ -127,7 +127,7 @@ class TagListOverlay extends Component {
         tag =>
           match(tag.editor_data.name) ||
           match(tag.mac) ||
-          tag.editor_data.tags.map(x => x.name).some(match)
+          getTagLabels(tag).some(match)
       )
       // TODO: Should we show hidden tags?
       .filter(tag => {
@@ -177,7 +177,7 @@ class TagListOverlay extends Component {
                   </div>
                   <LabelList
                     align="right"
-                    labels={tag.editor_data.tags.map(x => x.name)}
+                    labels={getTagLabels(tag)}
                     fontSize={theme.fontSizeSmallest}
                   />
                 </div>

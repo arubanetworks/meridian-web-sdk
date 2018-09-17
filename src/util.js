@@ -12,6 +12,10 @@ export function createSearchMatcher(query) {
     target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
 }
 
+export function getTagLabels(tag) {
+  return tag.editor_data.tags.map(tag => tag.name);
+}
+
 export function requiredParam(funcName, argName) {
   // eslint-disable-next-line no-console
   console.error(`${funcName}: argument \`${argName}\` is required`);

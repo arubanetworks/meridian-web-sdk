@@ -1,7 +1,7 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
-import { getAssetURL } from "./util";
+import { getAssetURL, getTagLabels } from "./util";
 import { css, cx, mixins } from "./style";
 
 const SIZE = 48;
@@ -52,8 +52,8 @@ const Tag = ({
 }) => {
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
-  const labelClassNames = data.editor_data.tags.map(label => {
-    const s = label.name.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
+  const labelClassNames = getTagLabels(data).map(label => {
+    const s = label.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
     return `meridian-tag-label-${s}`;
   });
   const className = isSelected

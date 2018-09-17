@@ -2,7 +2,7 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 
 import Overlay from "./Overlay";
-import { getPlacemarkIconURL, STRINGS } from "./util";
+import { getPlacemarkIconURL, STRINGS, getTagLabels } from "./util";
 import { css, theme } from "./style";
 import LabelList from "./LabelList";
 
@@ -65,13 +65,11 @@ const MapMarkerOverlay = ({ kind, item, toggleMapMarkerOverlay }) => (
       </p>
       {kind === "tag" ? (
         <div className={cssTagData}>
-          {item.editor_data.tags ? (
-            <LabelList
-              align="left"
-              labels={item.editor_data.tags.map(x => x.name)}
-              fontSize={theme.fontSize}
-            />
-          ) : null}
+          <LabelList
+            align="left"
+            labels={getTagLabels(item)}
+            fontSize={theme.fontSize}
+          />
           <p>MAC: {item.mac}</p>
         </div>
       ) : null}

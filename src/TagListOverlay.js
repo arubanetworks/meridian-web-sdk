@@ -1,6 +1,4 @@
-// TODO:
-// - This code is copy/pasted from FloorOverlay! Fix the variable names
-// - Add CSS hook classes
+// TODO (2018-09-17) Brian Mock
 // - Probably share some code with FloorOverlay eventually
 
 import { h, Component } from "preact";
@@ -28,7 +26,7 @@ const cssOverlayBuildingName = css({
 });
 
 const cssTagList = css({
-  label: "floors-list",
+  label: "tags-list",
   overflowY: "auto",
   flex: "1 1 auto"
 });
@@ -86,7 +84,7 @@ class TagListOverlay extends Component {
     const floorToGroup = {};
     for (const floor of floors) {
       floorToGroup[floor.id] = [
-        floor.group_name,
+        floor.group_name || STRINGS.unnamedBuilding,
         STRINGS.enDash,
         floor.name
       ].join(" ");
@@ -96,31 +94,9 @@ class TagListOverlay extends Component {
 
   getOrganizedTags(tags) {
     const floorToGroup = this.getFloorToGroup();
-    return groupBy(
-      tags,
-      tag => floorToGroup[tag.calculations.default.location.floor_id]
-    );
-  }
-
-  handleSearchFilterChange = event => {
-    this.setState({ searchFilter: event.target.value });
-  };
-
-  getFloorsByID() {
-    const { floors } = this.props;
-    return keyBy(floors, "id");
-  }
-
-  // Move "" to the end of the list (Unassigned)
-  processedFloorsByBuilding() {
-    const { searchFilter } = this.state;
-    const { floors } = this.props;
-    const match = createSearchMatcher(searchFilter);
-    return floors.filter(
-      floor =>
-        match(floor.name || "") ||
-        match(floor.group_name || STRINGS.unnamedBuilding)
-    );
+    return groupBy(tags, tag => {
+      return floorToGroup[tag.calculations.default.location.map_id];
+    });
   }
 
   getSortedGroups(organizedTags) {
@@ -128,9 +104,7 @@ class TagListOverlay extends Component {
     const groups = Object.keys(organizedTags).sort();
     groups.forEach((group, index) => {
       const floors = organizedTags[group];
-      if (
-        floors[0].tag.calculations.default.location.floor_id === currentFloorID
-      ) {
+      if (floors[0].calculations.default.location.map_id === currentFloorID) {
         const [currentGroup] = groups.splice(index, 1);
         groups.unshift(currentGroup);
       }
@@ -152,7 +126,7 @@ class TagListOverlay extends Component {
     const processedTags = tags
       .filter(
         tag =>
-          match(tag.name) ||
+          match(tag.editor_data.name) ||
           match(tag.mac) ||
           tag.editor_data.tags.map(x => x.name).some(match)
       )
@@ -189,7 +163,7 @@ class TagListOverlay extends Component {
                 onClick={() => {
                   update({
                     locationID: tag.calculations.default.location.location_id,
-                    floorID: tag.calculations.default.location.floor_id,
+                    floorID: tag.calculations.default.location.map_id,
                     tags: {
                       ...tagOptions,
                       filter: () => true
@@ -199,10 +173,12 @@ class TagListOverlay extends Component {
                 }}
               >
                 <div className={cssOverlayTagButtonInner}>
-                  <div className={cssOverlayTagButtonName}>{tag.name}</div>
+                  <div className={cssOverlayTagButtonName}>
+                    {tag.editor_data.name}
+                  </div>
                   <LabelList
                     align="right"
-                    labels={tag.editor_data.tags || []}
+                    labels={tag.editor_data.tags.map(x => x.name)}
                     fontSize={theme.fontSizeSmallest}
                   />
                 </div>

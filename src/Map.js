@@ -446,6 +446,7 @@ export default class Map extends Component {
       return (
         <MapMarkerOverlay
           toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
+          kind={selectedItem.kind === "placemark" ? "placemark" : "tag"}
           item={selectedItem}
         />
       );

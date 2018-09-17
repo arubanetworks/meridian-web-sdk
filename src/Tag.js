@@ -72,7 +72,7 @@ const Tag = ({
       style={style}
       onClick={event => {
         event.target.focus();
-        onClick(event);
+        onClick();
       }}
       onMouseDown={event => {
         event.stopPropagation();

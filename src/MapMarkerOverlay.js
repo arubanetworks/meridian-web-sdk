@@ -29,8 +29,9 @@ const cssTagData = css({
   fontSize: 14
 });
 
-function getImageStyle(item) {
-  if (item.kind === "placemark") {
+function getImageStyle({ kind, item }) {
+  console.log({ kind, item });
+  if (kind === "placemark") {
     const url = getPlacemarkIconURL(item.type);
     return {
       backgroundSize: "70%",
@@ -38,7 +39,7 @@ function getImageStyle(item) {
       backgroundColor: `#${item.color}`,
       height: 300
     };
-  } else if (item.kind === "tag" && item.editor_data.image_url) {
+  } else if (kind === "tag" && item.editor_data.image_url) {
     return {
       backgroundImage: `url('${item.editor_data.image_url}')`,
       height: 300
@@ -51,22 +52,24 @@ function getImageStyle(item) {
   }
 }
 
-const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
+const MapMarkerOverlay = ({ kind, item, toggleMapMarkerOverlay }) => (
   <Overlay
     position="left"
     onCloseClicked={() => {
       toggleMapMarkerOverlay({ open: false });
     }}
   >
-    <div className={cssOverlayImage} style={getImageStyle(item)} />
+    <div className={cssOverlayImage} style={getImageStyle({ kind, item })} />
     <div className={cssOverlayContent}>
-      <p className={cssOverlayName}>{item.name || STRINGS.enDash}</p>
-      {item.kind === "tag" ? (
+      <p className={cssOverlayName}>
+        {(kind === "tag" ? item.editor_data.name : item.name) || STRINGS.enDash}
+      </p>
+      {kind === "tag" ? (
         <div className={cssTagData}>
           {item.editor_data.tags ? (
             <LabelList
               align="left"
-              labels={item.editor_data.tags}
+              labels={item.editor_data.tags.map(x => x.name)}
               fontSize={theme.fontSize}
             />
           ) : null}
@@ -78,6 +81,7 @@ const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
 );
 
 MapMarkerOverlay.propTypes = {
+  kind: PropTypes.oneOf(["tag", "placemark"]),
   item: PropTypes.object.isRequired,
   toggleMapMarkerOverlay: PropTypes.func.isRequired
 };

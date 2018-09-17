@@ -18,7 +18,9 @@ const MapMarker = ({
         isSelected={selectedItem ? selectedItem.mac === data.mac : false}
         mapZoomFactor={mapZoomFactor}
         data={data}
-        onClick={onClick}
+        onClick={() => {
+          onClick(data);
+        }}
         disabled={disabled}
       />
     );
@@ -28,7 +30,9 @@ const MapMarker = ({
         isSelected={selectedItem ? selectedItem.id === data.id : false}
         mapZoomFactor={mapZoomFactor}
         data={data}
-        onClick={onClick}
+        onClick={() => {
+          onClick(data);
+        }}
         disabled={disabled}
       />
     );

@@ -4,7 +4,6 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import groupBy from "lodash.groupby";
-import keyBy from "lodash.keyby";
 
 import IconSpinner from "./IconSpinner";
 import Overlay from "./Overlay";

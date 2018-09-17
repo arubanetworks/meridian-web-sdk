@@ -30,7 +30,6 @@ const cssTagData = css({
 });
 
 function getImageStyle({ kind, item }) {
-  console.log({ kind, item });
   if (kind === "placemark") {
     const url = getPlacemarkIconURL(item.type);
     return {

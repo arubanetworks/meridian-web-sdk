@@ -181,10 +181,7 @@ export default class TagLayer extends Component {
     const { filter = () => true } = markers;
     const allTags = this.filterControlTags(this.getTags());
     const filteredTags = allTags.filter(filter);
-    onUpdate({
-      allTags: allTags.map(tag => tag.data),
-      filteredTags: filteredTags.map(tag => tag.data)
-    });
+    onUpdate({ allTags, filteredTags });
   };
 
   render() {

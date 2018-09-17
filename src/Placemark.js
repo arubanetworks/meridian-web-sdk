@@ -75,8 +75,6 @@ const getIconStyle = data => {
 
 const Placemark = ({
   isSelected,
-  x,
-  y,
   data,
   mapZoomFactor,
   onClick = () => {},
@@ -96,8 +94,8 @@ const Placemark = ({
       )
     : cx("meridian-placemark-icon", cssTypeName, cssPlacemarkIcon);
   const style = {
-    left: x,
-    top: y,
+    left: data.x,
+    top: data.y,
     transform: `translate(-50%, -50%) scale(${k})`
   };
   if (labelOnly) {
@@ -145,8 +143,6 @@ const Placemark = ({
 Placemark.propTypes = {
   isSelected: PropTypes.bool.isRequired,
   mapZoomFactor: PropTypes.number.isRequired,
-  x: PropTypes.number.isRequired,
-  y: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   disabled: PropTypes.bool

@@ -2,7 +2,7 @@ import { h } from "preact";
 import PropTypes from "prop-types";
 
 import Overlay from "./Overlay";
-import { getPlacemarkIconURL, STRINGS } from "./util";
+import { getPlacemarkIconURL, STRINGS, getTagLabels } from "./util";
 import { css, theme } from "./style";
 import LabelList from "./LabelList";
 
@@ -29,8 +29,8 @@ const cssTagData = css({
   fontSize: 14
 });
 
-function getImageStyle(item) {
-  if (item.kind === "placemark") {
+function getImageStyle({ kind, item }) {
+  if (kind === "placemark") {
     const url = getPlacemarkIconURL(item.type);
     return {
       backgroundSize: "70%",
@@ -38,9 +38,9 @@ function getImageStyle(item) {
       backgroundColor: `#${item.color}`,
       height: 300
     };
-  } else if (item.kind === "tag" && item.imageURL) {
+  } else if (kind === "tag" && item.editor_data.image_url) {
     return {
-      backgroundImage: `url('${item.imageURL}')`,
+      backgroundImage: `url('${item.editor_data.image_url}')`,
       height: 300
     };
   } else {
@@ -51,25 +51,25 @@ function getImageStyle(item) {
   }
 }
 
-const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
+const MapMarkerOverlay = ({ kind, item, toggleMapMarkerOverlay }) => (
   <Overlay
     position="left"
     onCloseClicked={() => {
       toggleMapMarkerOverlay({ open: false });
     }}
   >
-    <div className={cssOverlayImage} style={getImageStyle(item)} />
+    <div className={cssOverlayImage} style={getImageStyle({ kind, item })} />
     <div className={cssOverlayContent}>
-      <p className={cssOverlayName}>{item.name || STRINGS.enDash}</p>
-      {item.kind === "tag" ? (
+      <p className={cssOverlayName}>
+        {(kind === "tag" ? item.editor_data.name : item.name) || STRINGS.enDash}
+      </p>
+      {kind === "tag" ? (
         <div className={cssTagData}>
-          {item.labels ? (
-            <LabelList
-              align="left"
-              labels={item.labels}
-              fontSize={theme.fontSize}
-            />
-          ) : null}
+          <LabelList
+            align="left"
+            labels={getTagLabels(item)}
+            fontSize={theme.fontSize}
+          />
           <p>MAC: {item.mac}</p>
         </div>
       ) : null}
@@ -78,6 +78,7 @@ const MapMarkerOverlay = ({ item, toggleMapMarkerOverlay }) => (
 );
 
 MapMarkerOverlay.propTypes = {
+  kind: PropTypes.oneOf(["tag", "placemark"]),
   item: PropTypes.object.isRequired,
   toggleMapMarkerOverlay: PropTypes.func.isRequired
 };

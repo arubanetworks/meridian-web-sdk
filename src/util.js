@@ -12,6 +12,10 @@ export function createSearchMatcher(query) {
     target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
 }
 
+export function getTagLabels(tag) {
+  return tag.editor_data.tags.map(tag => tag.name);
+}
+
 export function requiredParam(funcName, argName) {
   // eslint-disable-next-line no-console
   console.error(`${funcName}: argument \`${argName}\` is required`);
@@ -37,36 +41,6 @@ export function getAssetURL(suffix) {
 export function getPlacemarkIconURL(type) {
   const name = "placemark-" + type.replace(/_/g, "-");
   return getAssetURL(`placemarks/${name}.svg`);
-}
-
-export function normalizeTag(tag) {
-  const { mac } = tag;
-  const {
-    name,
-    image_url: imageURL,
-    is_control_tag: isControlTag
-  } = tag.editor_data;
-  const {
-    x,
-    y,
-    location_id: locationID,
-    map_id: floorID
-  } = tag.calculations.default.location;
-  const labels = tag.editor_data.tags.map(x => x.name);
-  return {
-    kind: "tag",
-    name,
-    id: mac,
-    mac,
-    x,
-    y,
-    imageURL,
-    locationID,
-    floorID,
-    labels,
-    isControlTag,
-    data: tag
-  };
 }
 
 export async function fetchAllPaginatedData(api, url) {

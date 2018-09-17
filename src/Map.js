@@ -19,8 +19,7 @@ import {
   fetchAllPaginatedData,
   asyncClientCall,
   validateEnvironment,
-  fetchAllTags,
-  normalizeTag
+  fetchAllTags
 } from "./util";
 
 const ZOOM_FACTOR = 0.5;
@@ -153,12 +152,12 @@ export default class Map extends Component {
       const { api, locationID, showControlTags } = this.props;
       const floorID = STREAM_ALL_FLOORS;
       const rawTags = await fetchAllTags({ api, locationID, floorID });
-      const normalizedTags = rawTags
-        .map(normalizeTag)
-        .filter(tag => showControlTags === true || !tag.isControlTag);
+      const filteredTags = rawTags.filter(
+        tag => showControlTags === true || !tag.editor_data.is_control_tag
+      );
       this.setState({
         areTagsLoading: false,
-        allTagData: normalizedTags
+        allTagData: filteredTags
       });
       this.tagsTimeout = setTimeout(loop, 5 * 60 * 1000);
     };
@@ -447,6 +446,7 @@ export default class Map extends Component {
       return (
         <MapMarkerOverlay
           toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
+          kind={selectedItem.kind === "placemark" ? "placemark" : "tag"}
           item={selectedItem}
         />
       );

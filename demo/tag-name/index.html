@@ -82,7 +82,7 @@
           if (selectedTag) {
             this.map.update({
               tags: {
-                filter: tag => tag.id === selectedTag,
+                filter: tag => tag.mac === selectedTag,
               }
             });
           } else {

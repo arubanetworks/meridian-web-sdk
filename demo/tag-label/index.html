@@ -58,6 +58,7 @@
 
       onTagsUpdate = tags => {
         const labels = {};
+        console.log(tags);
         tags.allTags.forEach(tag => {
           // Labels used to be called tags
           tag.editor_data.tags.forEach(t => {
@@ -73,7 +74,7 @@
           if (selectedLabel) {
             this.map.update({
               tags: {
-                filter: tag => tag.labels.includes(selectedLabel),
+                filter: tag => tag.editor_data.tags.some(tag => tag.name === selectedLabel),
               }
             });
           } else {

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
 
 import MapMarker from "./MapMarker";
-import { normalizeTag } from "./util";
 
 export default class TagLayer extends Component {
   static defaultProps = {
@@ -113,7 +112,7 @@ export default class TagLayer extends Component {
   }, 1000);
 
   tagsByMAC(tags) {
-    return tags.map(tag => normalizeTag(tag)).reduce((obj, tag) => {
+    return tags.reduce((obj, tag) => {
       obj[tag.mac] = tag;
       return obj;
     }, {});
@@ -165,7 +164,7 @@ export default class TagLayer extends Component {
     const { markers } = this.props;
     return tags.filter(tag => {
       if (markers.showControlTags !== true) {
-        return !tag.isControlTag;
+        return !tag.editor_data.is_control_tag;
       }
       return true;
     });
@@ -182,10 +181,7 @@ export default class TagLayer extends Component {
     const { filter = () => true } = markers;
     const allTags = this.filterControlTags(this.getTags());
     const filteredTags = allTags.filter(filter);
-    onUpdate({
-      allTags: allTags.map(tag => tag.data),
-      filteredTags: filteredTags.map(tag => tag.data)
-    });
+    onUpdate({ allTags, filteredTags });
   };
 
   render() {
@@ -197,10 +193,6 @@ export default class TagLayer extends Component {
         mapZoomFactor={mapZoomFactor}
         key={tag.mac}
         kind="tag"
-        id={tag.mac}
-        x={tag.x}
-        y={tag.y}
-        name={tag.name}
         data={tag}
         onClick={onMarkerClick}
         disabled={markers.disabled}

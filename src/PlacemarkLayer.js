@@ -111,10 +111,6 @@ export default class PlacemarkLayer extends Component {
         mapZoomFactor={mapZoomFactor}
         key={placemark.id}
         kind="placemark"
-        id={placemark.id}
-        x={placemark.x}
-        y={placemark.y}
-        name={placemark.name}
         data={placemark}
         onClick={onMarkerClick}
         disabled={markers.disabled}

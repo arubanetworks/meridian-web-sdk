@@ -37,9 +37,9 @@ const context = {
   api: null
 };
 
-export const version = GLOBAL_VERSION;
+const version = GLOBAL_VERSION;
 
-export function restrictedPanZoom({ type, touches, shiftKey }) {
+function restrictedPanZoom({ type, touches, shiftKey }) {
   if (type === "wheel" && !shiftKey) {
     return false;
   } else if (type === "touchstart") {
@@ -48,7 +48,7 @@ export function restrictedPanZoom({ type, touches, shiftKey }) {
   return true;
 }
 
-export function init(
+function init(
   { api = requiredParam("init", "options.api") } = requiredParam(
     "init",
     "options"
@@ -57,7 +57,7 @@ export function init(
   context.api = api;
 }
 
-export function createMap(
+function createMap(
   node = requiredParam("createMap", "node"),
   options = requiredParam("createMap", "options")
 ) {
@@ -92,6 +92,20 @@ export function createMap(
   return { update, zoomToDefault, zoomToPoint };
 }
 
-export function createAPI(options = requiredParam("createAPI", "options")) {
+function createAPI(options = requiredParam("createAPI", "options")) {
   return new API(options);
 }
+
+// Brian Mock (2018-09-18)
+//
+// Unfortunately, most people assume that you can use `import MeridianSDK`
+// instead of the more correct `import * as MeridianSDK` due to Babel's sloppy
+// interop between ES modules and CommonJS. Given that, we're exporting things
+// as one big JS object.
+export default {
+  version,
+  init,
+  createAPI,
+  createMap,
+  restrictedPanZoom
+};

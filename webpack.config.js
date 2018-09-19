@@ -54,7 +54,7 @@ const npmConfig = {
   ...common,
   output: {
     filename: "index.js",
-    libraryTarget: "commonjs-module",
+    libraryTarget: "commonjs",
     path: path.resolve(__dirname, "dist")
   },
   target: "node",

@@ -12,9 +12,9 @@ const envToTagURL = {
 const tagPath = "/streams/v1beta2/tracking/websocket";
 
 const envToRestURL = {
-  development: "http://localhost:8091/api",
-  production: "https://edit.meridianapps.com/api",
-  staging: "https://staging-edit.meridianapps.com/api"
+  development: "http://localhost:8091/websdk/api",
+  production: "https://edit.meridianapps.com/websdk/api",
+  staging: "https://staging-edit.meridianapps.com/websdk/api"
 };
 
 // We're not sure if we wanna expose streaming for all floors as an option

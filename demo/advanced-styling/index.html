@@ -15,11 +15,20 @@
   <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
   <script src="../shared.js"></script>
   <style>
-    .map {
+    body {
+      background: seashell;
+      color: purple;
+      color: rebeccapurple;
+      padding-top: 20px;
       max-width: 500px;
       margin: auto;
-      padding: 0 20px 0 10px;
       font-family: "Comic Sans MS", Papyrus, fantasy;
+      line-height: 1.5;
+      font-size: 20px;
+    }
+
+    .map {
+      margin-bottom: 40px;
     }
 
     /**
@@ -37,44 +46,23 @@
     body .meridian-zoom-button {
       fill: red;
       background: lightblue;
-      cursor: pointer;
-    }
-
-    body .meridian-zoom-button:hover {
-      fill: green;
-      background: pink;
+      border-radius: 0;
     }
 
     body .meridian-zoom-button-in {
       border-color: darkgreen;
+      background: gainsboro;
+      fill: crimson;
     }
 
     body .meridian-zoom-controls {
+      overflow: hidden;
       border-radius: 0;
       box-shadow: 0 0 3px 3px orange;
       border-radius: 0 20px 0 20px;
     }
 
-    body .meridian-overlay {
-      background: peachpuff;
-      color: orchid;
-      border-radius: 0 0 40px 0;
-    }
-
-    body .meridian-overlay-close {
-      border-radius: 0;
-      background: red;
-      fill: green;
-      box-shadow: 0 0 0 3px gold;
-    }
-
-    body .meridian-overlay-close:hover {
-      border-radius: 2px;
-      background: green;
-      fill: red;
-      box-shadow: 0 0 0 6px gold;
-    }
-
+    body .meridian-tag-control,
     body .meridian-floor-control {
       border-color: darkgreen;
       box-shadow: 0 0 3px 3px orange;
@@ -83,17 +71,37 @@
       background: lightblue;
     }
 
-    body .meridian-floor-control:hover,
-    body .meridian-floor-control:active {
+    body .meridian-tag-control {
+      border-radius: 10px 0 10px 0;
+      background: mintcream;
+      fill: violet;
+      box-shadow: 0 0 3px black;
+    }
+
+    body .meridian-zoom-button:hover,
+    body .meridian-tag-control:hover,
+    body .meridian-floor-control:hover {
       fill: green;
       background: pink;
+      box-shadow: 0 0 3px white;
     }
+
+    body .meridian-tag-control:hover {
+      border-radius: 10px 0 10px 0;
+      background: violet;
+      fill: mintcream;
+    }
+
   </style>
 </head>
 
 <body>
 
   <div class="map" id="meridian-map"></div>
+  <p>
+    This style is intentionally a bit over the top to show you how customizable
+    these hooks are.
+  </p>
 
   <script src="../meridian-sdk.js"></script>
   <script id="the-code">

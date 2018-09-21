@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
 
 bold=$'\e[1m'
@@ -20,12 +20,10 @@ Heading "--- Deploying $name demos v$version ---"
 
 Heading "* Cleaning old build..."
 rm -rf dist
-mkdir -p dist/--SECRET--
 
 Heading "* Building SDK JS bundle..."
 npm run -s build
-mv dist/meridian-sdk.js dist/--SECRET--/
-cp -r demo/* dist/--SECRET--/
+cp -r demo/* dist/
 
 Heading "* Copying build files..."
 npx gh-pages --dist dist
@@ -33,4 +31,4 @@ npx gh-pages --dist dist
 Heading "* Cleaning up build files..."
 rm -rf dist
 
-Heading "==> https://arubanetworks.github.io/meridian-web-sdk/--SECRET--"
+Heading "==> https://arubanetworks.github.io/meridian-web-sdk"

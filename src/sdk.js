@@ -1,4 +1,5 @@
 import { h, render } from "preact";
+import axios from "axios";
 
 import Map from "./Map";
 import API from "./API";
@@ -22,6 +23,53 @@ if (document.readyState === "complete") {
 const context = {
   api: null
 };
+
+async function sendAnalyticsCodeEvent({
+  action,
+  locationID,
+  onTagsUpdate = false,
+  tagsFilter = false,
+  placemarksFilter = false
+}) {
+  const data = {
+    aip: 1,
+    v: "1",
+    tid: "UA-56747301-5",
+    an: "MeridianSDK",
+    av: "0.0.3",
+    uid: locationID,
+    cid: locationID,
+    t: "event",
+    ds: "app",
+    ec: "code",
+    ea: action,
+    // cd1: onTagsUpdate.toString(),
+    // cd2: tagsFilter.toString(),
+    // cd3: placemarksFilter.toString(),
+    ul: navigator.language,
+    z: Math.random()
+      .toString(36)
+      .substring(7), // cache buster per google
+    ua: window.navigator.userAgent
+  };
+
+  if (action === "createMap") {
+    data.cm1 = onTagsUpdate ? 1 : 0;
+    data.cm2 = tagsFilter ? 1 : 0;
+    data.cm3 = placemarksFilter ? 1 : 0;
+  }
+
+  axios
+    .get("http://www.google-analytics.com/collect", {
+      params: {
+        ...data
+      }
+    })
+    .then(response => {
+      console.info(response);
+      console.info(response.config.params);
+    });
+}
 
 export const version = GLOBAL_VERSION;
 
@@ -58,6 +106,13 @@ export function createMap(
       node,
       domRef
     );
+    sendAnalyticsCodeEvent({
+      action: "map.update",
+      locationID: options.locationID,
+      onTagsUpdate: !!options.onTagsUpdate,
+      tagsFilter: !!(options.tags && options.tags.filter),
+      placemarksFilter: !!(options.placemarks && options.placemarks.filter)
+    });
   };
   const zoomToDefault = () => {
     mapRef.zoomToDefault();
@@ -75,6 +130,13 @@ export function createMap(
     <Map api={context.api} update={update} {...options} ref={setMapRef} />,
     node
   );
+  sendAnalyticsCodeEvent({
+    action: "createMap",
+    locationID: options.locationID,
+    onTagsUpdate: !!options.onTagsUpdate,
+    tagsFilter: !!(options.tags && options.tags.filter),
+    placemarksFilter: !!(options.placemarks && options.placemarks.filter)
+  });
   return { update, zoomToDefault, zoomToPoint };
 }
 

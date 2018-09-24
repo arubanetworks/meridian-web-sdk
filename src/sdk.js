@@ -92,10 +92,10 @@ export function createMap(
   const setMapRef = newMapRef => {
     mapRef = newMapRef;
   };
-  const update = (updatedOptions, internalUpdate = false) => {
+  const _update = (updatedOptions, { internalUpdate = true } = {}) => {
     options = { ...options, ...updatedOptions };
     domRef = render(
-      <Map api={context.api} update={update} {...options} ref={setMapRef} />,
+      <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
       node,
       domRef
     );
@@ -110,6 +110,9 @@ export function createMap(
       internalUpdate
     });
   };
+  const update = updatedOptions => {
+    _update(updatedOptions, { internalUpdate: false });
+  };
   const zoomToDefault = () => {
     mapRef.zoomToDefault();
   };
@@ -123,7 +126,7 @@ export function createMap(
     mapRef.zoomToPoint(x, y, scale);
   };
   let domRef = render(
-    <Map api={context.api} update={update} {...options} ref={setMapRef} />,
+    <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
     node
   );
   sendAnalyticsCodeEvent({

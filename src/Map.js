@@ -212,7 +212,7 @@ export default class Map extends Component {
   };
 
   selectFloorByID = floorID => {
-    this.props.update({ floorID }, true);
+    this.props.update({ floorID });
   };
 
   async getFloors() {

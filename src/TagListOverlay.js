@@ -160,17 +160,14 @@ class TagListOverlay extends Component {
                 key={tag.id}
                 className={cssOverlayTagButton}
                 onClick={() => {
-                  update(
-                    {
+                  update({
                       locationID: tag.calculations.default.location.location_id,
                       floorID: tag.calculations.default.location.map_id,
                       tags: {
                         ...tagOptions,
                         filter: () => true
                       }
-                    },
-                    true
-                  );
+                  });
                   onMarkerClick(tag);
                 }}
               >

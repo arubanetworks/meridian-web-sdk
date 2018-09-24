@@ -24,6 +24,8 @@ const context = {
   api: null
 };
 
+const pixelRatio = window.devicePixelRatio || 1;
+
 async function sendAnalyticsCodeEvent({
   action,
   locationID,
@@ -37,18 +39,21 @@ async function sendAnalyticsCodeEvent({
     v: "1",
     tid: "UA-56747301-5",
     an: "MeridianSDK",
-    av: "0.0.3",
+    av: GLOBAL_VERSION,
     uid: locationID,
     cid: locationID,
     t: "event",
     ds: "app",
     ec: "code",
     ea: action,
+    ev: 1,
     el: internalUpdate ? "internal" : "external",
     cm1: onTagsUpdate ? 1 : 0,
     cm2: tagsFilter ? 1 : 0,
     cm3: placemarksFilter ? 1 : 0,
     ul: navigator.language,
+    sr: `${window.screen.width * pixelRatio}x${window.screen.height *
+      pixelRatio}`,
     z: Math.random()
       .toString(36)
       .substring(7), // cache buster per google

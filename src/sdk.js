@@ -60,16 +60,11 @@ async function sendAnalyticsCodeEvent({
     ua: window.navigator.userAgent
   };
 
-  axios
-    .get("http://www.google-analytics.com/collect", {
-      params: {
-        ...data
-      }
-    })
-    .then(response => {
-      console.info(response.status);
-      console.info(response.config.params);
-    });
+  axios.get("http://www.google-analytics.com/collect", {
+    params: {
+      ...data
+    }
+  });
 }
 
 export const version = GLOBAL_VERSION;

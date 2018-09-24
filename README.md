@@ -1,54 +1,45 @@
 # Meridian Web SDK
 
-## Editor Web SDK integration page example
+## License
 
-NOTE: <TOKEN> will be replaced in the snippet automatically for convenience. And
-<ENVIRONMENT> will either be "production" or "production-eu" depending on the
-location's context.
+[MIT](LICENSE)
 
-## Example
+## Documentation
 
-Hello, please enjoy our provided JS SDK!
+Please read the [documentation][] from our site.
 
-### npm Installation
+## Examples
+
+We have several [examples][] of how to use the SDK.
+
+## Installation
+
+Install from npm:
+
+```sh
+$ npm install @meridian/web-sdk
+```
+
+And then for CommonJS imports use:
 
 ```js
-// npm install --save @meridian/sdk
-
-const MeridianSDK = require("@meridian/sdk");
-
-MeridianSDK.init({
-  api: MeridianSDK.createAPI({
-    environment: "<ENVIRONMENT>",
-    token: "<TOKEN>"
-  })
-});
-
-MeridianSDK.createMap(document.getElementById("meridian-map"), {
-  locationID: "...",
-  floorID: "..."
-});
+var MeridianSDK = require("@meridian/web-sdk");
 ```
 
-### Script Tag Installation
+Or for ES modules imports:
+
+```js
+import MeridianSDK from "@meridian/web-sdk";
+```
+
+If you would like a standalone JS file with all dependencies bundled that you can use from a script tag, [download][] the latest version and include it:
 
 ```html
-<script src="https://storage.googleapis.com/meridian-sdk/x.y.z/meridian-sdk.js"></script>
-<script>
-MeridianSDK.init({
-  api: MeridianSDK.createAPI({
-    environment: "<ENVIRONMENT>",
-    token: "<TOKEN>"
-  })
-});
-
-var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
-  locationID: "...",
-  floorID: "..."
-});
-
-map.update({
-  // ...
-});
-</script>
+<script src="meridian-sdk.js"></script>
 ```
+
+Which will make a global object called `MeridianSDK`
+
+[examples]: http://example.com/#TODO_EXAMPLES
+[documentation]: https://docs.meridianapps.com/article/779-the-meridian-web-sdk
+[download]: https://arubanetworks.github.io/meridian-web-sdk/--SECRET--/meridian-sdk.js

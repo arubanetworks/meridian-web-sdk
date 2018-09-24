@@ -29,7 +29,8 @@ async function sendAnalyticsCodeEvent({
   locationID,
   onTagsUpdate = false,
   tagsFilter = false,
-  placemarksFilter = false
+  placemarksFilter = false,
+  internalUpdate
 }) {
   const data = {
     aip: 1,
@@ -43,7 +44,7 @@ async function sendAnalyticsCodeEvent({
     ds: "app",
     ec: "code",
     ea: action,
-    el: "internal",
+    el: internalUpdate ? "internal" : "external",
     cm1: onTagsUpdate ? 1 : 0,
     cm2: tagsFilter ? 1 : 0,
     cm3: placemarksFilter ? 1 : 0,
@@ -61,7 +62,7 @@ async function sendAnalyticsCodeEvent({
       }
     })
     .then(response => {
-      console.info(response);
+      console.info(response.status);
       console.info(response.config.params);
     });
 }
@@ -94,7 +95,7 @@ export function createMap(
   const setMapRef = newMapRef => {
     mapRef = newMapRef;
   };
-  const update = updatedOptions => {
+  const update = (updatedOptions, internalUpdate = false) => {
     options = { ...options, ...updatedOptions };
     domRef = render(
       <Map api={context.api} update={update} {...options} ref={setMapRef} />,
@@ -106,7 +107,8 @@ export function createMap(
       locationID: options.locationID,
       onTagsUpdate: !!options.onTagsUpdate,
       tagsFilter: !!(options.tags && options.tags.filter),
-      placemarksFilter: !!(options.placemarks && options.placemarks.filter)
+      placemarksFilter: !!(options.placemarks && options.placemarks.filter),
+      internalUpdate
     });
   };
   const zoomToDefault = () => {

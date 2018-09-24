@@ -25,6 +25,8 @@ const context = {
 };
 
 const pixelRatio = window.devicePixelRatio || 1;
+const screen = window.screen;
+const screenRes = `${screen.width * pixelRatio}x${screen.height * pixelRatio}`;
 
 async function sendAnalyticsCodeEvent({
   action,
@@ -34,37 +36,32 @@ async function sendAnalyticsCodeEvent({
   placemarksFilter = false,
   internalUpdate
 }) {
-  const data = {
-    aip: 1,
-    v: "1",
-    tid: "UA-56747301-5",
-    an: "MeridianSDK",
-    av: GLOBAL_VERSION,
-    uid: locationID,
-    cid: locationID,
-    t: "event",
-    ds: "app",
-    ec: "code",
-    ea: action,
-    ev: 1,
-    el: internalUpdate ? "internal" : "external",
-    cm1: onTagsUpdate ? 1 : 0,
-    cm2: tagsFilter ? 1 : 0,
-    cm3: placemarksFilter ? 1 : 0,
-    ul: navigator.language,
-    sr: `${window.screen.width * pixelRatio}x${window.screen.height *
-      pixelRatio}`,
+  const params = {
+    v: "1", // GA version
+    tid: "UA-56747301-5", // Tracking ID
+    an: "MeridianSDK", // Application Name
+    ds: "app", // Data Source
+    av: GLOBAL_VERSION, // Application Version
+    uid: locationID, // User ID
+    cid: locationID, // Client ID
+    t: "event", // Hit Type
+    ec: "code", // Event Category
+    ea: action, // Event Action
+    ev: 1, // Event Value
+    el: internalUpdate ? "internal" : "external", // Event Label
+    cm1: onTagsUpdate ? 1 : 0, // Custom Metric
+    cm2: tagsFilter ? 1 : 0, // Custom Metric
+    cm3: placemarksFilter ? 1 : 0, // Custom Metric
+    ul: navigator.language, // User Language
+    sr: screenRes, // Screen Resolution
+    aip: 1, // Anonymize IP
+    ua: window.navigator.userAgent, // User Agent
     z: Math.random()
       .toString(36)
-      .substring(7), // cache buster per google
-    ua: window.navigator.userAgent
+      .substring(7) // Cache Buster (per google)
   };
 
-  axios.get("http://www.google-analytics.com/collect", {
-    params: {
-      ...data
-    }
-  });
+  axios.get("http://www.google-analytics.com/collect", { params });
 }
 
 export const version = GLOBAL_VERSION;
@@ -105,9 +102,9 @@ export function createMap(
     sendAnalyticsCodeEvent({
       action: "map.update",
       locationID: options.locationID,
-      onTagsUpdate: !!options.onTagsUpdate,
-      tagsFilter: !!(options.tags && options.tags.filter),
-      placemarksFilter: !!(options.placemarks && options.placemarks.filter),
+      onTagsUpdate: Boolean(options.onTagsUpdate),
+      tagsFilter: Boolean(options.tags && options.tags.filter),
+      placemarksFilter: Boolean(options.placemarks && options.placemarks.filter),
       internalUpdate
     });
   };
@@ -130,9 +127,9 @@ export function createMap(
   sendAnalyticsCodeEvent({
     action: "createMap",
     locationID: options.locationID,
-    onTagsUpdate: !!options.onTagsUpdate,
-    tagsFilter: !!(options.tags && options.tags.filter),
-    placemarksFilter: !!(options.placemarks && options.placemarks.filter)
+    onTagsUpdate: Boolean(options.onTagsUpdat)e,
+    tagsFilter: Boolean(options.tags && options.tags.filter),
+    placemarksFilter: Boolean(options.placemarks && options.placemarks.filter)
   });
   return { update, zoomToDefault, zoomToPoint };
 }

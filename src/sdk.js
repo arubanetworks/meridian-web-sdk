@@ -43,21 +43,16 @@ async function sendAnalyticsCodeEvent({
     ds: "app",
     ec: "code",
     ea: action,
-    // cd1: onTagsUpdate.toString(),
-    // cd2: tagsFilter.toString(),
-    // cd3: placemarksFilter.toString(),
+    el: "internal",
+    cm1: onTagsUpdate ? 1 : 0,
+    cm2: tagsFilter ? 1 : 0,
+    cm3: placemarksFilter ? 1 : 0,
     ul: navigator.language,
     z: Math.random()
       .toString(36)
       .substring(7), // cache buster per google
     ua: window.navigator.userAgent
   };
-
-  if (action === "createMap") {
-    data.cm1 = onTagsUpdate ? 1 : 0;
-    data.cm2 = tagsFilter ? 1 : 0;
-    data.cm3 = placemarksFilter ? 1 : 0;
-  }
 
   axios
     .get("http://www.google-analytics.com/collect", {

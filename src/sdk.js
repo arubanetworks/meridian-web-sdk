@@ -104,7 +104,9 @@ export function createMap(
       locationID: options.locationID,
       onTagsUpdate: Boolean(options.onTagsUpdate),
       tagsFilter: Boolean(options.tags && options.tags.filter),
-      placemarksFilter: Boolean(options.placemarks && options.placemarks.filter),
+      placemarksFilter: Boolean(
+        options.placemarks && options.placemarks.filter
+      ),
       internalUpdate
     });
   };
@@ -127,7 +129,7 @@ export function createMap(
   sendAnalyticsCodeEvent({
     action: "createMap",
     locationID: options.locationID,
-    onTagsUpdate: Boolean(options.onTagsUpdat)e,
+    onTagsUpdate: Boolean(options.onTagsUpdate),
     tagsFilter: Boolean(options.tags && options.tags.filter),
     placemarksFilter: Boolean(options.placemarks && options.placemarks.filter)
   });

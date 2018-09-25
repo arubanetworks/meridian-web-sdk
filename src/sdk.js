@@ -61,7 +61,7 @@ async function sendAnalyticsCodeEvent({
       .substring(7) // Cache Buster (per google)
   };
 
-  axios.get("http://www.google-analytics.com/collect", { params });
+  axios.get("https://www.google-analytics.com/collect", { params });
 }
 
 export const version = GLOBAL_VERSION;

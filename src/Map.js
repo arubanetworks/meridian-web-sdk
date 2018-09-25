@@ -19,7 +19,8 @@ import {
   fetchAllPaginatedData,
   asyncClientCall,
   validateEnvironment,
-  fetchAllTags
+  fetchAllTags,
+  requiredParam
 } from "./util";
 
 const ZOOM_FACTOR = 0.5;
@@ -115,15 +116,21 @@ export default class Map extends Component {
     this.tagsTimeout = null;
     this.mapSelection = null;
     this.mapRef = null;
+    this.validateFloorID();
   }
 
   componentDidMount() {
-    const { api } = this.props;
+    const { api, locationID } = this.props;
     const isEnvironmentValid = validateEnvironment(api.environment);
     if (!isEnvironmentValid) {
       this.toggleErrorOverlay({
         open: true,
-        message: `API errror: "${api.environment}" is not a valid environment`
+        message: `API error: "${api.environment}" is not a valid environment`
+      });
+    } else if (!locationID) {
+      this.toggleErrorOverlay({
+        open: true,
+        message: `createMap error: "options.locationID" is required`
       });
     } else {
       this.initializeFloors();
@@ -134,12 +141,24 @@ export default class Map extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
+      this.validateFloorID();
     }
   }
 
   componentWillUnmount() {
     if (this.tagsTimeout) {
       clearTimeout(this.tagsTimeout);
+    }
+  }
+
+  // Helpful message for SDK devs
+  validateFloorID() {
+    const { floorID } = this.props;
+    if (!floorID) {
+      this.toggleErrorOverlay({
+        open: true,
+        message: `createMap error: "options.floorID" is required`
+      });
     }
   }
 

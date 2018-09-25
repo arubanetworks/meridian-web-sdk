@@ -112,7 +112,14 @@ class TagListOverlay extends Component {
   }
 
   renderTagList() {
-    const { update, tagOptions, tags, loading, onMarkerClick } = this.props;
+    const {
+      update,
+      tagOptions,
+      tags,
+      loading,
+      onMarkerClick,
+      toggleTagListOverlay
+    } = this.props;
     const { searchFilter } = this.state;
     if (loading) {
       return (
@@ -169,6 +176,7 @@ class TagListOverlay extends Component {
                     }
                   });
                   onMarkerClick(tag);
+                  toggleTagListOverlay({ open: false });
                 }}
               >
                 <div className={cssOverlayTagButtonInner}>

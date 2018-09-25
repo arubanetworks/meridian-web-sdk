@@ -1,4 +1,5 @@
 import { h, render } from "preact";
+import axios from "axios";
 
 import Map from "./Map";
 import API from "./API";
@@ -22,6 +23,46 @@ if (document.readyState === "complete") {
 const context = {
   api: null
 };
+
+const pixelRatio = window.devicePixelRatio || 1;
+const screen = window.screen;
+const screenRes = `${screen.width * pixelRatio}x${screen.height * pixelRatio}`;
+
+async function sendAnalyticsCodeEvent({
+  action,
+  locationID,
+  onTagsUpdate = false,
+  tagsFilter = false,
+  placemarksFilter = false,
+  internalUpdate
+}) {
+  const params = {
+    v: "1", // GA version
+    tid: "UA-56747301-5", // Tracking ID
+    an: "MeridianSDK", // Application Name
+    ds: "app", // Data Source
+    av: GLOBAL_VERSION, // Application Version
+    uid: locationID, // User ID
+    cid: locationID, // Client ID
+    t: "event", // Hit Type
+    ec: "code", // Event Category
+    ea: action, // Event Action
+    ev: 1, // Event Value
+    el: internalUpdate ? "internal" : "external", // Event Label
+    cm1: onTagsUpdate ? 1 : 0, // Custom Metric
+    cm2: tagsFilter ? 1 : 0, // Custom Metric
+    cm3: placemarksFilter ? 1 : 0, // Custom Metric
+    ul: navigator.language, // User Language
+    sr: screenRes, // Screen Resolution
+    aip: 1, // Anonymize IP
+    ua: window.navigator.userAgent, // User Agent
+    z: Math.random()
+      .toString(36)
+      .substring(7) // Cache Buster (per google)
+  };
+
+  axios.get("http://www.google-analytics.com/collect", { params });
+}
 
 export const version = GLOBAL_VERSION;
 
@@ -51,13 +92,26 @@ export function createMap(
   const setMapRef = newMapRef => {
     mapRef = newMapRef;
   };
-  const update = updatedOptions => {
+  const _update = (updatedOptions, { internalUpdate = true } = {}) => {
     options = { ...options, ...updatedOptions };
     domRef = render(
-      <Map api={context.api} update={update} {...options} ref={setMapRef} />,
+      <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
       node,
       domRef
     );
+    sendAnalyticsCodeEvent({
+      action: "map.update",
+      locationID: options.locationID,
+      onTagsUpdate: Boolean(options.onTagsUpdate),
+      tagsFilter: Boolean(options.tags && options.tags.filter),
+      placemarksFilter: Boolean(
+        options.placemarks && options.placemarks.filter
+      ),
+      internalUpdate
+    });
+  };
+  const update = updatedOptions => {
+    _update(updatedOptions, { internalUpdate: false });
   };
   const zoomToDefault = () => {
     mapRef.zoomToDefault();
@@ -72,9 +126,16 @@ export function createMap(
     mapRef.zoomToPoint(x, y, scale);
   };
   let domRef = render(
-    <Map api={context.api} update={update} {...options} ref={setMapRef} />,
+    <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
     node
   );
+  sendAnalyticsCodeEvent({
+    action: "createMap",
+    locationID: options.locationID,
+    onTagsUpdate: Boolean(options.onTagsUpdate),
+    tagsFilter: Boolean(options.tags && options.tags.filter),
+    placemarksFilter: Boolean(options.placemarks && options.placemarks.filter)
+  });
   return { update, zoomToDefault, zoomToPoint };
 }
 

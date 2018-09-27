@@ -43,18 +43,6 @@
       box-shadow: 0 8px 10px 2px chocolate;
     }
 
-    body .meridian-zoom-button {
-      fill: red;
-      background: lightblue;
-      border-radius: 0;
-    }
-
-    body .meridian-zoom-button-in {
-      border-color: darkgreen;
-      background: gainsboro;
-      fill: crimson;
-    }
-
     body .meridian-zoom-controls {
       overflow: hidden;
       border-radius: 0;
@@ -62,34 +50,35 @@
       border-radius: 0 20px 0 20px;
     }
 
+    body .meridian-zoom-button {
+      fill: red;
+      background: mintcream;
+      border-radius: 0;
+      border-color: orange;
+    }
+
     body .meridian-tag-control,
     body .meridian-floor-control {
       border-color: darkgreen;
-      box-shadow: 0 0 3px 3px orange;
       border-radius: 0 10px 0 10px;
       fill: red;
-      background: lightblue;
-    }
-
-    body .meridian-tag-control {
-      border-radius: 10px 0 10px 0;
       background: mintcream;
-      fill: violet;
-      box-shadow: 0 0 3px black;
+      box-shadow: 0 0 3px 3px orange;
     }
 
-    body .meridian-zoom-button:hover,
     body .meridian-tag-control:hover,
-    body .meridian-floor-control:hover {
-      fill: green;
-      background: pink;
-      box-shadow: 0 0 3px white;
+    body .meridian-floor-control:hover,
+    body .meridian-tag-control:focus,
+    body .meridian-floor-control:focus {
+      outline: none;
+      background: mediumturquoise;
+      box-shadow: 0 0 3px 3px orange;
     }
-
-    body .meridian-tag-control:hover {
-      border-radius: 10px 0 10px 0;
-      background: violet;
-      fill: mintcream;
+    body .meridian-zoom-button:hover,
+    body .meridian-zoom-button:focus {
+      background: mediumturquoise;
+      outline: none;
+      box-shadow: 0 0 3px white;
     }
 
   </style>

@@ -113,7 +113,7 @@ class TagListOverlay extends Component {
 
   renderTagList() {
     const {
-      update,
+      updateMap,
       tagOptions,
       tags,
       loading,
@@ -167,7 +167,7 @@ class TagListOverlay extends Component {
                 key={tag.id}
                 className={cssOverlayTagButton}
                 onClick={() => {
-                  update({
+                  updateMap({
                     locationID: tag.calculations.default.location.location_id,
                     floorID: tag.calculations.default.location.map_id,
                     tags: {
@@ -226,7 +226,7 @@ TagListOverlay.propTypes = {
   showControlTags: PropTypes.bool.isRequired,
   floors: PropTypes.object.isRequired,
   tagOptions: PropTypes.object.isRequired,
-  update: PropTypes.func.isRequired,
+  updateMap: PropTypes.func.isRequired,
   api: PropTypes.object.isRequired,
   locationID: PropTypes.string.isRequired,
   currentFloorID: PropTypes.string.isRequired,

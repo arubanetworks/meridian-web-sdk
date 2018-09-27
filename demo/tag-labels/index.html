@@ -45,23 +45,31 @@ class App extends React.Component {
       tagLabels: [],
       showTagsWithLabel: {}
     };
-    this.initMeridianMap = this.initMeridianMap.bind(this);
-    this.onTagsUpdate = this.onTagsUpdate.bind(this);
   }
 
-  initMeridianMap(element) {
+  initMeridianMap = (element) => {
     this.map = MeridianSDK.createMap(element, {
       locationID: "5198682008846336",
       floorID: "5708313257836544",
       height: "360px",
       onTagsUpdate: this.onTagsUpdate,
+      showTagsControl: false,
       tags: {
         filter: () => false
       }
     });
   }
 
-  onTagsUpdate(tags) {
+  updateMap = () => {
+    const labels = this.getVisibleLabels();
+    this.map.update({
+      tags: {
+        filter: tag => tag.editor_data.tags.map(x => x.name).some(label => labels.includes(label))
+      }
+    });
+  }
+
+  onTagsUpdate = (tags) =>  {
     this.setState({ tagLabels: this.getLabels(tags.allTags) });
   }
 
@@ -84,16 +92,7 @@ class App extends React.Component {
           ...prevState.showTagsWithLabel,
           [label]: !prevState.showTagsWithLabel[label]
         }
-      }),
-      () => {
-        const labels = this.getVisibleLabels();
-        this.map.update({
-          tags: {
-            filter: tag => tag.editor_data.tags.map(x => x.name).some(label => labels.includes(label))
-          }
-        });
-      }
-    );
+      }), this.updateMap);
   }
 
   getVisibleLabels() {
@@ -107,7 +106,7 @@ class App extends React.Component {
         <div className="map" id="map" ref={this.initMeridianMap} />
         <div className="controls-container">
           <p style={{ textAlign: "center" }}>
-            {this.state.tagLabels.length} categories found
+            {this.state.tagLabels.length} labels found
           </p>
           <div className="controls" style={{ minHeight: 100, minWidth: 260 }}>
             {this.state.tagLabels.map(label => (

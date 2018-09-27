@@ -52,14 +52,32 @@
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "360px",
-          onTagsUpdate: this.onTagsUpdate
+          onTagsUpdate: this.onTagsUpdate,
+          showTagsControl: false
         });
       };
+
+      updateMap = () => {
+        const selectedLabel = this.state.selectedLabel;
+        if (selectedLabel) {
+          this.map.update({
+            tags: {
+              filter: tag => tag.editor_data.tags.some(tag => tag.name === selectedLabel),
+            }
+          });
+        } else {
+          this.map.update({
+            tags: {
+              filter: () => true
+            }
+          });
+        }
+      }
 
       onTagsUpdate = tags => {
         const labels = {};
         tags.allTags.forEach(tag => {
-          // Labels used to be called tags
+          // Labels are called tags on the backend :)
           tag.editor_data.tags.forEach(t => {
             labels[t.name] = true;
           });
@@ -68,22 +86,7 @@
       };
 
       onSelectChange = event => {
-        this.setState({ selectedLabel: event.target.value }, () => {
-          const selectedLabel = this.state.selectedLabel;
-          if (selectedLabel) {
-            this.map.update({
-              tags: {
-                filter: tag => tag.editor_data.tags.some(tag => tag.name === selectedLabel),
-              }
-            });
-          } else {
-            this.map.update({
-              tags: {
-                filter: () => true
-              }
-            });
-          }
-        });
+        this.setState({ selectedLabel: event.target.value }, this.updateMap);
       };
 
       renderSelectOptions = () => {
@@ -105,13 +108,13 @@
           <div>
             <div className="map" id="map" ref={this.initMeridianMap} />
             <div className="controls-container" style={{ textAlign: "center" }}>
+              <p>{this.state.tagLabels.length} labels found</p>
               <div>
                 <select onChange={this.onSelectChange}>
                   <option value="">all</option>
                   {this.renderSelectOptions()}
                 </select>
               </div>
-              <p>{this.state.tagLabels.length} labels found</p>
             </div>
           </div>
         );

@@ -171,7 +171,7 @@ export default class Map extends Component {
 
   initializeTags() {
     // TODO: We should update this to not poll for updates unless the tab is
-    // active. In that case it would also make sence to ask for an update when
+    // active. In that case it would also make sense to ask for an update when
     // they switch back. Might even make sense to block updates while the tag
     // list is open?
     const loop = async () => {

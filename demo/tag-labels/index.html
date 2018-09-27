@@ -53,7 +53,6 @@ class App extends React.Component {
       floorID: "5708313257836544",
       height: "360px",
       onTagsUpdate: this.onTagsUpdate,
-      onMapUpdate: this.onMapUpdate,
       showTagsControl: false,
       tags: {
         filter: () => false
@@ -68,10 +67,6 @@ class App extends React.Component {
         filter: tag => tag.editor_data.tags.map(x => x.name).some(label => labels.includes(label))
       }
     });
-  }
-
-  onMapUpdate = () => {
-    this.updateMap();
   }
 
   onTagsUpdate = (tags) =>  {

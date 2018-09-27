@@ -53,7 +53,6 @@
           floorID: "5755685136498688",
           height: "360px",
           onTagsUpdate: this.onTagsUpdate,
-          onMapUpdate: this.onMapUpdate,
           showTagsControl: false,
           tags: {
             filter: () => true
@@ -76,10 +75,6 @@
             }
           });
         }
-      }
-
-      onMapUpdate = () => {
-        this.updateMap();
       }
 
       onTagsUpdate = tags => {

@@ -155,7 +155,7 @@ export default class Map extends Component {
   updateMap = newOptions => {
     const { update, onMapUpdate } = this.props;
     update(newOptions);
-    onMapUpdate(newOptions);
+    asyncClientCall(onMapUpdate, newOptions);
   };
 
   // Helpful message for SDK devs

@@ -19,8 +19,7 @@ import {
   fetchAllPaginatedData,
   asyncClientCall,
   validateEnvironment,
-  fetchAllTags,
-  requiredParam
+  fetchAllTags
 } from "./util";
 
 const ZOOM_FACTOR = 0.5;
@@ -76,7 +75,8 @@ export default class Map extends Component {
     onMarkerClick: PropTypes.func,
     onMapClick: PropTypes.func,
     onTagsUpdate: PropTypes.func,
-    onFloorsUpdate: PropTypes.func
+    onFloorsUpdate: PropTypes.func,
+    onMapUpdate: PropTypes.func
   };
 
   static defaultProps = {
@@ -88,7 +88,8 @@ export default class Map extends Component {
     placemarks: {},
     tags: {},
     onTagsUpdate: () => {},
-    onFloorsUpdate: () => {}
+    onFloorsUpdate: () => {},
+    onMapUpdate: () => {}
   };
 
   constructor(props) {
@@ -150,6 +151,12 @@ export default class Map extends Component {
       clearTimeout(this.tagsTimeout);
     }
   }
+
+  updateMap = newOptions => {
+    const { update, onMapUpdate } = this.props;
+    update(newOptions);
+    onMapUpdate(newOptions);
+  };
 
   // Helpful message for SDK devs
   validateFloorID() {
@@ -231,7 +238,7 @@ export default class Map extends Component {
   };
 
   selectFloorByID = floorID => {
-    this.props.update({ floorID });
+    this.updateMap({ floorID });
   };
 
   async getFloors() {
@@ -432,7 +439,7 @@ export default class Map extends Component {
   }
 
   renderTagListOverlay() {
-    const { locationID, floorID, api, update, tags } = this.props;
+    const { locationID, floorID, api, tags } = this.props;
     const {
       isTagListOverlayOpen,
       floors,
@@ -448,7 +455,7 @@ export default class Map extends Component {
           loading={areTagsLoading}
           tags={allTagData}
           tagOptions={tags}
-          update={update}
+          updateMap={this.updateMap}
           api={api}
           locationID={locationID}
           currentFloorID={floorID}

@@ -53,11 +53,34 @@
           floorID: "5755685136498688",
           height: "360px",
           onTagsUpdate: this.onTagsUpdate,
+          onMapUpdate: this.onMapUpdate,
+          showTagsControl: false,
           tags: {
             filter: () => true
           }
         });
       };
+
+      updateMap = () => {
+        const selectedTag = this.state.selectedTag;
+        if (selectedTag) {
+          this.map.update({
+            tags: {
+              filter: tag => tag.mac === selectedTag,
+            }
+          });
+        } else {
+          this.map.update({
+            tags: {
+              filter: () => true
+            }
+          });
+        }
+      }
+
+      onMapUpdate = () => {
+        this.updateMap();
+      }
 
       onTagsUpdate = tags => {
         this.setState({
@@ -77,22 +100,7 @@
       };
 
       onSelectChange = event => {
-        this.setState({ selectedTag: event.target.value }, () => {
-          const selectedTag = this.state.selectedTag;
-          if (selectedTag) {
-            this.map.update({
-              tags: {
-                filter: tag => tag.mac === selectedTag,
-              }
-            });
-          } else {
-            this.map.update({
-              tags: {
-                filter: () => true
-              }
-            });
-          }
-        });
+        this.setState({ selectedTag: event.target.value }, this.updateMap);
       };
 
       renderSelectOptions = () => {
@@ -114,13 +122,13 @@
           <div>
             <div className="map" id="map" ref={this.initMeridianMap} />
             <div className="controls-container" style={{ textAlign: "center" }}>
+              <p>{this.state.tagNames.length} tags found</p>
               <div>
                 <select onChange={this.onSelectChange}>
                   <option value="">all</option>
                   {this.renderSelectOptions()}
                 </select>
               </div>
-              <p>{this.state.tagNames.length} tags found</p>
             </div>
           </div>
         );

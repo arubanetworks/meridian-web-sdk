@@ -11,7 +11,7 @@
     "build": "webpack -p --mode production --env production",
     "analyze": "webpack -p --mode production --env analyze",
     "postversion": "bash bin/postversion.sh",
-    "deploy:demo": "bash bin/deploy-demo.sh",
+    "postpublish": "bash bin/deploy.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

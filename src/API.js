@@ -19,11 +19,7 @@ const envToRestURL = {
   staging: "https://staging-edit.meridianapps.com/websdk/api"
 };
 
-// We're not sure if we wanna expose streaming for all floors as an option
-// externally, and we're only using it for lack of a REST endpoint internally.
-// We could just use a string here, I guess. Personally I would want to use a
-// Symbol() here but I don't want anything to do with Symbol "polyfills" in
-// non-ES6 browsers.
+// This is intentionally not exported from package as a whole
 export const STREAM_ALL_FLOORS = { const: "STREAM_ALL_FLOORS" };
 
 export default class API {
@@ -41,10 +37,6 @@ export default class API {
     });
   }
 
-  // TODO
-  // - We might want to just expose the Socket.IO client more directly here?
-  // - Subscribe to all events listed here: https://github.com/arubanetworks/asset-tracking-backend/blob/master/components/tag-tracker/API.md
-  // - We should probably work on the names of these callback functions
   openStream({
     locationID = requiredParam("openStream", "locationID"),
     floorID = requiredParam("openStream", "floorID"),

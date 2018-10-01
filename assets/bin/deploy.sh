@@ -13,7 +13,7 @@ Die() {
 bucket="gs://meridian-downloads/meridian-web-sdk-assets"
 
 echo "Verifying you are logged into gcloud..."
-if ! gcloud auth list 2>&1 |  grep ACTIVE; then
+if ! gcloud auth list 2>&1 | grep ACTIVE; then
   Die "You are NOT logged into gcloud. Please run: gcloud auth login"
 fi
 
@@ -26,8 +26,8 @@ echo "--- Deploying ${npm_package_name} ${version} ---"
 echo
 
 echo "* Copying build files..."
-gsutil -m cp -r placemarks "$bucket/$version/"
-gsutil -m cp -r tags "$bucket/$version/"
+gsutil -m cp -r -a public-read placemarks "$bucket/$version/"
+gsutil -m cp -r -a public-read tags "$bucket/$version/"
 
 echo
 echo "--- Deployed ${npm_package_name} ${version} ---"

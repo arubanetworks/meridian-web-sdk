@@ -1,5 +1,5 @@
 const ASSETS_URL =
-  "https://storage.googleapis.com/meridian-web-sdk-assets/0.2.0";
+  "https://files.meridianapps.com/meridian-web-sdk-assets/0.2.0";
 
 export const STRINGS = {
   enDash: "–",

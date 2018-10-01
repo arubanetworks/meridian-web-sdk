@@ -10,7 +10,7 @@ Die() {
   exit 1
 }
 
-bucket="gs://${npm_package_name}"
+bucket="gs://meridian-downloads/meridian-web-sdk-assets"
 
 echo "Verifying you are logged into gcloud..."
 if ! gcloud auth list 2>&1 |  grep ACTIVE; then

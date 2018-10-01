@@ -1,0 +1,16 @@
+sudo: false
+branches:
+  only:
+    - master
+language: node_js
+node_js:
+  - "node"
+  - "9"
+  - "8"
+cache:
+  directories:
+    - node_modules
+install:
+  - npm ci
+script:
+  - npm test

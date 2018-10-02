@@ -5,6 +5,7 @@ branches:
 language: node_js
 node_js:
   - "node"
+  - "lts/*"
   - "8"
 cache:
   directories:

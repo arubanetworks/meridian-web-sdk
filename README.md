@@ -42,8 +42,8 @@ Which will make a global object called `MeridianSDK`
 
 ## Deployment
 
-Run `npm version ____` with the version number to do a full npm, GCS, and GH
-Pages deploy.
+Run `npm version ____` with the version number to do a full npm, Google Cloud
+Storage, and GitHub Pages deploy.
 
 [examples]: https://arubanetworks.github.io/meridian-web-sdk
 [download]: https://arubanetworks.github.io/meridian-web-sdk/meridian-sdk.js

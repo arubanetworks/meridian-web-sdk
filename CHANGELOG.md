@@ -1,4 +1,4 @@
-# v0.2.0-beta?? (YYYY-MM-DD)
+# v0.4.0 (YYYY-MM-DD)
 
 The differences are compared to the old pre-release beta version.
 

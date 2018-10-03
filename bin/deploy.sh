@@ -41,9 +41,9 @@ npm run -s build
 cp -r demo/* dist/
 
 Heading "* Copying build files to GCS..."
-gsutil -Z \
+gsutil cp -Z \
   -a public-read \
-  cp dist/meridian-sdk.js "$bucket/$version/meridian-sdk.js"
+  dist/meridian-sdk.js "$bucket/$version/meridian-sdk.js"
 
 Heading "* Deploying examples to GH Pages..."
 npx gh-pages --dist dist

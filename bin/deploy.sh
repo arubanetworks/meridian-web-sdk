@@ -24,7 +24,7 @@ if ! gcloud auth list 2>&1 | grep "ACTIVE"; then
   Die "You are NOT logged into gcloud. Please run: gcloud auth login"
 fi
 
-bucket="gs://meridian-downloads/meridian-web-sdk"
+bucket="gs://files.meridianapps.com/meridian-web-sdk"
 
 # `npm run` provides this environment variable so we don't have to parse the
 # package.json just to get the version number

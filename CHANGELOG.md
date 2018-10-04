@@ -1,4 +1,4 @@
-# v0.4.0 (YYYY-MM-DD)
+# v0.4.1 (2018-10-03)
 
 The differences are compared to the old pre-release beta version.
 

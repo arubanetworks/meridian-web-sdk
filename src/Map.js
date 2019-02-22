@@ -394,15 +394,28 @@ export default class Map extends Component {
     }
   };
 
-  onMarkerClick = marker => {
-    if (this.props.onMarkerClick) {
-      // eslint-disable-next-line no-console
-      console.warn("onMarkerClick() is experimental, please do not use it");
-      setTimeout(() => {
-        this.props.onMarkerClick(marker.data);
-      }, 0);
-    } else {
-      this.toggleMapMarkerOverlay({ open: true, selectedItem: marker });
+  onMarkerClick = async data => {
+    let showOverlay = true;
+
+    const clientCallback = async () => {
+      if (this.props.onMarkerClick) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            this.props.onMarkerClick(data, { preventDefault });
+            resolve();
+          }, 0);
+        });
+      }
+      return new Promise(resolve => resolve());
+    };
+
+    const preventDefault = () => {
+      showOverlay = false;
+    };
+
+    await clientCallback();
+    if (showOverlay) {
+      this.toggleMapMarkerOverlay({ open: true, selectedItem: data });
     }
   };
 

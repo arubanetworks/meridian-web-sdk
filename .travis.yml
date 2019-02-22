@@ -7,8 +7,7 @@ node_js:
   - "node"
   - "lts/*"
 cache:
-  directories:
-    - "$HOME/.npm"
+  npm: true
 install:
   - npm ci
 script:

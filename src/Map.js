@@ -73,6 +73,8 @@ export default class Map extends Component {
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
+    onTagClick: PropTypes.func,
+    onPlacemarkClick: PropTypes.func,
     onMapClick: PropTypes.func,
     onTagsUpdate: PropTypes.func,
     onFloorsUpdate: PropTypes.func,
@@ -396,17 +398,29 @@ export default class Map extends Component {
 
   onMarkerClick = async data => {
     let showOverlay = true;
+    const { onTagClick, onPlacemarkClick, onMarkerClick } = this.props;
+
+    let callback = data.event_type ? onTagClick : onPlacemarkClick;
 
     const clientCallback = async () => {
-      if (this.props.onMarkerClick) {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            this.props.onMarkerClick(data, { preventDefault });
-            resolve();
-          }, 0);
-        });
+      if (callback) {
+        try {
+          await callback(data, { preventDefault });
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error(err);
+        }
       }
-      return new Promise(resolve => resolve());
+      if (onMarkerClick) {
+        // eslint-disable-next-line no-console
+        console.warn("onMarkerClick() is experimental, please do not use it");
+        try {
+          await onMarkerClick(data, { preventDefault });
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error(err);
+        }
+      }
     };
 
     const preventDefault = () => {

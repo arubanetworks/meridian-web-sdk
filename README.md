@@ -40,11 +40,6 @@ If you would like a standalone JS file with all dependencies bundled that you ca
 
 Which will make a global object called `MeridianSDK`
 
-## Deployment
-
-Run `npm version ____` with the version number to do a full npm, Google Cloud
-Storage, and GitHub Pages deploy.
-
 [examples]: https://arubanetworks.github.io/meridian-web-sdk
 [download]: https://arubanetworks.github.io/meridian-web-sdk/meridian-sdk.js
 [documentation]: https://docs.meridianapps.com/article/779-the-meridian-web-sdk

@@ -10,7 +10,7 @@
     "prepack": "npm run build",
     "build": "webpack -p --mode production --env production",
     "analyze": "webpack -p --mode production --env analyze",
-    "postversion": "bash bin/postversion.sh",
+    "version": "bash bin/postversion.sh",
     "postpublish": "bash bin/deploy.sh",
     "test": "bash bin/test.sh"
   },

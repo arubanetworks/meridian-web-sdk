@@ -45,6 +45,8 @@ gsutil cp -Z \
   -a public-read \
   dist/meridian-sdk.js "$bucket/$version/meridian-sdk.js"
 
+Heading "==> https://files.meridianapps.com/meridian-web-sdk/${version}/meridian-sdk.js"
+
 Heading "* Deploying examples to GH Pages..."
 npx gh-pages --dist dist
 

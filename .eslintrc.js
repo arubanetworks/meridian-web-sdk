@@ -10,8 +10,9 @@ module.exports = {
   rules: {
     curly: "error",
     "consistent-return": "error",
-    "react/sort-comp": "error",
-    "no-unused-vars": "error"
+    // "react/sort-comp": "error",
+    "no-unused-vars": "error",
+    "no-console": 1
   },
   settings: {
     react: {

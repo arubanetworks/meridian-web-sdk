@@ -41,7 +41,7 @@ const MapMarker = ({
 };
 
 MapMarker.propTypes = {
-  selectedItem: PropTypes.object.isRequired,
+  selectedItem: PropTypes.object,
   mapZoomFactor: PropTypes.number.isRequired,
   kind: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,

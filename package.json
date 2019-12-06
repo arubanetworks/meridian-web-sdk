@@ -34,7 +34,7 @@
     "d3-zoom": "^1.7.1",
     "lodash.groupby": "^4.6.0",
     "lodash.throttle": "^4.1.1",
-    "preact": "^8.3.1",
+    "preact": "^10.0.5",
     "prop-types": "^15.6.1",
     "socket.io-client": "^2.1.1"
   },

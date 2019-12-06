@@ -10,7 +10,7 @@ export default class PlacemarkLayer extends Component {
   };
 
   static propTypes = {
-    selectedItem: PropTypes.object.isRequired,
+    selectedItem: PropTypes.object,
     isPanningOrZooming: PropTypes.bool.isRequired,
     mapZoomFactor: PropTypes.number.isRequired,
     locationID: PropTypes.string.isRequired,

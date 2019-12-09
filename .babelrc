@@ -1,7 +1,7 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/env",
       {
         "modules": false
       }
@@ -9,14 +9,14 @@
   ],
   "plugins": [
     [
-      "transform-react-jsx",
+      "@babel/plugin-transform-react-jsx",
       {
         "pragma": "h"
       }
     ],
-    "transform-async-to-generator",
-    "transform-runtime",
-    "transform-class-properties",
-    "transform-object-rest-spread"
+    "@babel/transform-async-to-generator",
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-object-rest-spread"
   ]
 }

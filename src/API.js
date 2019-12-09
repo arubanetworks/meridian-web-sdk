@@ -46,10 +46,10 @@ export default class API {
     onClose = () => {},
     onException = () => {}
   }) {
-    const connection = SocketIO.connect(
-      envToTagURL[this.environment],
-      { path: tagPath, transports: ["websocket"] }
-    );
+    const connection = SocketIO.connect(envToTagURL[this.environment], {
+      path: tagPath,
+      transports: ["websocket"]
+    });
     const authenticate = () => {
       connection.emit("authenticate", {
         locationID,

@@ -73,6 +73,7 @@ export function validateEnvironment(env) {
     env === "staging" ||
     env === "production" ||
     env === "eu" ||
-    env === "development"
+    env === "development" ||
+    env === "devCloud"
   );
 }

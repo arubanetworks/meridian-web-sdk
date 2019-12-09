@@ -1,5 +1,5 @@
 import SocketIO from "socket.io-client";
-import axios from "axios";
+const axios = require("axios").default;
 
 import { requiredParam } from "./util";
 
@@ -24,11 +24,31 @@ const envToRestURL = {
 // This is intentionally not exported from package as a whole
 export const STREAM_ALL_FLOORS = { const: "STREAM_ALL_FLOORS" };
 
+export type EnvOptions = "production" | "staging" | "eu" | "development";
+
+interface openStreamParams {
+  locationID: string | undefined;
+  floorID: string | undefined;
+  onInitialTags?: void;
+  onTagUpdate?: void;
+  onTagLeave?: void;
+  onClose?: void;
+  onException?: void;
+}
+
+export type ApiOptions = {
+  environment: EnvOptions;
+  token: any;
+};
+
 export default class API {
+  token: any;
+  environment: EnvOptions;
+  axios: any;
   constructor({
     environment = "production",
     token = requiredParam("API", "token")
-  }) {
+  }: ApiOptions) {
     this.token = token;
     this.environment = environment;
     this.axios = axios.create({
@@ -39,45 +59,43 @@ export default class API {
     });
   }
 
-  openStream({
-    locationID = requiredParam("openStream", "locationID"),
-    floorID = requiredParam("openStream", "floorID"),
-    onInitialTags = () => {},
-    onTagUpdate = () => {},
-    onTagLeave = () => {},
-    onClose = () => {},
-    onException = () => {}
-  }) {
-    const connection = SocketIO.connect(envToTagURL[this.environment], {
-      path: tagPath,
-      transports: ["websocket"]
-    });
+  openStream(params: openStreamParams) {
+    if (!params.locationID) {
+      requiredParam("openStream", "locationID");
+    }
+    if (!params.floorID) {
+      requiredParam("openStream", "floorID");
+    }
+    const connection = SocketIO.connect(
+      envToTagURL[this.environment],
+      { path: tagPath, transports: ["websocket"] }
+    );
     const authenticate = () => {
       connection.emit("authenticate", {
-        locationID,
+        locationID: params.locationID,
         token: this.token
       });
     };
     const subscribe = () => {
       // Make sure you have to explicitly opt-in to streaming all floors data
-      if (floorID === STREAM_ALL_FLOORS) {
-        connection.emit("subscribe", { locationID });
+      if ((params.floorID as any) === STREAM_ALL_FLOORS) {
+        connection.emit("subscribe", { locationID: params.locationID });
       } else {
         connection.emit("subscribe", {
-          locationID,
-          mapID: floorID
+          locationID: params.locationID,
+          mapID: params.floorID
         });
       }
     };
     connection.on("connect", authenticate);
-    connection.on("connect_error", onClose);
-    connection.on("disconnect", onClose);
-    connection.on("exception", onException);
+    connection.on("connect_error", params.onClose);
+    connection.on("disconnect", params.onClose);
+    connection.on("exception", params.onException);
     connection.on("authenticated", subscribe);
-    connection.on("unauthenticated", onClose);
-    connection.on("assets", onInitialTags);
-    connection.on("asset_update", onTagUpdate);
-    connection.on("asset_delete", onTagLeave);
+    connection.on("unauthenticated", params.onClose);
+    connection.on("assets", params.onInitialTags);
+    connection.on("asset_update", params.onTagUpdate);
+    connection.on("asset_delete", params.onTagLeave);
     return {
       close: () => connection.close()
     };

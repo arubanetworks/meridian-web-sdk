@@ -17,8 +17,13 @@ const common = {
       {
         test: /\.js$/,
         use: "babel-loader",
-        exclude: /node_modules/,
+        exclude: /node_modules/
       },
+      {
+        test: /\.ts?$/,
+        use: [{ loader: "ts-loader" }],
+        exclude: /node_modules/
+      }
     ]
   },
   plugins: [definePlugin],
@@ -27,6 +32,7 @@ const common = {
     fs: "empty"
   },
   resolve: {
+    extensions: [".ts", ".ts", ".js"],
     alias: {
       d3: path.resolve(__dirname, "src/d3")
     }

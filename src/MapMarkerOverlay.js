@@ -79,15 +79,23 @@ const MapMarkerOverlay = ({
         <p>
           <button
             className={css(mixins.buttonReset, {
-              display: "flex",
               alignItems: "center",
+              backgroundColor: "#EBEEF2",
               borderRadius: "5px",
+              color: "#297BC0",
+              display: "flex",
+              fontSize: "18px",
+              fontWeight: "bold",
+              height: "63px",
+              justifyContent: "center",
               padding: "5px 8px 5px 5px",
               "&:hover, &:focus": {
                 cursor: "pointer",
                 boxShadow: "0 0 0 2px #297BC0",
                 outline: "none"
-              }
+              },
+              textTransform: "uppercase",
+              width: "100%"
             })}
             onClick={e => {
               e.preventDefault();
@@ -95,7 +103,7 @@ const MapMarkerOverlay = ({
             }}
           >
             <IconDirections />
-            Directions to Here
+            <span style={{ marginLeft: "5px" }}>Get Directions</span>
           </button>
         </p>
       );

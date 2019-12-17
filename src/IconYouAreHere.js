@@ -3,7 +3,7 @@ import { css } from "./style";
 
 const IconDirections = () => (
   <div className={css({ width: 32, height: 32 })}>
-    <svg width="72" height="77" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="72" height="77" fill="none">
       <path
         d="M35.55 76.1a2.55 2.55 0 100-5.1 2.55 2.55 0 000 5.1z"
         fill="#F2AF1D"

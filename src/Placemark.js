@@ -63,9 +63,11 @@ const cssLabelOnly = css({
   fontSize: 16
 });
 
-const getIconStyle = data => {
+const getIconStyle = (data, youAreHerePlacemarkID) => {
   const color = "#" + data.color;
-  const iconURL = getPlacemarkIconURL(data.type);
+  const iconURL = getPlacemarkIconURL(
+    youAreHerePlacemarkID === data.id ? "you-are-here" : data.type
+  );
   return {
     borderColor: color,
     backgroundColor: color,
@@ -78,7 +80,8 @@ const Placemark = ({
   data,
   mapZoomFactor,
   onClick = () => {},
-  disabled = false
+  disabled = false,
+  youAreHerePlacemarkID
 }) => {
   // Placemarks with a type that starts with label_ are special
   // No icon, grey uppercase text
@@ -119,7 +122,7 @@ const Placemark = ({
       <button
         disabled={disabled}
         className={iconClassName}
-        style={getIconStyle(data)}
+        style={getIconStyle(data, youAreHerePlacemarkID)}
         onClick={event => {
           event.target.focus();
           onClick(event);
@@ -134,7 +137,7 @@ const Placemark = ({
           visibility: mapZoomFactor < SHRINK_POINT ? "hidden" : ""
         }}
       >
-        {data.name}
+        {youAreHerePlacemarkID === data.id ? "You Are Here" : data.name}
       </div>
     </div>
   );
@@ -145,7 +148,8 @@ Placemark.propTypes = {
   mapZoomFactor: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
   onClick: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  youAreHerePlacemarkID: PropTypes.string
 };
 
 export default Placemark;

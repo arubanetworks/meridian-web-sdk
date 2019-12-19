@@ -1,9 +1,9 @@
 import { h } from "preact";
 import { css } from "./style";
 
-const IconDirections = () => (
+const IconYouAreHere = () => (
   <div className={css({ width: 32, height: 32 })}>
-    <svg width="72" height="77" fill="none">
+    <svg width="72" height="77" fill="0" fillOpacity="1">
       <path
         d="M35.55 76.1a2.55 2.55 0 100-5.1 2.55 2.55 0 000 5.1z"
         fill="#F2AF1D"
@@ -27,18 +27,18 @@ const IconDirections = () => (
           y="0"
           width="71.85"
           height="76.1"
-          filterUnits="userSpaceOnUse"
+          filter-units="userSpaceOnUse"
           colorInterpolationFilters="sRGB"
         >
-          <feFlood floodOpacity="0" result="BackgroundImageFix" />
-          <feColorMatrix
+          <fe-flood flood-opacity="0" result="BackgroundImageFix" />
+          <fe-color-matrix
             in="SourceAlpha"
             values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
           />
-          <feOffset />
-          <feGaussianBlur stdDeviation="5" />
-          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0" />
-          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <fe-offset />
+          <fe-gaussianBlur std-deviation="5" />
+          <fe-color-matrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0" />
+          <fe-blend in2="BackgroundImageFix" result="effect1_dropShadow" />
           <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
         </filter>
       </defs>
@@ -46,4 +46,4 @@ const IconDirections = () => (
   </div>
 );
 
-export default IconDirections;
+export default IconYouAreHere;

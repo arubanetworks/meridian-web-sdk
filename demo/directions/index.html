@@ -1,97 +1,97 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Directions | Meridian Web SDK</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
-    <link rel="stylesheet" href="../shared.css">
-    <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
     <script src="../shared.js"></script>
     <style>
-        body {
-            font-family: sans-serif;
-        }
+      body {
+        font-family: sans-serif;
+      }
 
-        .map {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
+      .map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="map" id="meridian-map"></div>
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
+      // Crossman Mall
+      // MeridianSDK.init({
+      //     api: MeridianSDK.createAPI({
+      //         environment: "staging",
+      //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTcyNDU3NTUwLCJ2YWx1ZSI6IjMyZjE5ZWMyYzUyNTU5NGYyZDc2NWU2MmQyNWZmOTE1ZDk0NjVlNjMifQ.cxRUJafThKhH5hVVYd928vidjo_7aOkqwers67B1_Jw"
+      //     })
+      // });
+      // MeridianSDK.createMap(document.getElementById("meridian-map"), {
+      //     locationID: "5759018246602752",
+      //     floorID: "5896488338587648",
+      //     height: "100%",
+      //     youAreHerePlacemarkID: "5896488338587648_6617343670616064"
+      // });
 
-        // Crossman Mall
-        // MeridianSDK.init({
-        //     api: MeridianSDK.createAPI({
-        //         environment: "staging",
-        //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTcyNDU3NTUwLCJ2YWx1ZSI6IjMyZjE5ZWMyYzUyNTU5NGYyZDc2NWU2MmQyNWZmOTE1ZDk0NjVlNjMifQ.cxRUJafThKhH5hVVYd928vidjo_7aOkqwers67B1_Jw"
-        //     })
-        // });
-        // MeridianSDK.createMap(document.getElementById("meridian-map"), {
-        //     locationID: "5759018246602752",
-        //     floorID: "5896488338587648",
-        //     height: "100%",
-        //     youAreHerePlacemarkID: "5896488338587648_6617343670616064"
-        // });
+      // AMNH
+      MeridianSDK.init({
+        api: MeridianSDK.createAPI({
+          environment: "staging",
+          token:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTcyNTU5OTYyLCJ2YWx1ZSI6ImM3NThlY2IzYThkYzFkOGY1Y2VhZWFiMGNhNGU1ODQxNmUwNmVhMTAifQ.EMspWSdDYvG-MsSO0UiXnJd_ZWsgAo0iADyfv8hwG68"
+        })
+      });
+      MeridianSDK.createMap(document.getElementById("meridian-map"), {
+        locationID: "2216128",
+        floorID: "5728962386853888",
+        height: "100%",
+        youAreHerePlacemarkID: "5728962386853888_5862282466689024"
+      });
 
-        // AMNH
-        MeridianSDK.init({
-            api: MeridianSDK.createAPI({
-                environment: "staging",
-                token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTcyNTU5OTYyLCJ2YWx1ZSI6ImM3NThlY2IzYThkYzFkOGY1Y2VhZWFiMGNhNGU1ODQxNmUwNmVhMTAifQ.EMspWSdDYvG-MsSO0UiXnJd_ZWsgAo0iADyfv8hwG68"
-            })
-        });
-        MeridianSDK.createMap(document.getElementById("meridian-map"), {
-            locationID: "2216128",
-            floorID: "5728962386853888",
-            height: "100%",
-            youAreHerePlacemarkID: "5728962386853888_5862282466689024"
-        });
+      // SJL - Orchard
+      // MeridianSDK.init({
+      //     api: MeridianSDK.createAPI({
+      //         environment: "staging",
+      //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTcyNjI5NzQ1LCJ2YWx1ZSI6ImQ1OTkwMTEyYjg2ZDNlOGU3MzZmODhhMDE1ZjY1YzIxOThlNmMyMTQifQ.euj0AqFtC5Wt8KdAib3Fwv3T89GhTHI7vzNhsQLoruU"
+      //     })
+      // });
+      // MeridianSDK.createMap(document.getElementById("meridian-map"), {
+      //     locationID: "5173087265357824",
+      //     floorID: "6670307294707712",
+      //     height: "100%",
+      //     youAreHerePlacemarkID: "6670307294707712_4919899949891584"
+      // });
 
-        // SJL - Orchard
-        // MeridianSDK.init({
-        //     api: MeridianSDK.createAPI({
-        //         environment: "staging",
-        //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTcyNjI5NzQ1LCJ2YWx1ZSI6ImQ1OTkwMTEyYjg2ZDNlOGU3MzZmODhhMDE1ZjY1YzIxOThlNmMyMTQifQ.euj0AqFtC5Wt8KdAib3Fwv3T89GhTHI7vzNhsQLoruU"
-        //     })
-        // });
-        // MeridianSDK.createMap(document.getElementById("meridian-map"), {
-        //     locationID: "5173087265357824",
-        //     floorID: "6670307294707712",
-        //     height: "100%",
-        //     youAreHerePlacemarkID: "6670307294707712_4919899949891584"
-        // });
-
-        // Melbourne Markets
-        // MeridianSDK.init({
-        //     api: MeridianSDK.createAPI({
-        //         environment: "staging",
-        //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTcyNjM0NTg1LCJ2YWx1ZSI6IjAzMWZjZDVhM2QwNjJjZGYxYWI5YWVjM2ExNDczMWJmYjBjNjVhMTQifQ.7N9T-xiLj_egaIGh75msxWpC37rGPMHoCJppjzVibso"
-        //     })
-        // });
-        // MeridianSDK.createMap(document.getElementById("meridian-map"), {
-        //     locationID: "5717721882820608",
-        //     floorID: "5659313586569216",
-        //     height: "100%",
-        //     youAreHerePlacemarkID: "5659313586569216_5649050225344512"
-        // });
+      // Melbourne Markets
+      // MeridianSDK.init({
+      //     api: MeridianSDK.createAPI({
+      //         environment: "staging",
+      //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTcyNjM0NTg1LCJ2YWx1ZSI6IjAzMWZjZDVhM2QwNjJjZGYxYWI5YWVjM2ExNDczMWJmYjBjNjVhMTQifQ.7N9T-xiLj_egaIGh75msxWpC37rGPMHoCJppjzVibso"
+      //     })
+      // });
+      // MeridianSDK.createMap(document.getElementById("meridian-map"), {
+      //     locationID: "5717721882820608",
+      //     floorID: "5659313586569216",
+      //     height: "100%",
+      //     youAreHerePlacemarkID: "5659313586569216_5649050225344512"
+      // });
     </script>
-</body>
-
+  </body>
 </html>

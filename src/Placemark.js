@@ -113,9 +113,24 @@ const Placemark = ({
   }
   if (isYouAreHere) {
     return (
-      <div className={cx(cssPlacemark)} style={style}>
+      <div
+        className={cx("meridian-placemark", cssPlacemark)}
+        style={{
+          left: data.x,
+          top: data.y,
+          transform: `translate(-45%, -50%) scale(${k})`,
+          zIndex: 3
+        }}
+      >
         <IconYouAreHere />
-        {/* YOU ARE HERE */}
+        <div
+          className={cx("meridian-label", cssLabel)}
+          style={{
+            visibility: mapZoomFactor < SHRINK_POINT ? "hidden" : ""
+          }}
+        >
+          YOU ARE HERE
+        </div>
       </div>
     );
   }

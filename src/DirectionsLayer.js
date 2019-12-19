@@ -11,27 +11,13 @@ export default function DirectionsLayer(props) {
   });
   // flatten all the points since we're not concerned with "steps"
   steps = steps.flat();
-  let segments = [];
+  let vertices = "";
   for (let i = 0; i < steps.length - 2; i += 2) {
     const x1 = steps[i];
     const y1 = steps[i + 1];
     const x2 = steps[i + 2];
     const y2 = steps[i + 3];
-    // This check ensures only true line segments are rendered
-    if (x1 !== x2 || y1 !== y2) {
-      segments.push(
-        <line
-          key={i}
-          x1={x1}
-          y1={y1}
-          x2={x2}
-          y2={y2}
-          style="stroke-width:20;stroke-linecap:round;stroke-dasharray:'4 1';"
-          stroke="#297BC0"
-          strokeDasharray="4 1"
-        />
-      );
-    }
+    vertices += ` ${x1},${y1} ${x2},${y2}`;
   }
   return (
     <div
@@ -43,7 +29,18 @@ export default function DirectionsLayer(props) {
       })}
     >
       <svg height={props.height} width={props.width}>
-        {segments}
+        <polyline
+          points={vertices}
+          fill="none"
+          stroke="#297BC0"
+          style="stroke-width:22;stroke-opacity:0.3;stroke-linecap:round;stroke-dasharray:'4 1';"
+        />
+        <polyline
+          points={vertices}
+          fill="none"
+          stroke="#297BC0"
+          style="stroke-width:15;stroke-opacity:0.8;stroke-linecap:round;stroke-dasharray:'4 1';"
+        />
       </svg>
     </div>
   );

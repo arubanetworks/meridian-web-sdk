@@ -20,26 +20,19 @@ export default function DirectionsLayer(props) {
     vertices += ` ${x1},${y1} ${x2},${y2}`;
   }
   return (
-    <div
-      className={css({
-        label: "DirectionsLayer",
-        position: "absolute",
-        top: 0,
-        left: 0
-      })}
-    >
+    <div className={cssDirectionsLayer}>
       <svg height={props.height} width={props.width}>
         <polyline
+          className={cssOuterPolyline}
           points={vertices}
           fill="none"
           stroke="#297BC0"
-          style="stroke-width:22;stroke-opacity:0.3;stroke-linecap:round;stroke-dasharray:'4 1';"
         />
         <polyline
+          className={cssInnerPolyline}
           points={vertices}
           fill="none"
           stroke="#297BC0"
-          style="stroke-width:15;stroke-opacity:0.8;stroke-linecap:round;stroke-dasharray:'4 1';"
         />
       </svg>
     </div>
@@ -50,3 +43,22 @@ DirectionsLayer.propTypes = {
   width: PropTypes.number,
   height: PropTypes.number
 };
+
+const cssDirectionsLayer = css({
+  label: "DirectionsLayer",
+  position: "absolute",
+  top: 0,
+  left: 0
+});
+const cssOuterPolyline = css({
+  strokeWidth: 22,
+  strokeOpacity: 0.3,
+  strokeLinecap: "round",
+  strokeDasharray: "4 1"
+});
+const cssInnerPolyline = css({
+  strokeWidth: 15,
+  strokeOpacity: 0.8,
+  strokeLinecap: "round",
+  strokeDasharray: "4 1"
+});

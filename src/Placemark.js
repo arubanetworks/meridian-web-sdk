@@ -28,7 +28,11 @@ const Placemark = ({
     color: "black",
     userSelect: "none",
     transform: "translate(-50%, 0)",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    visibility: "visible",
+    "&[hidden]": {
+      visibility: "hidden"
+    }
   });
   const cssLabelOnly = css({
     label: "meridian-label-only",
@@ -125,9 +129,7 @@ const Placemark = ({
         <IconYouAreHere />
         <div
           className={cx("meridian-label", cssLabel)}
-          style={{
-            visibility: mapZoomFactor < SHRINK_POINT ? "hidden" : ""
-          }}
+          hidden={mapZoomFactor < SHRINK_POINT}
         >
           YOU ARE HERE
         </div>
@@ -150,9 +152,7 @@ const Placemark = ({
       />
       <div
         className={cx("meridian-label", cssLabel)}
-        style={{
-          visibility: mapZoomFactor < SHRINK_POINT ? "hidden" : ""
-        }}
+        hidden={mapZoomFactor < SHRINK_POINT}
       >
         {data.name}
       </div>

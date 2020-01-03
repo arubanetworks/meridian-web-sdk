@@ -125,9 +125,7 @@ const Placemark = ({
         <IconYouAreHere />
         <div
           className={cx("meridian-label", cssLabel)}
-          style={{
-            visibility: mapZoomFactor < SHRINK_POINT ? "hidden" : ""
-          }}
+          hidden={mapZoomFactor < SHRINK_POINT ? true : false}
         >
           YOU ARE HERE
         </div>
@@ -150,9 +148,7 @@ const Placemark = ({
       />
       <div
         className={cx("meridian-label", cssLabel)}
-        style={{
-          visibility: mapZoomFactor < SHRINK_POINT ? "hidden" : ""
-        }}
+        hidden={mapZoomFactor < SHRINK_POINT ? true : false}
       >
         {data.name}
       </div>

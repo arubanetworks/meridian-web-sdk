@@ -38,13 +38,13 @@ export function getAssetURL(suffix) {
   return `${ASSETS_URL}/${suffix}`;
 }
 
-export function getDirections(
+export function getDirections({
   api,
   locationID,
   fromMapID,
   fromPlacemarkID,
   toPlacemarkID
-) {
+}) {
   return api.axios.get(`/locations/${locationID}/directions`, {
     params: {
       from_map_id: fromMapID,

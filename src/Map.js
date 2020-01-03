@@ -438,13 +438,13 @@ export default class Map extends Component {
   };
 
   onDirectionsToHereClicked = async item => {
-    const response = await getDirections(
-      this.props.api,
-      this.props.locationID,
-      this.props.floorID,
-      this.props.youAreHerePlacemarkID,
-      item.id
-    );
+    const response = await getDirections({
+      api: this.props.api,
+      locationID: this.props.locationID,
+      fromMapID: this.props.floorID,
+      fromPlacemarkID: this.props.youAreHerePlacemarkID,
+      toPlacemarkID: item.id
+    });
     if (response && response.data) {
       const routeSteps = response.data.routes[0].steps.map(step => step.points);
       this.setState({

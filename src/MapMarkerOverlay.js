@@ -8,6 +8,33 @@ import LabelList from "./LabelList";
 import IconDirections from "./IconDirections";
 import IconYouAreHere from "./IconYouAreHere";
 
+const cssGetDirectionsButton = css(mixins.buttonReset, {
+  label: "MapMarkerOverlay-GetDirectionsButton",
+  alignItems: "center",
+  backgroundColor: "#EBEEF2",
+  borderRadius: "5px",
+  color: "#297BC0",
+  display: "flex",
+  fontSize: "18px",
+  fontWeight: "bold",
+  height: "63px",
+  justifyContent: "center",
+  padding: "5px 8px 5px 5px",
+  "&:hover, &:focus": {
+    cursor: "pointer",
+    boxShadow: "0 0 0 2px #297BC0",
+    outline: "none"
+  },
+  textTransform: "uppercase",
+  width: "100%"
+});
+
+const cssIconYouAreHere = css({
+  label: "MapMarkerOverlay-IconYouAreHere",
+  display: "flex",
+  alignItems: "center"
+});
+
 const cssOverlayImage = css({
   label: "overlay-image",
   width: "100%",
@@ -64,12 +91,7 @@ const MapMarkerOverlay = ({
     if (kind === "placemark" && youAreHerePlacemarkID) {
       if (youAreHerePlacemarkID === item.id) {
         return (
-          <p
-            className={css({
-              display: "flex",
-              alignItems: "center"
-            })}
-          >
+          <p className={cssIconYouAreHere}>
             <IconYouAreHere />
             You are Here
           </p>
@@ -78,25 +100,7 @@ const MapMarkerOverlay = ({
       return (
         <p>
           <button
-            className={css(mixins.buttonReset, {
-              alignItems: "center",
-              backgroundColor: "#EBEEF2",
-              borderRadius: "5px",
-              color: "#297BC0",
-              display: "flex",
-              fontSize: "18px",
-              fontWeight: "bold",
-              height: "63px",
-              justifyContent: "center",
-              padding: "5px 8px 5px 5px",
-              "&:hover, &:focus": {
-                cursor: "pointer",
-                boxShadow: "0 0 0 2px #297BC0",
-                outline: "none"
-              },
-              textTransform: "uppercase",
-              width: "100%"
-            })}
+            className={cssGetDirectionsButton}
             onClick={e => {
               e.preventDefault();
               onDirectionsToHereClicked(item);

@@ -150,6 +150,12 @@ export default class Map extends Component {
       this.zoomToDefault();
       this.validateFloorID();
     }
+    if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
+      this.setState({
+        routeSteps: [],
+        isMapMarkerOverlayOpen: false
+      });
+    }
   }
 
   componentWillUnmount() {

@@ -4,13 +4,11 @@ import PropTypes from "prop-types";
 import { css } from "./style";
 
 export default function DirectionsLayer(props) {
-  // convert all points to float (they're strings by default)
-  let steps = props.routeSteps.map(step => {
+  // convert all points to float (they're strings by default) and flatten the result
+  let steps = props.routeSteps.flatMap(step => {
     const arr = step.split(",");
-    return arr.map(point => parseFloat(point));
+    return arr.map(point => Number(point));
   });
-  // flatten all the points since we're not concerned with "steps"
-  steps = steps.flat();
   let vertices = "";
   for (let i = 0; i < steps.length - 2; i += 2) {
     const x1 = steps[i];

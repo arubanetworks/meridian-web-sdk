@@ -9,26 +9,28 @@ export default function DirectionsLayer(props) {
     const arr = step.split(",");
     return arr.map(point => Number(point));
   });
-  let vertices = "";
+  let pointsArray = [];
   for (let i = 0; i < steps.length - 2; i += 2) {
     const x1 = steps[i];
     const y1 = steps[i + 1];
     const x2 = steps[i + 2];
     const y2 = steps[i + 3];
-    vertices += ` ${x1},${y1} ${x2},${y2}`;
+    pointsArray.push(`${x1},${y1}`);
+    pointsArray.push(`${x2},${y2}`);
   }
+  const points = pointsArray.join(" ");
   return (
     <div className={cssDirectionsLayer}>
       <svg height={props.height} width={props.width}>
         <polyline
           className={cssOuterPolyline}
-          points={vertices}
+          points={points}
           fill="none"
           stroke="#297BC0"
         />
         <polyline
           className={cssInnerPolyline}
-          points={vertices}
+          points={points}
           fill="none"
           stroke="#297BC0"
         />

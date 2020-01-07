@@ -29,14 +29,13 @@ const IconYouAreHere = () => (
         colorInterpolationFilters="sRGB"
       >
         <fe-flood flood-opacity="0" result="BackgroundImageFix" />
-        <fe-color-matrix
+        <feColorMatrix
           in="SourceAlpha"
           values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
         />
-        <fe-offset />
-        <fe-gaussianBlur std-deviation="5" />
-        <fe-color-matrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0" />
-        <fe-blend in2="BackgroundImageFix" result="effect1_dropShadow" />
+        <feOffset />
+        <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0" />
+        <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
         <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
       </filter>
     </defs>

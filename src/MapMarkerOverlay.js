@@ -101,8 +101,8 @@ const MapMarkerOverlay = ({
         <p>
           <button
             className={cssGetDirectionsButton}
-            onClick={e => {
-              e.preventDefault();
+            onClick={event => {
+              event.preventDefault();
               onDirectionsToHereClicked(item);
             }}
           >

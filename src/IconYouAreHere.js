@@ -6,7 +6,7 @@ const IconYouAreHere = () => (
       d="M35.55 76.1a2.55 2.55 0 100-5.1 2.55 2.55 0 000 5.1z"
       fill="#F2AF1D"
     />
-    <g filter="url(#filter0_d)">
+    <g filter="url(#MeridianWebSDK-IconYouAreHere-Filter)">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -20,7 +20,7 @@ const IconYouAreHere = () => (
     />
     <defs>
       <filter
-        id="filter0_d"
+        id="MeridianWebSDK-IconYouAreHere-Filter"
         x="0"
         y="0"
         width="71.85"

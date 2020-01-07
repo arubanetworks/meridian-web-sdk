@@ -610,8 +610,11 @@ export default class Map extends Component {
           style={{ width, height }}
         >
           <div
-            className={css({ position: "relative" })}
-            style={{ transform: mapTransform, transformOrigin: "0 0 0" }}
+            style={{
+              position: "relative",
+              transform: mapTransform,
+              transformOrigin: "0 0 0"
+            }}
           >
             <img
               src={mapData && mapData.svg_url}

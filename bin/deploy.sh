@@ -51,7 +51,7 @@ Heading "==> https://files.meridianapps.com/meridian-web-sdk/${version}/meridian
 
 if [[ "$SKIP_POSTPUBLISH" != "true" ]]; then
   Heading "* Deploying examples to GH Pages..."
-  echo npx gh-pages --dist dist
+  npx gh-pages --dist dist
 fi
 
 Heading "* Cleaning up build files..."

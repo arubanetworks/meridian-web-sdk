@@ -477,14 +477,10 @@ export default class Map extends Component {
 
   onDirectionsToHereClicked = async item => {
     sendAnalyticsCodeEvent({
-      action: "map.update",
+      action: "map.directions",
       locationID: this.props.locationID,
       youAreHerePlacemarkID: this.props.youAreHerePlacemarkID,
-      youAreHerePlacemarkName: this.state.placemarks[
-        this.props.youAreHerePlacemarkID
-      ].name,
-      destinationID: item.id,
-      destinationName: item.name
+      destinationID: item.id
     });
     const response = await getDirections({
       api: this.props.api,

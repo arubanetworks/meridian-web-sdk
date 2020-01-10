@@ -36,7 +36,7 @@ export async function sendAnalyticsCodeEvent({
   placemarksFilter = false,
   internalUpdate,
   youAreHerePlacemarkID = undefined,
-  destinationID = undefined,
+  destinationID = undefined
 }) {
   const params = {
     v: "1", // GA version
@@ -55,7 +55,7 @@ export async function sendAnalyticsCodeEvent({
     cm2: tagsFilter ? 1 : 0, // Custom Metric
     cm3: placemarksFilter ? 1 : 0, // Custom Metric
     cm4: youAreHerePlacemarkID, // Source Placemark ID for Directions
-    cm6: destinationID, // Destination Placemark ID for Directions
+    cm5: destinationID, // Destination Placemark ID for Directions
     ul: navigator.language, // User Language
     sr: screenRes, // Screen Resolution
     aip: 1, // Anonymize IP

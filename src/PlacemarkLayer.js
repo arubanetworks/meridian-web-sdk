@@ -2,11 +2,11 @@ import { h, Component } from "preact";
 import PropTypes from "prop-types";
 
 import MapMarker from "./MapMarker";
-import { fetchAllPaginatedData } from "./util";
 
 export default class PlacemarkLayer extends Component {
   static defaultProps = {
-    markers: {}
+    markers: {},
+    placemarks: {}
   };
 
   static propTypes = {
@@ -23,15 +23,12 @@ export default class PlacemarkLayer extends Component {
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
-    toggleLoadingSpinner: PropTypes.func.isRequired
-  };
-
-  state = {
-    placemarksByID: {}
+    placemarks: PropTypes.object,
+    updatePlacemarks: PropTypes.func
   };
 
   async componentDidMount() {
-    this.updatePlacemarks();
+    this.props.updatePlacemarks();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -45,39 +42,8 @@ export default class PlacemarkLayer extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.floorID !== this.props.floorID) {
-      this.setState({ placemarksByID: {} });
-      this.updatePlacemarks();
+      this.props.updatePlacemarks();
     }
-  }
-
-  async updatePlacemarks() {
-    const { locationID, floorID, api, toggleLoadingSpinner } = this.props;
-    toggleLoadingSpinner({ show: true, source: "placemarks" });
-    // 2018/08/21 - found a bug with the quadtree endpoint below, will revert when that's fixed
-    // const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
-    const placemarksURL = `locations/${locationID}/placemarks?map=${floorID}`;
-    const results = await fetchAllPaginatedData(api, placemarksURL);
-    const placemarksByID = this.groupPlacemarksByID(results);
-    this.setState({ placemarksByID }, () => {
-      toggleLoadingSpinner({ show: false, source: "placemarks" });
-    });
-  }
-
-  normalizePlacemark(placemark) {
-    // TODO: Strip off excess data, maybe?
-    return {
-      kind: "placemark",
-      ...placemark
-    };
-  }
-
-  groupPlacemarksByID(tags) {
-    return tags
-      .map(placemark => this.normalizePlacemark(placemark))
-      .reduce((obj, placemark) => {
-        obj[placemark.id] = placemark;
-        return obj;
-      }, {});
   }
 
   getFilterFunction() {
@@ -93,7 +59,6 @@ export default class PlacemarkLayer extends Component {
   }
 
   render() {
-    const { placemarksByID } = this.state;
     const {
       markers,
       onMarkerClick,
@@ -102,8 +67,8 @@ export default class PlacemarkLayer extends Component {
       youAreHerePlacemarkID
     } = this.props;
     const filter = this.getFilterFunction();
-    const filteredMarkers = Object.keys(placemarksByID)
-      .map(id => placemarksByID[id])
+    const filteredMarkers = Object.keys(this.props.placemarks)
+      .map(id => this.props.placemarks[id])
       .filter(placemark => {
         if (markers.showHiddenPlacemarks !== true) {
           return !placemark.hide_on_map;

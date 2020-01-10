@@ -22,6 +22,7 @@ import {
   fetchAllTags,
   getDirections
 } from "./util";
+import { sendAnalyticsCodeEvent } from "./sdk";
 import DirectionsLayer from "./DirectionsLayer";
 
 const ZOOM_FACTOR = 0.5;
@@ -111,7 +112,7 @@ export default class Map extends Component {
       mapTransform: "",
       mapZoomFactor: 0.5,
       floors: [],
-      placemarksData: null,
+      placemarks: {},
       svgURL: null,
       tagsConnection: null,
       tagsStatus: "Connecting",
@@ -141,6 +142,7 @@ export default class Map extends Component {
       });
     } else {
       this.initializeFloors();
+      this.updatePlacemarks();
       this.initializeTags();
     }
   }
@@ -251,6 +253,36 @@ export default class Map extends Component {
 
   selectFloorByID = floorID => {
     this.updateMap({ floorID, routeSteps: [] });
+  };
+
+  groupPlacemarksByID = tags => {
+    return tags
+      .map(placemark => this.normalizePlacemark(placemark))
+      .reduce((obj, placemark) => {
+        obj[placemark.id] = placemark;
+        return obj;
+      }, {});
+  };
+
+  normalizePlacemark(placemark) {
+    // TODO: Strip off excess data, maybe?
+    return {
+      kind: "placemark",
+      ...placemark
+    };
+  }
+
+  updatePlacemarks = async () => {
+    const { locationID, floorID, api } = this.props;
+    this.toggleLoadingSpinner({ show: true, source: "placemarks" });
+    // 2018/08/21 - found a bug with the quadtree endpoint below, will revert when that's fixed
+    // const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
+    const placemarksURL = `locations/${locationID}/placemarks?map=${floorID}`;
+    const results = await fetchAllPaginatedData(api, placemarksURL);
+    const placemarks = this.groupPlacemarksByID(results);
+    this.setState({ placemarks }, () => {
+      this.toggleLoadingSpinner({ show: false, source: "placemarks" });
+    });
   };
 
   async getFloors() {
@@ -444,6 +476,16 @@ export default class Map extends Component {
   };
 
   onDirectionsToHereClicked = async item => {
+    sendAnalyticsCodeEvent({
+      action: "map.update",
+      locationID: this.props.locationID,
+      youAreHerePlacemarkID: this.props.youAreHerePlacemarkID,
+      youAreHerePlacemarkName: this.state.placemarks[
+        this.props.youAreHerePlacemarkID
+      ].name,
+      destinationID: item.id,
+      destinationName: item.name
+    });
     const response = await getDirections({
       api: this.props.api,
       locationID: this.props.locationID,
@@ -641,6 +683,8 @@ export default class Map extends Component {
                 markers={placemarks}
                 onMarkerClick={this.onMarkerClick}
                 toggleLoadingSpinner={this.toggleLoadingSpinner}
+                placemarks={this.state.placemarks}
+                updatePlacemarks={this.updatePlacemarks}
               />
             ) : null}
 

@@ -3,4 +3,10 @@ set -eu
 
 git push
 git push --tags
-npm publish --access=public
+if [[ -z "$BETA" ]]; then
+echo "BETA IS EMPTY!"
+#   npm publish --access=public
+else
+  npm publish --access=public --tag "$BETA"
+fi
+

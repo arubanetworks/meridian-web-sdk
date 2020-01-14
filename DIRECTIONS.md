@@ -2,7 +2,7 @@
 
 The beta version of the new "get directions" feature of the Meridian Web SDK supports setting a static starting placemark ID and allowing a map user to view a direction line from the starting placemark to any other placemark on the same map, which is ideal for kiosk scenarios.
 
-1. Install the latest `directionsbeta` release from `npm`: `npm install 0.0.0-directionsbeta.2` where `2` is the latest build.
+1. Install the latest `directionsbeta` release from `npm`: `npm install @meridian/web-sdk@directionsbeta`.
 2. Pick a placemark ID on a map of your choice and add it as the value of a new option called `youAreHerePlacemarkID` to your `createMap` call:
 
 ```

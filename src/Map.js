@@ -19,8 +19,11 @@ import {
   fetchAllPaginatedData,
   asyncClientCall,
   validateEnvironment,
-  fetchAllTags
+  fetchAllTags,
+  getDirections
 } from "./util";
+import { sendAnalyticsCodeEvent } from "./sdk";
+import DirectionsLayer from "./DirectionsLayer";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -59,6 +62,7 @@ export default class Map extends Component {
     height: PropTypes.string,
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
+    youAreHerePlacemarkID: PropTypes.string,
     api: PropTypes.object,
     showFloorsControl: PropTypes.bool,
     showTagsControl: PropTypes.bool,
@@ -108,13 +112,14 @@ export default class Map extends Component {
       mapTransform: "",
       mapZoomFactor: 0.5,
       floors: [],
-      placemarksData: null,
+      placemarks: {},
       svgURL: null,
       tagsConnection: null,
       tagsStatus: "Connecting",
       selectedItem: null,
       areTagsLoading: true,
-      allTagData: []
+      allTagData: [],
+      routeSteps: []
     };
     this.tagsTimeout = null;
     this.mapSelection = null;
@@ -137,6 +142,7 @@ export default class Map extends Component {
       });
     } else {
       this.initializeFloors();
+      this.updatePlacemarks();
       this.initializeTags();
     }
   }
@@ -145,6 +151,12 @@ export default class Map extends Component {
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
       this.validateFloorID();
+    }
+    if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
+      this.setState({
+        routeSteps: [],
+        isMapMarkerOverlayOpen: false
+      });
     }
   }
 
@@ -177,11 +189,11 @@ export default class Map extends Component {
     // they switch back. Might even make sense to block updates while the tag
     // list is open?
     const loop = async () => {
-      const { api, locationID, showControlTags } = this.props;
+      const { api, locationID, showTagsControl } = this.props;
       const floorID = STREAM_ALL_FLOORS;
       const rawTags = await fetchAllTags({ api, locationID, floorID });
       const filteredTags = rawTags.filter(
-        tag => showControlTags === true || !tag.editor_data.is_control_tag
+        tag => showTagsControl === true || !tag.editor_data.is_control_tag
       );
       this.setState({
         areTagsLoading: false,
@@ -240,7 +252,37 @@ export default class Map extends Component {
   };
 
   selectFloorByID = floorID => {
-    this.updateMap({ floorID });
+    this.updateMap({ floorID, routeSteps: [] });
+  };
+
+  groupPlacemarksByID = tags => {
+    return tags
+      .map(placemark => this.normalizePlacemark(placemark))
+      .reduce((obj, placemark) => {
+        obj[placemark.id] = placemark;
+        return obj;
+      }, {});
+  };
+
+  normalizePlacemark(placemark) {
+    // TODO: Strip off excess data, maybe?
+    return {
+      kind: "placemark",
+      ...placemark
+    };
+  }
+
+  updatePlacemarks = async () => {
+    const { locationID, floorID, api } = this.props;
+    this.toggleLoadingSpinner({ show: true, source: "placemarks" });
+    // 2018/08/21 - found a bug with the quadtree endpoint below, will revert when that's fixed
+    // const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
+    const placemarksURL = `locations/${locationID}/placemarks?map=${floorID}`;
+    const results = await fetchAllPaginatedData(api, placemarksURL);
+    const placemarks = this.groupPlacemarksByID(results);
+    this.setState({ placemarks }, () => {
+      this.toggleLoadingSpinner({ show: false, source: "placemarks" });
+    });
   };
 
   async getFloors() {
@@ -433,6 +475,29 @@ export default class Map extends Component {
     }
   };
 
+  onDirectionsToHereClicked = async item => {
+    sendAnalyticsCodeEvent({
+      action: "map.directions",
+      locationID: this.props.locationID,
+      youAreHerePlacemarkID: this.props.youAreHerePlacemarkID,
+      destinationID: item.id
+    });
+    const response = await getDirections({
+      api: this.props.api,
+      locationID: this.props.locationID,
+      fromMapID: this.props.floorID,
+      fromPlacemarkID: this.props.youAreHerePlacemarkID,
+      toPlacemarkID: item.id
+    });
+    if (response && response.data) {
+      const routeSteps = response.data.routes[0].steps.map(step => step.points);
+      this.setState({
+        routeSteps,
+        isMapMarkerOverlayOpen: false
+      });
+    }
+  };
+
   shouldShowFloors() {
     const { showFloorsControl } = this.props;
     const { floors } = this.state;
@@ -501,6 +566,8 @@ export default class Map extends Component {
           toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
           kind={selectedItem.kind === "placemark" ? "placemark" : "tag"}
           item={selectedItem}
+          youAreHerePlacemarkID={this.props.youAreHerePlacemarkID}
+          onDirectionsToHereClicked={this.onDirectionsToHereClicked}
         />
       );
     }
@@ -539,6 +606,7 @@ export default class Map extends Component {
       showTagsControl,
       locationID,
       floorID,
+      youAreHerePlacemarkID,
       api,
       tags,
       placemarks,
@@ -579,13 +647,26 @@ export default class Map extends Component {
           onClick={this.onClick}
           style={{ width, height }}
         >
-          <div style={{ transform: mapTransform, transformOrigin: "0 0 0" }}>
+          <div
+            style={{
+              position: "relative",
+              transform: mapTransform,
+              transformOrigin: "0 0 0"
+            }}
+          >
             <img
               src={mapData && mapData.svg_url}
               ref={el => {
                 this.mapImage = el;
               }}
             />
+            {this.state.routeSteps.length > 0 && (
+              <DirectionsLayer
+                routeSteps={this.state.routeSteps}
+                width={this.mapImage.clientWidth}
+                height={this.mapImage.clientHeight}
+              />
+            )}
             {!errors.length && mapData ? (
               <PlacemarkLayer
                 selectedItem={selectedItem}
@@ -593,10 +674,13 @@ export default class Map extends Component {
                 mapZoomFactor={mapZoomFactor}
                 locationID={locationID}
                 floorID={floorID}
+                youAreHerePlacemarkID={youAreHerePlacemarkID}
                 api={api}
                 markers={placemarks}
                 onMarkerClick={this.onMarkerClick}
                 toggleLoadingSpinner={this.toggleLoadingSpinner}
+                placemarks={this.state.placemarks}
+                updatePlacemarks={this.updatePlacemarks}
               />
             ) : null}
 

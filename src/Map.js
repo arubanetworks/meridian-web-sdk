@@ -189,15 +189,12 @@ export default class Map extends Component {
     // they switch back. Might even make sense to block updates while the tag
     // list is open?
     const loop = async () => {
-      const { api, locationID, showTagsControl } = this.props;
+      const { api, locationID } = this.props;
       const floorID = STREAM_ALL_FLOORS;
-      const rawTags = await fetchAllTags({ api, locationID, floorID });
-      const filteredTags = rawTags.filter(
-        tag => showTagsControl === true || !tag.editor_data.is_control_tag
-      );
+      const allTagData = await fetchAllTags({ api, locationID, floorID });
       this.setState({
         areTagsLoading: false,
-        allTagData: filteredTags
+        allTagData
       });
       this.tagsTimeout = setTimeout(loop, 5 * 60 * 1000);
     };
@@ -542,7 +539,7 @@ export default class Map extends Component {
       return (
         <TagListOverlay
           onMarkerClick={this.onMarkerClick}
-          showControlTags={tags.showControlTags}
+          showControlTags={Boolean(tags.showControlTags)}
           floors={floors}
           loading={areTagsLoading}
           tags={allTagData}

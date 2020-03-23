@@ -1,5 +1,5 @@
 import SocketIO from "socket.io-client";
-const axios = require("axios").default;
+import axios, { AxiosInstance } from "axios";
 
 import { requiredParam } from "./util";
 
@@ -22,54 +22,49 @@ const envToRestURL = {
 };
 
 // This is intentionally not exported from package as a whole
-export const STREAM_ALL_FLOORS = { const: "STREAM_ALL_FLOORS" };
+export const STREAM_ALL_FLOORS =
+  "__secret_internal_stream_all_floors_do_not_use_or_you_will_be_fired";
 
 export type EnvOptions = "production" | "staging" | "eu" | "development";
 
-interface openStreamParams {
-  locationID: string | undefined;
-  floorID: string | undefined;
-  onInitialTags?: void;
-  onTagUpdate?: void;
-  onTagLeave?: void;
-  onClose?: void;
-  onException?: void;
-}
-
-export type ApiOptions = {
-  environment: EnvOptions;
-  token: any;
-};
-
 export default class API {
-  token: any;
+  token: string;
   environment: EnvOptions;
-  axios: any;
-  constructor({
-    environment = "production",
-    token = requiredParam("API", "token")
-  }: ApiOptions) {
-    this.token = token;
-    this.environment = environment;
+  axios: AxiosInstance;
+
+  constructor(options: { environment: EnvOptions; token: string }) {
+    if (!options.token) {
+      requiredParam("API", "token");
+    }
+    this.token = options.token;
+    this.environment = options.environment || "production";
     this.axios = axios.create({
       baseURL: envToRestURL[this.environment],
       headers: {
-        Authorization: `Token ${token}`
+        Authorization: `Token ${options.token}`
       }
     });
   }
 
-  openStream(params: openStreamParams) {
+  openStream(params: {
+    locationID: string;
+    floorID: string;
+    onInitialTags?: () => void;
+    onTagUpdate?: () => void;
+    onTagLeave?: () => void;
+    onClose?: () => void;
+    onException?: () => void;
+  }) {
     if (!params.locationID) {
       requiredParam("openStream", "locationID");
     }
     if (!params.floorID) {
       requiredParam("openStream", "floorID");
     }
-    const connection = SocketIO.connect(
-      envToTagURL[this.environment],
-      { path: tagPath, transports: ["websocket"] }
-    );
+    const connection = SocketIO.connect(envToTagURL[this.environment], {
+      path: tagPath,
+      transports: ["websocket"]
+    });
     const authenticate = () => {
       connection.emit("authenticate", {
         locationID: params.locationID,
@@ -78,7 +73,7 @@ export default class API {
     };
     const subscribe = () => {
       // Make sure you have to explicitly opt-in to streaming all floors data
-      if ((params.floorID as any) === STREAM_ALL_FLOORS) {
+      if (params.floorID === STREAM_ALL_FLOORS) {
         connection.emit("subscribe", { locationID: params.locationID });
       } else {
         connection.emit("subscribe", {

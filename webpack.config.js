@@ -4,10 +4,15 @@ const path = require("path");
 const webpack = require("webpack");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const nodeExternals = require("webpack-node-externals");
+const DeclarationBundlerPlugin = require('declaration-bundler-webpack-plugin');
 
 const Package = require("./package.json");
 
 const definePlugin = new webpack.DefinePlugin({
+  GLOBAL_VERSION: JSON.stringify(Package.version)
+});
+
+const declarationBundlerPlugin = new DeclarationBundlerPlugin({
   GLOBAL_VERSION: JSON.stringify(Package.version)
 });
 
@@ -21,7 +26,7 @@ const common = {
       }
     ]
   },
-  plugins: [definePlugin],
+  plugins: [definePlugin, declarationBundlerPlugin],
   node: {
     __dirname: true,
     fs: "empty"

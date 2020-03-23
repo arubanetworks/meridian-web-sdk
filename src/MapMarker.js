@@ -10,7 +10,8 @@ const MapMarker = ({
   data,
   mapZoomFactor,
   disabled,
-  onClick = () => {}
+  onClick = () => {},
+  youAreHerePlacemarkID
 }) => {
   if (kind === "tag") {
     return (
@@ -34,6 +35,7 @@ const MapMarker = ({
           onClick(data);
         }}
         disabled={disabled}
+        youAreHerePlacemarkID={youAreHerePlacemarkID}
       />
     );
   }
@@ -46,7 +48,8 @@ MapMarker.propTypes = {
   kind: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   onClick: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  youAreHerePlacemarkID: PropTypes.string
 };
 
 export default MapMarker;

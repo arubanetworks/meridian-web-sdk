@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h } from "preact";
 
 const IconYouAreHere = () => (

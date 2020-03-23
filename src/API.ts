@@ -23,7 +23,7 @@ const envToRestURL = {
 
 // This is intentionally not exported from package as a whole
 export const STREAM_ALL_FLOORS =
-  "__secret_internal_stream_all_floors_do_not_use_or_you_will_be_fired";
+  "__secret_internal_stream_all_floors_DO_NOT_USE";
 
 export type EnvOptions = "production" | "staging" | "eu" | "development";
 

@@ -4,7 +4,7 @@
   "version": "0.0.0-directionsbeta.2",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
   "main": "dist/index.js",
-  "types": "dist/types.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "webpack-dev-server --watch -d --env development",
     "nonlocal": "npm run start -- --host 0.0.0.0",

@@ -5,8 +5,7 @@ module.exports = {
     es6: true
   },
   extends: ["eslint:recommended", "plugin:react/recommended"],
-  parser: "babel-eslint",
-  plugins: ["babel", "react"],
+  plugins: ["react"],
   rules: {
     curly: "error",
     "consistent-return": "error",

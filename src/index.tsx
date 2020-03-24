@@ -137,34 +137,35 @@ export function init(options: InitOptions) {
   context.api = options.api;
 }
 
-const MyType = {
-  shouldMapPanZoom: PropTypes.func,
-  update: PropTypes.func.isRequired,
-  width: PropTypes.string,
-  height: PropTypes.string,
-  locationID: PropTypes.string.isRequired,
-  floorID: PropTypes.string.isRequired,
-  youAreHerePlacemarkID: PropTypes.string,
-  api: PropTypes.object,
-  showFloorsControl: PropTypes.bool,
-  showTagsControl: PropTypes.bool,
-  tags: PropTypes.shape({
-    showControlTags: PropTypes.bool,
-    filter: PropTypes.func,
-    disabled: PropTypes.bool
-  }),
-  placemarks: PropTypes.shape({
-    showHiddenPlacemarks: PropTypes.bool,
-    filter: PropTypes.func,
-    disabled: PropTypes.bool
-  }),
-  onMarkerClick: PropTypes.func,
-  onTagClick: PropTypes.func,
-  onPlacemarkClick: PropTypes.func,
-  onMapClick: PropTypes.func,
-  onTagsUpdate: PropTypes.func,
-  onFloorsUpdate: PropTypes.func,
-  onMapUpdate: PropTypes.func
+type MapProps = {
+  shouldMapPanZoom?: (event: TouchEvent & WheelEvent) => boolean;
+  // TODO: Internal only, remove
+  update: (newProps: MapProps) => void;
+  width?: string;
+  height?: string;
+  locationID: string;
+  floorID: string;
+  youAreHerePlacemarkID?: string;
+  api: AxiosInstance;
+  showFloorsControl?: boolean;
+  showTagsControl?: boolean;
+  tags?: {
+    showControlTags?: boolean;
+    filter?: (tag: Record<string, any>) => boolean;
+    disabled?: boolean;
+  };
+  placemarks?: {
+    showHiddenPlacemarks?: boolean;
+    filter?: (placemark: Record<string, any>) => boolean;
+    disabled?: boolean;
+  };
+  onMarkerClick: PropTypes.func;
+  onTagClick: PropTypes.func;
+  onPlacemarkClick: PropTypes.func;
+  onMapClick: PropTypes.func;
+  onTagsUpdate: PropTypes.func;
+  onFloorsUpdate: PropTypes.func;
+  onMapUpdate: PropTypes.func;
 };
 
 export function createMap(

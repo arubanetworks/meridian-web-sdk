@@ -27,7 +27,7 @@ const common = {
     fs: "empty"
   },
   resolve: {
-    extensions: [".ts", ".ts", ".js"],
+    extensions: [".ts", ".tsx", ".js"],
     alias: {
       d3: path.resolve(__dirname, "src/d3")
     }

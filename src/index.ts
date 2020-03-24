@@ -21,4 +21,5 @@
  * SOFTWARE.
  */
 
-module.exports = require("./sdk");
+// module.exports = require("./sdk");
+export * from "./sdk";

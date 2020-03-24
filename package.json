@@ -3,8 +3,8 @@
   "private": false,
   "version": "0.0.0-directionsbeta.2",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/src/index.d.ts",
   "scripts": {
     "start": "webpack-dev-server --watch -d --env development",
     "nonlocal": "npm run start -- --host 0.0.0.0",
@@ -19,7 +19,7 @@
     "type": "git",
     "url": "https://github.com/arubanetworks/meridian-web-sdk.git"
   },
-  "files": [],
+  "files": ["dist"],
   "keywords": [],
   "author": "Hewlett Packard Enterprise Development LP",
   "license": "MIT",

@@ -1,7 +1,6 @@
 /** @jsx h */
 
 // TODO: Make this TypeScripty :-)
-
 import { h, render } from "preact";
 import axios from "axios";
 

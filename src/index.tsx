@@ -54,6 +54,17 @@ const pixelRatio = window.devicePixelRatio || 1;
 const screen = window.screen;
 const screenRes = `${screen.width * pixelRatio}x${screen.height * pixelRatio}`;
 
+type SendAnalyticsCodeEventOptions = {
+  action: string;
+  locationID: string;
+  onTagsUpdate?: boolean;
+  tagsFilter?: boolean;
+  placemarksFilter?: boolean;
+  internalUpdate: string;
+  youAreHerePlacemarkID?: string;
+  destinationID?: string;
+}
+
 export async function sendAnalyticsCodeEvent({
   action,
   locationID,
@@ -63,7 +74,8 @@ export async function sendAnalyticsCodeEvent({
   internalUpdate,
   youAreHerePlacemarkID = undefined,
   destinationID = undefined
-}) {
+} : SendAnalyticsCodeEventOptions ) {
+
   const params = {
     v: "1", // GA version
     tid: "UA-56747301-5", // Tracking ID

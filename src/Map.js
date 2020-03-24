@@ -190,11 +190,11 @@ export default class Map extends Component {
     // they switch back. Might even make sense to block updates while the tag
     // list is open?
     const loop = async () => {
-      const { api, locationID, showTagsControl } = this.props;
+      const { api, locationID, tags } = this.props;
       const floorID = STREAM_ALL_FLOORS;
       const rawTags = await fetchAllTags({ api, locationID, floorID });
       const filteredTags = rawTags.filter(
-        tag => showTagsControl === true || !tag.editor_data.is_control_tag
+        tag => tags.showControlTags === true || !tag.editor_data.is_control_tag
       );
       this.setState({
         areTagsLoading: false,

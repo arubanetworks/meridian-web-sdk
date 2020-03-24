@@ -1,6 +1,7 @@
 # v?.?.? (????-??-??)
 
 - Fixes bug where `onTagsUpdate` was not called from `createAPI`
+- Fixes bug where `showControlTags` was not used
 
 # v0.5.0 (2019-02-25)
 

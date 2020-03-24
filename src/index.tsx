@@ -46,8 +46,12 @@ if (document.readyState === "complete") {
 
 /* global GLOBAL_VERSION */
 
-const context = {
-  api: null
+type APIContext = {
+  api?: AxiosInstance;
+};
+
+const context: APIContext = {
+  api: undefined
 };
 
 const pixelRatio = window.devicePixelRatio || 1;
@@ -133,12 +137,42 @@ export function init(options: InitOptions) {
   context.api = options.api;
 }
 
+const MyType = {
+  shouldMapPanZoom: PropTypes.func,
+  update: PropTypes.func.isRequired,
+  width: PropTypes.string,
+  height: PropTypes.string,
+  locationID: PropTypes.string.isRequired,
+  floorID: PropTypes.string.isRequired,
+  youAreHerePlacemarkID: PropTypes.string,
+  api: PropTypes.object,
+  showFloorsControl: PropTypes.bool,
+  showTagsControl: PropTypes.bool,
+  tags: PropTypes.shape({
+    showControlTags: PropTypes.bool,
+    filter: PropTypes.func,
+    disabled: PropTypes.bool
+  }),
+  placemarks: PropTypes.shape({
+    showHiddenPlacemarks: PropTypes.bool,
+    filter: PropTypes.func,
+    disabled: PropTypes.bool
+  }),
+  onMarkerClick: PropTypes.func,
+  onTagClick: PropTypes.func,
+  onPlacemarkClick: PropTypes.func,
+  onMapClick: PropTypes.func,
+  onTagsUpdate: PropTypes.func,
+  onFloorsUpdate: PropTypes.func,
+  onMapUpdate: PropTypes.func
+};
+
 export function createMap(
   node = requiredParam("createMap", "node"),
   options = requiredParam("createMap", "options")
 ) {
-  let mapRef = null;
-  const setMapRef = newMapRef => {
+  let mapRef: HTMLElement | null = null;
+  const setMapRef = (newMapRef: HTMLElement) => {
     mapRef = newMapRef;
   };
   const _update = (updatedOptions, { internalUpdate = true } = {}) => {

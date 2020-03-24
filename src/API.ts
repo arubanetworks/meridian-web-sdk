@@ -26,13 +26,14 @@ export const STREAM_ALL_FLOORS =
   "__secret_internal_stream_all_floors_DO_NOT_USE";
 
 export type EnvOptions = "production" | "staging" | "eu" | "development";
+export type APIOptions = { environment: EnvOptions; token: string };
 
 export default class API {
   token: string;
   environment: EnvOptions;
   axios: AxiosInstance;
 
-  constructor(options: { environment: EnvOptions; token: string }) {
+  constructor(options: APIOptions) {
     if (!options.token) {
       requiredParam("API", "token");
     }

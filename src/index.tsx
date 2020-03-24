@@ -25,10 +25,10 @@
 
 // TODO: Make this TypeScripty :-)
 import { h, render } from "preact";
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 import Map from "./Map";
-import API from "./API";
+import API, { APIOptions } from "./API";
 import { requiredParam } from "./util";
 
 // Wait to load Preact's debug module until the page is loaded since it assumes
@@ -63,7 +63,7 @@ type SendAnalyticsCodeEventOptions = {
   internalUpdate: string;
   youAreHerePlacemarkID?: string;
   destinationID?: string;
-}
+};
 
 export async function sendAnalyticsCodeEvent({
   action,
@@ -74,8 +74,7 @@ export async function sendAnalyticsCodeEvent({
   internalUpdate,
   youAreHerePlacemarkID = undefined,
   destinationID = undefined
-} : SendAnalyticsCodeEventOptions ) {
-
+}: SendAnalyticsCodeEventOptions) {
   const params = {
     v: "1", // GA version
     tid: "UA-56747301-5", // Tracking ID
@@ -108,7 +107,11 @@ export async function sendAnalyticsCodeEvent({
 
 export const version = GLOBAL_VERSION;
 
-export function restrictedPanZoom({ type, touches, shiftKey }) {
+export function restrictedPanZoom({
+  type,
+  touches,
+  shiftKey
+}: TouchEvent & WheelEvent) {
   if (type === "wheel" && !shiftKey) {
     return false;
   } else if (type === "touchstart") {
@@ -116,14 +119,18 @@ export function restrictedPanZoom({ type, touches, shiftKey }) {
   }
   return true;
 }
+type InitOptions = {
+  api: AxiosInstance;
+};
 
-export function init(
-  { api = requiredParam("init", "options.api") } = requiredParam(
-    "init",
-    "options"
-  )
-) {
-  context.api = api;
+export function init(options: InitOptions) {
+  if (!options) {
+    requiredParam("init", "options");
+  }
+  if (!options.api) {
+    requiredParam("init", "options.api");
+  }
+  context.api = options.api;
 }
 
 export function createMap(
@@ -181,6 +188,9 @@ export function createMap(
   return { update, zoomToDefault, zoomToPoint };
 }
 
-export function createAPI(options = requiredParam("createAPI", "options")) {
+export function createAPI(options: APIOptions) {
+  if (!options) {
+    requiredParam("createAPI", "options");
+  }
   return new API(options);
 }

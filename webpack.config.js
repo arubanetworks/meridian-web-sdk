@@ -32,7 +32,7 @@ const common = {
       d3: path.resolve(__dirname, "src/d3")
     }
   },
-  entry: path.resolve(__dirname, "src/index.ts"),
+  entry: path.resolve(__dirname, "src/index.tsx"),
   output: {
     filename: "meridian-sdk.js",
     library: "MeridianSDK",

@@ -51,7 +51,7 @@ export default class API {
     locationID: string;
     floorID: string;
     onInitialTags?: () => void;
-    onTagUpdate?: () => void;
+    onTagsUpdate?: () => void;
     onTagLeave?: () => void;
     onClose?: () => void;
     onException?: () => void;
@@ -90,7 +90,7 @@ export default class API {
     connection.on("authenticated", subscribe);
     connection.on("unauthenticated", params.onClose);
     connection.on("assets", params.onInitialTags);
-    connection.on("asset_update", params.onTagUpdate);
+    connection.on("asset_update", params.onTagsUpdate);
     connection.on("asset_delete", params.onTagLeave);
     return {
       close: () => connection.close()

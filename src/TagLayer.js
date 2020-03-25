@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
@@ -137,7 +138,7 @@ export default class TagLayer extends Component {
       onTagDisappear: data => {
         this.removeTag(data);
       },
-      onTagUpdate: data => {
+      onTagsUpdate: data => {
         this.handleTagUpdates([data]);
       },
       onClose: () => {

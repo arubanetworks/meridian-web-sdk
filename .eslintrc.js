@@ -4,19 +4,27 @@ module.exports = {
     node: true,
     es6: true
   },
-  extends: ["eslint:recommended", "plugin:react/recommended"],
-  parser: "babel-eslint",
-  plugins: ["babel", "react"],
+  parserOptions: {
+    sourceType: "module"
+  },
+  extends: [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  plugins: ["react", "@typescript-eslint"],
   rules: {
     curly: "error",
     "consistent-return": "error",
-    // "react/sort-comp": "error",
     "no-unused-vars": "error",
-    "no-console": 1
-  },
-  settings: {
-    react: {
-      pragma: "h"
-    }
+    "no-console": "warn",
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+    "no-console": "warn",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-empty-function": "off"
   }
 };

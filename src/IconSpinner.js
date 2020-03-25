@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h } from "preact";
 import { css, keyframes } from "./style";
 

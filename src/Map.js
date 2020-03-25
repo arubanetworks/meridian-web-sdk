@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
@@ -22,7 +23,7 @@ import {
   fetchAllTags,
   getDirections
 } from "./util";
-import { sendAnalyticsCodeEvent } from "./sdk";
+import { sendAnalyticsCodeEvent } from "./index";
 import DirectionsLayer from "./DirectionsLayer";
 
 const ZOOM_FACTOR = 0.5;
@@ -81,8 +82,7 @@ export default class Map extends Component {
     onPlacemarkClick: PropTypes.func,
     onMapClick: PropTypes.func,
     onTagsUpdate: PropTypes.func,
-    onFloorsUpdate: PropTypes.func,
-    onMapUpdate: PropTypes.func
+    onFloorsUpdate: PropTypes.func
   };
 
   static defaultProps = {
@@ -94,8 +94,7 @@ export default class Map extends Component {
     placemarks: {},
     tags: {},
     onTagsUpdate: () => {},
-    onFloorsUpdate: () => {},
-    onMapUpdate: () => {}
+    onFloorsUpdate: () => {}
   };
 
   constructor(props) {
@@ -167,9 +166,8 @@ export default class Map extends Component {
   }
 
   updateMap = newOptions => {
-    const { update, onMapUpdate } = this.props;
+    const { update } = this.props;
     update(newOptions);
-    onMapUpdate(newOptions);
   };
 
   // Helpful message for SDK devs
@@ -189,11 +187,11 @@ export default class Map extends Component {
     // they switch back. Might even make sense to block updates while the tag
     // list is open?
     const loop = async () => {
-      const { api, locationID, showTagsControl } = this.props;
+      const { api, locationID, tags } = this.props;
       const floorID = STREAM_ALL_FLOORS;
       const rawTags = await fetchAllTags({ api, locationID, floorID });
       const filteredTags = rawTags.filter(
-        tag => showTagsControl === true || !tag.editor_data.is_control_tag
+        tag => tags.showControlTags === true || !tag.editor_data.is_control_tag
       );
       this.setState({
         areTagsLoading: false,
@@ -441,9 +439,7 @@ export default class Map extends Component {
   onMarkerClick = async data => {
     let showOverlay = true;
     const { onTagClick, onPlacemarkClick, onMarkerClick } = this.props;
-
-    let callback = data.event_type ? onTagClick : onPlacemarkClick;
-
+    const callback = data.event_type ? onTagClick : onPlacemarkClick;
     const clientCallback = async () => {
       if (callback) {
         try {

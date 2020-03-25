@@ -15,10 +15,10 @@ const common = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: "babel-loader",
-        exclude: /node_modules/,
-      },
+        test: /\.(js|ts|tsx)$/,
+        use: [{ loader: "ts-loader" }],
+        exclude: /node_modules/
+      }
     ]
   },
   plugins: [definePlugin],
@@ -27,11 +27,12 @@ const common = {
     fs: "empty"
   },
   resolve: {
+    extensions: [".ts", ".tsx", ".js"],
     alias: {
       d3: path.resolve(__dirname, "src/d3")
     }
   },
-  entry: path.resolve(__dirname, "src/index.js"),
+  entry: path.resolve(__dirname, "src/index.tsx"),
   output: {
     filename: "meridian-sdk.js",
     library: "MeridianSDK",

@@ -159,13 +159,17 @@ type MapProps = {
     filter?: (placemark: Record<string, any>) => boolean;
     disabled?: boolean;
   };
-  onMarkerClick: PropTypes.func;
-  onTagClick: PropTypes.func;
-  onPlacemarkClick: PropTypes.func;
-  onMapClick: PropTypes.func;
-  onTagsUpdate: PropTypes.func;
-  onFloorsUpdate: PropTypes.func;
-  onMapUpdate: PropTypes.func;
+  // TODO: `onMarkerClick` is internal only, we should remove from public types
+  onMarkerClick?: (marker: Record<string, any>) => void;
+  onTagClick?: (tag: Record<string, any>) => void;
+  onPlacemarkClick?: (placemark: Record<string, any>) => void;
+  // TODO: `onMapClick` is not used or documented, we should delete it
+  onMapClick?: (event: MouseEvent) => void;
+  onTagsUpdate?: (tags: {
+    allTags: Record<string, any>[];
+    filteredTags: Record<string, any>[];
+  }) => void;
+  onFloorsUpdate?: (floors: Record<string, any>[]) => void;
 };
 
 export function createMap(

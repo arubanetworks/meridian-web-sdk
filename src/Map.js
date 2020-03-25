@@ -82,8 +82,7 @@ export default class Map extends Component {
     onPlacemarkClick: PropTypes.func,
     onMapClick: PropTypes.func,
     onTagsUpdate: PropTypes.func,
-    onFloorsUpdate: PropTypes.func,
-    onMapUpdate: PropTypes.func
+    onFloorsUpdate: PropTypes.func
   };
 
   static defaultProps = {
@@ -95,8 +94,7 @@ export default class Map extends Component {
     placemarks: {},
     tags: {},
     onTagsUpdate: () => {},
-    onFloorsUpdate: () => {},
-    onMapUpdate: () => {}
+    onFloorsUpdate: () => {}
   };
 
   constructor(props) {
@@ -168,9 +166,8 @@ export default class Map extends Component {
   }
 
   updateMap = newOptions => {
-    const { update, onMapUpdate } = this.props;
+    const { update } = this.props;
     update(newOptions);
-    onMapUpdate(newOptions);
   };
 
   // Helpful message for SDK devs

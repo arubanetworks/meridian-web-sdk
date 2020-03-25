@@ -41,6 +41,8 @@
     "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
     "acorn": "^7.1.0",
     "declaration-bundler-webpack-plugin": "^1.0.3",
     "eslint": "^6.7.2",

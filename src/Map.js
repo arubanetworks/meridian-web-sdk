@@ -439,9 +439,7 @@ export default class Map extends Component {
   onMarkerClick = async data => {
     let showOverlay = true;
     const { onTagClick, onPlacemarkClick, onMarkerClick } = this.props;
-
-    let callback = data.event_type ? onTagClick : onPlacemarkClick;
-
+    const callback = data.event_type ? onTagClick : onPlacemarkClick;
     const clientCallback = async () => {
       if (callback) {
         try {

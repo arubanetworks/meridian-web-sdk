@@ -64,7 +64,7 @@ type SendAnalyticsCodeEventOptions = {
   onTagsUpdate?: boolean;
   tagsFilter?: boolean;
   placemarksFilter?: boolean;
-  internalUpdate: string;
+  internalUpdate: boolean;
   youAreHerePlacemarkID?: string;
   destinationID?: string;
 };
@@ -134,7 +134,7 @@ export function init(options: InitOptions) {
 }
 
 type MapProps = {
-  shouldMapPanZoom?: (event: TouchEvent & WheelEvent) => boolean;
+  shouldMapPanZoom?: (event: TouchEvent | WheelEvent | MouseEvent) => boolean;
   // TODO: Internal only, remove
   update: (newProps: MapProps) => void;
   width?: string;
@@ -168,21 +168,28 @@ type MapProps = {
   onFloorsUpdate?: (floors: Record<string, any>[]) => void;
 };
 
-export function createMap(
-  node = requiredParam("createMap", "node"),
-  options = requiredParam("createMap", "options")
-) {
+export function createMap(node: HTMLElement, options: MapProps) {
+  if (!node) {
+    requiredParam("createMap", "node");
+  }
+  if (!options) {
+    requiredParam("createMap", "options");
+  }
+
   let mapRef: HTMLElement | null = null;
   const setMapRef = (newMapRef: HTMLElement) => {
     mapRef = newMapRef;
   };
-  const _update = (updatedOptions, { internalUpdate = true } = {}) => {
+  const _update = (
+    updatedOptions: Partial<MapProps>,
+    { internalUpdate = true } = {}
+  ) => {
     options = { ...options, ...updatedOptions };
     domRef = render(
       <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
       node,
       domRef
-    );
+    ) as any;
     sendAnalyticsCodeEvent({
       action: "map.update",
       locationID: options.locationID,
@@ -194,7 +201,7 @@ export function createMap(
       internalUpdate
     });
   };
-  const update = updatedOptions => {
+  const update = (updatedOptions: Partial<MapProps>) => {
     _update(updatedOptions, { internalUpdate: false });
   };
   const zoomToDefault = () => {
@@ -209,10 +216,10 @@ export function createMap(
   ) => {
     mapRef.zoomToPoint(x, y, scale);
   };
-  let domRef = render(
+  let domRef: HTMLElement = render(
     <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
     node
-  );
+  ) as any;
   sendAnalyticsCodeEvent({
     action: "createMap",
     locationID: options.locationID,

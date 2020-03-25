@@ -100,6 +100,7 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      mapImageURL: null,
       isFloorOverlayOpen: false,
       isTagListOverlayOpen: false,
       isMapMarkerOverlayOpen: false,
@@ -143,6 +144,7 @@ export default class Map extends Component {
       this.initializeFloors();
       this.updatePlacemarks();
       this.initializeTags();
+      this.fetchMapImageURL();
     }
   }
 
@@ -150,6 +152,7 @@ export default class Map extends Component {
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
       this.validateFloorID();
+      this.fetchMapImageURL();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
       this.setState({
@@ -163,6 +166,19 @@ export default class Map extends Component {
     if (this.tagsTimeout) {
       clearTimeout(this.tagsTimeout);
     }
+  }
+
+  async fetchMapImageURL() {
+    console.warn("fetchMapImageURL()");
+    const mapData = this.getMapData();
+    if (!mapData) {
+      return;
+    }
+    const response = await this.props.api.axios.get(mapData.svg_url, {
+      responseType: "blob"
+    });
+    console.log(response.data);
+    this.setState({ mapImageURL: URL.createObjectURL(response.data) });
   }
 
   updateMap = newOptions => {
@@ -187,7 +203,7 @@ export default class Map extends Component {
     // they switch back. Might even make sense to block updates while the tag
     // list is open?
     const loop = async () => {
-      const { api, locationID, tags } = this.props;
+      const { api, locationID } = this.props;
       const floorID = STREAM_ALL_FLOORS;
       const allTagData = await fetchAllTags({ api, locationID, floorID });
       this.setState({
@@ -589,6 +605,7 @@ export default class Map extends Component {
   render() {
     const mapData = this.getMapData();
     const {
+      mapImageURL,
       selectedItem,
       mapTransform,
       mapZoomFactor,
@@ -648,7 +665,7 @@ export default class Map extends Component {
             }}
           >
             <img
-              src={mapData && mapData.svg_url}
+              src={mapImageURL}
               ref={el => {
                 this.mapImage = el;
               }}

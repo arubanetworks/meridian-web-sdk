@@ -23,7 +23,7 @@ import {
   fetchAllTags,
   getDirections
 } from "./util";
-import { sendAnalyticsCodeEvent } from "./sdk";
+import { sendAnalyticsCodeEvent } from "./index";
 import DirectionsLayer from "./DirectionsLayer";
 
 const ZOOM_FACTOR = 0.5;

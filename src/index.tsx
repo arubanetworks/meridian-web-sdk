@@ -111,15 +111,11 @@ export async function sendAnalyticsCodeEvent({
 
 export const version = GLOBAL_VERSION;
 
-export function restrictedPanZoom({
-  type,
-  touches,
-  shiftKey
-}: TouchEvent & WheelEvent) {
-  if (type === "wheel" && !shiftKey) {
+export function restrictedPanZoom(event: TouchEvent | WheelEvent | MouseEvent) {
+  if (event instanceof WheelEvent && !event.shiftKey) {
     return false;
-  } else if (type === "touchstart") {
-    return touches.length >= 2;
+  } else if (event instanceof TouchEvent) {
+    return event.touches.length >= 2;
   }
   return true;
 }

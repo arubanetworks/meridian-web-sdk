@@ -1,5 +1,6 @@
 # v?.?.? (????-??-??)
 
+- Adds TypeScript support
 - Fixes bug where `onTagsUpdate` was not called from `createAPI`
 - Fixes bug where `showControlTags` was not used
 

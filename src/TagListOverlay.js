@@ -225,7 +225,7 @@ TagListOverlay.propTypes = {
   loading: PropTypes.bool.isRequired,
   tags: PropTypes.arrayOf(PropTypes.object).isRequired,
   showControlTags: PropTypes.bool.isRequired,
-  floors: PropTypes.object.isRequired,
+  floors: PropTypes.arrays.isRequired,
   tagOptions: PropTypes.object.isRequired,
   updateMap: PropTypes.func.isRequired,
   api: PropTypes.object.isRequired,

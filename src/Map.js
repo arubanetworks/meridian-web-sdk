@@ -189,13 +189,10 @@ export default class Map extends Component {
     const loop = async () => {
       const { api, locationID, tags } = this.props;
       const floorID = STREAM_ALL_FLOORS;
-      const rawTags = await fetchAllTags({ api, locationID, floorID });
-      const filteredTags = rawTags.filter(
-        tag => tags.showControlTags === true || !tag.editor_data.is_control_tag
-      );
+      const allTagData = await fetchAllTags({ api, locationID, floorID });
       this.setState({
         areTagsLoading: false,
-        allTagData: filteredTags
+        allTagData
       });
       this.tagsTimeout = setTimeout(loop, 5 * 60 * 1000);
     };
@@ -538,7 +535,7 @@ export default class Map extends Component {
       return (
         <TagListOverlay
           onMarkerClick={this.onMarkerClick}
-          showControlTags={tags.showControlTags}
+          showControlTags={Boolean(tags.showControlTags)}
           floors={floors}
           loading={areTagsLoading}
           tags={allTagData}

@@ -83,8 +83,6 @@ type CreateMapOptions = {
   height?: string;
   locationID: string;
   floorID: string;
-  youAreHerePlacemarkID?: string;
-  // TODO: This should be optional in createMap
   api?: AxiosInstance;
   showFloorsControl?: boolean;
   showTagsControl?: boolean;
@@ -108,6 +106,7 @@ type CreateMapOptions = {
 };
 
 type MapProps = CreateMapOptions & {
+  youAreHerePlacemarkID?: string;
   // TODO: Internal only, remove
   update: (newProps: MapProps) => void;
   // TODO: `onMarkerClick` is internal only, we should remove from public types

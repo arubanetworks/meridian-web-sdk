@@ -64,7 +64,7 @@ type SendAnalyticsCodeEventOptions = {
   onTagsUpdate?: boolean;
   tagsFilter?: boolean;
   placemarksFilter?: boolean;
-  internalUpdate: boolean;
+  internalUpdate?: boolean;
   youAreHerePlacemarkID?: string;
   destinationID?: string;
 };
@@ -75,7 +75,7 @@ export async function sendAnalyticsCodeEvent({
   onTagsUpdate = false,
   tagsFilter = false,
   placemarksFilter = false,
-  internalUpdate,
+  internalUpdate = false,
   youAreHerePlacemarkID = undefined,
   destinationID = undefined
 }: SendAnalyticsCodeEventOptions) {
@@ -176,8 +176,8 @@ export function createMap(node: HTMLElement, options: MapProps) {
     requiredParam("createMap", "options");
   }
 
-  let mapRef: HTMLElement | null = null;
-  const setMapRef = (newMapRef: HTMLElement) => {
+  let mapRef: Map | null = null;
+  const setMapRef = (newMapRef: Map) => {
     mapRef = newMapRef;
   };
   const _update = (
@@ -205,17 +205,31 @@ export function createMap(node: HTMLElement, options: MapProps) {
     _update(updatedOptions, { internalUpdate: false });
   };
   const zoomToDefault = () => {
-    mapRef.zoomToDefault();
+    mapRef?.zoomToDefault();
   };
-  const zoomToPoint = (
-    {
-      x = requiredParam("map.zoomToPoint.options", "x"),
-      y = requiredParam("map.zoomToPoint.options", "y"),
-      scale = requiredParam("map.zoomToPoint.options", "scale")
-    } = requiredParam("map.zoomToPoint", "options")
-  ) => {
-    mapRef.zoomToPoint(x, y, scale);
+
+  type ZoomToPointOptions = {
+    x: number;
+    y: number;
+    scale: number;
   };
+
+  function zoomToPoint(options: ZoomToPointOptions) {
+    if (!options) {
+      requiredParam("map.zoomToPoint", "options");
+    }
+    if (options.x === undefined) {
+      requiredParam("map.zoomToPoint", "options.x");
+    }
+    if (options.y === undefined) {
+      requiredParam("map.zoomToPoint", "options.y");
+    }
+    if (options.scale === undefined) {
+      requiredParam("map.zoomToPoint", "options.scale");
+    }
+    mapRef?.zoomToPoint(options.x, options.y, options.scale);
+  }
+
   let domRef: HTMLElement = render(
     <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
     node

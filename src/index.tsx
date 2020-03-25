@@ -144,6 +144,7 @@ type MapProps = {
   locationID: string;
   floorID: string;
   youAreHerePlacemarkID?: string;
+  // TODO: This should be optional in createMap
   api: AxiosInstance;
   showFloorsControl?: boolean;
   showTagsControl?: boolean;

@@ -135,17 +135,15 @@ export function init(options: InitOptions) {
   context.api = options.api;
 }
 
-type MapProps = {
+type CreateMapOptions = {
   shouldMapPanZoom?: (event: TouchEvent | WheelEvent | MouseEvent) => boolean;
-  // TODO: Internal only, remove
-  update: (newProps: MapProps) => void;
   width?: string;
   height?: string;
   locationID: string;
   floorID: string;
   youAreHerePlacemarkID?: string;
   // TODO: This should be optional in createMap
-  api: AxiosInstance;
+  api?: AxiosInstance;
   showFloorsControl?: boolean;
   showTagsControl?: boolean;
   tags?: {
@@ -158,12 +156,8 @@ type MapProps = {
     filter?: (placemark: Record<string, any>) => boolean;
     disabled?: boolean;
   };
-  // TODO: `onMarkerClick` is internal only, we should remove from public types
-  onMarkerClick?: (marker: Record<string, any>) => void;
   onTagClick?: (tag: Record<string, any>) => void;
   onPlacemarkClick?: (placemark: Record<string, any>) => void;
-  // TODO: `onMapClick` is not used or documented, we should delete it
-  onMapClick?: (event: MouseEvent) => void;
   onTagsUpdate?: (tags: {
     allTags: Record<string, any>[];
     filteredTags: Record<string, any>[];
@@ -171,7 +165,17 @@ type MapProps = {
   onFloorsUpdate?: (floors: Record<string, any>[]) => void;
 };
 
-export function createMap(node: HTMLElement, options: MapProps) {
+type MapProps = CreateMapOptions & {
+  // TODO: Internal only, remove
+  update: (newProps: MapProps) => void;
+  // TODO: `onMarkerClick` is internal only, we should remove from public types
+  onMarkerClick?: (marker: Record<string, any>) => void;
+  // TODO: `onMapClick` is not used or documented, we should delete it
+  onMapClick?: (event: MouseEvent) => void;
+  api: AxiosInstance;
+};
+
+export function createMap(node: HTMLElement, options: CreateMapOptions) {
   if (!node) {
     requiredParam("createMap", "node");
   }
@@ -184,7 +188,7 @@ export function createMap(node: HTMLElement, options: MapProps) {
     mapRef = newMapRef;
   };
   const _update = (
-    updatedOptions: Partial<MapProps>,
+    updatedOptions: Partial<CreateMapOptions>,
     { internalUpdate = true } = {}
   ) => {
     options = { ...options, ...updatedOptions };

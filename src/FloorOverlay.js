@@ -168,9 +168,8 @@ class FloorOverlay extends Component {
 FloorOverlay.propTypes = {
   toggleFloorOverlay: PropTypes.func.isRequired,
   currentFloorID: PropTypes.string.isRequired,
-  floors: PropTypes.object.isRequired,
-  selectFloorByID: PropTypes.func.isRequired,
-  closeFloorOverlay: PropTypes.func.isRequired
+  floors: PropTypes.array.isRequired,
+  selectFloorByID: PropTypes.func.isRequired
 };
 
 export default FloorOverlay;

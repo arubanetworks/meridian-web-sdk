@@ -58,6 +58,7 @@ const pixelRatio = window.devicePixelRatio || 1;
 const screen = window.screen;
 const screenRes = `${screen.width * pixelRatio}x${screen.height * pixelRatio}`;
 
+// TODO: Move this to internal only file
 type SendAnalyticsCodeEventOptions = {
   action: string;
   locationID: string;
@@ -69,6 +70,7 @@ type SendAnalyticsCodeEventOptions = {
   destinationID?: string;
 };
 
+// TODO: Move this to internal only file
 export async function sendAnalyticsCodeEvent({
   action,
   locationID,

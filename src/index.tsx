@@ -23,13 +23,13 @@
  * SOFTWARE.
  */
 
-// TODO: Make this TypeScripty :-)
 import { h, render } from "preact";
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
 
 import Map from "./Map";
 import API, { APIOptions } from "./API";
 import { requiredParam } from "./util";
+import { sendAnalyticsCodeEvent } from "./analytics";
 
 // Wait to load Preact's debug module until the page is loaded since it assumes
 // document.body exists, which is not true if someone loads our script in the
@@ -44,8 +44,6 @@ if (document.readyState === "complete") {
 // This is kinda irritating, but importing package.json just to get the version
 // is a waste of kilobytes, so we're using webpack's DefinePlugin to do a macro
 
-/* global GLOBAL_VERSION */
-
 type APIContext = {
   api?: AxiosInstance;
 };
@@ -54,63 +52,7 @@ const context: APIContext = {
   api: undefined
 };
 
-const pixelRatio = window.devicePixelRatio || 1;
-const screen = window.screen;
-const screenRes = `${screen.width * pixelRatio}x${screen.height * pixelRatio}`;
-
-// TODO: Move this to internal only file
-type SendAnalyticsCodeEventOptions = {
-  action: string;
-  locationID: string;
-  onTagsUpdate?: boolean;
-  tagsFilter?: boolean;
-  placemarksFilter?: boolean;
-  internalUpdate?: boolean;
-  youAreHerePlacemarkID?: string;
-  destinationID?: string;
-};
-
-// TODO: Move this to internal only file
-export async function sendAnalyticsCodeEvent({
-  action,
-  locationID,
-  onTagsUpdate = false,
-  tagsFilter = false,
-  placemarksFilter = false,
-  internalUpdate = false,
-  youAreHerePlacemarkID = undefined,
-  destinationID = undefined
-}: SendAnalyticsCodeEventOptions) {
-  const params = {
-    v: "1", // GA version
-    tid: "UA-56747301-5", // Tracking ID
-    an: "MeridianSDK", // Application Name
-    ds: "app", // Data Source
-    av: GLOBAL_VERSION, // Application Version
-    uid: locationID, // User ID
-    cid: locationID, // Client ID
-    t: "event", // Hit Type
-    ec: "code", // Event Category
-    ea: action, // Event Action
-    ev: 1, // Event Value
-    el: internalUpdate ? "internal" : "external", // Event Label
-    cm1: onTagsUpdate ? 1 : 0, // Custom Metric
-    cm2: tagsFilter ? 1 : 0, // Custom Metric
-    cm3: placemarksFilter ? 1 : 0, // Custom Metric
-    cm4: youAreHerePlacemarkID, // Source Placemark ID for Directions
-    cm5: destinationID, // Destination Placemark ID for Directions
-    ul: navigator.language, // User Language
-    sr: screenRes, // Screen Resolution
-    aip: 1, // Anonymize IP
-    ua: window.navigator.userAgent, // User Agent
-    z: Math.random()
-      .toString(36)
-      .substring(7) // Cache Buster (per google)
-  };
-
-  axios.get("https://www.google-analytics.com/collect", { params });
-}
-
+/* global GLOBAL_VERSION */
 export const version = GLOBAL_VERSION;
 
 export function restrictedPanZoom(event: TouchEvent | WheelEvent | MouseEvent) {

@@ -11,7 +11,7 @@
     "prepack": "npm run build",
     "build": "rm -rf dist && mkdir dist && webpack -p --mode production --env production",
     "analyze": "webpack -p --mode production --env analyze",
-    "version": "bash bin/postversion.sh",
+    "postversion": "bash bin/postversion.sh",
     "postpublish": "bash bin/deploy.sh",
     "test": "bash bin/test.sh"
   },

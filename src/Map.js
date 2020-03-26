@@ -2,6 +2,7 @@
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
+import { event as currentEvent } from "d3-selection";
 
 import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
@@ -370,7 +371,7 @@ export default class Map extends Component {
         // Don't destructure this at the top of the file because we need d3 to
         // hook until whatever the latest version of the function is, even if it
         // has changed since this callback was registered
-        .filter(() => this.props.shouldMapPanZoom(d3.event))
+        .filter(() => this.props.shouldMapPanZoom(currentEvent))
         // TODO: We're gonna need to calculate reasonable extents here based on
         // the container size and the map size
         .scaleExtent([1 / 16, 14])

@@ -41,6 +41,7 @@
     "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
+    "@types/d3-zoom": "^1.7.4",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
     "acorn": "^7.1.0",

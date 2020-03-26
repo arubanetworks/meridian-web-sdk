@@ -25,7 +25,7 @@ type OpenStreamOptions = {
   locationID: string;
   floorID: string;
   onInitialTags?: (tags: Record<string, any>[]) => void;
-  onTagsUpdate?: () => void;
+  onTagUpdate?: () => void;
   onTagLeave?: () => void;
   onClose?: () => void;
   onException?: () => void;
@@ -93,7 +93,7 @@ export default class API {
     connection.on("authenticated", subscribe);
     connection.on("unauthenticated", options.onClose || emptyFn);
     connection.on("assets", options.onInitialTags || emptyFn);
-    connection.on("asset_update", options.onTagsUpdate || emptyFn);
+    connection.on("asset_update", options.onTagUpdate || emptyFn);
     connection.on("asset_delete", options.onTagLeave || emptyFn);
     return {
       close: () => connection.close()

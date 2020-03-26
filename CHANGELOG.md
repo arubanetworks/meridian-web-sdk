@@ -1,7 +1,7 @@
 # v?.?.? (????-??-??)
 
 - Adds TypeScript support
-- Fixes a bug where `onTagsUpdate` was not called from `createAPI`
+- Fixes a bug where `onTagUpdate` was not called from `createAPI`
 - Fixes a bug where if `showTagsControl` was false, all control tags would be
   hidden on the map
 - Fixes a bug where the map background image would fail to load unless the user also had access to <https://edit.meridianapps.com>.

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Tag Label - openStream | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script src="../shared.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .map {
+        max-width: 500px;
+        margin: auto;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="react-root"></div>
+    </div>
+
+    <script src="../meridian-sdk.js"></script>
+    <script type="text/babel" id="the-code">
+      // ---^^^ SDK setup ^^^---
+      const myApi = MeridianSDK.createAPI({
+        environment: "production",
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+      });
+
+      // ---vvv UI controls vvv---
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            tagLabels: [],
+            selectedLabel: null,
+            socketInstances: []
+          };
+        }
+
+        initMeridianMap = element => {
+          this.map = MeridianSDK.createMap(element, {
+            api: myApi,
+            locationID: "5198682008846336",
+            floorID: "5755685136498688",
+            height: "360px",
+            onTagsUpdate: this.onTagsUpdate,
+            showTagsControl: false
+          });
+        };
+
+        openSocket = () => {
+          const newSocket = myApi.openStream({
+            locationID: "5468665088573440",
+            floorID: "5653104741580800",
+            onInitialTags: function(tags) {
+              console.log("onInitialTags", tags);
+            },
+            onTagUpdate: function(tags) {
+              console.log("onTagUpdate", tags);
+            },
+            onTagLeave: function(tag) {
+              console.log("onTagLeave", tag);
+            },
+            onException: function(err) {
+              console.log("onException", err);
+            },
+            onClose: function() {
+              console.log("onClose");
+            }
+          });
+        };
+
+        render() {
+          return <p>Open the Dev Tools to see the socket output.</p>;
+        }
+      }
+
+      ReactDOM.render(<App />, document.getElementById("react-root"));
+    </script>
+  </body>
+</html>

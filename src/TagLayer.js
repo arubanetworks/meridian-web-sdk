@@ -138,7 +138,7 @@ export default class TagLayer extends Component {
       onTagDisappear: data => {
         this.removeTag(data);
       },
-      onTagsUpdate: data => {
+      onTagUpdate: data => {
         this.handleTagUpdates([data]);
       },
       onClose: () => {

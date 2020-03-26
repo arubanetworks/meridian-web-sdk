@@ -1,8 +1,10 @@
-# v?.?.? (????-??-??)
+# v0.6.0 (2020-03-26)
 
 - Adds TypeScript support
-- Fixes bug where `onTagsUpdate` was not called from `createAPI`
-- Fixes bug where `showControlTags` was not used
+- Fixes a bug where `onTagUpdate` was not called from `createAPI`
+- Fixes a bug where if `showTagsControl` was false, all control tags would be
+  hidden on the map
+- Fixes a bug where the map background image would fail to load unless the user also had access to <https://edit.meridianapps.com>.
 
 # v0.5.0 (2019-02-25)
 

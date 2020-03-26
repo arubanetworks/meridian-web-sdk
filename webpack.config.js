@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 "use strict";
 
 const path = require("path");
@@ -27,10 +28,7 @@ const common = {
     fs: "empty"
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"],
-    alias: {
-      d3: path.resolve(__dirname, "src/d3")
-    }
+    extensions: [".ts", ".tsx", ".js"]
   },
   entry: path.resolve(__dirname, "src/index.tsx"),
   output: {

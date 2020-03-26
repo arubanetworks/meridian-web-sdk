@@ -1,7 +1,12 @@
 /** @jsx h */
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
-import * as d3 from "d3";
+import {
+  zoom as d3Zoom,
+  zoomTransform as d3ZoomTransform,
+  zoomIdentity as d3ZoomIdentity
+} from "d3-zoom";
+import { select as d3Select, event as d3Event } from "d3-selection";
 
 import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
@@ -100,6 +105,7 @@ export default class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      mapImageURL: null,
       isFloorOverlayOpen: false,
       isTagListOverlayOpen: false,
       isMapMarkerOverlayOpen: false,
@@ -143,13 +149,20 @@ export default class Map extends Component {
       this.initializeFloors();
       this.updatePlacemarks();
       this.initializeTags();
+      this.fetchMapImageURL();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
       this.validateFloorID();
+    }
+    if (
+      prevProps.floorID !== this.props.floorID ||
+      prevState.floors !== this.state.floors
+    ) {
+      this.fetchMapImageURL();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
       this.setState({
@@ -163,6 +176,17 @@ export default class Map extends Component {
     if (this.tagsTimeout) {
       clearTimeout(this.tagsTimeout);
     }
+  }
+
+  async fetchMapImageURL() {
+    const mapData = this.getMapData();
+    if (!mapData) {
+      return;
+    }
+    const response = await this.props.api.axios.get(mapData.svg_url, {
+      responseType: "blob"
+    });
+    this.setState({ mapImageURL: URL.createObjectURL(response.data) });
   }
 
   updateMap = newOptions => {
@@ -187,7 +211,7 @@ export default class Map extends Component {
     // they switch back. Might even make sense to block updates while the tag
     // list is open?
     const loop = async () => {
-      const { api, locationID, tags } = this.props;
+      const { api, locationID } = this.props;
       const floorID = STREAM_ALL_FLOORS;
       const allTagData = await fetchAllTags({ api, locationID, floorID });
       this.setState({
@@ -335,7 +359,7 @@ export default class Map extends Component {
   addZoomBehavior() {
     if (this.mapRef) {
       const onZoom = () => {
-        const { k, x, y } = d3.zoomTransform(this.mapRef);
+        const { k, x, y } = d3ZoomTransform(this.mapRef);
         const t = `translate(${x}px, ${y}px) scale(${k})`;
         this.setState({
           mapTransform: t,
@@ -346,12 +370,11 @@ export default class Map extends Component {
       const onZoomEnd = () => {
         this.setState({ isPanningOrZooming: false });
       };
-      this.zoomD3 = d3
-        .zoom()
+      this.zoomD3 = d3Zoom()
         // Don't destructure this at the top of the file because we need d3 to
         // hook until whatever the latest version of the function is, even if it
         // has changed since this callback was registered
-        .filter(() => this.props.shouldMapPanZoom(d3.event))
+        .filter(() => this.props.shouldMapPanZoom(d3Event))
         // TODO: We're gonna need to calculate reasonable extents here based on
         // the container size and the map size
         .scaleExtent([1 / 16, 14])
@@ -359,7 +382,7 @@ export default class Map extends Component {
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom)
         .on("end.zoom", onZoomEnd);
-      this.mapSelection = d3.select(this.mapRef);
+      this.mapSelection = d3Select(this.mapRef);
       this.mapSelection.call(this.zoomD3);
     }
   }
@@ -392,7 +415,7 @@ export default class Map extends Component {
   zoomToPoint = (x, y, k) => {
     const { width, height } = this.getMapRefSize();
     // I'm so sorry, but it's really hard to center things, and also math
-    const t = d3.zoomIdentity
+    const t = d3ZoomIdentity
       .translate(-k * x + width / 2, -k * y + height / 2)
       .scale(k);
     this.mapSelection
@@ -589,6 +612,7 @@ export default class Map extends Component {
   render() {
     const mapData = this.getMapData();
     const {
+      mapImageURL,
       selectedItem,
       mapTransform,
       mapZoomFactor,
@@ -648,7 +672,7 @@ export default class Map extends Component {
             }}
           >
             <img
-              src={mapData && mapData.svg_url}
+              src={mapImageURL}
               ref={el => {
                 this.mapImage = el;
               }}

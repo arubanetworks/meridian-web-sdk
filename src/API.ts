@@ -21,6 +21,16 @@ const envToRestURL = {
   staging: "https://staging-edit.meridianapps.com/websdk/api"
 };
 
+type OpenStreamOptions = {
+  locationID: string;
+  floorID: string;
+  onInitialTags?: (tags: Record<string, any>[]) => void;
+  onTagUpdate?: (tag: Record<string, any>) => void;
+  onTagLeave?: (tag: Record<string, any>) => void;
+  onClose?: () => void;
+  onException?: (error: Error) => void;
+};
+
 // This is intentionally not exported from package as a whole
 export const STREAM_ALL_FLOORS =
   "__secret_internal_stream_all_floors_DO_NOT_USE";
@@ -47,51 +57,44 @@ export default class API {
     });
   }
 
-  openStream(params: {
-    locationID: string;
-    floorID: string;
-    onInitialTags?: () => void;
-    onTagsUpdate?: () => void;
-    onTagLeave?: () => void;
-    onClose?: () => void;
-    onException?: () => void;
-  }) {
-    if (!params.locationID) {
+  openStream(options: OpenStreamOptions) {
+    if (!options.locationID) {
       requiredParam("openStream", "locationID");
     }
-    if (!params.floorID) {
+    if (!options.floorID) {
       requiredParam("openStream", "floorID");
     }
+    const emptyFn = () => {};
     const connection = SocketIO.connect(envToTagURL[this.environment], {
       path: tagPath,
       transports: ["websocket"]
     });
     const authenticate = () => {
       connection.emit("authenticate", {
-        locationID: params.locationID,
+        locationID: options.locationID,
         token: this.token
       });
     };
     const subscribe = () => {
       // Make sure you have to explicitly opt-in to streaming all floors data
-      if (params.floorID === STREAM_ALL_FLOORS) {
-        connection.emit("subscribe", { locationID: params.locationID });
+      if (options.floorID === STREAM_ALL_FLOORS) {
+        connection.emit("subscribe", { locationID: options.locationID });
       } else {
         connection.emit("subscribe", {
-          locationID: params.locationID,
-          mapID: params.floorID
+          locationID: options.locationID,
+          mapID: options.floorID
         });
       }
     };
     connection.on("connect", authenticate);
-    connection.on("connect_error", params.onClose);
-    connection.on("disconnect", params.onClose);
-    connection.on("exception", params.onException);
+    connection.on("connect_error", options.onClose || emptyFn);
+    connection.on("disconnect", options.onClose || emptyFn);
+    connection.on("exception", options.onException || emptyFn);
     connection.on("authenticated", subscribe);
-    connection.on("unauthenticated", params.onClose);
-    connection.on("assets", params.onInitialTags);
-    connection.on("asset_update", params.onTagsUpdate);
-    connection.on("asset_delete", params.onTagLeave);
+    connection.on("unauthenticated", options.onClose || emptyFn);
+    connection.on("assets", options.onInitialTags || emptyFn);
+    connection.on("asset_update", options.onTagUpdate || emptyFn);
+    connection.on("asset_delete", options.onTagLeave || emptyFn);
     return {
       close: () => connection.close()
     };

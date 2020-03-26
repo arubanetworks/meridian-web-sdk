@@ -76,7 +76,7 @@ const ZoomButton = ({ onClick, dir }) => {
 };
 
 ZoomButton.propTypes = {
-  zoomD3: PropTypes.node,
+  zoomD3: PropTypes.any,
   dir: PropTypes.oneOf(["in", "out"])
 };
 

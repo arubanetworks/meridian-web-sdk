@@ -148,10 +148,15 @@ export default class Map extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
       this.validateFloorID();
+    }
+    if (
+      prevProps.floorID !== this.props.floorID ||
+      prevState.floors !== this.state.floors
+    ) {
       this.fetchMapImageURL();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
@@ -169,7 +174,6 @@ export default class Map extends Component {
   }
 
   async fetchMapImageURL() {
-    console.warn("fetchMapImageURL()");
     const mapData = this.getMapData();
     if (!mapData) {
       return;
@@ -177,7 +181,6 @@ export default class Map extends Component {
     const response = await this.props.api.axios.get(mapData.svg_url, {
       responseType: "blob"
     });
-    console.log(response.data);
     this.setState({ mapImageURL: URL.createObjectURL(response.data) });
   }
 

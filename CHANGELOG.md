@@ -1,4 +1,4 @@
-# v?.?.? (????-??-??)
+# v0.6.0 (2020-03-26)
 
 - Adds TypeScript support
 - Fixes a bug where `onTagUpdate` was not called from `createAPI`

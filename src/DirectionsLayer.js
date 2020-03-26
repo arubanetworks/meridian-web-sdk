@@ -6,11 +6,11 @@ import { css } from "./style";
 
 export default function DirectionsLayer(props) {
   // convert all points to float (they're strings by default) and flatten the result
-  let steps = props.routeSteps.flatMap(step => {
+  const steps = props.routeSteps.flatMap(step => {
     const arr = step.split(",");
     return arr.map(point => Number(point));
   });
-  let pointsArray = [];
+  const pointsArray = [];
   for (let i = 0; i < steps.length - 2; i += 2) {
     const x1 = steps[i];
     const y1 = steps[i + 1];

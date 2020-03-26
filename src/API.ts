@@ -25,10 +25,10 @@ type OpenStreamOptions = {
   locationID: string;
   floorID: string;
   onInitialTags?: (tags: Record<string, any>[]) => void;
-  onTagUpdate?: () => void;
-  onTagLeave?: () => void;
+  onTagUpdate?: (tag: Record<string, any>) => void;
+  onTagLeave?: (tag: Record<string, any>) => void;
   onClose?: () => void;
-  onException?: () => void;
+  onException?: (error: Error) => void;
 };
 
 // This is intentionally not exported from package as a whole

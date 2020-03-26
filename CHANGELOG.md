@@ -1,6 +1,7 @@
 # v0.6.0 (2020-03-26)
 
 - Adds TypeScript support
+- `MeridianSDK.restrictedPanZoom` now supports any modifier key, not just Shift
 - Fixes a bug where `onTagUpdate` was not called from `createAPI`
 - Fixes a bug where if `showTagsControl` was false, all control tags would be
   hidden on the map

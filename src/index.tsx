@@ -56,8 +56,8 @@ const context: APIContext = {
 export const version = GLOBAL_VERSION;
 
 export function restrictedPanZoom(event: TouchEvent | WheelEvent | MouseEvent) {
-  if (event instanceof WheelEvent && !event.shiftKey) {
-    return false;
+  if (event instanceof WheelEvent) {
+    return event.shiftKey || event.altKey || event.ctrlKey || event.metaKey;
   } else if (event instanceof TouchEvent) {
     return event.touches.length >= 2;
   }

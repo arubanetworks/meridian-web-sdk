@@ -4,6 +4,8 @@ set -eu
 # This script deploys the demos to the GH Pages site and also deploys the
 # current version of the SDK to our GCS bucket
 
+
+
 bold=$'\e[1m'
 cyan=$'\e[36m'
 clear=$'\e[0m'
@@ -47,8 +49,10 @@ gsutil cp -Z \
 
 Heading "==> https://files.meridianapps.com/meridian-web-sdk/${version}/meridian-sdk.js"
 
-Heading "* Deploying examples to GH Pages..."
-npx gh-pages --dist dist
+if [[ "$SKIP_POSTPUBLISH" != "true" ]]; then
+  Heading "* Deploying examples to GH Pages..."
+  npx gh-pages --dist dist
+fi
 
 Heading "* Cleaning up build files..."
 rm -rf dist

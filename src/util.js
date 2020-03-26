@@ -38,6 +38,22 @@ export function getAssetURL(suffix) {
   return `${ASSETS_URL}/${suffix}`;
 }
 
+export function getDirections({
+  api,
+  locationID,
+  fromMapID,
+  fromPlacemarkID,
+  toPlacemarkID
+}) {
+  return api.axios.get(`/locations/${locationID}/directions`, {
+    params: {
+      from_map_id: fromMapID,
+      from_placemark_id: fromPlacemarkID,
+      to_placemark_ids: toPlacemarkID
+    }
+  });
+}
+
 export function getPlacemarkIconURL(type) {
   const name = "placemark-" + type.replace(/_/g, "-");
   return getAssetURL(`placemarks/${name}.svg`);
@@ -73,6 +89,7 @@ export function validateEnvironment(env) {
     env === "staging" ||
     env === "production" ||
     env === "eu" ||
-    env === "development"
+    env === "development" ||
+    env === "devCloud"
   );
 }

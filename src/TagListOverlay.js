@@ -1,3 +1,4 @@
+/** @jsx h */
 // TODO (2018-09-17) Brian Mock
 // - Probably share some code with FloorOverlay eventually
 
@@ -224,7 +225,7 @@ TagListOverlay.propTypes = {
   loading: PropTypes.bool.isRequired,
   tags: PropTypes.arrayOf(PropTypes.object).isRequired,
   showControlTags: PropTypes.bool.isRequired,
-  floors: PropTypes.object.isRequired,
+  floors: PropTypes.array.isRequired,
   tagOptions: PropTypes.object.isRequired,
   updateMap: PropTypes.func.isRequired,
   api: PropTypes.object.isRequired,

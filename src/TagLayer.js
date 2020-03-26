@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
@@ -11,7 +12,7 @@ export default class TagLayer extends Component {
   };
 
   static propTypes = {
-    selectedItem: PropTypes.object.isRequired,
+    selectedItem: PropTypes.object,
     isPanningOrZooming: PropTypes.bool.isRequired,
     mapZoomFactor: PropTypes.number.isRequired,
     locationID: PropTypes.string.isRequired,

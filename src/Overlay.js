@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h } from "preact";
 import PropTypes from "prop-types";
 
@@ -73,7 +74,7 @@ const Overlay = ({ position, onCloseClicked, children }) => (
 
 Overlay.propTypes = {
   position: PropTypes.oneOf(["left", "right"]).isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.any.isRequired,
   onCloseClicked: PropTypes.func.isRequired
 };
 

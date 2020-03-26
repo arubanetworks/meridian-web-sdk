@@ -1,3 +1,4 @@
+/** @jsx h */
 import { h } from "preact";
 import PropTypes from "prop-types";
 
@@ -10,7 +11,8 @@ const MapMarker = ({
   data,
   mapZoomFactor,
   disabled,
-  onClick = () => {}
+  onClick = () => {},
+  youAreHerePlacemarkID
 }) => {
   if (kind === "tag") {
     return (
@@ -34,6 +36,7 @@ const MapMarker = ({
           onClick(data);
         }}
         disabled={disabled}
+        youAreHerePlacemarkID={youAreHerePlacemarkID}
       />
     );
   }
@@ -41,12 +44,13 @@ const MapMarker = ({
 };
 
 MapMarker.propTypes = {
-  selectedItem: PropTypes.object.isRequired,
+  selectedItem: PropTypes.object,
   mapZoomFactor: PropTypes.number.isRequired,
   kind: PropTypes.string.isRequired,
   data: PropTypes.object.isRequired,
   onClick: PropTypes.func,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  youAreHerePlacemarkID: PropTypes.string
 };
 
 export default MapMarker;

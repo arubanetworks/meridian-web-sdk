@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 "use strict";
 
 const path = require("path");
@@ -15,8 +16,8 @@ const common = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        use: "babel-loader",
+        test: /\.(js|ts|tsx)$/,
+        use: [{ loader: "ts-loader" }],
         exclude: /node_modules/
       }
     ]
@@ -27,11 +28,9 @@ const common = {
     fs: "empty"
   },
   resolve: {
-    alias: {
-      d3: path.resolve(__dirname, "src/d3")
-    }
+    extensions: [".ts", ".tsx", ".js"]
   },
-  entry: path.resolve(__dirname, "src/index.js"),
+  entry: path.resolve(__dirname, "src/index.tsx"),
   output: {
     filename: "meridian-sdk.js",
     library: "MeridianSDK",

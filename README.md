@@ -29,7 +29,7 @@ var MeridianSDK = require("@meridian/web-sdk");
 Or for ES modules imports:
 
 ```js
-import MeridianSDK from "@meridian/web-sdk";
+import * as MeridianSDK from "@meridian/web-sdk";
 ```
 
 If you would like a standalone JS file with all dependencies bundled that you can use from a script tag, [download][] the latest version and include it:

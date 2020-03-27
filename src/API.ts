@@ -78,10 +78,14 @@ export default class API {
     });
     ws.addEventListener("message", event => {
       console.log("message", JSON.parse(event.data));
-      // const data = JSON.parse(event.data);
+      const data = JSON.parse(event.data);
       // TODO decide whether to call onTagUpdate or onTagLeave
       // Either a .error or .result depending on the type of message
-      options.onTagUpdate?.(JSON.parse(event.data).result.asset_updates[0]);
+      if (data.error) {
+        options.onException?.(new Error(data.error.message));
+      } else if (data.result) {
+        options.onTagUpdate?.(data.result.asset_updates[0]);
+      }
     });
     ws.addEventListener("error", event => {
       console.log("error", event);

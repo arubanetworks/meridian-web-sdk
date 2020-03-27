@@ -22,16 +22,6 @@ const envToRestURL = {
   staging: "https://staging-edit.meridianapps.com/websdk/api"
 };
 
-type OpenStreamOptions = {
-  locationID: string;
-  floorID: string;
-  onInitialTags?: (tags: Record<string, any>[]) => void;
-  onTagUpdate?: (tag: Record<string, any>) => void;
-  onTagLeave?: (tag: Record<string, any>) => void;
-  onClose?: () => void;
-  onException?: (error: Error) => void;
-};
-
 // This is intentionally not exported from package as a whole
 export const STREAM_ALL_FLOORS =
   "__secret_internal_stream_all_floors_DO_NOT_USE";
@@ -59,46 +49,49 @@ export default class API {
   }
 
   // TODO stream
-  openStream(options: OpenStreamOptions) {
+  openStream(options: {
+    locationID: string;
+    floorID: string;
+    onInitialTags?: (tags: Record<string, any>[]) => void;
+    onTagUpdate?: (tag: Record<string, any>) => void;
+    onTagLeave?: (tag: Record<string, any>) => void;
+    onClose?: () => void;
+    onException?: (error: Error) => void;
+  }) {
+    // TODO: Add re-connect logic?
     if (!options.locationID) {
       requiredParam("openStream", "locationID");
     }
     if (!options.floorID) {
       requiredParam("openStream", "floorID");
     }
-    const emptyFn = () => {};
-    const connection = SocketIO.connect(envToTagURL[this.environment], {
-      path: tagPath,
-      transports: ["websocket"]
+    const ws = new WebSocket(
+      `wss://staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Bearer+${this.token}`
+    );
+    const request = {
+      asset_requests: [
+        {
+          resource_type: "LOCATION",
+          location_id: options.locationID
+        }
+      ]
+    };
+    ws.addEventListener("open", event => {
+      console.log(event);
+      ws.send(JSON.stringify(request));
     });
-    const authenticate = () => {
-      connection.emit("authenticate", {
-        locationID: options.locationID,
-        token: this.token
-      });
-    };
-    const subscribe = () => {
-      // Make sure you have to explicitly opt-in to streaming all floors data
-      if (options.floorID === STREAM_ALL_FLOORS) {
-        connection.emit("subscribe", { locationID: options.locationID });
-      } else {
-        connection.emit("subscribe", {
-          locationID: options.locationID,
-          mapID: options.floorID
-        });
-      }
-    };
-    connection.on("connect", authenticate);
-    connection.on("connect_error", options.onClose || emptyFn);
-    connection.on("disconnect", options.onClose || emptyFn);
-    connection.on("exception", options.onException || emptyFn);
-    connection.on("authenticated", subscribe);
-    connection.on("unauthenticated", options.onClose || emptyFn);
-    connection.on("assets", options.onInitialTags || emptyFn);
-    connection.on("asset_update", options.onTagUpdate || emptyFn);
-    connection.on("asset_delete", options.onTagLeave || emptyFn);
+    ws.addEventListener("message", event => {
+      console.log("message", JSON.parse(event.data));
+    });
+    ws.addEventListener("error", event => {
+      console.log("error", event);
+    });
+    ws.addEventListener("close", event => {
+      console.log("close", event);
+      options.onClose?.();
+    });
     return {
-      close: () => connection.close()
+      close: () => ws.close()
     };
   }
 }

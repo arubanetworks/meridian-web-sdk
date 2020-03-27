@@ -72,6 +72,13 @@ export default class API {
         }
       ]
     };
+
+    this.axios
+      .post(`https://staging-tags.meridianapps.com/api/v1/track/assets`)
+      .then(response => {
+        console.log(response);
+      });
+
     ws.addEventListener("open", event => {
       console.log(event);
       ws.send(JSON.stringify(request));
@@ -80,7 +87,6 @@ export default class API {
       console.log("message", JSON.parse(event.data));
       const data = JSON.parse(event.data);
       // TODO decide whether to call onTagUpdate or onTagLeave
-      // Either a .error or .result depending on the type of message
       if (data.error) {
         options.onException?.(new Error(data.error.message));
       } else if (data.result) {

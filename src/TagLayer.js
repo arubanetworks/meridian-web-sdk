@@ -163,6 +163,7 @@ export default class TagLayer extends Component {
   }
 
   filterControlTags(tags) {
+    console.info("tags", tags);
     const { markers } = this.props;
     return tags.filter(tag => {
       if (markers.showControlTags !== true) {

@@ -81,7 +81,7 @@ export default class API {
     ws.addEventListener("message", event => {
       console.log("message", JSON.parse(event.data));
       // TODO decide whether to call onTagUpdate or onTagLeave
-      options.onTagUpdate?.(JSON.parse(event.data));
+      options.onTagUpdate?.(JSON.parse(event.data).result.asset_updates[0]);
     });
     ws.addEventListener("error", event => {
       console.log("error", event);

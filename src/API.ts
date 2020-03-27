@@ -61,7 +61,6 @@ export default class API {
     if (!options.floorID) {
       requiredParam("openStream", "floorID");
     }
-
     const ws = new WebSocket(
       `wss://staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Token%20${this.token}`
     );
@@ -73,14 +72,15 @@ export default class API {
         }
       ]
     };
-
     ws.addEventListener("open", event => {
       console.log(event);
       ws.send(JSON.stringify(request));
     });
     ws.addEventListener("message", event => {
       console.log("message", JSON.parse(event.data));
+      // const data = JSON.parse(event.data);
       // TODO decide whether to call onTagUpdate or onTagLeave
+      // Either a .error or .result depending on the type of message
       options.onTagUpdate?.(JSON.parse(event.data).result.asset_updates[0]);
     });
     ws.addEventListener("error", event => {

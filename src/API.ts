@@ -1,18 +1,14 @@
-import SocketIO from "socket.io-client";
 import axios, { AxiosInstance } from "axios";
 
 import { requiredParam } from "./util";
 
-const envToTagURL = {
-  development: "https://tags.meridianapps.com",
-  devCloud: "https://dev-tags.meridianapps.com",
-  production: "https://tags.meridianapps.com",
-  eu: "https://tags-eu.meridianapps.com",
-  staging: "https://staging-tags.meridianapps.com"
-};
-
-// TODO stream
-const tagPath = "/streams/v1beta2/tracking/websocket";
+// const envToTagURL = {
+//   development: "https://tags.meridianapps.com",
+//   devCloud: "https://dev-tags.meridianapps.com",
+//   production: "https://tags.meridianapps.com",
+//   eu: "https://tags-eu.meridianapps.com",
+//   staging: "https://staging-tags.meridianapps.com"
+// };
 
 const envToRestURL = {
   development: "http://localhost:8091/websdk/api",
@@ -66,7 +62,7 @@ export default class API {
       requiredParam("openStream", "floorID");
     }
     const ws = new WebSocket(
-      `wss://staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Bearer+${this.token}`
+      `wss://staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Bearer%20${this.token}`
     );
     const request = {
       asset_requests: [

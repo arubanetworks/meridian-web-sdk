@@ -49,8 +49,8 @@ export default class API {
     locationID: string;
     floorID: string;
     onInitialTags?: (tags: Record<string, any>[]) => void;
-    onTagUpdate?: (tag: Record<string, any>) => void;
     onTagLeave?: (tag: Record<string, any>) => void;
+    onTagUpdate?: (tag: Record<string, any>) => void;
     onClose?: () => void;
     onException?: (error: Error) => void;
   }) {
@@ -61,8 +61,9 @@ export default class API {
     if (!options.floorID) {
       requiredParam("openStream", "floorID");
     }
+
     const ws = new WebSocket(
-      `wss://staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Bearer%20${this.token}`
+      `wss://staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Token%20${this.token}`
     );
     const request = {
       asset_requests: [
@@ -72,15 +73,21 @@ export default class API {
         }
       ]
     };
+
     ws.addEventListener("open", event => {
       console.log(event);
       ws.send(JSON.stringify(request));
     });
     ws.addEventListener("message", event => {
       console.log("message", JSON.parse(event.data));
+      // TODO decide whether to call onTagUpdate or onTagLeave
+      options.onTagUpdate?.(JSON.parse(event.data));
     });
     ws.addEventListener("error", event => {
       console.log("error", event);
+      options.onException?.(
+        new Error("MeridianSDK.openStream connection error")
+      );
     });
     ws.addEventListener("close", event => {
       console.log("close", event);

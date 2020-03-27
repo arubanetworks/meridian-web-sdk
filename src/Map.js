@@ -205,6 +205,7 @@ export default class Map extends Component {
     }
   }
 
+  // TODO stream
   initializeTags() {
     // TODO: We should update this to not poll for updates unless the tab is
     // active. In that case it would also make sense to ask for an update when
@@ -213,6 +214,7 @@ export default class Map extends Component {
     const loop = async () => {
       const { api, locationID } = this.props;
       const floorID = STREAM_ALL_FLOORS;
+      // TODO get all assets
       const allTagData = await fetchAllTags({ api, locationID, floorID });
       this.setState({
         areTagsLoading: false,

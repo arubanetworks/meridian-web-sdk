@@ -11,6 +11,7 @@ const envToTagURL = {
   staging: "https://staging-tags.meridianapps.com"
 };
 
+// TODO stream
 const tagPath = "/streams/v1beta2/tracking/websocket";
 
 const envToRestURL = {
@@ -57,6 +58,7 @@ export default class API {
     });
   }
 
+  // TODO stream
   openStream(options: OpenStreamOptions) {
     if (!options.locationID) {
       requiredParam("openStream", "locationID");

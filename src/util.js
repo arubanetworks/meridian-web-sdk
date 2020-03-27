@@ -71,6 +71,7 @@ export async function fetchAllPaginatedData(api, url) {
   return results;
 }
 
+// TODO stream (use non-stream endpoint)
 export async function fetchAllTags({ api, locationID, floorID }) {
   return new Promise(resolve => {
     const stream = api.openStream({

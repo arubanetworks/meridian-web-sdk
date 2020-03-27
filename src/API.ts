@@ -76,7 +76,7 @@ export default class API {
     this.axios
       .post(`https://staging-tags.meridianapps.com/api/v1/track/assets`)
       .then(response => {
-        console.log(response);
+        console.log("initial tags", response);
       });
 
     ws.addEventListener("open", event => {

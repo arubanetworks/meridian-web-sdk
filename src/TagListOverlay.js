@@ -95,7 +95,7 @@ class TagListOverlay extends Component {
   getOrganizedTags(tags) {
     const floorToGroup = this.getFloorToGroup();
     return groupBy(tags, tag => {
-      return floorToGroup[tag.calculations.default.location.map_id];
+      return floorToGroup[tag.map_id];
     });
   }
 
@@ -104,7 +104,7 @@ class TagListOverlay extends Component {
     const groups = Object.keys(organizedTags).sort();
     groups.forEach((group, index) => {
       const floors = organizedTags[group];
-      if (floors[0].calculations.default.location.map_id === currentFloorID) {
+      if (floors[0].map_id === currentFloorID) {
         const [currentGroup] = groups.splice(index, 1);
         groups.unshift(currentGroup);
       }
@@ -133,14 +133,13 @@ class TagListOverlay extends Component {
     const processedTags = tags
       .filter(
         tag =>
-          match(tag.editor_data.name) ||
-          match(tag.mac) ||
-          getTagLabels(tag).some(match)
+          match(tag.name) || match(tag.mac) || getTagLabels(tag).some(match)
       )
       // TODO: Should we show hidden tags?
       .filter(tag => {
         if (tagOptions.showControlTags !== true) {
-          return !tag.editor_data.is_control_tag;
+          // TODO: This field is missing in Go tag tracker
+          return !tag.is_control_tag;
         }
         return true;
       })
@@ -169,8 +168,8 @@ class TagListOverlay extends Component {
                 className={cssOverlayTagButton}
                 onClick={() => {
                   updateMap({
-                    locationID: tag.calculations.default.location.location_id,
-                    floorID: tag.calculations.default.location.map_id,
+                    locationID: tag.location_id,
+                    floorID: tag.map_id,
                     tags: {
                       ...tagOptions,
                       filter: () => true
@@ -181,9 +180,7 @@ class TagListOverlay extends Component {
                 }}
               >
                 <div className={cssOverlayTagButtonInner}>
-                  <div className={cssOverlayTagButtonName}>
-                    {tag.editor_data.name}
-                  </div>
+                  <div className={cssOverlayTagButtonName}>{tag.name}</div>
                   <LabelList
                     align="right"
                     labels={getTagLabels(tag)}

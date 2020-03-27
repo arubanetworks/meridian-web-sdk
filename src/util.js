@@ -13,7 +13,7 @@ export function createSearchMatcher(query) {
 }
 
 export function getTagLabels(tag) {
-  return tag.editor_data.tags.map(tag => tag.name);
+  return (tag.tags || []).map(tag => tag.name);
 }
 
 export function requiredParam(funcName, argName) {

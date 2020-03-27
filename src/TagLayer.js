@@ -163,11 +163,11 @@ export default class TagLayer extends Component {
   }
 
   filterControlTags(tags) {
-    console.info("tags", tags);
     const { markers } = this.props;
     return tags.filter(tag => {
       if (markers.showControlTags !== true) {
-        return !tag.editor_data.is_control_tag;
+        // TODO: This field is missing in Go tag tracker
+        return !tag.is_control_tag;
       }
       return true;
     });

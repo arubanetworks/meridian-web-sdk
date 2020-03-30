@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-import { requiredParam } from "./util";
+import { requiredParam, fetchAllTags } from "./util";
 
 // const envToTagURL = {
 //   development: "https://tags.meridianapps.com",
@@ -44,7 +44,6 @@ export default class API {
     });
   }
 
-  // TODO stream
   openStream(options: {
     locationID: string;
     floorID: string;
@@ -73,18 +72,18 @@ export default class API {
       ]
     };
 
-    this.axios
-      .post(`https://staging-tags.meridianapps.com/api/v1/track/assets`)
-      .then(response => {
-        console.log("initial tags", response);
-      });
+    fetchAllTags({
+      api: this,
+      locationID: options.locationID,
+      floorID: options.floorID
+    }).then(response => {
+      options.onInitialTags?.(response.data?.asset_updates ?? []);
+    });
 
-    ws.addEventListener("open", event => {
-      console.log(event);
+    ws.addEventListener("open", () => {
       ws.send(JSON.stringify(request));
     });
     ws.addEventListener("message", event => {
-      console.log("message", JSON.parse(event.data));
       const data = JSON.parse(event.data);
       // TODO decide whether to call onTagUpdate or onTagLeave
       if (data.error) {
@@ -93,14 +92,12 @@ export default class API {
         options.onTagUpdate?.(data.result.asset_updates[0]);
       }
     });
-    ws.addEventListener("error", event => {
-      console.log("error", event);
+    ws.addEventListener("error", () => {
       options.onException?.(
         new Error("MeridianSDK.openStream connection error")
       );
     });
-    ws.addEventListener("close", event => {
-      console.log("close", event);
+    ws.addEventListener("close", () => {
       options.onClose?.();
     });
     return {

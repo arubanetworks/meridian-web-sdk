@@ -2,15 +2,27 @@ import axios, { AxiosInstance } from "axios";
 
 import { requiredParam } from "./util";
 
+// TODO (not for streaming)
 const envToTagURL = {
   //Update the environment from development to eu per Marc
-  development: "https://tags.meridianapps.com",
-  devCloud: "https://dev-tags.meridianapps.com",
-  production: "https://tags.meridianapps.com",
-  eu: "https://tags-eu.meridianapps.com",
+  development: "http://localhost:8091/api/v1/track/assets",
+  devCloud: "https://dev-tags.meridianapps.com/api/v1/track/assets",
+  production: "https://tags.meridianapps.com/api/v1/track/assets",
+  eu: "https://tags-eu.meridianapps.com/api/v1/track/assets",
   staging: "https://staging-tags.meridianapps.com/api/v1/track/assets"
 } as const;
 
+// TODO (for streaming)
+const envToStreamingTagURL = {
+  //Update the environment from development to eu per Marc
+  development: "ws://localhost:8091/streams/v1/track/assets",
+  devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
+  production: "wss://tags.meridianapps.com/streams/v1/track/assets",
+  eu: "wss://tags-eu.meridianapps.com/streams/v1/track/assets",
+  staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets"
+} as const;
+
+// TODO (placemarks, floors, map SVGs)
 const envToRestURL = {
   development: "http://localhost:8091/websdk/api",
   devCloud: "https://dev-edit.meridianapps.com/websdk/api",
@@ -78,7 +90,11 @@ export default class API {
       requiredParam("openStream", "floorID");
     }
     const ws = new WebSocket(
-      `wss://staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Token%20${this.token}`
+      `${
+        envToStreamingTagURL[this.environment]
+      }staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Token%20${
+        this.token
+      }`
     );
     const request = {
       asset_requests: [

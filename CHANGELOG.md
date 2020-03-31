@@ -2,6 +2,7 @@
 
 - Fixed a bug where tag labels wouldn't line wrap in the tag list
 - [BREAKING CHANGE] Tag data returned from API has a new schema
+- Switched TypeScript compiler to target ES2017
 
 # v0.6.0 (2020-03-26)
 

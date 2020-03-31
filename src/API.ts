@@ -34,25 +34,27 @@ export async function fetchTagsByFloor(options: {
   locationID: string;
   floorID: string;
 }) {
-  return await options.api.axios.post(
+  const response = await options.api.axios.post(
     envToTagTrackerRestURL[options.api.environment],
     {
       floor_id: options.floorID,
       location_id: options.locationID
     }
   );
+  return response.data.asset_updates;
 }
 
 export async function fetchTagsByLocation(options: {
   api: API;
   locationID: string;
 }) {
-  return await options.api.axios.post(
+  const response = await options.api.axios.post(
     envToTagTrackerRestURL[options.api.environment],
     {
       location_id: options.locationID
     }
   );
+  return response.data.asset_updates;
 }
 
 export default class API {

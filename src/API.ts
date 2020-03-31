@@ -2,9 +2,7 @@ import axios, { AxiosInstance } from "axios";
 
 import { requiredParam } from "./util";
 
-// TODO (not for streaming)
-const envToTagURL = {
-  //Update the environment from development to eu per Marc
+const envToTagTrackerRestURL = {
   development: "http://localhost:8091/api/v1/track/assets",
   devCloud: "https://dev-tags.meridianapps.com/api/v1/track/assets",
   production: "https://tags.meridianapps.com/api/v1/track/assets",
@@ -12,9 +10,7 @@ const envToTagURL = {
   staging: "https://staging-tags.meridianapps.com/api/v1/track/assets"
 } as const;
 
-// TODO (for streaming)
-const envToStreamingTagURL = {
-  //Update the environment from development to eu per Marc
+const envToTagTrackerStreamingURL = {
   development: "ws://localhost:8091/streams/v1/track/assets",
   devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
   production: "wss://tags.meridianapps.com/streams/v1/track/assets",
@@ -22,8 +18,7 @@ const envToStreamingTagURL = {
   staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets"
 } as const;
 
-// TODO (placemarks, floors, map SVGs)
-const envToRestURL = {
+const envToEditorRestURL = {
   development: "http://localhost:8091/websdk/api",
   devCloud: "https://dev-edit.meridianapps.com/websdk/api",
   production: "https://edit.meridianapps.com/websdk/api",
@@ -39,19 +34,25 @@ export async function fetchTagsByFloor(options: {
   locationID: string;
   floorID: string;
 }) {
-  return await options.api.axios.post(envToTagURL[options.api.environment], {
-    floor_id: options.floorID,
-    location_id: options.locationID
-  });
+  return await options.api.axios.post(
+    envToTagTrackerRestURL[options.api.environment],
+    {
+      floor_id: options.floorID,
+      location_id: options.locationID
+    }
+  );
 }
 
 export async function fetchTagsByLocation(options: {
   api: API;
   locationID: string;
 }) {
-  return await options.api.axios.post(envToTagURL[options.api.environment], {
-    location_id: options.locationID
-  });
+  return await options.api.axios.post(
+    envToTagTrackerRestURL[options.api.environment],
+    {
+      location_id: options.locationID
+    }
+  );
 }
 
 export default class API {
@@ -66,7 +67,7 @@ export default class API {
     this.token = options.token;
     this.environment = options.environment || "production";
     this.axios = axios.create({
-      baseURL: envToRestURL[this.environment],
+      baseURL: envToEditorRestURL[this.environment],
       headers: {
         Authorization: `Token ${options.token}`
       }
@@ -89,13 +90,11 @@ export default class API {
     if (!options.floorID) {
       requiredParam("openStream", "floorID");
     }
-    const ws = new WebSocket(
-      `${
-        envToStreamingTagURL[this.environment]
-      }staging-tags.meridianapps.com/streams/v1/track/assets?method=POST&authorization=Token%20${
-        this.token
-      }`
-    );
+    const params = new URLSearchParams();
+    params.set("method", "POST");
+    params.set("authorization", `Token ${this.token}`);
+    const url = envToTagTrackerStreamingURL[this.environment];
+    const ws = new WebSocket(`${url}?${params}`);
     const request = {
       asset_requests: [
         {

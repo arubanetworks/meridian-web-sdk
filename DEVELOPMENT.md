@@ -10,3 +10,7 @@ Update the download link on <https://docs.meridianapps.com/hc/en-us/articles/360
 ### Pre-Release/Beta Versions
 
 Run `BETA="____beta" SKIP_POSTPUBLISH=true npm version 0.0.0-____beta.0` to do a full npm, Google Cloud Storage deploy that publishes a beta version to npm and skips the GitHub Pages deploy.
+
+## Running Local Tag Tracker
+
+Local tag tracker requires Go and Redis to work correctly.

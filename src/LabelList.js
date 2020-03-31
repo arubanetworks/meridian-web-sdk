@@ -25,6 +25,7 @@ const getCSSLabelList = ({ align, fontSize }) =>
     label: "label-list",
     fontSize,
     marginTop: 8,
+    marginLeft: 3,
     textAlign: align,
     flex: "1 1 auto"
   });

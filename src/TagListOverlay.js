@@ -53,7 +53,7 @@ const cssOverlayTagButtonInner = css(mixins.flexRow, {
 
 const cssOverlayTagButtonName = css({
   label: "overlay-tags-button-name",
-  flex: "1 0 auto"
+  flex: "1 1 auto"
 });
 
 const cssTagListEmpty = css({

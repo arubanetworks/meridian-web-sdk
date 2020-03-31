@@ -122,11 +122,14 @@ export default class API {
       } else if (data.result) {
         // TODO!! update to handle if there is more than one item in the asset_updates array
         const assetUpdate = data.result.asset_updates[0];
+        const eventType = assetUpdate.event_type;
 
-        if (assetUpdate.event_type === "DELETE") {
+        if (eventType === "DELETE") {
           options.onTagLeave?.(assetUpdate);
-        } else {
+        } else if (eventType === "UPDATE") {
           options.onTagUpdate?.(assetUpdate);
+        } else {
+          throw new Error(`Unknown event type: ${eventType}`);
         }
       }
     });

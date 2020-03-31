@@ -1,3 +1,8 @@
+# v0.7.0 (????????)
+
+- Fixed a bug where tag labels wouldn't line wrap in the tag list
+- [BREAKING CHANGE] Tag data returned from API has a new schema
+
 # v0.6.0 (2020-03-26)
 
 - Adds TypeScript support

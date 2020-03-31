@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 
-import { requiredParam } from "./util";
+import { requiredParam, asyncClientCall } from "./util";
 
 const envToTagTrackerRestURL = {
   development: "http://localhost:8091/api/v1/track/assets",
@@ -120,16 +120,19 @@ export default class API {
       if (data.error) {
         options.onException?.(new Error(data.error.message));
       } else if (data.result) {
-        // TODO!! update to handle if there is more than one item in the asset_updates array
-        const assetUpdate = data.result.asset_updates[0];
-        const eventType = assetUpdate.event_type;
-
-        if (eventType === "DELETE") {
-          options.onTagLeave?.(assetUpdate);
-        } else if (eventType === "UPDATE") {
-          options.onTagUpdate?.(assetUpdate);
-        } else {
-          throw new Error(`Unknown event type: ${eventType}`);
+        for (const assetUpdate of data.result.asset_updates) {
+          const eventType = assetUpdate.event_type;
+          if (eventType === "DELETE") {
+            if (options.onTagLeave) {
+              asyncClientCall(options.onTagLeave, assetUpdate);
+            }
+          } else if (eventType === "UPDATE") {
+            if (options.onTagUpdate) {
+              asyncClientCall(options.onTagUpdate, assetUpdate);
+            }
+          } else {
+            throw new Error(`Unknown event type: ${eventType}`);
+          }
         }
       }
     });

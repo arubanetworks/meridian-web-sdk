@@ -117,11 +117,17 @@ export default class API {
     });
     ws.addEventListener("message", event => {
       const data = JSON.parse(event.data);
-      // TODO decide whether to call onTagUpdate or onTagLeave
       if (data.error) {
         options.onException?.(new Error(data.error.message));
       } else if (data.result) {
-        options.onTagUpdate?.(data.result.asset_updates[0]);
+        // TODO!! update to handle if there is more than one item in the asset_updates array
+        const assetUpdate = data.result.asset_updates[0];
+
+        if (assetUpdate.event_type === "DELETE") {
+          options.onTagLeave?.(assetUpdate);
+        } else {
+          options.onTagUpdate?.(assetUpdate);
+        }
       }
     });
     ws.addEventListener("error", () => {

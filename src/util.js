@@ -1,5 +1,3 @@
-import { STREAM_ALL_FLOORS } from "./API";
-
 const ASSETS_URL =
   "https://files.meridianapps.com/meridian-web-sdk-assets/0.2.0";
 
@@ -71,17 +69,6 @@ export async function fetchAllPaginatedData(api, url) {
     next = data.next;
   }
   return results;
-}
-
-export async function fetchAllTags({ api, locationID, floorID }) {
-  // TODO: Stop hard coding the URL
-  return await api.axios.post(
-    `https://staging-tags.meridianapps.com/api/v1/track/assets`,
-    {
-      floor_id: floorID === STREAM_ALL_FLOORS ? undefined : floorID,
-      location_id: locationID
-    }
-  );
 }
 
 export function validateEnvironment(env) {

@@ -19,13 +19,12 @@ import ErrorOverlay from "./ErrorOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
-import { STREAM_ALL_FLOORS } from "./API";
+import { fetchTagsByLocation } from "./API";
 import { css, cx } from "./style";
 import {
   fetchAllPaginatedData,
   asyncClientCall,
   validateEnvironment,
-  fetchAllTags,
   getDirections
 } from "./util";
 import { sendAnalyticsCodeEvent } from "./index";
@@ -213,9 +212,8 @@ export default class Map extends Component {
     // list is open?
     const loop = async () => {
       const { api, locationID } = this.props;
-      const floorID = STREAM_ALL_FLOORS;
       // TODO get all assets
-      const allTagData = await fetchAllTags({ api, locationID, floorID });
+      const allTagData = await fetchTagsByLocation({ api, locationID });
       this.setState({
         areTagsLoading: false,
         allTagData

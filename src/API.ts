@@ -1,14 +1,15 @@
 import axios, { AxiosInstance } from "axios";
 
-import { requiredParam, fetchAllTags } from "./util";
+import { requiredParam } from "./util";
 
-// const envToTagURL = {
-//   development: "https://tags.meridianapps.com",
-//   devCloud: "https://dev-tags.meridianapps.com",
-//   production: "https://tags.meridianapps.com",
-//   eu: "https://tags-eu.meridianapps.com",
-//   staging: "https://staging-tags.meridianapps.com"
-// };
+const envToTagURL = {
+  //Update the environment from development to eu per Marc
+  development: "https://tags.meridianapps.com",
+  devCloud: "https://dev-tags.meridianapps.com",
+  production: "https://tags.meridianapps.com",
+  eu: "https://tags-eu.meridianapps.com",
+  staging: "https://staging-tags.meridianapps.com/api/v1/track/assets"
+} as const;
 
 const envToRestURL = {
   development: "http://localhost:8091/websdk/api",
@@ -16,14 +17,30 @@ const envToRestURL = {
   production: "https://edit.meridianapps.com/websdk/api",
   eu: "https://edit-eu.meridianapps.com/websdk/api",
   staging: "https://staging-edit.meridianapps.com/websdk/api"
-};
-
-// This is intentionally not exported from package as a whole
-export const STREAM_ALL_FLOORS =
-  "__secret_internal_stream_all_floors_DO_NOT_USE";
+} as const;
 
 export type EnvOptions = "production" | "staging" | "eu" | "development";
 export type APIOptions = { environment: EnvOptions; token: string };
+
+export async function fetchTagsByFloor(options: {
+  api: API;
+  locationID: string;
+  floorID: string;
+}) {
+  return await options.api.axios.post(envToTagURL[options.api.environment], {
+    floor_id: options.floorID,
+    location_id: options.locationID
+  });
+}
+
+export async function fetchTagsByLocation(options: {
+  api: API;
+  locationID: string;
+}) {
+  return await options.api.axios.post(envToTagURL[options.api.environment], {
+    location_id: options.locationID
+  });
+}
 
 export default class API {
   token: string;
@@ -72,7 +89,7 @@ export default class API {
       ]
     };
 
-    fetchAllTags({
+    fetchTagsByFloor({
       api: this,
       locationID: options.locationID,
       floorID: options.floorID

@@ -41,9 +41,6 @@ if (document.readyState === "complete") {
   document.addEventListener("DOMContentLoaded", loadPreactDebug, false);
 }
 
-// This is kinda irritating, but importing package.json just to get the version
-// is a waste of kilobytes, so we're using webpack's DefinePlugin to do a macro
-
 type APIContext = {
   api?: AxiosInstance;
 };
@@ -52,9 +49,22 @@ const context: APIContext = {
   api: undefined
 };
 
+// This is kinda irritating, but importing package.json just to get the version
+// is a waste of kilobytes, so we're using webpack's DefinePlugin to do a macro
 /* global GLOBAL_VERSION */
+
+/**
+ * The current version of the Meridian Web SDK. Useful for checking which
+ * version is running.
+ */
 export const version = GLOBAL_VERSION;
 
+/**
+ * This function can be used to restrict pan/zoom events unless the user is
+ * holding down a modifier key (Control, Alt, Command, Shift) on their keyboard.
+ * This prevents accidental map interactions in pages with lots of scrolling
+ * content.
+ */
 export function restrictedPanZoom(event: TouchEvent | WheelEvent | MouseEvent) {
   if (event instanceof WheelEvent) {
     return event.shiftKey || event.altKey || event.ctrlKey || event.metaKey;
@@ -63,11 +73,13 @@ export function restrictedPanZoom(event: TouchEvent | WheelEvent | MouseEvent) {
   }
   return true;
 }
-type InitOptions = {
-  api: AxiosInstance;
-};
 
-export function init(options: InitOptions) {
+/**
+ * Initializes a share MeridianSDK API instance for use across all calls to
+ * createMap. You can either call this function or pass your API instance
+ * directly to createMap.
+ */
+export function init(options: { api: AxiosInstance }) {
   if (!options) {
     requiredParam("init", "options");
   }
@@ -105,25 +117,49 @@ type CreateMapOptions = {
   onFloorsUpdate?: (floors: Record<string, any>[]) => void;
 };
 
-type MapProps = CreateMapOptions & {
-  youAreHerePlacemarkID?: string;
-  // TODO: Internal only, remove
-  update: (newProps: MapProps) => void;
-  // TODO: `onMarkerClick` is internal only, we should remove from public types
-  onMarkerClick?: (marker: Record<string, any>) => void;
-  // TODO: `onMapClick` is not used or documented, we should delete it
-  onMapClick?: (event: MouseEvent) => void;
-  api: AxiosInstance;
+// TODO: Move this type to Map.js after we convert it to TS.
+
+// type MapProps = CreateMapOptions & {
+//   youAreHerePlacemarkID?: string;
+//   // TODO: Internal only, remove
+//   update: (newProps: MapProps) => void;
+//   // TODO: `onMarkerClick` is internal only, we should remove from public types
+//   onMarkerClick?: (marker: Record<string, any>) => void;
+//   // TODO: `onMapClick` is not used or documented, we should delete it
+//   onMapClick?: (event: MouseEvent) => void;
+//   api: AxiosInstance;
+// };
+
+type MeridianMap = {
+  /**
+   * Update the Meridian map to have new options.
+   */
+  update: (updatedOptions: Partial<CreateMapOptions>) => void;
+  /**
+   * Zoom to the default zoom level and pan to the default position.
+   */
+  zoomToDefault: () => void;
+  /**
+   * Zoom to a given x, y coordinate and scale to a given zoom factor.
+   */
+  zoomToPoint: (options: { x: number; y: number; scale: number }) => void;
 };
 
-export function createMap(node: HTMLElement, options: CreateMapOptions) {
-  if (!node) {
+/**
+ * Creates and returns a map object mounted at the given HTML element. If you
+ * are using the tags.filter or onTagClick or onTagsUpdate functions, refer to
+ * <https://tags.meridianapps.com/docs/track> for the schema.
+ */
+export function createMap(
+  element: HTMLElement,
+  options: CreateMapOptions
+): MeridianMap {
+  if (!element) {
     requiredParam("createMap", "node");
   }
   if (!options) {
     requiredParam("createMap", "options");
   }
-
   let mapRef: Map | null = null;
   const setMapRef = (newMapRef: Map) => {
     mapRef = newMapRef;
@@ -135,7 +171,7 @@ export function createMap(node: HTMLElement, options: CreateMapOptions) {
     options = { ...options, ...updatedOptions };
     domRef = render(
       <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
-      node,
+      element,
       domRef
     ) as any;
     sendAnalyticsCodeEvent({
@@ -149,38 +185,9 @@ export function createMap(node: HTMLElement, options: CreateMapOptions) {
       internalUpdate
     });
   };
-  const update = (updatedOptions: Partial<MapProps>) => {
-    _update(updatedOptions, { internalUpdate: false });
-  };
-  const zoomToDefault = () => {
-    mapRef?.zoomToDefault();
-  };
-
-  type ZoomToPointOptions = {
-    x: number;
-    y: number;
-    scale: number;
-  };
-
-  function zoomToPoint(options: ZoomToPointOptions) {
-    if (!options) {
-      requiredParam("map.zoomToPoint", "options");
-    }
-    if (options.x === undefined) {
-      requiredParam("map.zoomToPoint", "options.x");
-    }
-    if (options.y === undefined) {
-      requiredParam("map.zoomToPoint", "options.y");
-    }
-    if (options.scale === undefined) {
-      requiredParam("map.zoomToPoint", "options.scale");
-    }
-    mapRef?.zoomToPoint(options.x, options.y, options.scale);
-  }
-
   let domRef: HTMLElement = render(
     <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
-    node
+    element
   ) as any;
   sendAnalyticsCodeEvent({
     action: "createMap",
@@ -189,9 +196,39 @@ export function createMap(node: HTMLElement, options: CreateMapOptions) {
     tagsFilter: Boolean(options.tags && options.tags.filter),
     placemarksFilter: Boolean(options.placemarks && options.placemarks.filter)
   });
-  return { update, zoomToDefault, zoomToPoint };
+  return {
+    update: updatedOptions => {
+      _update(updatedOptions, { internalUpdate: false });
+    },
+    zoomToDefault: () => {
+      mapRef?.zoomToDefault();
+    },
+    zoomToPoint: options => {
+      if (!options) {
+        requiredParam("map.zoomToPoint", "options");
+      }
+      if (options.x === undefined) {
+        requiredParam("map.zoomToPoint", "options.x");
+      }
+      if (options.y === undefined) {
+        requiredParam("map.zoomToPoint", "options.y");
+      }
+      if (options.scale === undefined) {
+        requiredParam("map.zoomToPoint", "options.scale");
+      }
+      mapRef?.zoomToPoint(options.x, options.y, options.scale);
+    }
+  };
 }
 
+/**
+ * Creates and returns an API instance. Each API instance takes an environment
+ * and a token. You can create multiple API instances in case you want to use
+ * multiple tokens (e.g. to show data from multiple locations or organizations
+ * on a single page).
+ *
+ * Pass this either to init() or createMap().
+ */
 export function createAPI(options: APIOptions) {
   if (!options) {
     requiredParam("createAPI", "options");

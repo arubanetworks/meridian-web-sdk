@@ -294,9 +294,7 @@ export default class Map extends Component {
   updatePlacemarks = async () => {
     const { locationID, floorID, api } = this.props;
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
-    // 2018/08/21 - found a bug with the quadtree endpoint below, will revert when that's fixed
-    // const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
-    const placemarksURL = `locations/${locationID}/placemarks?map=${floorID}`;
+    const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
     const placemarks = this.groupPlacemarksByID(results);
     this.setState({ placemarks }, () => {

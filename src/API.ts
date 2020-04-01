@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import ReconnectingWebSocket from "reconnecting-websocket";
 
 import { requiredParam, asyncClientCall } from "./util";
 
@@ -57,6 +58,10 @@ export async function fetchTagsByLocation(options: {
   return response.data.asset_updates;
 }
 
+type Stream = {
+  close: () => void;
+};
+
 export default class API {
   token: string;
   environment: EnvOptions;
@@ -82,10 +87,9 @@ export default class API {
     onInitialTags?: (tags: Record<string, any>[]) => void;
     onTagLeave?: (tag: Record<string, any>) => void;
     onTagUpdate?: (tag: Record<string, any>) => void;
-    onClose?: () => void;
     onException?: (error: Error) => void;
-  }) {
-    // TODO: Add re-connect logic?
+    onClose?: () => void;
+  }): Stream {
     if (!options.locationID) {
       requiredParam("openStream", "locationID");
     }
@@ -96,7 +100,7 @@ export default class API {
     params.set("method", "POST");
     params.set("authorization", `Token ${this.token}`);
     const url = envToTagTrackerStreamingURL[this.environment];
-    const ws = new WebSocket(`${url}?${params}`);
+    const ws = new ReconnectingWebSocket(`${url}?${params}`);
     const request = {
       asset_requests: [
         {
@@ -105,7 +109,6 @@ export default class API {
         }
       ]
     };
-
     fetchTagsByFloor({
       api: this,
       locationID: options.locationID,
@@ -113,7 +116,6 @@ export default class API {
     }).then(response => {
       options.onInitialTags?.(response.data?.asset_updates ?? []);
     });
-
     ws.addEventListener("open", () => {
       ws.send(JSON.stringify(request));
     });
@@ -121,7 +123,9 @@ export default class API {
       const data = JSON.parse(event.data);
       if (data.error) {
         options.onException?.(new Error(data.error.message));
-      } else if (data.result) {
+        return;
+      }
+      if (data.result) {
         for (const assetUpdate of data.result.asset_updates) {
           const eventType = assetUpdate.event_type;
           if (eventType === "DELETE") {
@@ -136,7 +140,9 @@ export default class API {
             throw new Error(`Unknown event type: ${eventType}`);
           }
         }
+        return;
       }
+      throw new Error(`Unknown message: ${event.data}`);
     });
     ws.addEventListener("error", () => {
       options.onException?.(

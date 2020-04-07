@@ -42,4 +42,4 @@ Which will make a global object called `MeridianSDK`
 
 [examples]: https://arubanetworks.github.io/meridian-web-sdk
 [download]: https://arubanetworks.github.io/meridian-web-sdk/meridian-sdk.js
-[documentation]: https://docs.meridianapps.com/article/779-the-meridian-web-sdk
+[documentation]: https://docs.meridianapps.com/hc/en-us/articles/360039669774-The-Meridian-Web-SDK

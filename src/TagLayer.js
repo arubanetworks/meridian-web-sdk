@@ -126,7 +126,6 @@ export default class TagLayer extends Component {
     });
   }
 
-  // TODO stream
   connect() {
     const { floorID, locationID, api, toggleLoadingSpinner } = this.props;
     toggleLoadingSpinner({ show: true, source: "tags" });

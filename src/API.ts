@@ -104,8 +104,9 @@ export default class API {
     const request = {
       asset_requests: [
         {
-          resource_type: "LOCATION",
-          location_id: options.locationID
+          resource_type: "FLOOR",
+          location_id: options.locationID,
+          resource_ids: [options.floorID]
         }
       ]
     };

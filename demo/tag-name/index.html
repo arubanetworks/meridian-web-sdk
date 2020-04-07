@@ -80,7 +80,7 @@
       onTagsUpdate = tags => {
         this.setState({
           tagNames: tags.allTags.map(t => ({
-            value: t.editor_data.name,
+            value: t.name,
             mac: t.mac
           })).sort((a, b) => {
             if (a.value < b.value) {

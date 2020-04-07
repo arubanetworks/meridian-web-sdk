@@ -171,7 +171,7 @@
           break;
         case "filter-Jamboard":
           state.tags.filter = function(tag) {
-            return tag.editor_data.tags.map(x => x.name).includes("Jamboard");
+            return tag.tags.map(x => x.name).includes("Jamboard");
           };
           break;
         case "filter-Dolly":

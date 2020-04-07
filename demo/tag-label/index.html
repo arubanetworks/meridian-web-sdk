@@ -62,7 +62,7 @@
         if (selectedLabel) {
           this.map.update({
             tags: {
-              filter: tag => tag.editor_data.tags.some(tag => tag.name === selectedLabel),
+              filter: tag => tag.tags.some(tag => tag.name === selectedLabel),
             }
           });
         } else {
@@ -78,7 +78,7 @@
         const labels = {};
         tags.allTags.forEach(tag => {
           // Labels are called tags on the backend :)
-          tag.editor_data.tags.forEach(t => {
+          tag.tags.forEach(t => {
             labels[t.name] = true;
           });
         });

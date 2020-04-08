@@ -135,6 +135,11 @@ export default class API {
             }
           } else if (eventType === "UPDATE") {
             if (options.onTagUpdate) {
+              console.log(
+                assetUpdate.mac,
+                assetUpdate.map_id,
+                assetUpdate.name
+              );
               asyncClientCall(options.onTagUpdate, assetUpdate);
             }
           } else {

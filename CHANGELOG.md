@@ -17,6 +17,8 @@
       - `onTagsUpdate()`
       - `tags.filter()`
 - Fixed a bug where tag labels wouldn't line wrap in the tag list
+- Fixed a bug where placemarks didn't hide while loading placemarks for a new
+  floor
 - Switched TypeScript compiler to target ES2017
 
 # v0.6.0 (2020-03-26)

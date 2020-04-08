@@ -272,8 +272,8 @@ export default class Map extends Component {
     this.updateMap({ floorID, routeSteps: [] });
   };
 
-  groupPlacemarksByID = tags => {
-    return tags
+  groupPlacemarksByID = placemarks => {
+    return placemarks
       .map(placemark => this.normalizePlacemark(placemark))
       .reduce((obj, placemark) => {
         obj[placemark.id] = placemark;
@@ -292,6 +292,7 @@ export default class Map extends Component {
   updatePlacemarks = async () => {
     const { locationID, floorID, api } = this.props;
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
+    this.setState({ placemarks: {} });
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
     const placemarks = this.groupPlacemarksByID(results);

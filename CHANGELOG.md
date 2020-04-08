@@ -1,25 +1,36 @@
-# v0.7.0 (????????)
+# v0.7.0 (????-??-??)
 
+- **(BREAKING CHANGE)** Tag data returned from API has a new schema
+  - `tag.editor_data.tags` is now `tag.tags`
+  - `tag.editor_data.is_control_tag` is now `tag.is_control_tag`
+  - `tag.calculations.default.location.x` is now `tag.x`
+  - `tag.calculations.default.location.y` is now `tag.y`
+  - any other fields from `tag.editor_data` and `tag.calculations` have been
+    moved up to the top level of the `tag` object
 - Fixed a bug where tag labels wouldn't line wrap in the tag list
-- [BREAKING CHANGE] Tag data returned from API has a new schema
 - Switched TypeScript compiler to target ES2017
 
 # v0.6.0 (2020-03-26)
 
-- Adds TypeScript support
+- Added TypeScript support
 - `MeridianSDK.restrictedPanZoom` now supports any modifier key, not just Shift
-- Fixes a bug where `onTagUpdate` was not called from `createAPI`
-- Fixes a bug where if `showTagsControl` was false, all control tags would be
+- Fixed a bug where `onTagUpdate` was not called from `createAPI`
+- Fixed a bug where if `showTagsControl` was false, all control tags would be
   hidden on the map
-- Fixes a bug where the map background image would fail to load unless the user also had access to <https://edit.meridianapps.com>.
+- Fixed a bug where the map background image would fail to load unless the user
+  also had access to <https://edit.meridianapps.com>.
 
 # v0.5.0 (2019-02-25)
 
-### Enhancements
+- Added `onTagClick(data, options)` - (optional) callback function called
+  whenever a tag is clicked, receiving the tag data and an options object. The
+  options object contains a `preventDefault` function. Call
+  `options.preventDefault()` to prevent the overlay from appearing.
 
-- `onTagClick(data, options)` - (optional) callback function called whenever a tag is clicked, receiving the tag data and an options object. The options object contains a `preventDefault` function. Call `options.preventDefault()` to prevent the overlay from appearing.
-
-- `onPlacemarkClick(data, options)` - (optional) callback function called whenever a placemark is clicked, receiving the tag data and an options object. The options object contains a `preventDefault` function. Call `options.preventDefault()` to prevent the overlay from appearing.
+- Added `onPlacemarkClick(data, options)` - (optional) callback function called
+  whenever a placemark is clicked, receiving the tag data and an options object.
+  The options object contains a `preventDefault` function. Call
+  `options.preventDefault()` to prevent the overlay from appearing.
 
 # v0.4.1 (2018-10-03)
 

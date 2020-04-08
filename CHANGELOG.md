@@ -7,6 +7,15 @@
   - `tag.calculations.default.location.y` is now `tag.y`
   - any other fields from `tag.editor_data` and `tag.calculations` have been
     moved up to the top level of the `tag` object
+  - This may affect your SDK usage if you use the following callbacks:
+    - Methods on the stream returned from `openStream()`
+      - `stream.onInitialTags()`
+      - `stream.onTagLeave()`
+      - `stream.onTagUpdate()`
+    - The options callbacks to `createMap()`
+      - `onTagClick()`
+      - `onTagsUpdate()`
+      - `tags.filter()`
 - Fixed a bug where tag labels wouldn't line wrap in the tag list
 - Switched TypeScript compiler to target ES2017
 

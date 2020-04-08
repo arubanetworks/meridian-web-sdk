@@ -129,7 +129,6 @@ export default class TagLayer extends Component {
   connect() {
     const { floorID, locationID, api, toggleLoadingSpinner } = this.props;
     toggleLoadingSpinner({ show: true, source: "tags" });
-    console.log("connect", floorID);
     const connection = api.openStream({
       locationID,
       floorID,
@@ -155,8 +154,6 @@ export default class TagLayer extends Component {
 
   disconnect() {
     const { connection } = this.state;
-    console.log("disconnect", connection);
-
     if (connection) {
       connection.close();
       this.tagUpdates = {};

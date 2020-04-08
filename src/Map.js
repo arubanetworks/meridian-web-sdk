@@ -161,6 +161,7 @@ export default class Map extends Component {
       prevProps.floorID !== this.props.floorID ||
       prevState.floors !== this.state.floors
     ) {
+      this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
@@ -292,7 +293,6 @@ export default class Map extends Component {
   updatePlacemarks = async () => {
     const { locationID, floorID, api } = this.props;
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
-    this.setState({ placemarks: {} });
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
     const placemarks = this.groupPlacemarksByID(results);

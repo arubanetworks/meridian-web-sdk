@@ -19,6 +19,8 @@
 - Fixed a bug where tag labels wouldn't line wrap in the tag list
 - Fixed a bug where placemarks didn't hide while loading placemarks for a new
   floor
+- Fixed a bug where map images didn't hide while loading the map image for a new
+  floor
 - Switched TypeScript compiler to target ES2017
 
 # v0.6.0 (2020-03-26)

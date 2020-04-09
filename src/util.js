@@ -7,6 +7,12 @@ export const STRINGS = {
   noResultsFound: "No results found."
 };
 
+export function objectWithoutKey(object, key) {
+  const newObject = { ...object };
+  delete newObject[key];
+  return newObject;
+}
+
 export function createSearchMatcher(query) {
   return target =>
     target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;

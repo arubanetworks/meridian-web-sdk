@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
 
 import MapMarker from "./MapMarker";
+import { objectWithoutKey } from "./util";
 
 export default class TagLayer extends Component {
   static defaultProps = {
@@ -32,7 +33,7 @@ export default class TagLayer extends Component {
     super(props);
     this.state = {
       tagsByMAC: {},
-      connection: null
+      connectionsByFloorID: {}
     };
     this.tagUpdates = {};
   }
@@ -40,7 +41,7 @@ export default class TagLayer extends Component {
   componentDidMount() {
     const { markers } = this.props;
     if (markers) {
-      this.connect();
+      this.connect(this.props.floorID);
     }
   }
 
@@ -55,13 +56,13 @@ export default class TagLayer extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.floorID !== this.props.floorID) {
-      this.disconnect();
-      this.connect();
+      this.disconnect(prevProps.floorID);
+      this.connect(this.props.floorID);
     }
   }
 
   componentWillUnmount() {
-    this.disconnect();
+    this.disconnect(this.props.floorID);
   }
 
   getTags() {
@@ -126,39 +127,70 @@ export default class TagLayer extends Component {
     });
   }
 
-  connect() {
-    const { floorID, locationID, api, toggleLoadingSpinner } = this.props;
+  connect(floorID) {
+    const { locationID, api, toggleLoadingSpinner } = this.props;
     toggleLoadingSpinner({ show: true, source: "tags" });
     const connection = api.openStream({
       locationID,
       floorID,
       onInitialTags: data => {
-        this.setInitialTags(data);
+        if (floorID === this.props.floorID) {
+          this.setInitialTags(data);
+        }
       },
       onTagDisappear: data => {
-        this.removeTag(data);
+        if (floorID === this.props.floorID) {
+          this.removeTag(data);
+        }
       },
       onTagUpdate: data => {
-        this.handleTagUpdates([data]);
+        if (floorID === this.props.floorID) {
+          this.handleTagUpdates([data]);
+        }
       },
       onClose: () => {
-        this.setState({ connection: null }, () => {
-          this.onUpdate();
-        });
+        this.disconnect(floorID);
       }
     });
-    this.setState({ connection }, () => {
-      this.onUpdate();
-    });
+    this.setState(
+      prevState => {
+        return {
+          connectionsByFloorID: {
+            ...prevState.connectionsByFloorID,
+            [floorID]: connection
+          }
+        };
+      },
+      () => {
+        this.onUpdate();
+      }
+    );
   }
 
-  disconnect() {
-    const { connection } = this.state;
+  disconnect(floorID) {
+    const connection = this.state.connectionsByFloorID[floorID];
     if (connection) {
       connection.close();
-      this.tagUpdates = {};
-      this.setState({ tagsByMAC: {} });
     }
+    this.tagUpdates = {};
+    this.setState(
+      prevState => {
+        const tagsByMAC = { ...prevState.tagsByMAC };
+        for (const mac of Object.keys(tagsByMAC)) {
+          if (tagsByMAC[mac].map_id === floorID) {
+            delete tagsByMAC[mac];
+          }
+        }
+        const connectionsByFloorID = objectWithoutKey(
+          prevState.connectionsByFloorID,
+          floorID
+        );
+        return { tagsByMAC, connectionsByFloorID };
+      },
+      () => {
+        this.onUpdate();
+      }
+    );
   }
 
   filterControlTags(tags) {

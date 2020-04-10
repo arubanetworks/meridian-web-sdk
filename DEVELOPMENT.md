@@ -7,7 +7,7 @@ Run `npm version ____` with the version number to do a full npm, Google Cloud
 Storage, and GitHub Pages deploy.
 
 Update the download link on
-<https://docs.meridianapps.com/hc/en-us/articles/360040165473-Get-the-Web-SDK>
+<https://docs.meridianapps.com/hc/en-us/articles/360039669854-SDK-Downloads>
 to point to the new version.
 
 Copy the relevant section of CHANGELOG.md and post it in #releases in Slack.

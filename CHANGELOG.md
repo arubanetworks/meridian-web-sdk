@@ -1,4 +1,4 @@
-# v0.7.0 (????-??-??)
+# v0.7.0 (2020-04-10)
 
 - **(BREAKING CHANGE)** Tag data returned from API has a new schema
   - `tag.editor_data.tags` is now `tag.tags`
@@ -22,6 +22,8 @@
 - Fixed a bug where map images didn't hide while loading the map image for a new
   floor
 - Switched TypeScript compiler to target ES2017
+- Fixed a few race conditions involving incorrect data appearing onscreen when
+  switching floors quickly
 
 # v0.6.0 (2020-03-26)
 

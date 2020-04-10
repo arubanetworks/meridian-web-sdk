@@ -138,7 +138,6 @@ class TagListOverlay extends Component {
       // TODO: Should we show hidden tags?
       .filter(tag => {
         if (tagOptions.showControlTags !== true) {
-          // TODO: This field is missing in Go tag tracker
           return !tag.is_control_tag;
         }
         return true;

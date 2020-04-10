@@ -19,13 +19,12 @@ import ErrorOverlay from "./ErrorOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
-import { STREAM_ALL_FLOORS } from "./API";
+import { fetchTagsByLocation } from "./API";
 import { css, cx } from "./style";
 import {
   fetchAllPaginatedData,
   asyncClientCall,
   validateEnvironment,
-  fetchAllTags,
   getDirections
 } from "./util";
 import { sendAnalyticsCodeEvent } from "./index";
@@ -162,6 +161,7 @@ export default class Map extends Component {
       prevProps.floorID !== this.props.floorID ||
       prevState.floors !== this.state.floors
     ) {
+      this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
@@ -179,6 +179,7 @@ export default class Map extends Component {
   }
 
   async fetchMapImageURL() {
+    const { floorID } = this.props;
     const mapData = this.getMapData();
     if (!mapData) {
       return;
@@ -186,7 +187,9 @@ export default class Map extends Component {
     const response = await this.props.api.axios.get(mapData.svg_url, {
       responseType: "blob"
     });
-    this.setState({ mapImageURL: URL.createObjectURL(response.data) });
+    if (floorID === this.props.floorID) {
+      this.setState({ mapImageURL: URL.createObjectURL(response.data) });
+    }
   }
 
   updateMap = newOptions => {
@@ -212,8 +215,7 @@ export default class Map extends Component {
     // list is open?
     const loop = async () => {
       const { api, locationID } = this.props;
-      const floorID = STREAM_ALL_FLOORS;
-      const allTagData = await fetchAllTags({ api, locationID, floorID });
+      const allTagData = await fetchTagsByLocation({ api, locationID });
       this.setState({
         areTagsLoading: false,
         allTagData
@@ -274,8 +276,8 @@ export default class Map extends Component {
     this.updateMap({ floorID, routeSteps: [] });
   };
 
-  groupPlacemarksByID = tags => {
-    return tags
+  groupPlacemarksByID = placemarks => {
+    return placemarks
       .map(placemark => this.normalizePlacemark(placemark))
       .reduce((obj, placemark) => {
         obj[placemark.id] = placemark;
@@ -294,14 +296,15 @@ export default class Map extends Component {
   updatePlacemarks = async () => {
     const { locationID, floorID, api } = this.props;
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
-    // 2018/08/21 - found a bug with the quadtree endpoint below, will revert when that's fixed
-    // const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
-    const placemarksURL = `locations/${locationID}/placemarks?map=${floorID}`;
+    const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
-    const placemarks = this.groupPlacemarksByID(results);
-    this.setState({ placemarks }, () => {
-      this.toggleLoadingSpinner({ show: false, source: "placemarks" });
-    });
+    // If the user switches floors, we want to get rid of the value
+    if (floorID === this.props.floorID) {
+      const placemarks = this.groupPlacemarksByID(results);
+      this.setState({ placemarks }, () => {
+        this.toggleLoadingSpinner({ show: false, source: "placemarks" });
+      });
+    }
   };
 
   async getFloors() {
@@ -505,6 +508,8 @@ export default class Map extends Component {
       fromPlacemarkID: this.props.youAreHerePlacemarkID,
       toPlacemarkID: item.id
     });
+    // TODO: Check to make sure floorID and youAreHerePlacemarkID and
+    // destinationID all have not changed since before the `await` above
     if (response && response.data) {
       const routeSteps = response.data.routes[0].steps.map(step => step.points);
       this.setState({

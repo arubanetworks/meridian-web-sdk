@@ -61,10 +61,10 @@ const Tag = ({
     ? cx("meridian-tag-selected", labelClassNames, cssTagSelected)
     : cx("meridian-tag", labelClassNames, cssTag);
   const style = {
-    left: data.calculations.default.location.x,
-    top: data.calculations.default.location.y,
+    left: data.x,
+    top: data.y,
     transform: `translate(-50%, -50%) scale(${k})`,
-    backgroundImage: `url('${data.editor_data.image_url || DEFAULT_TAG_IMAGE}')`
+    backgroundImage: `url('${data.image_url || DEFAULT_TAG_IMAGE}')`
   };
   return (
     <button

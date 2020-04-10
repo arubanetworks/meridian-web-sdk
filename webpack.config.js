@@ -61,7 +61,8 @@ const npmConfig = {
 };
 
 const development = {
-  ...common
+  ...common,
+  devtool: "source-map"
 };
 
 // Build the browser JS bundle as well as the npm bundle

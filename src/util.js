@@ -7,13 +7,19 @@ export const STRINGS = {
   noResultsFound: "No results found."
 };
 
+export function objectWithoutKey(object, key) {
+  const newObject = { ...object };
+  delete newObject[key];
+  return newObject;
+}
+
 export function createSearchMatcher(query) {
   return target =>
     target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
 }
 
 export function getTagLabels(tag) {
-  return tag.editor_data.tags.map(tag => tag.name);
+  return (tag.tags || []).map(tag => tag.name);
 }
 
 export function requiredParam(funcName, argName) {
@@ -69,19 +75,6 @@ export async function fetchAllPaginatedData(api, url) {
     next = data.next;
   }
   return results;
-}
-
-export async function fetchAllTags({ api, locationID, floorID }) {
-  return new Promise(resolve => {
-    const stream = api.openStream({
-      locationID,
-      floorID,
-      onInitialTags: tags => {
-        resolve(tags);
-        stream.close();
-      }
-    });
-  });
 }
 
 export function validateEnvironment(env) {

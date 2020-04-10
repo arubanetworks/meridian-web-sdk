@@ -38,7 +38,7 @@ If you would like a standalone JS file with all dependencies bundled that you ca
 <script src="meridian-sdk.js"></script>
 ```
 
-Which will make a global object called `MeridianSDK`
+Which will make a global object called `MeridianSDK`.
 
 [examples]: https://arubanetworks.github.io/meridian-web-sdk
 [download]: https://arubanetworks.github.io/meridian-web-sdk/meridian-sdk.js

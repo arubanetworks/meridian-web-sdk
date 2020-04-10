@@ -64,7 +64,7 @@ class App extends React.Component {
     const labels = this.getVisibleLabels();
     this.map.update({
       tags: {
-        filter: tag => tag.editor_data.tags.map(x => x.name).some(label => labels.includes(label))
+        filter: tag => tag.tags.map(x => x.name).some(label => labels.includes(label))
       }
     });
   }
@@ -77,7 +77,7 @@ class App extends React.Component {
     const labels = {};
     tags.forEach(tag => {
       // Labels used to be called tags
-      tag.editor_data.tags.forEach(t => {
+      tag.tags.forEach(t => {
         labels[t.name] = true;
       });
     });

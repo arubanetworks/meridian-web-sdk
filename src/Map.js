@@ -179,6 +179,7 @@ export default class Map extends Component {
   }
 
   async fetchMapImageURL() {
+    const { floorID } = this.props;
     const mapData = this.getMapData();
     if (!mapData) {
       return;
@@ -186,7 +187,9 @@ export default class Map extends Component {
     const response = await this.props.api.axios.get(mapData.svg_url, {
       responseType: "blob"
     });
-    this.setState({ mapImageURL: URL.createObjectURL(response.data) });
+    if (floorID === this.props.floorID) {
+      this.setState({ mapImageURL: URL.createObjectURL(response.data) });
+    }
   }
 
   updateMap = newOptions => {
@@ -505,6 +508,8 @@ export default class Map extends Component {
       fromPlacemarkID: this.props.youAreHerePlacemarkID,
       toPlacemarkID: item.id
     });
+    // TODO: Check to make sure floorID and youAreHerePlacemarkID and
+    // destinationID all have not changed since before the `await` above
     if (response && response.data) {
       const routeSteps = response.data.routes[0].steps.map(step => step.points);
       this.setState({

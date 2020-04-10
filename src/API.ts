@@ -34,7 +34,7 @@ export async function fetchTagsByFloor(options: {
   api: API;
   locationID: string;
   floorID: string;
-}) {
+}): Promise<Record<string, any>[]> {
   const response = await options.api.axios.post(
     envToTagTrackerRestURL[options.api.environment],
     {
@@ -48,7 +48,7 @@ export async function fetchTagsByFloor(options: {
 export async function fetchTagsByLocation(options: {
   api: API;
   locationID: string;
-}) {
+}): Promise<Record<string, any>[]> {
   const response = await options.api.axios.post(
     envToTagTrackerRestURL[options.api.environment],
     {
@@ -114,8 +114,8 @@ export default class API {
       api: this,
       locationID: options.locationID,
       floorID: options.floorID
-    }).then(response => {
-      options.onInitialTags?.(response.data?.asset_updates ?? []);
+    }).then(tags => {
+      options.onInitialTags?.(tags);
     });
     ws.addEventListener("open", () => {
       ws.send(JSON.stringify(request));

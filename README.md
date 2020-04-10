@@ -41,5 +41,5 @@ If you would like a standalone JS file with all dependencies bundled that you ca
 Which will make a global object called `MeridianSDK`.
 
 [examples]: https://arubanetworks.github.io/meridian-web-sdk
-[download]: https://arubanetworks.github.io/meridian-web-sdk/meridian-sdk.js
+[download]: https://docs.meridianapps.com/hc/en-us/articles/360039669854-SDK-Downloads
 [documentation]: https://docs.meridianapps.com/hc/en-us/articles/360039669774-The-Meridian-Web-SDK

@@ -42,7 +42,12 @@ export default class PlacemarkLayer extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    console.log(
+      "placemarkLayer Component Did Update - prevProps floorID",
+      prevProps.floorID
+    );
     if (prevProps.floorID !== this.props.floorID) {
+      console.log("updatePlacemarks firing new floorID", this.props.floorID);
       this.props.updatePlacemarks();
     }
   }

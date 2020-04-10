@@ -295,10 +295,13 @@ export default class Map extends Component {
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
-    const placemarks = this.groupPlacemarksByID(results);
-    this.setState({ placemarks }, () => {
-      this.toggleLoadingSpinner({ show: false, source: "placemarks" });
-    });
+    // If the user switches floors, we want to get rid of the value
+    if (floorID === this.props.floorID) {
+      const placemarks = this.groupPlacemarksByID(results);
+      this.setState({ placemarks }, () => {
+        this.toggleLoadingSpinner({ show: false, source: "placemarks" });
+      });
+    }
   };
 
   async getFloors() {

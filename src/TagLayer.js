@@ -40,7 +40,9 @@ export default class TagLayer extends Component {
 
   componentDidMount() {
     const { markers } = this.props;
+    console.log("componentDidMount", this.props.floorID);
     if (markers) {
+      console.log("componentDidMount if Markers", this.props.floorID);
       this.connect(this.props.floorID);
     }
   }
@@ -54,14 +56,19 @@ export default class TagLayer extends Component {
     return true;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.connectionsByFloorID !== this.state.connectionsByFloorID) {
+      console.log("connections by floor id", this.state.connectionsByFloorID);
+    }
     if (prevProps.floorID !== this.props.floorID) {
+      console.log(prevProps.floorID, this.props.floorID);
       this.disconnect(prevProps.floorID);
       this.connect(this.props.floorID);
     }
   }
 
   componentWillUnmount() {
+    console.log("componentWillUnmount", this.props.floorID);
     this.disconnect(this.props.floorID);
   }
 
@@ -128,6 +135,7 @@ export default class TagLayer extends Component {
   }
 
   connect(floorID) {
+    console.log("connecting...", floorID);
     const { locationID, api, toggleLoadingSpinner } = this.props;
     toggleLoadingSpinner({ show: true, source: "tags" });
     const connection = api.openStream({
@@ -149,6 +157,7 @@ export default class TagLayer extends Component {
         }
       },
       onClose: () => {
+        console.log("onClose", floorID);
         this.disconnect(floorID);
       }
     });
@@ -168,6 +177,7 @@ export default class TagLayer extends Component {
   }
 
   disconnect(floorID) {
+    console.log("disconnect started", floorID);
     const connection = this.state.connectionsByFloorID[floorID];
     if (connection) {
       connection.close();
@@ -197,6 +207,7 @@ export default class TagLayer extends Component {
     const { markers } = this.props;
     return tags.filter(tag => {
       if (markers.showControlTags !== true) {
+        // TODO: This field is missing in Go tag tracker
         return !tag.is_control_tag;
       }
       return true;

@@ -197,7 +197,6 @@ export default class TagLayer extends Component {
     const { markers } = this.props;
     return tags.filter(tag => {
       if (markers.showControlTags !== true) {
-        // TODO: This field is missing in Go tag tracker
         return !tag.is_control_tag;
       }
       return true;

@@ -1,14 +1,10 @@
 ## Deployment
 
-Run `npm login` and enter your NPM credentials before proceeding. You only need
-to do this once.
+Run `npm login` and enter your npm credentials before proceeding. You only need to do this once.
 
-Run `npm version ____` with the version number to do a full npm, Google Cloud
-Storage, and GitHub Pages deploy.
+Run `npm version ____` with the version number to do a full npm, Google Cloud Storage, and GitHub Pages deploy.
 
-Update the download link on
-<https://docs.meridianapps.com/hc/en-us/articles/360039669854-SDK-Downloads>
-to point to the new version.
+This should automatically publish to npm. If the publish fails, you can manually run `npm publish` to attempt publishing again.
 
 Copy the relevant section of CHANGELOG.md and post it in #releases in Slack.
 

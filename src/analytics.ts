@@ -1,6 +1,11 @@
+/**
+ * @internal
+ * @packageDocumentation
+ */
+
 import axios from "axios";
 
-import { version } from "./index";
+import { version } from "./web-sdk";
 
 const pixelRatio = window.devicePixelRatio || 1;
 const screen = window.screen;
@@ -17,16 +22,19 @@ type SendAnalyticsCodeEventOptions = {
   destinationID?: string;
 };
 
-export async function sendAnalyticsCodeEvent({
-  action,
-  locationID,
-  onTagsUpdate = false,
-  tagsFilter = false,
-  placemarksFilter = false,
-  internalUpdate = false,
-  youAreHerePlacemarkID = undefined,
-  destinationID = undefined
-}: SendAnalyticsCodeEventOptions) {
+export async function sendAnalyticsCodeEvent(
+  options: SendAnalyticsCodeEventOptions
+) {
+  const {
+    action,
+    locationID,
+    onTagsUpdate = false,
+    tagsFilter = false,
+    placemarksFilter = false,
+    internalUpdate = false,
+    youAreHerePlacemarkID = undefined,
+    destinationID = undefined
+  } = options;
   const params = {
     v: "1", // GA version
     tid: "UA-56747301-5", // Tracking ID

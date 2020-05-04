@@ -6,40 +6,15 @@
 
 ## Documentation
 
-Please read the [documentation][] from our site.
+Please read the [documentation][] for an installation and API guide.
 
 ## Examples
 
 We have several [examples][] of how to use the SDK.
 
-## Installation
-
-Install from npm:
-
-```sh
-$ npm install @meridian/web-sdk
-```
-
-And then for CommonJS imports use:
-
-```js
-var MeridianSDK = require("@meridian/web-sdk");
-```
-
-Or for ES modules imports:
-
-```js
-import * as MeridianSDK from "@meridian/web-sdk";
-```
-
-If you would like a standalone JS file with all dependencies bundled that you can use from a script tag, [download][] the latest version and include it:
-
-```html
-<script src="meridian-sdk.js"></script>
-```
-
-Which will make a global object called `MeridianSDK`.
-
 [examples]: https://arubanetworks.github.io/meridian-web-sdk
 [download]: https://docs.meridianapps.com/hc/en-us/articles/360039669854-SDK-Downloads
+
+<!-- TODO: Update this link below -->
+
 [documentation]: https://docs.meridianapps.com/hc/en-us/articles/360039669774-The-Meridian-Web-SDK

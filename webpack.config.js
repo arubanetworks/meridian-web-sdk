@@ -30,7 +30,7 @@ const common = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
   },
-  entry: path.resolve(__dirname, "src/index.tsx"),
+  entry: path.resolve(__dirname, "src/web-sdk.tsx"),
   output: {
     filename: "meridian-sdk.js",
     library: "MeridianSDK",
@@ -52,7 +52,7 @@ const common = {
 const npmConfig = {
   ...common,
   output: {
-    filename: "index.js",
+    filename: "web-sdk.js",
     libraryTarget: "commonjs",
     path: path.resolve(__dirname, "dist")
   },

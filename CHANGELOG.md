@@ -1,3 +1,9 @@
+# v0.7.1 (????-??-??)
+
+- Exposes the `API` class directly so you can use `new API(options)` instead of `createAPI(options)`
+- Deprecates `createAPI(options)`
+- Switches to TypeDoc for documentation
+
 # v0.7.0 (2020-04-10)
 
 - **(BREAKING CHANGE)** Tag data returned from API has a new schema

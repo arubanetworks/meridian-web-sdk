@@ -10,7 +10,7 @@ Copy the relevant section of CHANGELOG.md and post it in #releases in Slack.
 
 ### Pre-Release/Beta Versions
 
-Run `BETA="____beta" SKIP_POSTPUBLISH=true npm version 0.0.0-____beta.0` to do a full npm, Google Cloud Storage deploy that publishes a beta version to npm and skips the GitHub Pages deploy.
+Run `BETA="____beta" npm version 0.0.0-____beta.0` to do a full npm, Google Cloud Storage deploy that publishes a beta version to npm and skips the GitHub Pages deploy.
 
 ## Running Local Tag Tracker
 

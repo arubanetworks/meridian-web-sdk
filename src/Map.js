@@ -1,4 +1,10 @@
 /** @jsx h */
+
+/**
+ * @internal
+ * @packageDocumentation
+ */
+
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 import {
@@ -27,7 +33,7 @@ import {
   validateEnvironment,
   getDirections
 } from "./util";
-import { sendAnalyticsCodeEvent } from "./index";
+import { sendAnalyticsCodeEvent } from "./web-sdk";
 import DirectionsLayer from "./DirectionsLayer";
 
 const ZOOM_FACTOR = 0.5;

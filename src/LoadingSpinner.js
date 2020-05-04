@@ -1,4 +1,10 @@
 /** @jsx h */
+
+/**
+ * @internal
+ * @packageDocumentation
+ */
+
 import { h } from "preact";
 import { css, theme } from "./style";
 import IconSpinner from "./IconSpinner";

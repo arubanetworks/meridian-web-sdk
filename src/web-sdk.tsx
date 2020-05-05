@@ -38,7 +38,8 @@ import {
   asyncClientCall,
   envToEditorRestURL,
   fetchTagsByFloor,
-  envToTagTrackerStreamingURL
+  envToTagTrackerStreamingURL,
+  deprecated
 } from "./util";
 import { sendAnalyticsCodeEvent } from "./analytics";
 
@@ -312,6 +313,9 @@ export function createMap(
  * @deprecated
  */
 export function createAPI(options: APIOptions): API {
+  deprecated(
+    "use `new MeridianSDK.API(options)` instead of `MeridianSDK.createAPI(options)`"
+  );
   if (!options) {
     requiredParam("createAPI", "options");
   }
@@ -323,6 +327,14 @@ export function createAPI(options: APIOptions): API {
  * for REST API calls, or `openStream()` for opening a tag stream. You can
  * create multiple API instances in case you want to use multiple tokens (e.g.
  * to show data from multiple locations or organizations on a single page).
+ *
+ * ```js
+ * const api = new MeridianSDK.API({
+ *   token: "<TOKEN GOES HERE>"
+ * });
+ *
+ * MeridianSDK.init({ api: api });
+ * ```
  *
  * You can use multiple API instances if you want to use multiple
  * tokens/environments on a single page:
@@ -351,31 +363,33 @@ export function createAPI(options: APIOptions): API {
  */
 export class API {
   /**
-   * Meridian API token. Make sure to create a **read only** token for security.
+   * Meridian API token. Make sure to create a **READ ONLY** token for security.
+   * Otherwise anyone using your page could take your token and modify all of
+   * your Meridian data.
    */
   token: string;
 
-  /** Meridian environment (production or eu). */
+  /**
+   * Meridian environment (`"production"` or `"eu"`). Defaults to
+   * `"production"`.
+   */
   environment: EnvOptions;
 
   /**
-   * REST API client with authentication credentials already added. See
-   * <https://github.com/axios/axios> for Axios documentation, and
-   * <https://docs.meridianapps.com/hc/en-us/categories/360002761313-Developers>
-   * for Meridian API documentation.
+   * Axios REST API client with authentication credentials already added. See
+   * the [Axios documentation](https://github.com/axios/axios) and [Meridian API
+   * documentation](https://docs.meridianapps.com/hc/en-us/categories/360002761313-Developers).
+   *
+   * ```js
+   * const api = new MeridianSDK.API({ token: "<TOKEN>" });
+   * const result = await api.axios.get(`locations/${locationID}`);
+   * console.log(result.data);
    */
   axios: AxiosInstance;
 
   /**
    * Pass the result to `init()` or `createMap()`.
-   *
-   * ```js
-   * const api = new MeridianSDK.API({
-   *   token: "<TOKEN GOES HERE>"
-   * });
-   *
-   * MeridianSDK.init({ api: api });
-   * ```
+   * @internal
    */
   constructor(options: APIOptions) {
     if (!options.token) {
@@ -392,10 +406,12 @@ export class API {
   }
 
   /**
-   * Opens a tag stream.
+   * Opens a tag stream for a given location and floor. `onInitialTags` is
+   * called with the full list of tags for that floor, then `onTagUpdate` is
+   * called every time a tag moves on the floor.
    *
    * ```js
-   * const api = MeridianSDK.createAPI({
+   * const api = new MeridianSDK.API({
    *   token: token,
    *   environment: "production"
    * });
@@ -498,7 +514,7 @@ export class API {
 }
 
 /**
- * Environment name used in [[APIOptions]]. If unsure, use "production".
+ * Environment name used in [[APIOptions]]. If unsure, use `"production"`.
  */
 export type EnvOptions = "production" | "staging" | "eu" | "development";
 

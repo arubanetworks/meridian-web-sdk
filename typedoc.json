@@ -4,6 +4,5 @@
   "out": "./docs",
   "readme": "docs-readme.md",
   "stripInternal": true,
-  "excludeNotExported": true,
   "excludePrivate": true
 }

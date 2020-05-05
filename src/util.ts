@@ -5,6 +5,11 @@
 
 import { API } from "./web-sdk";
 
+export function deprecated(...args: any[]) {
+  // eslint-disable-next-line no-console
+  console.warn("[deprecated]", ...args);
+}
+
 const ASSETS_URL =
   "https://files.meridianapps.com/meridian-web-sdk-assets/0.2.0";
 

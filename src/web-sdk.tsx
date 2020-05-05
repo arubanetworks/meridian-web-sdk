@@ -46,6 +46,7 @@ import { sendAnalyticsCodeEvent } from "./analytics";
 // Wait to load Preact's debug module until the page is loaded since it assumes
 // document.body exists, which is not true if someone loads our script in the
 // <head> of a document
+/** @internal */
 const loadPreactDebug = () => require("preact/debug");
 if (document.readyState === "complete") {
   setTimeout(loadPreactDebug, 0);
@@ -53,16 +54,19 @@ if (document.readyState === "complete") {
   document.addEventListener("DOMContentLoaded", loadPreactDebug, false);
 }
 
+/** @internal */
 type APIContext = {
   api?: API;
 };
 
+/** @internal */
 const context: APIContext = {
   api: undefined
 };
 
 // This is kinda irritating, but importing package.json just to get the version
 // is a waste of kilobytes, so we're using webpack's DefinePlugin to do a macro
+/** @internal */
 declare const GLOBAL_VERSION: string;
 
 /**
@@ -73,7 +77,7 @@ declare const GLOBAL_VERSION: string;
  * console.log(MeridianSDK.version);
  * ```
  */
-export const version = GLOBAL_VERSION;
+export const version: string = GLOBAL_VERSION;
 
 /**
  * This function can be used to restrict pan/zoom events unless the user is
@@ -84,7 +88,9 @@ export const version = GLOBAL_VERSION;
  * Pass this to `shouldMapPanZoom` in [[createMap]] if you would like the user
  * to use two fingers or hold down a modifier key in order to zoom the map.
  */
-export function restrictedPanZoom(event: TouchEvent | WheelEvent | MouseEvent) {
+export function restrictedPanZoom(
+  event: TouchEvent | WheelEvent | MouseEvent
+): boolean {
   if (event instanceof WheelEvent) {
     return event.shiftKey || event.altKey || event.ctrlKey || event.metaKey;
   } else if (event instanceof TouchEvent) {
@@ -105,7 +111,7 @@ export function restrictedPanZoom(event: TouchEvent | WheelEvent | MouseEvent) {
  * MeridianSDK.init({ api: api });
  * ```
  */
-export function init(options: { api: API }) {
+export function init(options: { api: API }): void {
   if (!options) {
     requiredParam("init", "options");
   }

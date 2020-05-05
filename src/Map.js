@@ -25,7 +25,7 @@ import ErrorOverlay from "./ErrorOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
-import { fetchTagsByLocation } from "./API";
+import { fetchTagsByLocation } from "./util";
 import { css, cx } from "./style";
 import {
   fetchAllPaginatedData,

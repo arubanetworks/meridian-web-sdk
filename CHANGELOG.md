@@ -1,3 +1,7 @@
+# v0.7.2 (2020-05-05)
+
+- Fixes broken links
+
 # v0.7.1 (2020-05-05)
 
 - Exposes the `API` class directly so you can use `new API(options)` instead of `createAPI(options)`

@@ -112,6 +112,6 @@ You can style Tags with specific labels using:
 .meridian-tag-label-{LABEL-NAME}
 ```
 
-[examples]: /examples
+[examples]: examples
 [api token]: https://docs.meridianapps.com/hc/en-us/articles/360039670154-Authenticate-to-the-API
 [download]: https://docs.meridianapps.com/hc/en-us/articles/360039669854-SDK-Downloads

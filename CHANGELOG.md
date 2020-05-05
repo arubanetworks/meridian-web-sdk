@@ -1,4 +1,4 @@
-# v0.7.1 (????-??-??)
+# v0.7.1 (2020-05-05)
 
 - Exposes the `API` class directly so you can use `new API(options)` instead of `createAPI(options)`
 - Deprecates `createAPI(options)`

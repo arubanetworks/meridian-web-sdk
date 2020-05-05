@@ -1,4 +1,10 @@
 /** @jsx h */
+
+/**
+ * @internal
+ * @packageDocumentation
+ */
+
 import { h } from "preact";
 import PropTypes from "prop-types";
 import { css, theme, mixins, cx } from "./style";

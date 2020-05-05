@@ -33,12 +33,8 @@ name="${npm_package_name}"
 
 Heading "--- Deploying $name demos v$version ---"
 
-Heading "* Cleaning old build..."
-rm -rf dist
-
-Heading "* Building SDK JS bundle..."
+Heading "* Building SDK and documentation..."
 npm run -s build
-cp -r demo/* dist/
 
 Heading "* Copying build files to GCS..."
 gsutil cp -Z \
@@ -47,12 +43,12 @@ gsutil cp -Z \
 
 Heading "==> https://files.meridianapps.com/meridian-web-sdk/${version}/meridian-sdk.js"
 
-if [[ "${SKIP_POSTPUBLISH:-}" != "true" ]]; then
+if [[ -z "${BETA:-}" ]]; then
   Heading "* Deploying examples to GH Pages..."
-  npx gh-pages --dist dist
+  npx gh-pages --dist docs
 fi
 
 Heading "* Cleaning up build files..."
-rm -rf dist
+rm -rf dist docs
 
 Heading "==> https://arubanetworks.github.io/meridian-web-sdk"

@@ -1,3 +1,8 @@
+/**
+ * @internal
+ * @packageDocumentation
+ */
+
 import createEmotion from "create-emotion";
 
 export const theme = {

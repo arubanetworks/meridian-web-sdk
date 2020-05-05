@@ -1,4 +1,10 @@
 /** @jsx h */
+
+/**
+ * @internal
+ * @packageDocumentation
+ */
+
 import { h, Component } from "preact";
 import PropTypes from "prop-types";
 

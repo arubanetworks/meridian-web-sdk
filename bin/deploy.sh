@@ -45,7 +45,9 @@ Heading "==> https://files.meridianapps.com/meridian-web-sdk/${version}/meridian
 
 if [[ -z "${BETA:-}" ]]; then
   Heading "* Deploying examples to GH Pages..."
-  npx gh-pages --dist docs
+  # Customized glob pattern to include the .nojekyll file so GitHub will stop
+  # using Jekyll on our docs folder
+  npx gh-pages --dist docs --src "**/{.nojekyll,*}"
 fi
 
 Heading "* Cleaning up build files..."

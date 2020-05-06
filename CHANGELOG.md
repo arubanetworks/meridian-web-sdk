@@ -1,3 +1,7 @@
+# v0.7.4 (????-??-??)
+
+- Adds more examples to documentation
+
 # v0.7.3 (2020-05-05)
 
 - Download link now points directly to unpkg

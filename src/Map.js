@@ -33,7 +33,7 @@ import {
   validateEnvironment,
   getDirections
 } from "./util";
-import { sendAnalyticsCodeEvent } from "./web-sdk";
+import { sendAnalyticsCodeEvent } from "./analytics";
 import DirectionsLayer from "./DirectionsLayer";
 
 const ZOOM_FACTOR = 0.5;

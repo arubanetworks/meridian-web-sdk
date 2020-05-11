@@ -1,6 +1,10 @@
-# v0.7.4 (????-??-??)
+# v0.7.5 (2020-05-11)
 
 - Adds more examples to documentation
+
+# v0.7.4 (2020-05-07)
+
+- Fixes an internal code crash
 
 # v0.7.3 (2020-05-05)
 

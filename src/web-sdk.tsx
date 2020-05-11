@@ -25,6 +25,19 @@
 
 /**
  * See [[init]] and [[createMap]] for getting started.
+ *
+ * ```js
+ * const api = new MeridianSDK.API({ token: "<TOKEN>" });
+ * MeridianSDK.init({ api: api });
+ * const map = MeridianSDK.createMap(
+ *  document.querySelector("#map-container"),
+ *  {
+ *    locationID: "<location ID>",
+ *    floorID: "<floor ID>",
+ *    height: "500px"
+ *  }
+ * )
+ * ```
  * @packageDocumentation
  */
 
@@ -87,6 +100,22 @@ export const version: string = GLOBAL_VERSION;
  *
  * Pass this to `shouldMapPanZoom` in [[createMap]] if you would like the user
  * to use two fingers or hold down a modifier key in order to zoom the map.
+ *
+ * ```js
+ * const api = new MeridianSDK.API({ token: "<TOKEN>" });
+ *
+ * MeridianSDK.init({ api: api });
+ *
+ * const map = MeridianSDK.createMap(
+ *  document.querySelector("#map-container"),
+ *  {
+ *    locationID: "<location ID>",
+ *    floorID: "<floor ID>",
+ *    height: "500px",
+ *    shouldMapPanZoom: MeridianSDK.restrictedPanZoom,
+ *  }
+ * )
+ * ```
  */
 export function restrictedPanZoom(
   event: TouchEvent | WheelEvent | MouseEvent
@@ -241,6 +270,18 @@ export type MeridianMap = {
  * Creates and returns a map object mounted at the given HTML element. If you
  * are using the tags.filter or onTagClick or onTagsUpdate functions, refer to
  * <https://tags.meridianapps.com/docs/track> for the schema.
+ *
+ * ```js
+ * const api = new MeridianSDK.API({ token: "<TOKEN>" });
+ * MeridianSDK.init({ api: api });
+ * const map = MeridianSDK.createMap(
+ *  document.querySelector("#map-container"),
+ *  {
+ *    locationID: "<location ID>",
+ *    floorID: "<floor ID>"
+ *  }
+ * )
+ * ```
  */
 export function createMap(
   element: HTMLElement,
@@ -412,9 +453,8 @@ export class API {
   }
 
   /**
-   * Opens a tag stream for a given location and floor. `onInitialTags` is
-   * called with the full list of tags for that floor, then `onTagUpdate` is
-   * called every time a tag moves on the floor.
+   * Opens a tag stream for a given location and floor. `onInitialTags` is called with the full list of tags for that
+   * floor, then `onTagUpdate` is called every time a tag moves on the floor.
    *
    * ```js
    * const api = new MeridianSDK.API({
@@ -422,7 +462,7 @@ export class API {
    *   environment: "production"
    * });
    *
-   * api.openStream({
+   * const stream = api.openStream({
    *   locationID: locationID,
    *   floorID: floorID,
    *   onInitialTags: (tags) => {
@@ -431,7 +471,10 @@ export class API {
    *   onTagUpdate: (tag) => {
    *     console.log("update", tag);
    *   }
-   * })
+   * });
+   *
+   * // call `stream.close()` when switching pages to avoid leaving the stream
+   * // open and wasting bandwidth in the background
    * ```
    */
   openStream(options: {
@@ -526,11 +569,30 @@ export type EnvOptions = "production" | "staging" | "eu" | "development";
 
 /**
  * Options passed to [[createAPI]].
+ *
+ * ```js
+ * const api = new MeridianSDK.API({
+ *   environment: "production", // or "eu"
+ *   token: "<token>"
+ * });
+ * ```
  */
 export type APIOptions = { environment?: EnvOptions; token: string };
 
 /**
  * An open tag stream that can be closed. Returned by [[API.openStream]].
+ *
+ * ```js
+ * const api = new MeridianSDK.API({
+ *   // ...
+ * });
+ *
+ * const stream = api.openStream({
+ *   // ...
+ * });
+ *
+ * stream.close();
+ * ```
  */
 export type Stream = {
   close: () => void;

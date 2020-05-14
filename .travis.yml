@@ -18,7 +18,7 @@ deploy:
   - provider: npm
     skip_cleanup: true
     # TODO: Switch to a company owned account
-    email: brian@mockbrian.com
+    email: $NPM_EMAIL
     api_key: $NPM_TOKEN
     # TODO: Change this to `latest` once I verify everything works
     tag: test

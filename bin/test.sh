@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-set -eu
+set -eux
 
-set -x
 npx eslint "src/**/*.js"
 npx prettier --list-different "src/**/*.js"

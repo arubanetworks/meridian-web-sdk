@@ -12,8 +12,7 @@
     "prepack": "npm run build",
     "build": "bash bin/build.sh",
     "analyze": "webpack -p --mode production --env analyze",
-    "postversion": "bash bin/postversion.sh",
-    "postpublish": "bash bin/deploy.sh",
+    "postversion": "git push origin --tags && git push origin HEAD",
     "test": "bash bin/test.sh"
   },
   "repository": {

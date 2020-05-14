@@ -2,6 +2,7 @@ sudo: false
 branches:
   only:
     - master
+    - /^v[0-9]/
 language: node_js
 node_js:
   - "node"
@@ -12,3 +13,17 @@ install:
   - npm ci
 script:
   - npm test
+  - npm run build
+deploy:
+  - provider: npm
+    skip_cleanup: true
+    # TODO: Switch to a company owned account
+    email: brian@mockbrian.com
+    api_key: $NPM_TOKEN
+    # TODO: Change this to `latest` once I verify everything works
+    tag: test
+  - provider: pages
+    skip_cleanup: true
+    local_dir: docs
+    # TODO: Switch to a company owned account
+    github_token: $GITHUB_TOKEN

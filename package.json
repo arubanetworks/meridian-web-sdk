@@ -9,7 +9,6 @@
     "start": "webpack-dev-server --watch -d --env development src/web-sdk.tsx",
     "nonlocal": "npm run start -- --host 0.0.0.0",
     "docs": "bash bin/docs.sh",
-    "prepack": "npm run build",
     "build": "bash bin/build.sh",
     "analyze": "webpack -p --mode production --env analyze",
     "postversion": "git push origin --tags && git push origin HEAD",

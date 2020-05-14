@@ -22,8 +22,12 @@ deploy:
     api_key: $NPM_TOKEN
     # TODO: Change this to `latest` once I verify everything works
     tag: test
+    on:
+      tags: true
   - provider: pages
     skip_cleanup: true
     local_dir: docs
     # TODO: Switch to a company owned account
     github_token: $GITHUB_TOKEN
+    on:
+      tags: true

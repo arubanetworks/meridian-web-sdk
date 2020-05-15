@@ -1,3 +1,7 @@
+# v0.7.6 (2020-05-15)
+
+- Adds descriptions to examples page
+
 # v0.7.5 (2020-05-11)
 
 - Adds more examples to documentation

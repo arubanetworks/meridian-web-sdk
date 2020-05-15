@@ -18,7 +18,6 @@ deploy:
   - provider: npm
     # Don't delete `dist/` and `docs/` since we need them to deploy
     skip_cleanup: true
-    # TODO: Switch to an account operated by Meridian
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
     tag: latest

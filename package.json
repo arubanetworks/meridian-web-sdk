@@ -1,7 +1,7 @@
 {
   "name": "@meridian/web-sdk",
   "private": false,
-  "version": "0.7.5",
+  "version": "0.7.5-test.17",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
   "main": "./dist/web-sdk.js",
   "types": "./dist/src/web-sdk.d.ts",
@@ -9,11 +9,9 @@
     "start": "webpack-dev-server --watch -d --env development src/web-sdk.tsx",
     "nonlocal": "npm run start -- --host 0.0.0.0",
     "docs": "bash bin/docs.sh",
-    "prepack": "npm run build",
     "build": "bash bin/build.sh",
     "analyze": "webpack -p --mode production --env analyze",
-    "postversion": "bash bin/postversion.sh",
-    "postpublish": "bash bin/deploy.sh",
+    "postversion": "git push origin --tags && git push origin HEAD",
     "test": "bash bin/test.sh"
   },
   "repository": {

@@ -2,6 +2,7 @@ sudo: false
 branches:
   only:
     - master
+    - /^v[0-9]/
 language: node_js
 node_js:
   - "node"
@@ -12,3 +13,27 @@ install:
   - npm ci
 script:
   - npm test
+  - npm run build
+deploy:
+  - provider: npm
+    # Don't delete `dist/` and `docs/` since we need them to deploy
+    skip_cleanup: true
+    email: $NPM_EMAIL
+    api_key: $NPM_TOKEN
+    tag: latest
+    on:
+      tags: true
+      # Only deploy from the LTS job
+      node_js: "lts/*"
+  - provider: pages # GitHub pages
+    # Don't delete `dist/` and `docs/` since we need them to deploy
+    skip_cleanup: true
+    local_dir: docs
+    # This is a Personal Access Token with the permission `repo_public`
+    # (https://github.com/settings/tokens) for a user with read+write permission
+    # to the repo (https://github.com/arubanetworks/meridian-web-sdk)
+    github_token: $GITHUB_TOKEN
+    on:
+      tags: true
+      # Only deploy from the LTS job
+      node_js: "lts/*"

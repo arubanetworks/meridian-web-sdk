@@ -88,7 +88,7 @@
   bottom: 15px;
   left: 15px;
   background: white;
-  color: #297bc0;
+  color: hsl(240, 100%, 60%);
   font-family: sans-serif;
   z-index: 1;
   overflow: hidden;
@@ -129,4 +129,10 @@
 
 select {
   font-size: 18px;
+}
+
+body {
+  font-family: sans-serif;
+  background: #fdfdfd;
+  color: #222;
 }

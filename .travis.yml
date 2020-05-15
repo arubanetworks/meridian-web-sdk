@@ -5,10 +5,7 @@ branches:
     - /^v[0-9]/
 language: node_js
 node_js:
-  # We should test against latest stable "node" and long term support "lts/*",
-  # but right now Travis wants to run the deploy block after each node version
-  # which is extremely bad.
-  # - "node"
+  - "node"
   - "lts/*"
 cache:
   npm: true
@@ -27,6 +24,8 @@ deploy:
     tag: test
     on:
       tags: true
+      # Only deploy from the LTS release
+      node_js: "lts/*"
   - provider: pages
     skip_cleanup: true
     local_dir: docs
@@ -34,3 +33,5 @@ deploy:
     github_token: $GITHUB_TOKEN
     on:
       tags: true
+      # Only deploy from the LTS release
+      node_js: "lts/*"

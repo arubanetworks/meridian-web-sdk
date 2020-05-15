@@ -30,7 +30,7 @@ deploy:
     skip_cleanup: true
     local_dir: docs
     # TODO: Switch to a company owned account
-    github_token: $GITHUB_TOKEN
+    # github_token: $GITHUB_TOKEN
     on:
       tags: true
       # Only deploy from the LTS release

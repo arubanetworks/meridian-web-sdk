@@ -5,7 +5,10 @@ branches:
     - /^v[0-9]/
 language: node_js
 node_js:
-  - "node"
+  # We should test against latest stable "node" and long term support "lts/*",
+  # but right now Travis wants to run the deploy block after each node version
+  # which is extremely bad.
+  # - "node"
   - "lts/*"
 cache:
   npm: true

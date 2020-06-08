@@ -1,3 +1,8 @@
+# v0.7.7 (2020-06-08)
+
+- Updates documentation for `onTagsUpdate` to clarify it only receives tags for
+  the current floor
+
 # v0.7.6 (2020-05-15)
 
 - Adds descriptions to examples page

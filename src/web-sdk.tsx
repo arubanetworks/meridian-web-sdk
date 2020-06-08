@@ -212,9 +212,10 @@ export type CreateMapOptions = {
     event: MeridianEvent
   ) => void;
   /**
-   * Called when tags are updated. `allTags` is every tag, even ones not show.
-   * `filteredTags` is only the tags shown on the map (i.e. it respects
-   * `showControlTags` and `filter`).
+   * Called when tags on the current floor are updated. `allTags` is every tag
+   * on the current floor, even ones not shown on the map. `filteredTags` is
+   * only the tags shown on the map (i.e. it respects `showControlTags` and
+   * `filter`).
    */
   onTagsUpdate?: (tags: {
     allTags: Record<string, any>[];

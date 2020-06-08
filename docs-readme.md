@@ -114,4 +114,4 @@ You can style Tags with specific labels using:
 
 [examples]: examples
 [api token]: https://docs.meridianapps.com/hc/en-us/articles/360039670154-Authenticate-to-the-API
-[download]: https://unpkg.com/@meridian/web-sdk@0.7.2/dist/meridian-sdk.js
+[download]: https://unpkg.com/@meridian/web-sdk/dist/meridian-sdk.js

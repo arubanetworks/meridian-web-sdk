@@ -17,4 +17,4 @@ We have several [examples][] of how to use the SDK.
 
 <!-- TODO: Update this link below -->
 
-[documentation]: https://docs.meridianapps.com/hc/en-us/articles/360039669774-The-Meridian-Web-SDK
+[documentation]: https://arubanetworks.github.io/meridian-web-sdk/

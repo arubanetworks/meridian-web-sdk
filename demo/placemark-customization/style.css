@@ -1,0 +1,55 @@
+body {
+  font-family: sans-serif;
+}
+
+.container {
+  width: 900px;
+  margin: 0 auto;
+}
+
+.map {
+  border: 1px solid #ccc;
+  width: 500px;
+}
+
+.controls-container {
+  margin: 20px auto;
+  max-width: 500px;
+}
+
+.controls {
+  margin-bottom: 10px;
+  margin-top: 20px;
+  background: hsl(210, 50%, 98%);
+  color: hsl(210, 80%, 30%);
+  border: 1px solid hsl(210, 30%, 80%);
+  padding: 15px;
+}
+
+img {
+  margin: 15px 0px;
+}
+
+@media only screen and (max-width: 900px) {
+  .container {
+    max-width: 340px;
+    width: auto;
+    margin: 0 auto;
+  }
+  .controls-container {
+    float: none;
+    margin: 10px 0 0 0;
+    width: 100%;
+    max-width: auto;
+  }
+
+  .map {
+    float: none;
+    width: 100%;
+  }
+
+  img {
+    width: 308px;
+    height: 75px;
+  }
+}

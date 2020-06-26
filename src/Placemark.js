@@ -12,7 +12,7 @@ import { getPlacemarkIconURL } from "./util";
 import { css, cx, mixins, theme } from "./style";
 import IconYouAreHere from "./IconYouAreHere";
 
-const SIZE = 24;
+const SIZE = "24px";
 
 const Placemark = ({
   isSelected,
@@ -31,6 +31,7 @@ const Placemark = ({
   const iconClassName = isSelected
     ? cx(
         "meridian-placemark-icon-selected",
+        "meridian-placemark-icon",
         cssTypeName,
         cssPlacemarkIconSelected
       )
@@ -47,9 +48,9 @@ const Placemark = ({
     const color = "#" + data.color;
     const iconURL = getPlacemarkIconURL(data.type);
     return {
-      borderColor: color,
-      backgroundColor: color,
-      backgroundImage: `url('${iconURL}')`
+      "--meridian-placemark-iconURL": `url('${iconURL}')`,
+      "--meridian-placemark-borderColor": color,
+      "--meridian-placemark-backgroundColor": color
     };
   }
 
@@ -63,6 +64,7 @@ const Placemark = ({
             "meridian-label",
             "meridian-label-only"
           )}
+          data-meridian-placemark-id={data.next_id}
         >
           {data.name}
         </div>
@@ -84,6 +86,7 @@ const Placemark = ({
         <div
           className={cx("meridian-label", cssLabel)}
           hidden={mapZoomFactor < SHRINK_POINT}
+          data-meridian-placemark-id={data.next_id}
         >
           YOU ARE HERE
         </div>
@@ -95,6 +98,7 @@ const Placemark = ({
       <button
         disabled={disabled}
         className={iconClassName}
+        data-meridian-placemark-id={data.next_id}
         style={getIconStyle(data)}
         onClick={event => {
           event.target.focus();
@@ -156,17 +160,23 @@ const cssPlacemarkIcon = css(
   mixins.pointer,
   mixins.focusNone,
   {
+    "--meridian-placemark-placemarkWidth": SIZE,
+    "--meridian-placemark-placemarkHeight": SIZE,
+    "--meridian-placemark-backgroundColor": theme.brandBlue,
+    "--meridian-placemark-borderColor": theme.brandBlue,
     label: "meridian-placemark-icon",
     transition: "width 80ms ease, height 80ms ease",
     display: "block",
-    width: SIZE,
-    height: SIZE,
+    width: "var(--meridian-placemark-placemarkWidth)",
+    height: "var(--meridian-placemark-placemarkHeight)",
     borderRadius: "100%",
-    backgroundColor: theme.brandBlue,
+    backgroundColor: "var(--meridian-placemark-backgroundColor)",
+    backgroundImage: "var(--meridian-placemark-iconURL)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     border: "2px solid transparent",
+    borderColor: "var(--meridian-placemark-borderColor)",
     overflow: "hidden",
     zIndex: 1
   }

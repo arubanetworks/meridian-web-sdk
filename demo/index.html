@@ -33,7 +33,7 @@
       }
 
       h3 {
-        border-top: 1px solid rgba(0, 0, 0, 0.10);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
         font-size: 1.25rem;
         margin: 0 -20px;
         padding: 0 20px;
@@ -53,7 +53,8 @@
       }
 
       code {
-        font-family: "JetBrains Mono", "Fira Code", "Menlo", "Consolas", monospace;
+        font-family: "JetBrains Mono", "Fira Code", "Menlo", "Consolas",
+          monospace;
         background: hsl(0, 100%, 97%);
         color: hsl(0, 100%, 40%);
       }
@@ -73,13 +74,23 @@
     <h1>Meridian Web SDK Examples</h1>
     <section>
       <h2>Documentation</h2>
-      <a href="..">Read the documentation</a> on GitHub.
+      <a href="https://arubanetworks.github.io/meridian-web-sdk/"
+        >Read the documentation</a
+      >
+      on GitHub.
     </section>
     <section>
       <h2>Examples</h2>
 
       <h3><a href="basic">Basic</a></h3>
       <p>A basic demo of the Meridian Web SDK.</p>
+
+      <h3><a href="placemark-customization">Placemark Customization</a></h3>
+      <p>
+        A demo showing you can target placemark css using
+        <code>[data-meridian-placemark-id={placemark id}]</code> to customize
+        the UI
+      </p>
 
       <h3><a href="alternate">API as an option</a></h3>
       <p>

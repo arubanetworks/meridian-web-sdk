@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import { getAssetURL, getTagLabels } from "./util";
 import { css, cx, mixins } from "./style";
 
-const SIZE = 48;
+const SIZE = "48px";
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
 const DEFAULT_TAG_IMAGE = getAssetURL("tags/tag.svg");
@@ -22,16 +22,21 @@ const cssTag = css(
   mixins.pointer,
   mixins.focusNone,
   {
+    "--meridian-tag-tagWidth": SIZE,
+    "--meridian-tag-tagHeight": SIZE,
+    "--meridian-tag-backgroundColor": "white",
+    "--meridian-tag-border": "2px solid white",
     label: "meridian-tag",
-    width: SIZE,
-    height: SIZE,
+    width: "var(--meridian-tag-tagWidth)",
+    height: "var(--meridian-tag-tagHeight)",
     borderRadius: "100%",
     position: "absolute",
-    backgroundColor: "white",
+    backgroundImage: "var(--meridian-tag-imageURL)",
+    backgroundColor: "var(--meridian-tag-backgroundColor)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    border: "2px solid white",
+    border: "var(--meridian-tag-border)",
     overflow: "hidden",
     transition: `
       width 80ms ease,
@@ -64,19 +69,29 @@ const Tag = ({
     return `meridian-tag-label-${s}`;
   });
   const className = isSelected
-    ? cx("meridian-tag-selected", labelClassNames, cssTagSelected)
+    ? cx(
+        "meridian-tag-selected",
+        "meridian-tag",
+        labelClassNames,
+        cssTagSelected,
+        cssTag
+      )
     : cx("meridian-tag", labelClassNames, cssTag);
-  const style = {
-    left: data.x,
-    top: data.y,
-    transform: `translate(-50%, -50%) scale(${k})`,
-    backgroundImage: `url('${data.image_url || DEFAULT_TAG_IMAGE}')`
-  };
+
+  function getTagStyle(data) {
+    return {
+      left: data.x,
+      top: data.y,
+      transform: `translate(-50%, -50%) scale(${k})`,
+      "--meridian-tag-imageURL": `url('${data.image_url || DEFAULT_TAG_IMAGE}')`
+    };
+  }
   return (
     <button
       disabled={disabled}
       className={className}
-      style={style}
+      style={getTagStyle(data)}
+      data-meridian-tag-id={data.id}
       onClick={event => {
         event.target.focus();
         onClick();

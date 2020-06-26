@@ -1,3 +1,11 @@
+# v0.7.7 (2020-06-??)
+
+- Adds the ability to target placemarks and tags by ID using data attribute selectors. Access a tag with `[data-meridian-tag-id={mac or tag id}]`, Access a placemark with `[data-meridian-placemark-id={placemark id}]`
+
+- Adds an Example, titled Placemark Customization, for styling a specific placemark
+
+- Switches from inline styles to CSS Custom Properties for easier customization of Placemarks and Tags
+
 # v0.7.7 (2020-06-08)
 
 - Updates documentation for `onTagsUpdate` to clarify it only receives tags for

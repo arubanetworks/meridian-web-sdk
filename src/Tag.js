@@ -27,6 +27,7 @@ const cssTag = css(
     height: SIZE,
     borderRadius: "100%",
     position: "absolute",
+    backgroundImage: "var(--meridian-tag-imageURL)",
     backgroundColor: "white",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
@@ -64,19 +65,29 @@ const Tag = ({
     return `meridian-tag-label-${s}`;
   });
   const className = isSelected
-    ? cx("meridian-tag-selected", labelClassNames, cssTagSelected)
+    ? cx(
+        "meridian-tag-selected",
+        "meridian-tag",
+        labelClassNames,
+        cssTagSelected,
+        cssTag
+      )
     : cx("meridian-tag", labelClassNames, cssTag);
-  const style = {
-    left: data.x,
-    top: data.y,
-    transform: `translate(-50%, -50%) scale(${k})`,
-    backgroundImage: `url('${data.image_url || DEFAULT_TAG_IMAGE}')`
-  };
+
+  function getTagStyle(data) {
+    return {
+      left: data.x,
+      top: data.y,
+      transform: `translate(-50%, -50%) scale(${k})`,
+      "--meridian-tag-imageURL": `url('${data.image_url || DEFAULT_TAG_IMAGE}')`
+    };
+  }
   return (
     <button
       disabled={disabled}
       className={className}
-      style={style}
+      style={getTagStyle(data)}
+      data-meridian-tag-id={data.id}
       onClick={event => {
         event.target.focus();
         onClick();

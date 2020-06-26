@@ -1,3 +1,13 @@
+# v0.7.7 (2020-06-26)
+
+- You can select placemarks by ID now `.meridian-placemark-icon[data-meridian-placemark-id="..."]`
+
+- You can select tags by ID now `.meridian-tag[data-meridian-tag-id="..."]`
+
+- Adds an Example, titled Placemark Customization, for styling a specific placemark
+
+- Switches from inline styles to CSS Custom Properties for easier customization of Placemarks and Tags
+
 # v0.7.7 (2020-06-08)
 
 - Updates documentation for `onTagsUpdate` to clarify it only receives tags for

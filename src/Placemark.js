@@ -161,7 +161,6 @@ const cssPlacemarkIcon = css(
   mixins.focusNone,
   {
     "--meridian-placemark-backgroundColor": theme.brandBlue,
-    "--meridian-placemark-borderColor": "transparent",
     label: "meridian-placemark-icon",
     transition: "width 80ms ease, height 80ms ease",
     display: "block",
@@ -174,7 +173,6 @@ const cssPlacemarkIcon = css(
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
     border: "2px solid transparent",
-    borderColor: "var(--meridian-placemark-borderColor)",
     overflow: "hidden",
     zIndex: 1
   }

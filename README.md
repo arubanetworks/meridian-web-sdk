@@ -12,7 +12,7 @@ Please read the [documentation][] for an installation and API guide.
 
 We have several [examples][] of how to use the SDK.
 
-[examples]: https://arubanetworks.github.io/meridian-web-sdk
+[examples]: https://arubanetworks.github.io/meridian-web-sdk/examples
 [download]: https://docs.meridianapps.com/hc/en-us/articles/360039669854-SDK-Downloads
 
 <!-- TODO: Update this link below -->

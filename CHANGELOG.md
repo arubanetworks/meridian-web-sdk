@@ -1,4 +1,4 @@
-# v0.7.7 (2020-06-26)
+# v0.7.8 (2020-06-26)
 
 - You can select placemarks by ID now `.meridian-placemark-icon[data-meridian-placemark-id="..."]`
 

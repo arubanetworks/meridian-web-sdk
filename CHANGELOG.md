@@ -1,6 +1,8 @@
 # v0.7.7 (2020-06-26)
 
-- Adds the ability to target placemarks and tags by ID using data attribute selectors. Access a tag with `[data-meridian-tag-id={mac or tag id}]`, Access a placemark with `[data-meridian-placemark-id={placemark id}]`
+- You can select placemarks by ID now `.meridian-placemark-icon[data-meridian-placemark-id="..."]`
+
+- You can select tags by ID now `.meridian-tag[data-meridian-tag-id="..."]`
 
 - Adds an Example, titled Placemark Customization, for styling a specific placemark
 

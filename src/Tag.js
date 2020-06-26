@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import { getAssetURL, getTagLabels } from "./util";
 import { css, cx, mixins } from "./style";
 
-const SIZE = "48px";
+const SIZE = 48;
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
 const DEFAULT_TAG_IMAGE = getAssetURL("tags/tag.svg");
@@ -22,21 +22,17 @@ const cssTag = css(
   mixins.pointer,
   mixins.focusNone,
   {
-    "--meridian-tag-tagWidth": SIZE,
-    "--meridian-tag-tagHeight": SIZE,
-    "--meridian-tag-backgroundColor": "white",
-    "--meridian-tag-border": "2px solid white",
     label: "meridian-tag",
-    width: "var(--meridian-tag-tagWidth)",
-    height: "var(--meridian-tag-tagHeight)",
+    width: SIZE,
+    height: SIZE,
     borderRadius: "100%",
     position: "absolute",
     backgroundImage: "var(--meridian-tag-imageURL)",
-    backgroundColor: "var(--meridian-tag-backgroundColor)",
+    backgroundColor: "white",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    border: "var(--meridian-tag-border)",
+    border: "2px solid white",
     overflow: "hidden",
     transition: `
       width 80ms ease,

@@ -12,7 +12,7 @@ import { getPlacemarkIconURL } from "./util";
 import { css, cx, mixins, theme } from "./style";
 import IconYouAreHere from "./IconYouAreHere";
 
-const SIZE = "24px";
+const SIZE = 24;
 
 const Placemark = ({
   isSelected,
@@ -160,15 +160,13 @@ const cssPlacemarkIcon = css(
   mixins.pointer,
   mixins.focusNone,
   {
-    "--meridian-placemark-placemarkWidth": SIZE,
-    "--meridian-placemark-placemarkHeight": SIZE,
     "--meridian-placemark-backgroundColor": theme.brandBlue,
-    "--meridian-placemark-borderColor": theme.brandBlue,
+    "--meridian-placemark-borderColor": "transparent",
     label: "meridian-placemark-icon",
     transition: "width 80ms ease, height 80ms ease",
     display: "block",
-    width: "var(--meridian-placemark-placemarkWidth)",
-    height: "var(--meridian-placemark-placemarkHeight)",
+    width: SIZE,
+    height: SIZE,
     borderRadius: "100%",
     backgroundColor: "var(--meridian-placemark-backgroundColor)",
     backgroundImage: "var(--meridian-placemark-iconURL)",

@@ -1,4 +1,4 @@
-# v0.7.7 (2020-06-??)
+# v0.7.7 (2020-06-26)
 
 - Adds the ability to target placemarks and tags by ID using data attribute selectors. Access a tag with `[data-meridian-tag-id={mac or tag id}]`, Access a placemark with `[data-meridian-placemark-id={placemark id}]`
 

@@ -1,8 +1,8 @@
 ## To test your changes in the web sdk
 
-- Go to meridian-editor-frontend and run:
+- Go to your project directory and run:
 
-```shell
+```sh
 $ cd meridian-web-sdk
 $ npm pack
 $ cd ../meridian-editor-frontend

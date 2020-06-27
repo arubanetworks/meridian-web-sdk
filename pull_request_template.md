@@ -1,0 +1,2 @@
+- [ ] This change is documented in CHANGELOG.md
+- [ ] This change has been tested via the terms in TESTING.md

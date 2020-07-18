@@ -196,8 +196,8 @@ export type CreateMapOptions = {
   showTagsControl?: boolean;
   /** Options related to tags. */
   tags?: CreateMapTagsOptions;
-  /** Set to true to disable loading placemarks */
-  dontLoadPlacemarks?: boolean;
+  /** Set to false to disable loading placemarks */
+  loadPlacemarks?: boolean;
   /** Options related to placemarks. */
   placemarks?: CreateMapPlacemarksOptions;
   /**

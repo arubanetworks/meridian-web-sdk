@@ -4,9 +4,10 @@
 
 ```sh
 $ cd meridian-web-sdk
+$ npm run build
 $ npm pack
-$ cd ../meridian-editor-frontend
-$ npm install ../meridian-web-sdk/WHATEVER.tgz
+$ cd ../meridian-editor-frontend/meridian-client
+$ npm install ../../meridian-web-sdk/meridian-web-sdk-${VERSION}.tgz
 ```
 
 - Modify the MEF code to use the new feature

@@ -1,3 +1,9 @@
+# v0.8.0 (2020-??-??)
+
+- Adds option `loadPlacemarks` that when false causes the map to not load
+  placemark data (it can be updated via `update` to true later if you want to
+  load the data at a later time)
+
 # v0.7.8 (2020-06-26)
 
 - You can select placemarks by ID now `.meridian-placemark-icon[data-meridian-placemark-id="..."]`

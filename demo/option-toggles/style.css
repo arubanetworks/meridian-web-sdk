@@ -30,6 +30,7 @@ body {
   display: flex;
   padding: 16px 8px;
   user-select: none;
+  align-items: center;
 }
 
 .controls__item > span {

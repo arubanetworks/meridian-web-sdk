@@ -137,9 +137,10 @@
             <input
               autocomplete="off"
               type="checkbox"
-              id="dont-load-placemarks"
+              id="load-placemarks"
+              checked
             />
-            <span>Disable loading placemarks</span>
+            <span>Enable loading placemarks</span>
           </label>
         </div>
       </div>
@@ -160,13 +161,13 @@
         locationID: "5198682008846336",
         floorID: "5755685136498688",
         height: "360px",
-        dontLoadPlacemarks: true
+        loadPlacemarks: true
       });
       // ---^^^ SDK setup ^^^---
 
       // ---vvv UI controls vvv---
       var state = {
-        dontLoadPlacemarks: true,
+        loadPlacemarks: true,
         placemarks: {},
         tags: {},
         onTagsUpdate: function(tags) {
@@ -262,8 +263,8 @@
         updateMap();
       });
 
-      $("#dont-load-placemarks").on("change", function(event) {
-        state.dontLoadPlacemarks = event.target.checked;
+      $("#load-placemarks").on("change", function(event) {
+        state.loadPlacemarks = event.target.checked;
         updateMap();
       });
 

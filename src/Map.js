@@ -82,7 +82,7 @@ export default class Map extends Component {
       filter: PropTypes.func,
       disabled: PropTypes.bool
     }),
-    dontLoadPlacemarks: PropTypes.bool,
+    loadPlacemarks: PropTypes.bool,
     placemarks: PropTypes.shape({
       showHiddenPlacemarks: PropTypes.bool,
       filter: PropTypes.func,
@@ -138,7 +138,7 @@ export default class Map extends Component {
   }
 
   componentDidMount() {
-    const { api, locationID, dontLoadPlacemarks } = this.props;
+    const { api, locationID } = this.props;
     const isEnvironmentValid = validateEnvironment(api.environment);
     if (!isEnvironmentValid) {
       this.toggleErrorOverlay({
@@ -152,7 +152,8 @@ export default class Map extends Component {
       });
     } else {
       this.initializeFloors();
-      if (!dontLoadPlacemarks) {
+      // Check for `false` explicitly in case this is `undefined`
+      if (this.props.loadPlacemarks !== false) {
         this.updatePlacemarks();
       }
       this.initializeTags();
@@ -178,8 +179,12 @@ export default class Map extends Component {
         isMapMarkerOverlayOpen: false
       });
     }
-    // If the `dontLoadPlacemarks` value changed is is currently falsy
-    if (!this.props.dontLoadPlacemarks && prevProps.dontLoadPlacemarks) {
+    // If the `loadPlacemarks` value changed is is currently true. Checking for
+    // `false` explicitly so that `undefined` is treated as `true`.
+    if (
+      this.props.loadPlacemarks !== false &&
+      prevProps.loadPlacemarks === false
+    ) {
       this.updatePlacemarks();
     }
   }

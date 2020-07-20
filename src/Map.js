@@ -97,6 +97,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
+    loadPlacemarks: true,
     showTagsControl: true,
     showFloorsControl: true,
     shouldMapPanZoom: () => true,
@@ -152,8 +153,7 @@ export default class Map extends Component {
       });
     } else {
       this.initializeFloors();
-      // Check for `false` explicitly in case this is `undefined`
-      if (this.props.loadPlacemarks !== false) {
+      if (this.props.loadPlacemarks) {
         this.updatePlacemarks();
       }
       this.initializeTags();
@@ -179,12 +179,7 @@ export default class Map extends Component {
         isMapMarkerOverlayOpen: false
       });
     }
-    // If the `loadPlacemarks` value changed is is currently true. Checking for
-    // `false` explicitly so that `undefined` is treated as `true`.
-    if (
-      this.props.loadPlacemarks !== false &&
-      prevProps.loadPlacemarks === false
-    ) {
+    if (this.props.loadPlacemarks && !prevProps.loadPlacemarks) {
       this.updatePlacemarks();
     }
   }

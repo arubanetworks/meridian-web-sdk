@@ -23,3 +23,5 @@ $ npm install ../../meridian-web-sdk/meridian-web-sdk-${VERSION}.tgz
 ### Demos still work
 
 - Test that the examples in the `demo` folder still work
+- Verify that at least one of the demos actually demonstrates the change you're
+  testing

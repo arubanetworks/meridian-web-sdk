@@ -2,6 +2,8 @@
 
 Have someone **besides** the author do the following:
 
+### npm bundle still works
+
 - Go to your project directory and run:
 
 ```sh
@@ -13,4 +15,11 @@ $ cd ../meridian-editor-frontend/meridian-client
 $ npm install ../../meridian-web-sdk/meridian-web-sdk-${VERSION}.tgz
 ```
 
-- Modify the MEF code to use the new feature
+- Ensure that the "Web SDK" screen in the Editor appears to function correctly
+  still
+  - Map, placemarks, and tag data load
+  - The provided checkboxes still work
+
+### Demos still work
+
+- Test that the examples in the `demo` folder still work

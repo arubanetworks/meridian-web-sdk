@@ -1,4 +1,4 @@
-# v0.8.0 (2020-??-??)
+# v0.8.0 (2020-07-23)
 
 - Adds option `loadPlacemarks` that when false causes the map to not load
   placemark data (defaults to `true`; it can be updated via `update` to true

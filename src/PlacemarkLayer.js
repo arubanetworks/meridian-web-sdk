@@ -30,13 +30,8 @@ export default class PlacemarkLayer extends Component {
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
-    placemarks: PropTypes.object,
-    updatePlacemarks: PropTypes.func
+    placemarks: PropTypes.object
   };
-
-  async componentDidMount() {
-    this.props.updatePlacemarks();
-  }
 
   shouldComponentUpdate(nextProps) {
     const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
@@ -45,12 +40,6 @@ export default class PlacemarkLayer extends Component {
       return false;
     }
     return true;
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.floorID !== this.props.floorID) {
-      this.props.updatePlacemarks();
-    }
   }
 
   getFilterFunction() {

@@ -27,6 +27,7 @@
         <div class="controls">
           <label class="controls__item">
             <input
+              autocomplete="off"
               type="radio"
               name="placemark-filter"
               value="filter-none"
@@ -35,11 +36,22 @@
             <span>Hide all placemarks</span>
           </label>
           <label class="controls__item">
-            <input type="radio" name="placemark-filter" value="filter-all" />
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-filter"
+              value="filter-all"
+              checked
+            />
             <span>Show all placemarks</span>
           </label>
           <label class="controls__item">
-            <input type="radio" name="placemark-filter" value="filter-cafe" />
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-filter"
+              value="filter-cafe"
+            />
             <span
               >Show placemarks of type
               <b>cafe</b>
@@ -47,6 +59,7 @@
           </label>
           <label class="controls__item">
             <input
+              autocomplete="off"
               type="radio"
               name="placemark-filter"
               value="filter-water_fountain"
@@ -59,41 +72,75 @@
         </div>
         <div class="controls">
           <label class="controls__item">
-            <input type="radio" name="tag-filter" value="filter-none" />
+            <input
+              autocomplete="off"
+              type="radio"
+              name="tag-filter"
+              value="filter-none"
+            />
             <span>Hide all tags</span>
           </label>
           <label class="controls__item">
-            <input type="radio" name="tag-filter" value="filter-all" checked />
+            <input
+              autocomplete="off"
+              type="radio"
+              name="tag-filter"
+              value="filter-all"
+              checked
+            />
             <span>Show all tags</span>
           </label>
           <label class="controls__item">
-            <input type="radio" name="tag-filter" value="filter-Jamboard" />
+            <input
+              autocomplete="off"
+              type="radio"
+              name="tag-filter"
+              value="filter-Jamboard"
+            />
             <span
               >Show tags labeled
               <b>Jamboard</b>
             </span>
           </label>
           <label class="controls__item">
-            <input type="radio" name="tag-filter" value="filter-CafeCart" />
+            <input
+              autocomplete="off"
+              type="radio"
+              name="tag-filter"
+              value="filter-CafeCart"
+            />
             <span>Show tag <b>CC78ABC6D187</b> (cafe cart 1) </span>
           </label>
         </div>
         <div class="controls">
           <label class="controls__item">
-            <input type="checkbox" id="show-control-tags" />
+            <input autocomplete="off" type="checkbox" id="show-control-tags" />
             <span>Show Control Tags</span>
           </label>
           <label class="controls__item">
-            <input type="checkbox" id="show-hidden-placemarks" />
+            <input
+              autocomplete="off"
+              type="checkbox"
+              id="show-hidden-placemarks"
+            />
             <span>Show Hidden Placemarks</span>
           </label>
           <label class="controls__item">
-            <input type="checkbox" id="disable-placemarks" />
+            <input autocomplete="off" type="checkbox" id="disable-placemarks" />
             <span>Disable clicking on placemarks</span>
           </label>
           <label class="controls__item">
-            <input type="checkbox" id="disable-tags" />
+            <input autocomplete="off" type="checkbox" id="disable-tags" />
             <span>Disable clicking on tags</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="checkbox"
+              id="load-placemarks"
+              checked
+            />
+            <span>Enable loading placemarks</span>
           </label>
         </div>
       </div>
@@ -114,21 +161,14 @@
         locationID: "5198682008846336",
         floorID: "5755685136498688",
         height: "360px",
-        placemarks: {
-          filter: function() {
-            return false;
-          }
-        }
+        loadPlacemarks: true
       });
       // ---^^^ SDK setup ^^^---
 
       // ---vvv UI controls vvv---
       var state = {
-        placemarks: {
-          filter: function() {
-            return false;
-          }
-        },
+        loadPlacemarks: true,
+        placemarks: {},
         tags: {},
         onTagsUpdate: function(tags) {
           if (state.tags.filter === filterCafeCart) {
@@ -149,8 +189,8 @@
         map.zoomToDefault();
       }
 
-      $("[name='placemark-filter']").on("change", function() {
-        switch (this.value) {
+      $("[name='placemark-filter']").on("change", function(event) {
+        switch (event.target.value) {
           case "filter-none":
             state.placemarks.filter = function() {
               return false;
@@ -172,13 +212,13 @@
             };
             break;
           default:
-            throw new Error("unexpected option " + this.value);
+            throw new Error("unexpected option " + event.target.value);
         }
         updateMap();
       });
 
-      $("[name='tag-filter']").on("change", function() {
-        switch (this.value) {
+      $("[name='tag-filter']").on("change", function(event) {
+        switch (event.target.value) {
           case "filter-none":
             state.tags.filter = function() {
               return false;
@@ -198,28 +238,36 @@
             state.tags.filter = filterCafeCart;
             break;
           default:
-            throw new Error("unexpected option " + this.value);
+            throw new Error("unexpected option " + event.target.value);
         }
         updateMap();
       });
 
-      $("#show-control-tags").on("change", function() {
-        state.tags.showControlTags = this.checked;
-        updateMap();
-      });
-      $("#show-hidden-placemarks").on("change", function() {
-        state.placemarks.showHiddenPlacemarks = this.checked;
-        updateMap();
-      });
-      $("#disable-placemarks").on("change", function() {
-        state.placemarks.disabled = this.checked;
+      $("#show-control-tags").on("change", function(event) {
+        state.tags.showControlTags = event.target.checked;
         updateMap();
       });
 
-      $("#disable-tags").on("change", function() {
-        state.tags.disabled = this.checked;
+      $("#show-hidden-placemarks").on("change", function(event) {
+        state.placemarks.showHiddenPlacemarks = event.target.checked;
         updateMap();
       });
+
+      $("#disable-placemarks").on("change", function(event) {
+        state.placemarks.disabled = event.target.checked;
+        updateMap();
+      });
+
+      $("#disable-tags").on("change", function(event) {
+        state.tags.disabled = event.target.checked;
+        updateMap();
+      });
+
+      $("#load-placemarks").on("change", function(event) {
+        state.loadPlacemarks = event.target.checked;
+        updateMap();
+      });
+
       // ---^^^ UI controls ^^^---
     </script>
   </body>

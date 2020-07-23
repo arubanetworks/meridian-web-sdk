@@ -82,6 +82,7 @@ export default class Map extends Component {
       filter: PropTypes.func,
       disabled: PropTypes.bool
     }),
+    loadPlacemarks: PropTypes.bool,
     placemarks: PropTypes.shape({
       showHiddenPlacemarks: PropTypes.bool,
       filter: PropTypes.func,
@@ -96,6 +97,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
+    loadPlacemarks: true,
     showTagsControl: true,
     showFloorsControl: true,
     shouldMapPanZoom: () => true,
@@ -116,7 +118,6 @@ export default class Map extends Component {
       isMapMarkerOverlayOpen: false,
       isErrorOverlayOpen: false,
       isPanningOrZooming: false,
-      showLoadingSpinner: false,
       loadingSources: {},
       errors: [],
       mapTransform: "",
@@ -152,7 +153,9 @@ export default class Map extends Component {
       });
     } else {
       this.initializeFloors();
-      this.updatePlacemarks();
+      if (this.props.loadPlacemarks) {
+        this.updatePlacemarks();
+      }
       this.initializeTags();
       this.fetchMapImageURL();
     }
@@ -175,6 +178,9 @@ export default class Map extends Component {
         routeSteps: [],
         isMapMarkerOverlayOpen: false
       });
+    }
+    if (this.props.loadPlacemarks && !prevProps.loadPlacemarks) {
+      this.updatePlacemarks();
     }
   }
 
@@ -253,26 +259,20 @@ export default class Map extends Component {
   };
 
   toggleLoadingSpinner = ({ show, source = "unknown" }) => {
-    const { showLoadingSpinner } = this.state;
-    this.setState(
-      prevState => ({
-        loadingSources: { ...prevState.loadingSources, [source]: show }
-      }),
-      () => {
-        if (show && !showLoadingSpinner) {
-          this.setState({ showLoadingSpinner: show });
-        } else if (!show) {
-          const { loadingSources } = this.state;
-          const isSourceLoading = Object.keys(loadingSources).some(item => {
-            return loadingSources[item] === true;
-          });
-          if (!isSourceLoading) {
-            this.setState({ showLoadingSpinner: false });
-          }
-        }
+    this.setState(prevState => ({
+      loadingSources: {
+        ...prevState.loadingSources,
+        [source]: show
       }
-    );
+    }));
   };
+
+  showLoadingSpinner() {
+    const { loadingSources } = this.state;
+    return Object.keys(loadingSources).some(item => {
+      return loadingSources[item] === true;
+    });
+  }
 
   toggleMapMarkerOverlay = ({ open, selectedItem = null }) => {
     this.setState({ isMapMarkerOverlayOpen: open, selectedItem: selectedItem });
@@ -299,7 +299,7 @@ export default class Map extends Component {
     };
   }
 
-  updatePlacemarks = async () => {
+  async updatePlacemarks() {
     const { locationID, floorID, api } = this.props;
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
@@ -311,7 +311,7 @@ export default class Map extends Component {
         this.toggleLoadingSpinner({ show: false, source: "placemarks" });
       });
     }
-  };
+  }
 
   async getFloors() {
     const { locationID, api } = this.props;
@@ -602,7 +602,7 @@ export default class Map extends Component {
   }
 
   renderLoadingSpinner() {
-    if (this.state.showLoadingSpinner) {
+    if (this.showLoadingSpinner()) {
       return <LoadingSpinner />;
     }
     return null;
@@ -708,7 +708,6 @@ export default class Map extends Component {
                 onMarkerClick={this.onMarkerClick}
                 toggleLoadingSpinner={this.toggleLoadingSpinner}
                 placemarks={this.state.placemarks}
-                updatePlacemarks={this.updatePlacemarks}
               />
             ) : null}
 

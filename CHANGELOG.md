@@ -1,10 +1,16 @@
-# v0.8.0 (2020-07-23)
+# Meridian Web SDK Changelog
+
+## Unreleased
+
+- Adds support for changing `locationID` on a map
+
+## v0.8.0 (2020-07-23)
 
 - Adds option `loadPlacemarks` that when false causes the map to not load
   placemark data (defaults to `true`; it can be updated via `update` to true
   later if you want to load the data at a later time)
 
-# v0.7.8 (2020-06-26)
+## v0.7.8 (2020-06-26)
 
 - You can select placemarks by ID now `.meridian-placemark-icon[data-meridian-placemark-id="..."]`
 
@@ -14,38 +20,38 @@
 
 - Switches from inline styles to CSS Custom Properties for easier customization of Placemarks and Tags
 
-# v0.7.7 (2020-06-08)
+## v0.7.7 (2020-06-08)
 
 - Updates documentation for `onTagsUpdate` to clarify it only receives tags for
   the current floor
 
-# v0.7.6 (2020-05-15)
+## v0.7.6 (2020-05-15)
 
 - Adds descriptions to examples page
 
-# v0.7.5 (2020-05-11)
+## v0.7.5 (2020-05-11)
 
 - Adds more examples to documentation
 
-# v0.7.4 (2020-05-07)
+## v0.7.4 (2020-05-07)
 
 - Fixes an internal code crash
 
-# v0.7.3 (2020-05-05)
+## v0.7.3 (2020-05-05)
 
 - Download link now points directly to unpkg
 
-# v0.7.2 (2020-05-05)
+## v0.7.2 (2020-05-05)
 
 - Fixes broken links
 
-# v0.7.1 (2020-05-05)
+## v0.7.1 (2020-05-05)
 
 - Exposes the `API` class directly so you can use `new API(options)` instead of `createAPI(options)`
 - Deprecates `createAPI(options)`
 - Switches to TypeDoc for documentation
 
-# v0.7.0 (2020-04-10)
+## v0.7.0 (2020-04-10)
 
 - **(BREAKING CHANGE)** Tag data returned from API has a new schema
   - `tag.editor_data.tags` is now `tag.tags`
@@ -72,7 +78,7 @@
 - Fixed a few race conditions involving incorrect data appearing onscreen when
   switching floors quickly
 
-# v0.6.0 (2020-03-26)
+## v0.6.0 (2020-03-26)
 
 - Added TypeScript support
 - `MeridianSDK.restrictedPanZoom` now supports any modifier key, not just Shift
@@ -82,7 +88,7 @@
 - Fixed a bug where the map background image would fail to load unless the user
   also had access to <https://edit.meridianapps.com>.
 
-# v0.5.0 (2019-02-25)
+## v0.5.0 (2019-02-25)
 
 - Added `onTagClick(data, options)` - (optional) callback function called
   whenever a tag is clicked, receiving the tag data and an options object. The
@@ -94,7 +100,7 @@
   The options object contains a `preventDefault` function. Call
   `options.preventDefault()` to prevent the overlay from appearing.
 
-# v0.4.1 (2018-10-03)
+## v0.4.1 (2018-10-03)
 
 The differences are compared to the old pre-release beta version.
 
@@ -108,6 +114,6 @@ The differences are compared to the old pre-release beta version.
 - `onTagDisappear` is now called `onTagLeave`
 - Data passed to callbacks follows the same format as the Meridian endpoints now
 
-# Other Releases
+## Other Releases
 
 Previous releases were internal only and not documented.

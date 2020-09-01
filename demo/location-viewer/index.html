@@ -20,9 +20,11 @@
     }
 
     .map {
-      max-width: 500px;
-      margin: auto;
-      border: 1px solid #ccc;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
 
     .form {
@@ -128,7 +130,8 @@
       // Create the map
       var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
         locationID: locationID,
-        floorID: floorID
+        floorID: floorID,
+        height: "100%"
       });
     })
   </script>

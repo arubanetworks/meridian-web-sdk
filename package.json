@@ -24,23 +24,9 @@
   "homepage": "https://github.com/arubanetworks/meridian-web-sdk#readme",
   "dependencies": {},
   "devDependencies": {
-    "@types/d3-zoom": "^1.7.4",
-    "@typescript-eslint/eslint-plugin": "^2.25.0",
-    "@typescript-eslint/parser": "^2.25.0",
-    "acorn": "^7.1.0",
-    "declaration-bundler-webpack-plugin": "^1.0.3",
-    "eslint-plugin-react": "^7.17.0",
-    "fsevents": "^2.1.2",
-    "gh-pages": "^2.1.1",
-    "prettier": "^1.19.1",
-    "ts-loader": "^8.0.3",
-    "typedoc": "^0.16.11",
-    "typescript": "^3.7.3",
     "webpack": "^4.44.1",
-    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-node-externals": "^1.7.2",
     "worker-loader": "^3.0.2"
   }
 }

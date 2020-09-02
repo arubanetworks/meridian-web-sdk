@@ -16,9 +16,21 @@ const common = {
   module: {
     rules: [
       {
+        test: /\.worker\.(js|ts)$/,
+        use: [
+          {
+            loader: "worker-loader",
+            options: {
+              inline: "no-fallback"
+            }
+          }
+        ],
+        exclude: /node_modules/
+      },
+      {
         test: /\.(js|ts|tsx)$/,
         use: [{ loader: "ts-loader" }],
-        exclude: /node_modules/
+        exclude: /node_modules|\.worker\./
       }
     ]
   },
@@ -61,8 +73,9 @@ const npmConfig = {
 };
 
 const development = {
-  ...common,
-  devtool: "source-map"
+  ...common
+  // devtool: false
+  // devtool: "source-map"
 };
 
 // Build the browser JS bundle as well as the npm bundle

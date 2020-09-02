@@ -42,7 +42,7 @@ const common = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"]
   },
-  entry: path.resolve(__dirname, "src/web-sdk.tsx"),
+  entry: path.resolve(__dirname, "src/web-sdk.js"),
   output: {
     filename: "meridian-sdk.js",
     library: "MeridianSDK",

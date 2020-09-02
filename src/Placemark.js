@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import { getPlacemarkIconURL } from "./util";
 import { css, cx, mixins, theme } from "./style";
 import IconYouAreHere from "./IconYouAreHere";
+import { hideOnMap } from "./PlacemarkLayer";
 
 const SIZE = 24;
 
@@ -41,7 +42,8 @@ const Placemark = ({
   const style = {
     left: data.x,
     top: data.y,
-    transform: `translate(-50%, -50%) scale(${k})`
+    transform: `translate(-50%, -50%) scale(${k})`,
+    display: data[hideOnMap] ? "none" : undefined
   };
 
   function getIconStyle(data) {

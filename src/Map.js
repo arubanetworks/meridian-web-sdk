@@ -170,7 +170,7 @@ export default class Map extends Component {
       prevProps.floorID !== this.props.floorID ||
       prevState.floors !== this.state.floors
     ) {
-      this.setState({ mapImageURL: null, placemarks: {} });
+      // this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
@@ -300,10 +300,12 @@ export default class Map extends Component {
   }
 
   async updatePlacemarks() {
+    // const { floorID } = this.props;
     const { locationID, floorID, api } = this.props;
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
+    // const results = BigData;
     // If the user switches floors, we want to get rid of the value
     if (floorID === this.props.floorID) {
       const placemarks = this.groupPlacemarksByID(results);
@@ -363,6 +365,19 @@ export default class Map extends Component {
       });
     }
     this.toggleLoadingSpinner({ show: false, source: "map" });
+  }
+
+  getMapBounds() {
+    if (this.mapRef) {
+      const { k, x, y } = d3ZoomTransform(this.mapRef);
+      const { clientWidth: w, clientHeight: h } = this.mapRef;
+      const x1 = -x / k;
+      const y1 = -y / k;
+      const x2 = (-x + w) / k;
+      const y2 = (-y + h) / k;
+      return [x1, y1, x2, y2];
+    }
+    return [0, 0, 0, 0];
   }
 
   addZoomBehavior() {
@@ -697,6 +712,7 @@ export default class Map extends Component {
             )}
             {!errors.length && mapData ? (
               <PlacemarkLayer
+                mapBounds={this.getMapBounds()}
                 selectedItem={selectedItem}
                 isPanningOrZooming={isPanningOrZooming}
                 mapZoomFactor={mapZoomFactor}

@@ -32,6 +32,7 @@
     "@types/lodash.sortby": "^4.7.6",
     "axios": "^0.19.0",
     "create-emotion": "^10.0.14",
+    "d3-quadtree": "^2.0.0",
     "d3-selection": "^1.4.1",
     "d3-zoom": "^1.8.3",
     "lodash.groupby": "^4.6.0",
@@ -60,6 +61,7 @@
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^1.7.2",
+    "worker-loader": "^3.0.2"
   }
 }

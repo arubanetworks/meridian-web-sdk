@@ -9,45 +9,40 @@ const nodeExternals = require("webpack-node-externals");
 const Package = require("./package.json");
 
 const definePlugin = new webpack.DefinePlugin({
-  GLOBAL_VERSION: JSON.stringify(Package.version)
+  GLOBAL_VERSION: JSON.stringify(Package.version),
 });
 
 const common = {
   module: {
     rules: [
       {
-        test: /\.worker\.(js|ts)$/,
+        test: /\.worker\.js$/,
         use: [
           {
             loader: "worker-loader",
             options: {
-              inline: "no-fallback"
-            }
-          }
+              inline: "no-fallback",
+            },
+          },
         ],
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
-      {
-        test: /\.(js|ts|tsx)$/,
-        use: [{ loader: "ts-loader" }],
-        exclude: /node_modules|\.worker\./
-      }
-    ]
+    ],
   },
   plugins: [definePlugin],
   node: {
     __dirname: true,
-    fs: "empty"
+    fs: "empty",
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: [".ts", ".tsx", ".js"],
   },
-  entry: path.resolve(__dirname, "src/web-sdk.js"),
+  entry: path.resolve(__dirname, "src/main.js"),
   output: {
     filename: "meridian-sdk.js",
     library: "MeridianSDK",
     libraryTarget: "var",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
   },
   devServer: {
     filename: "meridian-sdk.js",
@@ -55,8 +50,8 @@ const common = {
     contentBase: path.resolve(__dirname, "demo"),
     overlay: true,
     port: 3011,
-    stats: "errors-only"
-  }
+    stats: "errors-only",
+  },
 };
 
 // This bundles our code into one file but avoids bundling everything in
@@ -64,16 +59,16 @@ const common = {
 const npmConfig = {
   ...common,
   output: {
-    filename: "web-sdk.js",
+    filename: "main.js",
     libraryTarget: "commonjs",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
   },
   target: "node",
-  externals: [nodeExternals()]
+  externals: [nodeExternals()],
 };
 
 const development = {
-  ...common
+  ...common,
   // devtool: false
   // devtool: "source-map"
 };
@@ -83,13 +78,13 @@ const production = [common, npmConfig];
 
 const analyze = {
   ...common,
-  plugins: [definePlugin, new BundleAnalyzerPlugin()]
+  plugins: [definePlugin, new BundleAnalyzerPlugin()],
 };
 
 const configs = {
   development,
   production,
-  analyze
+  analyze,
 };
 
-module.exports = env => configs[env];
+module.exports = (env) => configs[env];

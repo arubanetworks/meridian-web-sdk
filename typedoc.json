@@ -1,8 +1,0 @@
-{
-  "mode": "modules",
-  "inputFiles": ["src/web-sdk.tsx"],
-  "out": "./docs",
-  "readme": "docs-readme.md",
-  "stripInternal": true,
-  "excludePrivate": true
-}

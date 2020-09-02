@@ -6,13 +6,7 @@
   "main": "./dist/web-sdk.js",
   "types": "./dist/src/web-sdk.d.ts",
   "scripts": {
-    "start": "webpack-dev-server --watch -d --env development src/web-sdk.js",
-    "nonlocal": "npm run start -- --host 0.0.0.0",
-    "docs": "bash bin/docs.sh",
-    "build": "bash bin/build.sh",
-    "analyze": "webpack -p --mode production --env analyze",
-    "postversion": "git push origin --tags && git push origin HEAD",
-    "test": "bash bin/test.sh"
+    "start": "webpack-dev-server --watch -d --env development src/main.js"
   },
   "repository": {
     "type": "git",
@@ -28,28 +22,13 @@
     "url": "https://github.com/arubanetworks/meridian-web-sdk/issues"
   },
   "homepage": "https://github.com/arubanetworks/meridian-web-sdk#readme",
-  "dependencies": {
-    "@types/lodash.sortby": "^4.7.6",
-    "axios": "^0.19.0",
-    "create-emotion": "^10.0.14",
-    "d3-quadtree": "^2.0.0",
-    "d3-selection": "^1.4.1",
-    "d3-zoom": "^1.8.3",
-    "lodash.groupby": "^4.6.0",
-    "lodash.sortby": "^4.7.0",
-    "lodash.throttle": "^4.1.1",
-    "preact": "^10.0.5",
-    "prop-types": "^15.7.2",
-    "reconnecting-websocket": "^4.4.0",
-    "socket.io-client": "^2.3.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/d3-zoom": "^1.7.4",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
     "acorn": "^7.1.0",
     "declaration-bundler-webpack-plugin": "^1.0.3",
-    "eslint": "^6.7.2",
     "eslint-plugin-react": "^7.17.0",
     "fsevents": "^2.1.2",
     "gh-pages": "^2.1.1",

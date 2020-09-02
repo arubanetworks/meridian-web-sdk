@@ -9,6 +9,7 @@ module.exports = {
           {
             loader: "worker-loader",
             options: {
+              // This setting seems to trigger the issue
               inline: "no-fallback",
             },
           },

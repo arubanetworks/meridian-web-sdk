@@ -1,0 +1,97 @@
+body {
+  font-family: sans-serif;
+}
+
+.container {
+  width: 900px;
+  margin: 0 auto;
+}
+
+.map {
+  border: 1px solid #ccc;
+  float: left;
+  width: 500px;
+}
+
+.sidebar-container {
+  float: left;
+  margin-left: 20px;
+  max-width: 350px;
+}
+
+#sidebar-contents {
+  margin-bottom: 10px;
+  background: hsl(210, 50%, 98%);
+  color: hsl(210, 80%, 30%);
+  border: 1px solid hsl(210, 30%, 80%);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  height: 480px;
+  width: 340px;
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-bottom: 1px solid hsl(210, 30%, 80%);
+  justify-content: center;
+  margin-left: -20px;
+  margin-right: -20px;
+  padding-bottom: 24px;
+}
+
+h3 {
+  margin-top: 0px;
+}
+
+.placemark {
+  /* background-size: 70%; */
+  background-image: url("placemark.svg");
+  background-repeat: no-repeat;
+  height: 250px;
+  width: 250px;
+}
+
+.tag {
+  background-size: 70%;
+  height: 250px;
+  width: 250px;
+  background-repeat: no-repeat;
+}
+
+.generic {
+  background: hsl(207, 65%, 46%);
+  height: 250px;
+  width: 250px;
+}
+
+.meridian-placemark-icon:focus {
+  height: 30px;
+  width: 30px;
+}
+
+.meridian-tag:focus {
+  height: 60px;
+  width: 60px;
+}
+
+@media only screen and (max-width: 900px) {
+  .container {
+    max-width: 340px;
+    width: auto;
+    margin: 0 auto;
+  }
+  .sidebar-container {
+    float: none;
+    margin: 10px 0 0 0;
+    width: 100%;
+    max-width: auto;
+  }
+
+  .map {
+    float: none;
+    width: 100%;
+  }
+}

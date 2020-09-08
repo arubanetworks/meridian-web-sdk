@@ -1,3 +1,7 @@
+# unreleased
+
+- Adds an Example, titled "Tag/Marker click, prevent default and show additional options", to demo customization of a Tag/Marker click callback
+
 # v0.8.0 (2020-07-23)
 
 - Adds option `loadPlacemarks` that when false causes the map to not load

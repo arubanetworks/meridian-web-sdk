@@ -30,7 +30,7 @@ const common = {
       {
         test: /\.(js|ts|tsx)$/,
         use: [{ loader: "ts-loader" }],
-        exclude: /node_modules|\.worker\./
+        exclude: /node_modules/
       }
     ]
   },
@@ -73,9 +73,10 @@ const npmConfig = {
 };
 
 const development = {
-  ...common
-  // devtool: false
-  // devtool: "source-map"
+  ...common,
+  devtool: "cheap-source-map"
+  // TODO: Switch back to `eval-cheap-module-source-map` after
+  // https://github.com/webpack/webpack/issues/11417 is resolved
 };
 
 // Build the browser JS bundle as well as the npm bundle

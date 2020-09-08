@@ -6,7 +6,7 @@
   "main": "./dist/web-sdk.js",
   "types": "./dist/src/web-sdk.d.ts",
   "scripts": {
-    "start": "webpack-dev-server --watch -d --env development src/web-sdk.tsx",
+    "start": "webpack-dev-server --watch --env development src/web-sdk.tsx",
     "nonlocal": "npm run start -- --host 0.0.0.0",
     "docs": "bash bin/docs.sh",
     "build": "bash bin/build.sh",
@@ -35,6 +35,7 @@
     "d3-quadtree": "^2.0.0",
     "d3-selection": "^1.4.1",
     "d3-zoom": "^1.8.3",
+    "lodash.debounce": "^4.0.8",
     "lodash.groupby": "^4.6.0",
     "lodash.sortby": "^4.7.0",
     "lodash.throttle": "^4.1.1",

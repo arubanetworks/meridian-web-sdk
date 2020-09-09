@@ -1,6 +1,6 @@
 # unreleased
 
-- Adds an Example, titled "Tag/Marker click, prevent default and show additional options", to demo customization of a Tag/Marker click callback
+- Adds an Example, titled "Tag/Marker click, prevent default and show additional options", to demo customization of a Tag/Marker click callback -- overriding the default modal, and showing marker data in a sidebar
 
 # v0.8.0 (2020-07-23)
 

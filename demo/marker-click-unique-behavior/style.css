@@ -31,10 +31,8 @@ body {
 
 h2 {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   flex-direction: column;
-  border-bottom: 1px solid hsl(210, 30%, 80%);
-  justify-content: center;
   margin: 0;
   margin-left: -20px;
   margin-right: -20px;
@@ -49,23 +47,19 @@ h3 {
 .placemark {
   background-image: url("placemark.svg");
   background-repeat: no-repeat;
-  width: 250px;
-  height: 250px;
+  width: 100%;
   border-radius: 4px;
 }
 
 .tag {
   background-repeat: no-repeat;
   background-size: cover;
-  width: 250px;
-  height: 250px;
+  width: 100%;
   border-radius: 4px;
 }
 
 .generic {
-  background: hsl(207, 65%, 46%);
-  height: 250px;
-  width: 250px;
+  display: none;
 }
 
 .meridian-placemark-icon:focus {

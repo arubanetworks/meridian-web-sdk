@@ -29,7 +29,7 @@
 
     <aside class="sidebar-container">
       <h2 id="marker-type">Info</h2>
-      <div id="marker-content"></div>
+      <img id="marker-img" class="marker-img" />
     </aside>
 
     <script src="../meridian-sdk.js"></script>
@@ -41,46 +41,44 @@
         })
       });
 
-      const map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
-        locationID: "5198682008846336",
-        floorID: "5755685136498688",
-        height: "100%",
-        onTagClick: (data, options) => {
-          showSideBar("tag", data);
-          options.preventDefault();
-          console.info("Tag data", data);
-          console.info("options", options);
-        },
-        onPlacemarkClick: (data, options) => {
-          showSideBar("placemark", data);
-          options.preventDefault();
-          console.info("Placemark data", data);
-          console.info("options", options);
+      const map = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          locationID: "5198682008846336",
+          floorID: "5755685136498688",
+          height: "100%",
+          onTagClick: (data, options) => {
+            showSideBar("tag", data);
+            options.preventDefault();
+            console.info("Tag data", data);
+            console.info("options", options);
+          },
+          onPlacemarkClick: (data, options) => {
+            showSideBar("placemark", data);
+            options.preventDefault();
+            console.info("Placemark data", data);
+            console.info("options", options);
+          }
         }
-      });
+      );
 
       function showSideBar(kind, data) {
-        const root = document.getElementById("marker-content");
-        root.textContent = "";
-
         const markerType = document.getElementById("marker-type");
-        const dataImage = document.createElement("img");
+        const dataImage = document.getElementById("marker-img");
 
         if (kind === "placemark") {
           markerType.textContent = data.name;
-          dataImage.classList.add("placemark");
           dataImage.style.backgroundColor = `#${data.color}`;
           dataImage.src = "placemark.svg";
         } else if (kind === "tag") {
           markerType.textContent = data.name;
-          dataImage.classList.add("tag");
+          dataImage.style.backgroundColor = "transparent";
           dataImage.src = data.image_url;
         } else {
           markerType.textContent = "Marker";
-          dataImage.classList.add("generic");
+          dataImage.style.backgroundColor = "transparent";
+          dataImage.src = "placemark.svg";
         }
-
-        root.appendChild(dataImage);
       }
     </script>
   </body>

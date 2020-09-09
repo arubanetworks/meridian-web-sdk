@@ -3,7 +3,6 @@ body {
 }
 
 .map {
-  background: red;
   position: fixed;
   top: 0;
   left: 0;
@@ -44,22 +43,9 @@ h3 {
   margin-top: 0px;
 }
 
-.placemark {
-  background-image: url("placemark.svg");
-  background-repeat: no-repeat;
+.marker-img {
   width: 100%;
   border-radius: 4px;
-}
-
-.tag {
-  background-repeat: no-repeat;
-  background-size: cover;
-  width: 100%;
-  border-radius: 4px;
-}
-
-.generic {
-  display: none;
 }
 
 .meridian-placemark-icon:focus {

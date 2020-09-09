@@ -74,28 +74,25 @@
       });
 
       function showSideBar(kind, data) {
-        document.getElementById("marker-content").innerHTML = "";
+        document.getElementById("marker-content").textContent = "";
 
         const markerType = document.createElement("h3");
         const dataTitle = document.createElement("h3");
         const titleStatement = `${data.name}`;
-        dataTitle.innerHTML = titleStatement;
+        dataTitle.textContent = titleStatement;
 
         const dataImage = document.createElement("div");
         if (kind === "placemark") {
-          markerType.innerHTML = `placemark: ${data.next_id}`;
-          dataImage.setAttribute("class", "placemark");
-          dataImage.setAttribute("style", `background-color: #${data.color};`);
+          markerType.textContent = `placemark: ${data.next_id}`;
+          dataImage.classList.add("placemark");
+          dataImage.style.backgroundColor = `#${data.color}`;
         } else if (kind === "tag" && data.image_url) {
-          markerType.innerHTML = `tag: ${data.id}`;
-          dataImage.setAttribute("class", "tag");
-          dataImage.setAttribute(
-            "style",
-            `background-image: url('${data.image_url};`
-          );
+          markerType.textContent = `tag: ${data.id}`;
+          dataImage.classList.add("tag");
+          dataImage.style.backgroundImage = `url(${data.image_url})`;
         } else {
-          markerType.innerHTML = "generic marker";
-          dataImage.setAttribute("class", "generic");
+          markerType.textContent = "generic marker";
+          dataImage.classList.add("generic");
         }
 
         document.getElementById("marker-content").appendChild(markerType);

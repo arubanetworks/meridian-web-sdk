@@ -15,8 +15,6 @@ log.txt
 .vscode/
 .sass-cache/
 .versions/
-.gitignore
-package-lock.json
 node_modules/
 $RECYCLE.BIN/
 

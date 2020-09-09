@@ -66,6 +66,12 @@ export default class PlacemarkLayer extends Component {
     const filteredMarkers = Object.keys(this.props.placemarks)
       .map(id => this.props.placemarks[id])
       .filter(placemark => {
+        if (placemark.type === "exclusion_area") {
+          // NOTE: Consider adding a new configuration setting called
+          // `placemarks.showExclusionAreas` in the future if someone actually
+          // wants to show exclusion areas for some reason.
+          return false;
+        }
         if (markers.showHiddenPlacemarks !== true) {
           return !placemark.hide_on_map;
         }

@@ -24,7 +24,8 @@ const cssOverlay = css(mixins.shadow, mixins.rounded, {
   left: 15,
   top: 15,
   right: 15,
-  maxHeight: "calc(100vh - 30px)",
+  // TODO: maxHeight should really be based on the Map height mins 30px or so
+  maxHeight: 500,
   zIndex: 2,
   maxWidth: 400
 });

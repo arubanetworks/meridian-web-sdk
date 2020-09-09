@@ -140,8 +140,7 @@ export default class Map extends Component {
 
   componentDidMount() {
     const { api, locationID } = this.props;
-    const isEnvironmentValid = validateEnvironment(api.environment);
-    if (!isEnvironmentValid) {
+    if (!validateEnvironment(api.environment)) {
       this.toggleErrorOverlay({
         open: true,
         message: `API error: "${api.environment}" is not a valid environment`
@@ -152,16 +151,30 @@ export default class Map extends Component {
         message: `createMap error: "options.locationID" is required`
       });
     } else {
-      this.initializeFloors();
-      if (this.props.loadPlacemarks) {
-        this.updatePlacemarks();
-      }
-      this.initializeTags();
-      this.fetchMapImageURL();
+      this.loadData();
     }
   }
 
+  loadData() {
+    this.initializeFloors();
+    if (this.props.loadPlacemarks) {
+      this.updatePlacemarks();
+    }
+    this.initializeTags();
+    this.fetchMapImageURL();
+  }
+
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.locationID !== prevProps.locationID) {
+      this.toggleTagListOverlay({ open: false });
+      this.toggleErrorOverlay({ open: false });
+      this.toggleMapMarkerOverlay({ open: false });
+      this.toggleFloorOverlay({ open: false });
+      this.zoomToDefault();
+      this.setState({ mapImageURL: null, placemarks: {} });
+      this.loadData();
+      return;
+    }
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
       this.validateFloorID();
@@ -191,7 +204,7 @@ export default class Map extends Component {
   }
 
   async fetchMapImageURL() {
-    const { floorID } = this.props;
+    const { locationID, floorID } = this.props;
     const mapData = this.getMapData();
     if (!mapData) {
       return;
@@ -199,7 +212,10 @@ export default class Map extends Component {
     const response = await this.props.api.axios.get(mapData.svg_url, {
       responseType: "blob"
     });
-    if (floorID === this.props.floorID) {
+    if (
+      floorID === this.props.floorID &&
+      locationID === this.props.locationID
+    ) {
       this.setState({ mapImageURL: URL.createObjectURL(response.data) });
     }
   }
@@ -228,6 +244,9 @@ export default class Map extends Component {
     const loop = async () => {
       const { api, locationID } = this.props;
       const allTagData = await fetchTagsByLocation({ api, locationID });
+      if (locationID !== this.props.locationID) {
+        return;
+      }
       this.setState({
         areTagsLoading: false,
         allTagData
@@ -305,7 +324,10 @@ export default class Map extends Component {
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     const results = await fetchAllPaginatedData(api, placemarksURL);
     // If the user switches floors, we want to get rid of the value
-    if (floorID === this.props.floorID) {
+    if (
+      floorID === this.props.floorID &&
+      locationID === this.props.locationID
+    ) {
       const placemarks = this.groupPlacemarksByID(results);
       this.setState({ placemarks }, () => {
         this.toggleLoadingSpinner({ show: false, source: "placemarks" });
@@ -351,8 +373,11 @@ export default class Map extends Component {
 
   async initializeFloors() {
     this.toggleLoadingSpinner({ show: true, source: "map" });
-    const { onFloorsUpdate } = this.props;
+    const { onFloorsUpdate, locationID } = this.props;
     const floors = await this.getFloors();
+    if (locationID !== this.props.locationID) {
+      return;
+    }
     if (floors && floors.length > 0) {
       this.setState({ floors }, () => {
         if (!this.zoomD3) {

@@ -74,13 +74,10 @@
       });
 
       function showSideBar(kind, data) {
-        const contentsDiv = document.getElementById("marker-content");
-        if (contentsDiv.innerHTML !== "") {
-          contentsDiv.innerHTML = "";
-        }
+        document.getElementById("marker-content").innerHTML = "";
 
-        const markerType = document.createElement("H3");
-        const dataTitle = document.createElement("H3");
+        const markerType = document.createElement("h3");
+        const dataTitle = document.createElement("h3");
         const titleStatement = `${data.name}`;
         dataTitle.innerHTML = titleStatement;
 

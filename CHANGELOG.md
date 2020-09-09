@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exclusion zones are now hidden
 
-### Added
+### Documentation
 
 - Adds an Example, titled "Tag/Marker click, prevent default and show additional options", to demo customization of a Tag/Marker click callback -- overriding the default modal, and showing marker data in a sidebar
 

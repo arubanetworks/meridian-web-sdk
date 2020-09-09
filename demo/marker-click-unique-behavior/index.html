@@ -22,30 +22,15 @@
     />
     <script src="../shared.js"></script>
     <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        font-family: sans-serif;
-      }
-
-      .map {
-        max-width: 550px;
-        margin: auto;
-        border: 1px solid #ccc;
-      }
-    </style>
   </head>
 
   <body>
-    <div class="container">
-      <div class="map" id="meridian-map"></div>
+    <main class="map" id="meridian-map"></main>
 
-      <aside class="sidebar-container">
-        <div id="sidebar-contents">
-          <h2>Last clicked map marker</h2>
-          <div id="marker-content"></div>
-        </div>
-      </aside>
-    </div>
+    <aside class="sidebar-container">
+      <h2 id="marker-type">Info</h2>
+      <div id="marker-content"></div>
+    </aside>
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
@@ -55,10 +40,11 @@
           token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
         })
       });
-      var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
+
+      const map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
         locationID: "5198682008846336",
         floorID: "5755685136498688",
-        height: "500px",
+        height: "100%",
         onTagClick: (data, options) => {
           showSideBar("tag", data);
           options.preventDefault();
@@ -74,30 +60,27 @@
       });
 
       function showSideBar(kind, data) {
-        document.getElementById("marker-content").textContent = "";
+        const root = document.getElementById("marker-content");
+        root.textContent = "";
 
-        const markerType = document.createElement("h3");
-        const dataTitle = document.createElement("h3");
-        const titleStatement = `${data.name}`;
-        dataTitle.textContent = titleStatement;
+        const markerType = document.getElementById("marker-type");
+        const dataImage = document.createElement("img");
 
-        const dataImage = document.createElement("div");
         if (kind === "placemark") {
-          markerType.textContent = `placemark: ${data.next_id}`;
+          markerType.textContent = data.name;
           dataImage.classList.add("placemark");
           dataImage.style.backgroundColor = `#${data.color}`;
-        } else if (kind === "tag" && data.image_url) {
-          markerType.textContent = `tag: ${data.id}`;
+          dataImage.src = "placemark.svg";
+        } else if (kind === "tag") {
+          markerType.textContent = data.name;
           dataImage.classList.add("tag");
-          dataImage.style.backgroundImage = `url(${data.image_url})`;
+          dataImage.src = data.image_url;
         } else {
-          markerType.textContent = "generic marker";
+          markerType.textContent = "Marker";
           dataImage.classList.add("generic");
         }
 
-        document.getElementById("marker-content").appendChild(markerType);
-        document.getElementById("marker-content").appendChild(dataTitle);
-        document.getElementById("marker-content").appendChild(dataImage);
+        root.appendChild(dataImage);
       }
     </script>
   </body>

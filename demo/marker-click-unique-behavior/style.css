@@ -2,47 +2,42 @@ body {
   font-family: sans-serif;
 }
 
-.container {
-  width: 900px;
-  margin: 0 auto;
-}
-
 .map {
-  border: 1px solid #ccc;
-  width: 500px;
-  display: flex;
-  flex-shrink: 0;
+  background: red;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100vw - 350px);
+  height: 100vh;
 }
 
 .sidebar-container {
-  display: flex;
   position: fixed;
   top: 0;
   right: 0;
+  width: 350px;
+  height: 100vh;
+  box-sizing: border-box;
+  width: 350px;
   height: 100%;
-  max-width: 350px;
-  flex-shrink: 0;
-}
-
-#sidebar-contents {
+  display: flex;
   background: hsl(210, 50%, 98%);
   color: hsl(210, 80%, 30%);
-  border: 1px solid hsl(210, 30%, 80%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  padding: 10px 20px 0px 20px;
-  width: 340px;
+  padding: 20px;
 }
 
 h2 {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   flex-direction: column;
-  border-bottom: 1px solid hsl(210, 30%, 80%);
-  justify-content: center;
+  margin: 0;
   margin-left: -20px;
   margin-right: -20px;
-  padding-bottom: 24px;
+  padding: 20px;
+  padding-top: 0;
 }
 
 h3 {
@@ -50,24 +45,21 @@ h3 {
 }
 
 .placemark {
-  /* background-size: 70%; */
   background-image: url("placemark.svg");
   background-repeat: no-repeat;
-  height: 250px;
-  width: 250px;
+  width: 100%;
+  border-radius: 4px;
 }
 
 .tag {
-  background-size: 70%;
-  height: 250px;
-  width: 250px;
   background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  border-radius: 4px;
 }
 
 .generic {
-  background: hsl(207, 65%, 46%);
-  height: 250px;
-  width: 250px;
+  display: none;
 }
 
 .meridian-placemark-icon:focus {

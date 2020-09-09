@@ -22,30 +22,15 @@
     />
     <script src="../shared.js"></script>
     <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        font-family: sans-serif;
-      }
-
-      .map {
-        max-width: 550px;
-        margin: auto;
-        border: 1px solid #ccc;
-      }
-    </style>
   </head>
 
   <body>
-    <div class="container">
-      <div class="map" id="meridian-map"></div>
+    <main class="map" id="meridian-map"></main>
 
-      <aside class="sidebar-container">
-        <div id="sidebar-contents">
-          <h2>Last clicked map marker</h2>
-          <div id="marker-content"></div>
-        </div>
-      </aside>
-    </div>
+    <aside class="sidebar-container">
+      <h2>Info</h2>
+      <div id="marker-content"></div>
+    </aside>
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
@@ -58,7 +43,7 @@
       var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
         locationID: "5198682008846336",
         floorID: "5755685136498688",
-        height: "500px",
+        height: "100%",
         onTagClick: (data, options) => {
           showSideBar("tag", data);
           options.preventDefault();
@@ -76,18 +61,17 @@
       function showSideBar(kind, data) {
         document.getElementById("marker-content").textContent = "";
 
-        const markerType = document.createElement("h3");
-        const dataTitle = document.createElement("h3");
-        const titleStatement = `${data.name}`;
-        dataTitle.textContent = titleStatement;
+        const markerType = document.createElement("p");
+        const dataTitle = document.createElement("p");
+        dataTitle.textContent = data.name;
 
         const dataImage = document.createElement("div");
         if (kind === "placemark") {
-          markerType.textContent = `placemark: ${data.next_id}`;
+          markerType.textContent = `Placemark: ${data.next_id}`;
           dataImage.classList.add("placemark");
           dataImage.style.backgroundColor = `#${data.color}`;
         } else if (kind === "tag" && data.image_url) {
-          markerType.textContent = `tag: ${data.id}`;
+          markerType.textContent = `Tag: ${data.id}`;
           dataImage.classList.add("tag");
           dataImage.style.backgroundImage = `url(${data.image_url})`;
         } else {

@@ -26,8 +26,15 @@ function toRoute(url) {
   return path.replace(/\/[0-9_]+/g, () => "/*");
 }
 
+async function sleep(time) {
+  return new Promise(resolve => {
+    setTimeout(resolve, time);
+  });
+}
+
 class FakeAxios {
   async get(url) {
+    await sleep(0);
     const route = toRoute(url);
     if (route === "/locations/*/maps") {
       return { data: mockMaps };
@@ -41,6 +48,7 @@ class FakeAxios {
   }
 
   async post(url) {
+    await sleep(0);
     const route = toRoute(url);
     if (route === "/api/v1/track/assets") {
       return { data: mockAssets };
@@ -52,6 +60,7 @@ class FakeAxios {
 
 class FakeAPI {
   constructor() {
+    this.token = "[FAKE_TOKEN]";
     this.environment = "production";
     this.axios = missingPropertyProxy("API.axios", new FakeAxios());
   }
@@ -65,8 +74,9 @@ class FakeAPI {
     // onException,
     // onClose
   }) {
-    // TODO: Return some actual tags
-    onInitialTags(mockAssets.asset_updates);
+    sleep(0).then(() => {
+      onInitialTags(mockAssets.asset_updates);
+    });
     return { close() {} };
   }
 }

@@ -11,7 +11,7 @@ pid="$!"
 wait-on "http://localhost:3011"
 
 # Run Cypress
-npx cypress run --headless --browser chrome
+npx cypress run --quiet --headless --browser chrome
 
 # Kill webpack-dev-server
 kill "$pid"

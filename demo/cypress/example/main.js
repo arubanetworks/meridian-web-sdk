@@ -9,7 +9,10 @@ const meridianMap = MeridianSDK.createMap(root, {
   floorID: "5755685136498688",
   height: "100%",
   onTagClick: tag => {
-    console.log("tag.map_id", tag.map_id);
+    console.log("tag", tag);
+  },
+  onPlacemarkClick: placemark => {
+    console.log("placemark", placemark);
   }
 });
 

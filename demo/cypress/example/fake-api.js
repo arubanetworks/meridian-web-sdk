@@ -1,6 +1,7 @@
 import mockMaps from "./mock-maps.js";
 import mockPlacemarks from "./mock-placemarks.js";
 import mockSvg from "./mock-svg.js";
+import fakeAssets from "./fake-assets.js";
 
 // Show console warnings when accessing an undefined property, so it's easier to
 // develop these fake APIs
@@ -22,7 +23,7 @@ function missingPropertyProxy(name, target) {
 function toRoute(url) {
   const path = new URL(url, "http://example.com").pathname;
   // Replace IDs with * so we can ignore them easier
-  return path.replace(/[0-9_]+/g, () => "*");
+  return path.replace(/\/[0-9_]+/g, () => "/*");
 }
 
 class FakeAxios {
@@ -39,8 +40,13 @@ class FakeAxios {
     }
   }
 
-  async post() {
-    throw new Error("TODO: FakeAxios.post");
+  async post(url) {
+    const route = toRoute(url);
+    if (route === "/api/v1/track/assets") {
+      return { data: fakeAssets };
+    } else {
+      throw new Error(`unknown route "${route}"`);
+    }
   }
 }
 
@@ -60,7 +66,7 @@ class FakeAPI {
     // onClose
   }) {
     // TODO: Return some actual tags
-    onInitialTags([]);
+    onInitialTags(fakeAssets.asset_updates);
     return { close() {} };
   }
 }

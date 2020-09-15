@@ -1,7 +1,7 @@
 import mockMaps from "./mock-maps.js";
 import mockPlacemarks from "./mock-placemarks.js";
 import mockSvg from "./mock-svg.js";
-import fakeAssets from "./fake-assets.js";
+import mockAssets from "./mock-assets.js";
 
 // Show console warnings when accessing an undefined property, so it's easier to
 // develop these fake APIs
@@ -43,7 +43,7 @@ class FakeAxios {
   async post(url) {
     const route = toRoute(url);
     if (route === "/api/v1/track/assets") {
-      return { data: fakeAssets };
+      return { data: mockAssets };
     } else {
       throw new Error(`unknown route "${route}"`);
     }
@@ -66,7 +66,7 @@ class FakeAPI {
     // onClose
   }) {
     // TODO: Return some actual tags
-    onInitialTags(fakeAssets.asset_updates);
+    onInitialTags(mockAssets.asset_updates);
     return { close() {} };
   }
 }

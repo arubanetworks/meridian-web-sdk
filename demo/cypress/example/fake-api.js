@@ -2,6 +2,8 @@ import mockMaps from "./mock-maps.js";
 import mockPlacemarks from "./mock-placemarks.js";
 import mockSvg from "./mock-svg.js";
 
+// Show console warnings when accessing an undefined property, so it's easier to
+// develop these fake APIs
 function missingPropertyProxy(name, target) {
   return new Proxy(target, {
     get(target, property) {
@@ -9,6 +11,7 @@ function missingPropertyProxy(name, target) {
         return target[property];
       }
       if (typeof property !== "symbol" && !property.startsWith("@")) {
+        // eslint-disable-next-line no-console
         console.warn(`[${name}] missing property "${property}"`);
       }
       return undefined;
@@ -16,14 +19,15 @@ function missingPropertyProxy(name, target) {
   });
 }
 
-class FakeAxios {
-  toRoute(url) {
-    const path = new URL(url, "http://example.com").pathname;
-    return path.replace(/[0-9_]+/g, () => "*");
-  }
+function toRoute(url) {
+  const path = new URL(url, "http://example.com").pathname;
+  // Replace IDs with * so we can ignore them easier
+  return path.replace(/[0-9_]+/g, () => "*");
+}
 
+class FakeAxios {
   async get(url) {
-    const route = this.toRoute(url);
+    const route = toRoute(url);
     if (route === "/locations/*/maps") {
       return { data: mockMaps };
     } else if (route === "/locations/*/maps/*/placemarks") {
@@ -55,6 +59,7 @@ class FakeAPI {
     // onException,
     // onClose
   }) {
+    // TODO: Return some actual tags
     onInitialTags([]);
     return { close() {} };
   }

@@ -1,7 +1,8 @@
 import mockMaps from "./mock-maps.js";
 import mockPlacemarks from "./mock-placemarks.js";
 import mockSvg from "./mock-svg.js";
-import mockAssets from "./mock-assets.js";
+import mockAllAssets from "./mock-all-assets.js";
+import mockFloorAssets from "./mock-floor-assets.js";
 
 // Show console warnings when accessing an undefined property, so it's easier to
 // develop these fake APIs
@@ -11,6 +12,8 @@ function missingPropertyProxy(name, target) {
       if (property in target) {
         return target[property];
       }
+      // Some library is trying to read various strange properties we don't
+      // implement, so let's ignore those isntead of showing a warning
       if (typeof property !== "symbol" && !property.startsWith("@")) {
         // eslint-disable-next-line no-console
         console.warn(`[${name}] missing property "${property}"`);
@@ -51,7 +54,7 @@ class FakeAxios {
     await sleep(0);
     const route = toRoute(url);
     if (route === "/api/v1/track/assets") {
-      return { data: mockAssets };
+      return { data: mockAllAssets };
     } else {
       throw new Error(`unknown route "${route}"`);
     }
@@ -75,7 +78,7 @@ class FakeAPI {
     // onClose
   }) {
     sleep(0).then(() => {
-      onInitialTags(mockAssets.asset_updates);
+      onInitialTags(mockFloorAssets);
     });
     return { close() {} };
   }

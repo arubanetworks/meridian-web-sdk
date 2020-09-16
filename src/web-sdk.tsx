@@ -568,7 +568,12 @@ export class API {
 /**
  * Environment name used in [[APIOptions]]. If unsure, use `"production"`.
  */
-export type EnvOptions = "production" | "staging" | "eu" | "development";
+export type EnvOptions =
+  | "production"
+  | "staging"
+  | "eu"
+  | "development"
+  | "devCloud";
 
 /**
  * Options passed to [[createAPI]].

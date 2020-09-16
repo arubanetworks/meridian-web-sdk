@@ -112,6 +112,32 @@ You can style Tags with specific labels using:
 .meridian-tag-label-{LABEL-NAME}
 ```
 
+### Requirements for Using d3
+
+If you have multiple packages that use d3 on your site, you may need to utilize webpack resolve.
+
+for example, to use `d3-selection` in your project, you will need to import in the following way:
+
+```js
+import { selection } from "d3-selection";
+```
+
+and write the following in your `webpack.config`;
+
+```js
+module.exports = {
+  //...
+  resolve: {
+    alias: {
+      "d3-selection": require.resolve("d3-selection")
+    }
+  }
+};
+```
+
+Please refer to the docs for [webpack require.resolve][]
+
 [examples]: examples
 [api token]: https://docs.meridianapps.com/hc/en-us/articles/360039670154-Authenticate-to-the-API
 [download]: https://unpkg.com/@meridian/web-sdk/dist/meridian-sdk.js
+[webpack require.resolve]: https://webpack.js.org/api/module-methods/#requireresolve

@@ -14,6 +14,7 @@ install:
 script:
   - npm test
   - npm run build
+  - npm run travis-cypress
 deploy:
   - provider: npm
     # Don't delete `dist/` and `docs/` since we need them to deploy

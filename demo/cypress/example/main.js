@@ -1,6 +1,6 @@
 /* global MeridianSDK */
 
-import { fakeAPI } from "./fake-api.js";
+import { fakeAPI } from "../utils/fake-api.js";
 
 const root = document.getElementById("meridian-map");
 const meridianMap = MeridianSDK.createMap(root, {

@@ -26,7 +26,6 @@
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
       /* global MeridianSDK */
-
       import { fakeAPI } from "../utils/fake-api.js";
 
       const root = document.getElementById("meridian-map");
@@ -41,16 +40,8 @@
         placemarks: {
           filter: placemark =>
             placemark.id === "5755685136498688_5717271485874176"
-        },
-        onTagClick: tag => {
-          console.log("tag", tag);
-        },
-        onPlacemarkClick: placemark => {
-          console.log("placemark", placemark);
         }
       });
-
-      Object.assign(window, { meridianMap });
     </script>
   </body>
 </html>

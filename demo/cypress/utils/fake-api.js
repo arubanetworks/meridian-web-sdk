@@ -78,7 +78,6 @@ class FakeAPI {
     // onClose
   }) {
     sleep(0).then(() => {
-      console.info("openStream()");
       onInitialTags(mockFloorAssets);
     });
     return { close() {} };

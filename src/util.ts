@@ -118,7 +118,6 @@ export async function fetchTagsByFloor(options: {
   locationID: string;
   floorID: string;
 }): Promise<Record<string, any>[]> {
-  console.info("fetchTagsByFloor");
   const response = await options.api.axios.post(
     envToTagTrackerRestURL[options.api.environment],
     {

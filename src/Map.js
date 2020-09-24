@@ -241,7 +241,6 @@ export default class Map extends Component {
     // active. In that case it would also make sense to ask for an update when
     // they switch back. Might even make sense to block updates while the tag
     // list is open?
-    console.info("kjlfjsdlkfjds");
     const loop = async () => {
       const { api, locationID } = this.props;
       const allTagData = await fetchTagsByLocation({ api, locationID });

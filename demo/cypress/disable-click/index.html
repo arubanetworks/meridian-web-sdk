@@ -26,7 +26,6 @@
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
       /* global MeridianSDK */
-
       import { fakeAPI } from "../utils/fake-api.js";
 
       const root = document.getElementById("meridian-map");
@@ -36,16 +35,7 @@
         floorID: "5755685136498688",
         height: "100%",
         tags: { disabled: true },
-        placemarks: { disabled: true },
-        onTagClick: tag => {
-          console.log("tag", tag);
-        },
-        onPlacemarkClick: placemark => {
-          console.log("placemark", placemark);
-        }
+        placemarks: { disabled: true }
       });
-
-      Object.assign(window, { meridianMap });
-    </script>
   </body>
 </html>

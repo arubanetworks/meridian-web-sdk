@@ -24,6 +24,7 @@
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
       import { fakeAPI } from "../utils/fake-api.js";
+
       const root = document.getElementById("meridian-map");
       const meridianMap = MeridianSDK.createMap(root, {
         api: fakeAPI,
@@ -37,6 +38,7 @@
           console.log("placemark", placemark);
         }
       });
+      Object.assign(window, { meridianMap });
     </script>
   </body>
 </html>

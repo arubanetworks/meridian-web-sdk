@@ -1,5 +1,33 @@
 export default [
   {
+    mac: "546C0E014866",
+    id: "546C0E014866",
+    name: "Chad",
+    location_id: "5198682008846336",
+    map_id: "5755685136498688",
+    x: 5027.271251150382,
+    y: 2165.735877420776,
+    event_type: "UPDATE",
+    timestamp: "1600202365",
+    created: "2019-06-07T21:36:12",
+    modified: "2020-09-15T20:05:04",
+    external_id: "",
+    image_url: "",
+    battery_level: 83,
+    control_x: 5450.225958858496,
+    control_y: 1065.3388213790097,
+    current_zone_id: "18",
+    tags: [
+      {
+        id: "5876089909673984",
+        name: "CT-Human"
+      }
+    ],
+    tag_ids: ["5876089909673984"],
+    zone_events: [],
+    map_events: []
+  },
+  {
     mac: "546C0E032A87",
     id: "546C0E032A87",
     name: "Jamboard - Blue",
@@ -23,16 +51,13 @@ export default [
       {
         id: "4726953227845632",
         name: "Jamboard"
-      },
-      {
-        id: "5876089909673984",
-        name: "CT-Human"
       }
     ],
-    tag_ids: ["4726953227845632", "5876089909673984"],
+    tag_ids: ["4726953227845632"],
     zone_events: [],
     map_events: []
   },
+
   {
     mac: "546C0E082AFB",
     id: "546C0E082AFB",
@@ -64,6 +89,30 @@ export default [
       }
     ],
     tag_ids: ["5659797845442560", "5454888638349312"],
+    zone_events: [],
+    map_events: []
+  },
+  {
+    mac: "546C0E014517",
+    id: "546C0E014517",
+    name: "Chad-Control",
+    location_id: "5198682008846336",
+    map_id: "5755685136498688",
+    x: 6506.614394882942,
+    y: 902.8928286905004,
+    event_type: "UPDATE",
+    timestamp: "1600202381",
+    created: "2019-06-07T21:54:13",
+    modified: "2020-09-15T19:05:38",
+    external_id: "",
+    image_url: "",
+    battery_level: 92,
+    control_x: 7041.762933740962,
+    control_y: 165.35773029922666,
+    is_control_tag: true,
+    current_zone_id: "18",
+    tags: [],
+    tag_ids: [],
     zone_events: [],
     map_events: []
   }

@@ -12,11 +12,9 @@
       }
 
       .map {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        max-width: 800px;
+        margin: auto;
+        border: 1px solid #ccc;
       }
     </style>
   </head>
@@ -24,6 +22,18 @@
   <body>
     <div class="map" id="meridian-map"></div>
     <script src="../../meridian-sdk.js"></script>
-    <script type="module" src="main.js"></script>
+    <script type="module">
+      import { fakeAPI } from "../utils/fake-api.js";
+
+      const root = document.getElementById("meridian-map");
+      const meridianMap = MeridianSDK.createMap(root, {
+        api: fakeAPI,
+        locationID: "5198682008846336",
+        floorID: "5755685136498688",
+        height: "600px"
+      });
+
+      Object.assign(window, { meridianMap });
+    </script>
   </body>
 </html>

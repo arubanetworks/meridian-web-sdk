@@ -11,3 +11,7 @@
 ## Running Local Tag Tracker
 
 Local tag tracker requires Go and Redis to work correctly.
+
+## Cypress Tests
+
+To run local Cypress tests, start your local development server normally. Then, in another terminal, run npx cypress open. You can then use the Cypress UI to run your tests. Travis CI runs these tests on each commit.

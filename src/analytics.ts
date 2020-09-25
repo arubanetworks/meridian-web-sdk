@@ -25,6 +25,10 @@ type SendAnalyticsCodeEventOptions = {
 export async function sendAnalyticsCodeEvent(
   options: SendAnalyticsCodeEventOptions
 ) {
+  // Skip Google Analytics when using Cypress automation testing
+  if ((window as any).Cypress) {
+    return;
+  }
   const {
     action,
     locationID,
@@ -61,6 +65,5 @@ export async function sendAnalyticsCodeEvent(
       .toString(36)
       .substring(7) // Cache Buster (per google)
   };
-
   axios.get("https://www.google-analytics.com/collect", { params });
 }

@@ -1,18 +1,21 @@
 import { MeridianMap } from "../../src/web-sdk";
 
+function getMeridianMap(): Cypress.Chainable<MeridianMap> {
+  return cy.window().then(contentWindow => {
+    return (contentWindow as any).meridianMap;
+  });
+}
+
 describe("Filter update", () => {
   it("should only show data specified by tags.filter and placemarks.filter", () => {
     cy.visit("/cypress/filter-update");
-    // -------------------------------------------------------------------------
+
     cy.get('[data-meridian-tag-id="546C0E032A87"]').should("exist");
     cy.get("[data-meridian-tag-id]").should("have.length", 3);
     cy.get("[data-meridian-placemark-id='5717271485874176']").should("exist");
     cy.get("[data-meridian-placemark-id]").should("have.length", 32);
-    // -------------------------------------------------------------------------
-    cy.window().then(contentWindow => {
-      // Having a hard time figuring out how to add `meridianMap` as a property
-      // of the window here, so just faking it with `as any` :shrug:
-      const meridianMap: MeridianMap = (contentWindow as any).meridianMap;
+
+    getMeridianMap().then(meridianMap => {
       meridianMap.update({
         tags: {
           filter: tag => tag.name === "Jamboard - Blue"
@@ -22,20 +25,19 @@ describe("Filter update", () => {
         }
       });
     });
+
     cy.get("[data-meridian-tag-id='546C0E032A87']").should("exist");
     cy.get("[data-meridian-tag-id]").should("have.length", 1);
     cy.get("[data-meridian-placemark-id='5717271485874176']").should("exist");
     cy.get("[data-meridian-placemark-id]").should("have.length", 1);
-    // -------------------------------------------------------------------------
-    cy.window().then(contentWindow => {
-      // Having a hard time figuring out how to add `meridianMap` as a property
-      // of the window here, so just faking it with `as any` :shrug:
-      const meridianMap: MeridianMap = (contentWindow as any).meridianMap;
+
+    getMeridianMap().then(meridianMap => {
       meridianMap.update({
         tags: {},
         placemarks: {}
       });
     });
+
     cy.get("[data-meridian-tag-id='546C0E032A87']").should("exist");
     cy.get("[data-meridian-tag-id]").should("have.length", 3);
     cy.get("[data-meridian-placemark-id='5717271485874176']").should("exist");

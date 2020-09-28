@@ -1,5 +1,11 @@
 import { MeridianMap } from "../../src/web-sdk";
 
+function getMeridianMap(): Cypress.Chainable<MeridianMap> {
+  return cy.window().then(contentWindow => {
+    return (contentWindow as any).meridianMap;
+  });
+}
+
 describe("Filter by tag label", () => {
   it("should only show tag specified by the label through tags.filter", () => {
     cy.visit("/cypress/filter-by-tag-label");
@@ -8,8 +14,7 @@ describe("Filter by tag label", () => {
     cy.get('[data-meridian-tag-id="546C0E032A87"]').should("exist");
     cy.get('[data-meridian-tag-id="546C0E082AFB"]').should("not.exist");
 
-    cy.window().then((contentWindow: any) => {
-      const meridianMap: MeridianMap = contentWindow.meridianMap;
+    getMeridianMap().then(meridianMap => {
       meridianMap.update({
         tags: { filter: () => true }
       });
@@ -20,12 +25,13 @@ describe("Filter by tag label", () => {
     cy.get('[data-meridian-tag-id="546C0E082AFB"]').should("exist");
     cy.get('[data-meridian-tag-id="546C0E014866"]').should("exist");
 
-    cy.window().then((contentWindow: any) => {
-      const meridianMap: MeridianMap = contentWindow.meridianMap;
+    getMeridianMap().then(meridianMap => {
       meridianMap.update({
         tags: {
-          filter: tag =>
-            tag.tags.some((tag: { name: string }) => tag.name === "Multimeter")
+          filter: assetTag =>
+            assetTag.tags.some(
+              (tagLabel: { name: string }) => tagLabel.name === "Multimeter"
+            )
         }
       });
     });

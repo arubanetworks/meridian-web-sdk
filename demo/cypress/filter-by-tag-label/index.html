@@ -35,7 +35,8 @@
         floorID: "5755685136498688",
         height: "100%",
         tags: {
-          filter: tag => tag.tags.some(tag => tag.name === "Jamboard")
+          filter: assetTag =>
+            assetTag.tags.some(tagLabel => tagLabel.name === "Jamboard")
         }
       });
 

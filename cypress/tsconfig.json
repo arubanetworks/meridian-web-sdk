@@ -4,5 +4,5 @@
     "sourceMap": false,
     "types": ["cypress"]
   },
-  "include": ["**/*.ts", "support/commands.js", "support/index.js"]
+  "include": ["**/*.ts", "support/commands.ts", "support/index.ts"]
 }

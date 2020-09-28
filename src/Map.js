@@ -185,6 +185,7 @@ export default class Map extends Component {
     ) {
       this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
+      this.updatePlacemarks();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
       this.setState({

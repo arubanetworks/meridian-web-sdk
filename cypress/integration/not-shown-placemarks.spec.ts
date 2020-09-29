@@ -20,8 +20,6 @@ describe("Hidden Placemarks", () => {
       });
     });
 
-    cy.get('[data-meridian-placemark-id="5766466041282560"]').should(
-      "not.exist"
-    );
+    cy.get('[data-meridian-placemark-id="5766466041282560"]').should("exist");
   });
 });

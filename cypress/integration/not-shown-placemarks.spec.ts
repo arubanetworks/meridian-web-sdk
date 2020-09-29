@@ -6,8 +6,8 @@ function getMeridianMap(): Cypress.Chainable<MeridianMap> {
   });
 }
 
-describe("placemarks not shown by default", () => {
-  it("should ensure that placemarks not shown by default exist but aren't shown", () => {
+describe("Hidden Placemarks", () => {
+  it("should not be shown unless showHiddenPlacemarks is true", () => {
     cy.visit("/cypress/not-shown-placemarks");
 
     cy.get('[data-meridian-placemark-id="5766466041282560"]').should(
@@ -16,12 +16,10 @@ describe("placemarks not shown by default", () => {
 
     getMeridianMap().then(meridianMap => {
       meridianMap.update({
-        placemarks: {
-          filter: placemark => placemark.hide_on_map === true
-        }
+        placemarks: { showHiddenPlacemarks: true }
       });
     });
 
-    cy.get("[data-meridian-placemark-id]").should("have.length", 0);
+    cy.get('[data-meridian-placemark-id="5766466041282560"]').should("exist");
   });
 });

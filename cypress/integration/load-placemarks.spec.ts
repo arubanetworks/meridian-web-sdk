@@ -9,15 +9,15 @@ describe("Loading Placemarks (props.loadPlacemarks)", () => {
       "contain",
       "Main Building – Floor 01"
     );
-    cy.get("[data-meridian-placemark-id]").should("have.length", 31);
+    cy.get("[data-meridian-placemark-id]").should("have.length", 0);
 
     cy.window().then((contentWindow: any) => {
       const meridianMap: MeridianMap = contentWindow.meridianMap;
       meridianMap.update({
-        loadPlacemarks: false
+        loadPlacemarks: true
       });
     });
 
-    cy.get("[data-meridian-placemark-id]").should("have.length", 0);
+    cy.get("[data-meridian-placemark-id]").should("have.length", 31);
   });
 });

@@ -18,5 +18,8 @@ describe("Basic/Default test", () => {
 
     cy.get('[data-meridian-placemark-id="5653164804014080"]').should("exist");
     cy.get("[data-meridian-placemark-id]").should("have.length", 31);
+
+    // control tags are not shown
+    cy.get('[data-meridian-tag-id="546C0E014517"]').should("not.exist");
   });
 });

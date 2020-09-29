@@ -1,6 +1,7 @@
-describe("Example", () => {
-  it("should work", () => {
+describe("Basic/Default test", () => {
+  it("should load data and UI elements", () => {
     cy.visit("/cypress/basic");
+
     cy.get(".meridian-map-container").should("exist");
     cy.get(".meridian-floor-label").should(
       "contain",

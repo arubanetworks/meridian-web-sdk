@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Unpublished floors are now hidden from the floor selector
+- A bug where placemarks wouldn't update after changing floors
+
 
 ## [0.8.1] - 2020-09-09
 

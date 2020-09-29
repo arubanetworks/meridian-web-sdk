@@ -155,8 +155,8 @@ export default class Map extends Component {
     }
   }
 
-  loadData() {
-    this.initializeFloors();
+  async loadData() {
+    await this.initializeFloors();
     if (this.props.loadPlacemarks) {
       this.updatePlacemarks();
     }
@@ -164,7 +164,7 @@ export default class Map extends Component {
     this.fetchMapImageURL();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.locationID !== prevProps.locationID) {
       this.toggleTagListOverlay({ open: false });
       this.toggleErrorOverlay({ open: false });
@@ -179,12 +179,10 @@ export default class Map extends Component {
       this.zoomToDefault();
       this.validateFloorID();
     }
-    if (
-      prevProps.floorID !== this.props.floorID ||
-      prevState.floors !== this.state.floors
-    ) {
+    if (prevProps.floorID !== this.props.floorID) {
       this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
+      this.updatePlacemarks();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
       this.setState({

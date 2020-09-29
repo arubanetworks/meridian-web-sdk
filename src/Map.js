@@ -157,9 +157,7 @@ export default class Map extends Component {
 
   async loadData() {
     await this.initializeFloors();
-    if (this.props.loadPlacemarks) {
-      this.updatePlacemarks();
-    }
+    this.updatePlacemarks();
     this.initializeTags();
     this.fetchMapImageURL();
   }
@@ -183,15 +181,14 @@ export default class Map extends Component {
       this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
       this.updatePlacemarks();
+    } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
+      this.updatePlacemarks();
     }
     if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
       this.setState({
         routeSteps: [],
         isMapMarkerOverlayOpen: false
       });
-    }
-    if (this.props.loadPlacemarks && !prevProps.loadPlacemarks) {
-      this.updatePlacemarks();
     }
   }
 
@@ -318,9 +315,15 @@ export default class Map extends Component {
 
   async updatePlacemarks() {
     const { locationID, floorID, api } = this.props;
-    this.toggleLoadingSpinner({ show: true, source: "placemarks" });
     const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
-    const results = await fetchAllPaginatedData(api, placemarksURL);
+    let results = [];
+
+    this.toggleLoadingSpinner({ show: true, source: "placemarks" });
+
+    if (this.props.loadPlacemarks) {
+      results = await fetchAllPaginatedData(api, placemarksURL);
+    }
+
     // If the user switches floors, we want to get rid of the value
     if (
       floorID === this.props.floorID &&

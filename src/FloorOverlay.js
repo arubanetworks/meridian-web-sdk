@@ -97,11 +97,13 @@ class FloorOverlay extends Component {
     const { searchFilter } = this.state;
     const { floors } = this.props;
     const match = createSearchMatcher(searchFilter);
-    return floors.filter(
-      floor =>
-        match(floor.name || "") ||
-        match(floor.group_name || STRINGS.unnamedBuilding)
-    );
+    return floors.filter(floor => {
+      return (
+        floor.published &&
+        (match(floor.name || "") ||
+          match(floor.group_name || STRINGS.unnamedBuilding))
+      );
+    });
   }
 
   renderList() {

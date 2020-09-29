@@ -8,7 +8,7 @@ function getMeridianMap(): Cypress.Chainable<MeridianMap> {
 
 describe("Hidden Placemarks", () => {
   it("should not be shown unless showHiddenPlacemarks is true", () => {
-    cy.visit("/cypress/not-shown-placemarks");
+    cy.visit("/cypress/basic");
 
     cy.get('[data-meridian-placemark-id="5766466041282560"]').should(
       "not.exist"
@@ -20,6 +20,8 @@ describe("Hidden Placemarks", () => {
       });
     });
 
-    cy.get('[data-meridian-placemark-id="5766466041282560"]').should("exist");
+    cy.get('[data-meridian-placemark-id="5766466041282560"]').should(
+      "not.exist"
+    );
   });
 });

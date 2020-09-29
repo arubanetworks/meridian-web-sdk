@@ -1,7 +1,7 @@
 import { MeridianMap } from "../../src/web-sdk";
 
 describe("Loading Placemarks (props.loadPlacemarks)", () => {
-  it("should load placemarks by default", () => {
+  it("should not load placemarks", () => {
     cy.visit("/cypress/load-placemarks");
 
     cy.get(".meridian-map-container").should("exist");

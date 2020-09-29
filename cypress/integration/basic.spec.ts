@@ -1,4 +1,4 @@
-describe("Default tests", () => {
+describe("Basic", () => {
   it("should render map and UI elements", () => {
     cy.visit("/cypress/basic");
 

@@ -1,10 +1,4 @@
-import { MeridianMap } from "../../src/web-sdk";
-
-function getMeridianMap(): Cypress.Chainable<MeridianMap> {
-  return cy.window().then(contentWindow => {
-    return (contentWindow as any).meridianMap;
-  });
-}
+import { getMeridianMap } from "./util/getMeridianMap";
 
 describe("Filter update", () => {
   it("should only show data specified by tags.filter and placemarks.filter", () => {

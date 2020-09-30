@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .map {
+        max-width: 800px;
+        margin: auto;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="map" id="meridian-map"></div>
+    <script src="../../meridian-sdk.js"></script>
+    <script type="module">
+      import { fakeAPI } from "../utils/fake-api.js";
+
+      const root = document.getElementById("meridian-map");
+      const meridianMap = MeridianSDK.createMap(root, {
+        api: fakeAPI,
+        locationID: "5198682008846336",
+        floorID: "5755685136498688",
+        height: "600px",
+        placemarks: { showHiddenPlacemarks: true }
+      });
+
+      Object.assign(window, { meridianMap });
+    </script>
+  </body>
+</html>

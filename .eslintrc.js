@@ -16,6 +16,7 @@ module.exports = {
   plugins: ["react", "@typescript-eslint"],
   rules: {
     curly: "error",
+    "spaced-comment": ["error", "always", { markers: ["/"] }],
     "consistent-return": "error",
     "no-unused-vars": "error",
     "no-console": "warn",

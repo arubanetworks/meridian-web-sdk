@@ -24,7 +24,7 @@ describe("Control Tags", () => {
     cy.get("[data-meridian-tag-id]").should("have.length", 4);
   });
 
-  it("control tags should be hidden by default", () => {
+  it("control tags should be visible", () => {
     cy.visit("/cypress/control-tags");
 
     cy.get(".meridian-map-container").should("exist");

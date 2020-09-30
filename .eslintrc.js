@@ -16,7 +16,16 @@ module.exports = {
   plugins: ["react", "@typescript-eslint"],
   rules: {
     curly: "error",
-    "spaced-comment": ["error", "always", { markers: ["/"] }],
+    "spaced-comment": [
+      "error",
+      "always",
+      {
+        // Cypress uses `///` comments to load TS types
+        markers: ["/"],
+        // webpack uses `/*!` comments for license blocks
+        exceptions: ["!"]
+      }
+    ],
     "consistent-return": "error",
     "no-unused-vars": "error",
     "no-console": "warn",

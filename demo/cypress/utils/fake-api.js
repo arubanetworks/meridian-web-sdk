@@ -42,7 +42,11 @@ class FakeAxios {
     if (route === "/locations/*/maps") {
       return { data: mockMaps };
     } else if (route === "/locations/*/maps/*/placemarks") {
-      return { data: mockPlacemarks };
+      const mapID = url.split("/")[3];
+      const placemarksOnFloor = mockPlacemarks.results.filter(
+        item => item.map === mapID
+      );
+      return { data: { ...mockPlacemarks, results: placemarksOnFloor } };
     } else if (route.endsWith(".svg")) {
       return { data: new Blob([mockSvg], { type: "image/svg+xml" }) };
     } else {
@@ -70,7 +74,7 @@ class FakeAPI {
 
   openStream({
     // locationID,
-    // floorID,
+    floorID: mapID,
     onInitialTags
     // onTagLeave,
     // onTagUpdate,
@@ -78,7 +82,10 @@ class FakeAPI {
     // onClose
   }) {
     sleep(0).then(() => {
-      onInitialTags(mockFloorAssets);
+      const assetsOnFloor = mockFloorAssets.filter(
+        item => item.map_id === mapID
+      );
+      onInitialTags(assetsOnFloor);
     });
     return { close() {} };
   }

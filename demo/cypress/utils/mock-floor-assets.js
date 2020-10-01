@@ -116,7 +116,6 @@ export default [
     zone_events: [],
     map_events: []
   },
-
   {
     mac: "546C0E014866",
     id: "546C0E014866",

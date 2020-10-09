@@ -121,7 +121,7 @@ class FloorOverlay extends Component {
     }
     if (buildingNames.length > 0) {
       return (
-        <div className={cssFloorsList}>
+        <div className={cx("floors-list", cssFloorsList)}>
           {buildingNames.map(buildingName => (
             <div key={buildingName}>
               <div className={cssOverlayBuildingName}>
@@ -136,7 +136,9 @@ class FloorOverlay extends Component {
                   }}
                   className={cx(
                     cssOverlayFloorButton,
-                    floor.id === currentFloorID && cssOverlayCurrentFloor
+                    floor.id === currentFloorID
+                      ? cx("current-floor", cssOverlayCurrentFloor)
+                      : undefined
                   )}
                 >
                   {floor.name}
@@ -157,6 +159,7 @@ class FloorOverlay extends Component {
     return (
       <Overlay
         position="right"
+        label="floors"
         onCloseClicked={() => {
           toggleFloorOverlay({ open: false });
         }}

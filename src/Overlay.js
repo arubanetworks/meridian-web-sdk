@@ -8,7 +8,7 @@
 import { h } from "preact";
 import PropTypes from "prop-types";
 
-import { css, theme, mixins } from "./style";
+import { css, theme, mixins, cx } from "./style";
 import IconClose from "./IconClose";
 
 const cssOverlay = css(mixins.shadow, mixins.rounded, {
@@ -30,13 +30,28 @@ const cssOverlay = css(mixins.shadow, mixins.rounded, {
   maxWidth: 400
 });
 
-const cssOverlayLeft = css(cssOverlay, {
-  marginRight: "auto"
-});
+const cssOverlayLeft = ({ label }) => {
+  return cx(
+    "meridian-map-overlay",
+    label,
+    cssOverlay,
+    css({
+      marginRight: "auto",
+      label
+    })
+  );
+};
 
-const cssOverlayRight = css(cssOverlay, {
-  marginLeft: "auto"
-});
+const cssOverlayRight = ({ label }) => {
+  return cx(
+    "meridian-map-overlay",
+    label,
+    cssOverlay,
+    css({
+      marginLeft: "auto"
+    })
+  );
+};
 
 const cssClose = css(
   mixins.buttonReset,
@@ -63,7 +78,7 @@ const cssClose = css(
 );
 
 const CloseButton = ({ onClick }) => (
-  <button className={cssClose} onClick={onClick}>
+  <button className={cx("close", cssClose)} onClick={onClick}>
     <IconClose />
   </button>
 );
@@ -72,8 +87,14 @@ CloseButton.propTypes = {
   onClick: PropTypes.func.isRequired
 };
 
-const Overlay = ({ position, onCloseClicked, children }) => (
-  <div className={position === "left" ? cssOverlayLeft : cssOverlayRight}>
+const Overlay = ({ position, onCloseClicked, children, label }) => (
+  <div
+    className={
+      position === "left"
+        ? cssOverlayLeft({ label })
+        : cssOverlayRight({ label })
+    }
+  >
     <CloseButton onClick={onCloseClicked} />
     {children}
   </div>
@@ -82,7 +103,8 @@ const Overlay = ({ position, onCloseClicked, children }) => (
 Overlay.propTypes = {
   position: PropTypes.oneOf(["left", "right"]).isRequired,
   children: PropTypes.any.isRequired,
-  onCloseClicked: PropTypes.func.isRequired
+  onCloseClicked: PropTypes.func.isRequired,
+  label: PropTypes.string
 };
 
 export default Overlay;

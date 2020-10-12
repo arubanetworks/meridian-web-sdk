@@ -120,6 +120,7 @@ class TagListOverlay extends Component {
 
   renderTagList() {
     const {
+      floors,
       updateMap,
       tagOptions,
       tags,
@@ -136,18 +137,30 @@ class TagListOverlay extends Component {
       );
     }
     const match = createSearchMatcher(searchFilter);
+    const floorsByID = groupBy(floors, floor => floor.id);
     const processedTags = tags
-      .filter(
-        tag =>
+      // Remove tags from unpublished floors
+      .filter(tag => {
+        const floor = floorsByID[tag.map_id][0];
+        if (floor) {
+          return floor.published;
+        }
+        return true;
+      })
+      // Remove tags that don't match the local search terms
+      .filter(tag => {
+        return (
           match(tag.name) || match(tag.mac) || getTagLabels(tag).some(match)
-      )
-      // TODO: Should we show hidden tags?
+        );
+      })
+      // Remove control tags unless the developer wants them
       .filter(tag => {
         if (tagOptions.showControlTags !== true) {
           return !tag.is_control_tag;
         }
         return true;
       })
+      // Sort by name
       .sort((a, b) => {
         if (a.name < b.name) {
           return -1;

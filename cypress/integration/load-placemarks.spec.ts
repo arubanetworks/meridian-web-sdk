@@ -1,4 +1,4 @@
-import { MeridianMap } from "../../src/web-sdk";
+import { getMeridianMap } from "./util/getMeridianMap";
 
 describe("Loading Placemarks (props.loadPlacemarks)", () => {
   it("should not load placemarks", () => {
@@ -11,8 +11,7 @@ describe("Loading Placemarks (props.loadPlacemarks)", () => {
     );
     cy.get("[data-meridian-placemark-id]").should("have.length", 0);
 
-    cy.window().then((contentWindow: any) => {
-      const meridianMap: MeridianMap = contentWindow.meridianMap;
+    getMeridianMap().then(meridianMap => {
       meridianMap.update({
         loadPlacemarks: true
       });

@@ -88,6 +88,7 @@ class OverlaySearchBar extends Component {
           onInput={event => {
             onChange(event.target.value);
           }}
+          data-testid="meridian--private--overlay-search"
           ref={element => {
             this.input = element;
           }}

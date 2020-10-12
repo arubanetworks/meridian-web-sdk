@@ -63,7 +63,11 @@ const cssClose = css(
 );
 
 const CloseButton = ({ onClick }) => (
-  <button className={cssClose} onClick={onClick}>
+  <button
+    className={cssClose}
+    onClick={onClick}
+    data-testid="meridian--private--close-overlay"
+  >
     <IconClose />
   </button>
 );
@@ -73,7 +77,10 @@ CloseButton.propTypes = {
 };
 
 const Overlay = ({ position, onCloseClicked, children }) => (
-  <div className={position === "left" ? cssOverlayLeft : cssOverlayRight}>
+  <div
+    className={position === "left" ? cssOverlayLeft : cssOverlayRight}
+    data-testid="meridian--private--map-overlay"
+  >
     <CloseButton onClick={onCloseClicked} />
     {children}
   </div>
@@ -82,7 +89,8 @@ const Overlay = ({ position, onCloseClicked, children }) => (
 Overlay.propTypes = {
   position: PropTypes.oneOf(["left", "right"]).isRequired,
   children: PropTypes.any.isRequired,
-  onCloseClicked: PropTypes.func.isRequired
+  onCloseClicked: PropTypes.func.isRequired,
+  label: PropTypes.string
 };
 
 export default Overlay;

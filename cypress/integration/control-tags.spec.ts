@@ -4,8 +4,8 @@ describe("Control Tags", () => {
   it("control tags should be hidden by default", () => {
     cy.visit("/cypress/basic");
 
-    cy.get(".meridian-map-container").should("exist");
-    cy.get(".meridian-floor-label").should(
+    cy.get("[data-testid='meridian--private--map-container']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 01"
     );
@@ -26,8 +26,8 @@ describe("Control Tags", () => {
   it("control tags should be visible", () => {
     cy.visit("/cypress/control-tags");
 
-    cy.get(".meridian-map-container").should("exist");
-    cy.get(".meridian-floor-label").should(
+    cy.get("[data-testid='meridian--private--map-container']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 01"
     );

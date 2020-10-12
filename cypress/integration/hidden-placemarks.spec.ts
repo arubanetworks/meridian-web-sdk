@@ -2,7 +2,7 @@ import { getMeridianMap } from "./util/getMeridianMap";
 
 describe("Hidden Placemarks", () => {
   it("should not be shown unless showHiddenPlacemarks is true", () => {
-    //hidden placemarks not visible by default
+    // hidden placemarks not visible by default
     cy.visit("/cypress/basic");
 
     cy.get("[data-meridian-placemark-id]").should("have.length", 31);
@@ -19,7 +19,7 @@ describe("Hidden Placemarks", () => {
     cy.get("[data-meridian-placemark-id]").should("have.length", 32);
     cy.get('[data-meridian-placemark-id="5766466041282560"]').should("exist");
 
-    //hidden placemarks visible by default
+    // hidden placemarks visible by default
     cy.visit("/cypress/hidden-placemarks");
 
     cy.get("[data-meridian-placemark-id]").should("have.length", 32);

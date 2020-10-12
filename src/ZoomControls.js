@@ -56,6 +56,7 @@ const ZoomButton = ({ onClick, dir }) => {
           "meridian-zoom-button-in",
           cssZoomButtonIn
         )}
+        data-testid="meridian--private--zoom-button-in"
         onClick={onClick}
       >
         <svg viewBox="0 0 36 36">
@@ -71,6 +72,7 @@ const ZoomButton = ({ onClick, dir }) => {
           "meridian-zoom-button-out",
           cssZoomButtonOut
         )}
+        data-testid="meridian--private--zoom-button-out"
         onClick={onClick}
       >
         <svg viewBox="0 0 36 36">

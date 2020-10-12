@@ -4,24 +4,28 @@ describe("Basic", () => {
   });
 
   it("should render map and UI elements", () => {
-    cy.get(".meridian-map-container").should("exist");
-    cy.get(".meridian-floor-label").should(
+    cy.get("[data-testid='meridian--private--map-container']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 01"
     );
-    cy.get(".meridian-tag-control").should("exist");
-    cy.get(".meridian-floor-control").should("exist");
+    cy.get("[data-testid='meridian--private--tag-control']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-control']").should("exist");
 
-    cy.get(".meridian-zoom-button-in").should("exist");
-    cy.get(".meridian-zoom-button-out").should("exist");
+    cy.get("[data-testid='meridian--private--zoom-button-in']").should("exist");
+    cy.get("[data-testid='meridian--private--zoom-button-out']").should(
+      "exist"
+    );
 
-    // no overlays should exist
-    cy.get(".meridian-map-overlay").should("not.exist");
+    // map overlays should exist
+    cy.get("[data-testid='meridian--private--map-overlay']").should(
+      "not.exist"
+    );
   });
 
   it("should show placemarks and tags", () => {
-    cy.get(".meridian-map-container").should("exist");
-    cy.get(".meridian-floor-label").should(
+    cy.get("[data-testid='meridian--private--map-container']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 01"
     );
@@ -46,8 +50,8 @@ describe("Basic", () => {
   });
 
   it("should not show control tags", () => {
-    cy.get(".meridian-map-container").should("exist");
-    cy.get(".meridian-floor-label").should(
+    cy.get("[data-testid='meridian--private--map-container']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 01"
     );
@@ -57,55 +61,66 @@ describe("Basic", () => {
     cy.get('[data-meridian-tag-id="546C0E014517"]').should("not.exist");
   });
 
-  it("Should have floor a selection UI that provides filtering and indicates the current floor", () => {
-    cy.get(".meridian-map-container").should("exist");
-    cy.get(".meridian-floor-label").should(
+  it("should have floor a selection UI that provides filtering and indicates the current floor", () => {
+    cy.get("[data-testid='meridian--private--map-container']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 01"
     );
 
     // open the floor list/selection overlay
-    cy.get(".meridian-floor-control").click();
-    cy.get("button.current-floor").within(() => {
+    cy.get("[data-testid='meridian--private--floor-control']").click();
+    cy.get("[data-testid='meridian--private--current-floor']").within(() => {
       cy.contains("Floor 01");
       cy.get("svg").should("exist");
     });
 
-    cy.get("input.search").type("Floor 02");
-    cy.get(".floors-list").within(() => {
-      cy.get("button.current-floor").should("not.exist");
+    cy.get("[data-testid='meridian--private--overlay-search").type("Floor 02");
+    cy.get("[data-testid='meridian--private--floors-list']").within(() => {
+      cy.get("[data-testid='meridian--private--current-floor']").should(
+        "not.exist"
+      );
       cy.contains("Floor 01").should("not.exist");
       cy.contains("Floor 02");
     });
 
-    cy.get("input.search").clear();
-    cy.get(".floors-list").within(() => {
+    cy.get("[data-testid='meridian--private--overlay-search").clear();
+    cy.get("[data-testid='meridian--private--floors-list']").within(() => {
       cy.contains("Floor 01");
       cy.contains("Floor 02");
-      cy.get("button.current-floor").should("contain", "Floor 01");
+      cy.get("[data-testid='meridian--private--current-floor']").should(
+        "contain",
+        "Floor 01"
+      );
     });
 
     // close the floor overlay
-    cy.get("button.close").click();
-    // flooor overlay should not be visible
-    cy.get(".meridian-map-overlay.floors").should("not.exist");
+    cy.get("[data-testid='meridian--private--close-overlay'").click();
+    // map overlay should not be visible
+    cy.get("[data-testid='meridian--private--map-overlay']").should(
+      "not.exist"
+    );
   });
 
-  it("Should have floor selection UI that allows changing floors", () => {
-    cy.get(".meridian-map-container").should("exist");
-    cy.get(".meridian-floor-label").should(
+  it("should have floor selection UI that allows changing floors", () => {
+    cy.get("[data-testid='meridian--private--map-container']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 01"
     );
 
-    cy.get(".meridian-floor-control").click();
-    cy.get("button")
-      .contains("Floor 02")
-      .click();
+    cy.get("[data-testid='meridian--private--floor-control']").click();
+    cy.get("[data-testid='meridian--private--floors-list']").within(() => {
+      cy.get("[data-testid='meridian--private--floor']")
+        .contains("Floor 02")
+        .click();
+    });
 
-    // overlay should not be visible
-    cy.get(".meridian-map-overlay.floors").should("not.exist");
-    cy.get(".meridian-floor-label").should(
+    // map overlay should not be visible
+    cy.get("[data-testid='meridian--private--map-overlay']").should(
+      "not.exist"
+    );
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 02"
     );

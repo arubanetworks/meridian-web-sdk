@@ -54,6 +54,7 @@ const FloorAndTagControls = ({
     {showTagList ? (
       <button
         className={cx("meridian-tag-control", cssControl)}
+        data-testid="meridian--private--tag-control"
         onClick={() => {
           toggleTagListOverlay({ open: true });
         }}
@@ -70,6 +71,7 @@ const FloorAndTagControls = ({
           "meridian-floor-control",
           showFloors && showTagList ? cssControlNotFirst : cssControl
         )}
+        data-testid="meridian--private--floor-control"
         onClick={() => {
           toggleFloorOverlay({ open: true });
         }}

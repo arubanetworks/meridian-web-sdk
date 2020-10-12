@@ -11,7 +11,7 @@ import groupBy from "lodash.groupby";
 
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
-import { css, theme, mixins, cx } from "./style";
+import { css, cx, theme, mixins } from "./style";
 import { createSearchMatcher, STRINGS } from "./util";
 
 const cssOverlayBuildingName = css({
@@ -121,7 +121,10 @@ class FloorOverlay extends Component {
     }
     if (buildingNames.length > 0) {
       return (
-        <div className={cx("floors-list", cssFloorsList)}>
+        <div
+          className={cssFloorsList}
+          data-testid="meridian--private--floors-list"
+        >
           {buildingNames.map(buildingName => (
             <div key={buildingName}>
               <div className={cssOverlayBuildingName}>
@@ -137,9 +140,14 @@ class FloorOverlay extends Component {
                   className={cx(
                     cssOverlayFloorButton,
                     floor.id === currentFloorID
-                      ? cx("current-floor", cssOverlayCurrentFloor)
+                      ? cssOverlayCurrentFloor
                       : undefined
                   )}
+                  data-testid={`${
+                    floor.id === currentFloorID
+                      ? "meridian--private--current-floor"
+                      : "meridian--private--floor"
+                  }`}
                 >
                   {floor.name}
                   {floor.id === currentFloorID ? <FloorCheckmark /> : null}
@@ -159,7 +167,6 @@ class FloorOverlay extends Component {
     return (
       <Overlay
         position="right"
-        label="floors"
         onCloseClicked={() => {
           toggleFloorOverlay({ open: false });
         }}

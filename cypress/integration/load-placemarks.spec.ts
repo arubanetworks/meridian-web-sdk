@@ -4,8 +4,8 @@ describe("Loading Placemarks (props.loadPlacemarks)", () => {
   it("should not load placemarks", () => {
     cy.visit("/cypress/load-placemarks");
 
-    cy.get(".meridian-map-container").should("exist");
-    cy.get(".meridian-floor-label").should(
+    cy.get("[data-testid='meridian--private--map-container']").should("exist");
+    cy.get("[data-testid='meridian--private--floor-label']").should(
       "contain",
       "Main Building – Floor 01"
     );

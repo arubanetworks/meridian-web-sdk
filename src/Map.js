@@ -676,6 +676,7 @@ export default class Map extends Component {
           isIE && cssNoTouchZoom
         )}
         style={{ width, height }}
+        data-testid="meridian--private--map-container"
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />

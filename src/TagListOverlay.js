@@ -183,6 +183,7 @@ class TagListOverlay extends Component {
             {organizedTags[buildingName].map(tag => (
               <button
                 key={tag.id}
+                data-testid={`meridian--private--overlay-tag-${tag.id}`}
                 className={cssOverlayTagButton}
                 onClick={() => {
                   updateMap({

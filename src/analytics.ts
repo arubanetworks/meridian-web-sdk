@@ -18,8 +18,6 @@ type SendAnalyticsCodeEventOptions = {
   tagsFilter?: boolean;
   placemarksFilter?: boolean;
   internalUpdate?: boolean;
-  youAreHerePlacemarkID?: string;
-  destinationID?: string;
 };
 
 export async function sendAnalyticsCodeEvent(
@@ -35,9 +33,7 @@ export async function sendAnalyticsCodeEvent(
     onTagsUpdate = false,
     tagsFilter = false,
     placemarksFilter = false,
-    internalUpdate = false,
-    youAreHerePlacemarkID = undefined,
-    destinationID = undefined
+    internalUpdate = false
   } = options;
   const params = {
     v: "1", // GA version
@@ -55,8 +51,6 @@ export async function sendAnalyticsCodeEvent(
     cm1: onTagsUpdate ? 1 : 0, // Custom Metric
     cm2: tagsFilter ? 1 : 0, // Custom Metric
     cm3: placemarksFilter ? 1 : 0, // Custom Metric
-    cm4: youAreHerePlacemarkID, // Source Placemark ID for Directions
-    cm5: destinationID, // Destination Placemark ID for Directions
     ul: navigator.language, // User Language
     sr: screenRes, // Screen Resolution
     aip: 1, // Anonymize IP

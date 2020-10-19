@@ -62,27 +62,6 @@ export function getAssetURL(suffix: string) {
   return `${ASSETS_URL}/${suffix}`;
 }
 
-/**
- * TODO: Actually document this, enable the feature, stop using Record<string,
- * any>, etc etc.
- * @internal
- */
-export function getDirections({
-  api,
-  locationID,
-  fromMapID,
-  fromPlacemarkID,
-  toPlacemarkID
-}: Record<string, any>) {
-  return api.axios.get(`/locations/${locationID}/directions`, {
-    params: {
-      from_map_id: fromMapID,
-      from_placemark_id: fromPlacemarkID,
-      to_placemark_ids: toPlacemarkID
-    }
-  });
-}
-
 export function getPlacemarkIconURL(type: string) {
   const name = "placemark-" + type.replace(/_/g, "-");
   return getAssetURL(`placemarks/${name}.svg`);

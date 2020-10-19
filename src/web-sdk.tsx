@@ -237,19 +237,6 @@ export type MeridianEvent = {
   preventDefault: () => void;
 };
 
-// TODO: Move this type to Map.js after we convert it to TS.
-
-// type MapProps = CreateMapOptions & {
-//   youAreHerePlacemarkID?: string;
-//   // TODO: Internal only, remove
-//   update: (newProps: MapProps) => void;
-//   // TODO: `onMarkerClick` is internal only, we should remove from public types
-//   onMarkerClick?: (marker: Record<string, any>) => void;
-//   // TODO: `onMapClick` is not used or documented, we should delete it
-//   onMapClick?: (event: MouseEvent) => void;
-//   api: AxiosInstance;
-// };
-
 /**
  * Returned from [[createMap]], this object allows you to manipulate a map that
  * has already been created in the page.

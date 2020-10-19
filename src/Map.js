@@ -30,11 +30,8 @@ import { css, cx } from "./style";
 import {
   fetchAllPaginatedData,
   asyncClientCall,
-  validateEnvironment,
-  getDirections
+  validateEnvironment
 } from "./util";
-import { sendAnalyticsCodeEvent } from "./analytics";
-import DirectionsLayer from "./DirectionsLayer";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -73,7 +70,6 @@ export default class Map extends Component {
     height: PropTypes.string,
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
-    youAreHerePlacemarkID: PropTypes.string,
     api: PropTypes.object,
     showFloorsControl: PropTypes.bool,
     showTagsControl: PropTypes.bool,
@@ -129,8 +125,7 @@ export default class Map extends Component {
       tagsStatus: "Connecting",
       selectedItem: null,
       areTagsLoading: true,
-      allTagData: [],
-      routeSteps: []
+      allTagData: []
     };
     this.tagsTimeout = null;
     this.mapSelection = null;
@@ -183,12 +178,6 @@ export default class Map extends Component {
       this.updatePlacemarks();
     } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
       this.updatePlacemarks();
-    }
-    if (prevProps.youAreHerePlacemarkID !== this.props.youAreHerePlacemarkID) {
-      this.setState({
-        routeSteps: [],
-        isMapMarkerOverlayOpen: false
-      });
     }
   }
 
@@ -293,7 +282,7 @@ export default class Map extends Component {
   };
 
   selectFloorByID = floorID => {
-    this.updateMap({ floorID, routeSteps: [] });
+    this.updateMap({ floorID });
   };
 
   groupPlacemarksByID = placemarks => {
@@ -526,31 +515,6 @@ export default class Map extends Component {
     }
   };
 
-  onDirectionsToHereClicked = async item => {
-    sendAnalyticsCodeEvent({
-      action: "map.directions",
-      locationID: this.props.locationID,
-      youAreHerePlacemarkID: this.props.youAreHerePlacemarkID,
-      destinationID: item.id
-    });
-    const response = await getDirections({
-      api: this.props.api,
-      locationID: this.props.locationID,
-      fromMapID: this.props.floorID,
-      fromPlacemarkID: this.props.youAreHerePlacemarkID,
-      toPlacemarkID: item.id
-    });
-    // TODO: Check to make sure floorID and youAreHerePlacemarkID and
-    // destinationID all have not changed since before the `await` above
-    if (response && response.data) {
-      const routeSteps = response.data.routes[0].steps.map(step => step.points);
-      this.setState({
-        routeSteps,
-        isMapMarkerOverlayOpen: false
-      });
-    }
-  };
-
   shouldShowFloors() {
     const { showFloorsControl } = this.props;
     const { floors } = this.state;
@@ -619,8 +583,6 @@ export default class Map extends Component {
           toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
           kind={selectedItem.kind === "placemark" ? "placemark" : "tag"}
           item={selectedItem}
-          youAreHerePlacemarkID={this.props.youAreHerePlacemarkID}
-          onDirectionsToHereClicked={this.onDirectionsToHereClicked}
         />
       );
     }
@@ -660,7 +622,6 @@ export default class Map extends Component {
       showTagsControl,
       locationID,
       floorID,
-      youAreHerePlacemarkID,
       api,
       tags,
       placemarks,
@@ -715,13 +676,6 @@ export default class Map extends Component {
                 this.mapImage = el;
               }}
             />
-            {this.state.routeSteps.length > 0 && (
-              <DirectionsLayer
-                routeSteps={this.state.routeSteps}
-                width={this.mapImage.clientWidth}
-                height={this.mapImage.clientHeight}
-              />
-            )}
             {!errors.length && mapData ? (
               <PlacemarkLayer
                 selectedItem={selectedItem}
@@ -729,7 +683,6 @@ export default class Map extends Component {
                 mapZoomFactor={mapZoomFactor}
                 locationID={locationID}
                 floorID={floorID}
-                youAreHerePlacemarkID={youAreHerePlacemarkID}
                 api={api}
                 markers={placemarks}
                 onMarkerClick={this.onMarkerClick}

@@ -10,7 +10,6 @@ import PropTypes from "prop-types";
 
 import { getPlacemarkIconURL } from "./util";
 import { css, cx, mixins, theme } from "./style";
-import IconYouAreHere from "./IconYouAreHere";
 
 const SIZE = 24;
 
@@ -19,8 +18,7 @@ const Placemark = ({
   data,
   mapZoomFactor,
   onClick = () => {},
-  disabled = false,
-  youAreHerePlacemarkID
+  disabled = false
 }) => {
   const SHRINK_POINT = 0.2;
   const SHRINK_FACTOR = 1.4;
@@ -36,8 +34,6 @@ const Placemark = ({
         cssPlacemarkIconSelected
       )
     : cx("meridian-placemark-icon", cssTypeName, cssPlacemarkIcon);
-  const isYouAreHere =
-    youAreHerePlacemarkID && youAreHerePlacemarkID === data.id;
   const style = {
     left: data.x,
     top: data.y,
@@ -71,28 +67,7 @@ const Placemark = ({
       </div>
     );
   }
-  if (isYouAreHere) {
-    return (
-      <div
-        className={cx("meridian-placemark", cssPlacemark)}
-        style={{
-          left: data.x,
-          top: data.y,
-          transform: `translate(-45%, -50%) scale(${k})`,
-          zIndex: 3
-        }}
-      >
-        <IconYouAreHere />
-        <div
-          className={cx("meridian-label", cssLabel)}
-          hidden={mapZoomFactor < SHRINK_POINT}
-          data-meridian-placemark-id={data.next_id}
-        >
-          YOU ARE HERE
-        </div>
-      </div>
-    );
-  }
+
   return (
     <div className={cx("meridian-placemark", cssPlacemark)} style={style}>
       <button
@@ -123,8 +98,7 @@ Placemark.propTypes = {
   mapZoomFactor: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
   onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-  youAreHerePlacemarkID: PropTypes.string
+  disabled: PropTypes.bool
 };
 
 const cssLabel = css(mixins.textStrokeWhite, {

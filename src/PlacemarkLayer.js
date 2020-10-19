@@ -22,7 +22,6 @@ export default class PlacemarkLayer extends Component {
     mapZoomFactor: PropTypes.number.isRequired,
     locationID: PropTypes.string.isRequired,
     floorID: PropTypes.string.isRequired,
-    youAreHerePlacemarkID: PropTypes.string,
     api: PropTypes.object,
     markers: PropTypes.shape({
       showHiddenPlacemarks: PropTypes.bool,
@@ -55,13 +54,7 @@ export default class PlacemarkLayer extends Component {
   }
 
   render() {
-    const {
-      markers,
-      onMarkerClick,
-      mapZoomFactor,
-      selectedItem,
-      youAreHerePlacemarkID
-    } = this.props;
+    const { markers, onMarkerClick, mapZoomFactor, selectedItem } = this.props;
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(this.props.placemarks)
       .map(id => this.props.placemarks[id])
@@ -88,7 +81,6 @@ export default class PlacemarkLayer extends Component {
         data={placemark}
         onClick={onMarkerClick}
         disabled={markers.disabled}
-        youAreHerePlacemarkID={youAreHerePlacemarkID}
       />
     ));
     return <div>{finalMarkers}</div>;

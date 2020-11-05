@@ -358,38 +358,30 @@ export function createAPI(options: APIOptions): API {
  * create multiple API instances in case you want to use multiple tokens (e.g.
  * to show data from multiple locations or organizations on a single page).
  *
- * ```js
+ * @example
+ * // Basic usage
  * const api = new MeridianSDK.API({
  *   token: "<TOKEN GOES HERE>"
  * });
- *
  * MeridianSDK.init({ api: api });
- * ```
  *
- * You can use multiple API instances if you want to use multiple
- * tokens/environments on a single page:
- *
- * ```js
+ * // Multiple APIs at once
  * const apiOrg1 = new MeridianSDK.API({
  *   token: "Insert Org 1 token here"
  * });
- *
  * const apiOrg2 = new MeridianSDK.API({
  *   token: "Insert Org 2 token here"
  * });
- *
  * MeridianSDK.createMap(elementOrg1, {
  *   api: apiCustomer1,
  *   locationID: "Insert Org 1 location ID here",
  *   floorID: "Insert Org 1 floor ID here"
  * });
- *
  * MeridianSDK.createMap(elementOrg2, {
  *   api: apiCustomer2,
  *   locationID: "Insert Org 2 location ID here",
  *   floorID: "Insert Org 2 floor ID here"
  * });
- * ```
  */
 export class API {
   /**
@@ -453,10 +445,10 @@ export class API {
     floorID: string
   ): Promise<Record<string, any>[]> {
     if (!locationID) {
-      requiredParam("tagsByFloor", "locationID");
+      requiredParam("fetchTagsByFloor", "locationID");
     }
     if (!floorID) {
-      requiredParam("tagsByFloor", "floorID");
+      requiredParam("fetchTagsByFloor", "floorID");
     }
     const response = await this._axiosTagsAPI.post("track/assets", {
       floor_id: floorID,
@@ -471,10 +463,10 @@ export class API {
     floorID: string
   ): Promise<Record<string, any>[]> {
     if (!locationID) {
-      requiredParam("placemarksByFloor", "locationID");
+      requiredParam("fetchPlacemarksByFloor", "locationID");
     }
     if (!floorID) {
-      requiredParam("placemarksByFloor", "floorID");
+      requiredParam("fetchPlacemarksByFloor", "floorID");
     }
     return await fetchAllPaginatedData(async url => {
       const { data } = await this._axiosEditorAPI.get(url);
@@ -487,7 +479,7 @@ export class API {
     locationID: string
   ): Promise<Record<string, any>[]> {
     if (!locationID) {
-      requiredParam("floorsByLocation", "locationID");
+      requiredParam("fetchFloorsByLocation", "locationID");
     }
     return await fetchAllPaginatedData(async url => {
       const { data } = await this._axiosEditorAPI.get(url);
@@ -499,6 +491,9 @@ export class API {
   async fetchTagsByLocation(
     locationID: string
   ): Promise<Record<string, any>[]> {
+    if (!locationID) {
+      requiredParam("fetchTagsByLocation", "locationID");
+    }
     const response = await this._axiosTagsAPI.post("/track/assets", {
       location_id: locationID
     });
@@ -507,6 +502,9 @@ export class API {
 
   /** TODO: Docs */
   async fetchSVGAsBlob(svgURL: string): Promise<Blob> {
+    if (!svgURL) {
+      requiredParam("fetchSVGAsBlob", "svgURL");
+    }
     const { data } = await this._axiosEditorAPI.get(svgURL, {
       responseType: "blob"
     });
@@ -514,10 +512,11 @@ export class API {
   }
 
   /**
-   * Opens a tag stream for a given location and floor. `onInitialTags` is called with the full list of tags for that
-   * floor, then `onTagUpdate` is called every time a tag moves on the floor.
+   * Opens a tag stream for a given location and floor. `onInitialTags` is
+   * called with the full list of tags for that floor, then `onTagUpdate` is
+   * called every time a tag moves on the floor.
    *
-   * ```js
+   * @example
    * const api = new MeridianSDK.API({
    *   token: token,
    *   environment: "production"
@@ -536,7 +535,6 @@ export class API {
    *
    * // call `stream.close()` when switching pages to avoid leaving the stream
    * // open and wasting bandwidth in the background
-   * ```
    */
   openStream(options: {
     /** Meridian location ID */

@@ -437,7 +437,9 @@ export class API {
     return this._axiosEditorAPI;
   }
 
-  /** TODO: Docs */
+  /**
+   * [async] Returns an array of all tags on the specified location and floor
+   */
   async fetchTagsByFloor(
     locationID: string,
     floorID: string
@@ -455,7 +457,24 @@ export class API {
     return response.data.asset_updates;
   }
 
-  /** TODO: Docs */
+  /**
+   * [async] Returns an array of all tags at the specified location
+   */
+  async fetchTagsByLocation(
+    locationID: string
+  ): Promise<Record<string, any>[]> {
+    if (!locationID) {
+      requiredParam("fetchTagsByLocation", "locationID");
+    }
+    const response = await this._axiosTagsAPI.post("/track/assets", {
+      location_id: locationID
+    });
+    return response.data.asset_updates;
+  }
+
+  /**
+   * [async] Returns an array of all placemarks on the specified location and floor
+   */
   async fetchPlacemarksByFloor(
     locationID: string,
     floorID: string
@@ -472,7 +491,9 @@ export class API {
     }, `locations/${locationID}/maps/${floorID}/placemarks`);
   }
 
-  /** TODO: Docs */
+  /**
+   * [async] Returns an array of all floors at the specified location
+   */
   async fetchFloorsByLocation(
     locationID: string
   ): Promise<Record<string, any>[]> {
@@ -485,20 +506,17 @@ export class API {
     }, `locations/${locationID}/maps`);
   }
 
-  /** TODO: Docs */
-  async fetchTagsByLocation(
-    locationID: string
-  ): Promise<Record<string, any>[]> {
-    if (!locationID) {
-      requiredParam("fetchTagsByLocation", "locationID");
-    }
-    const response = await this._axiosTagsAPI.post("/track/assets", {
-      location_id: locationID
-    });
-    return response.data.asset_updates;
-  }
-
-  /** TODO: Docs */
+  /**
+   * [async] Returns an object URL for the given SVG URL
+   *
+   * This object URL can be used as the `src` for an `img` tag.
+   *
+   * This method fetches the SVG URL using your API token, since `img` tags
+   * can't pass API tokens. The SVG URL can be obtained from the `svg_url`
+   * property on a floor. When you're finished using this URL, you should call
+   * `URL.revokeObjectURL` with the URL, so the browser can save memory by
+   * releasing the data.
+   */
   async fetchSVG(svgURL: string): Promise<string> {
     if (!svgURL) {
       requiredParam("fetchSVG", "svgURL");

@@ -433,9 +433,7 @@ export class API {
    * Use the fetch methods instead
    */
   get axios(): AxiosInstance {
-    deprecated(
-      "don't access the axios object directly: use the other API methods"
-    );
+    deprecated("axios is deprecated; use the MeridianSDK.API fetch methods");
     return this._axiosEditorAPI;
   }
 

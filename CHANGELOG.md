@@ -15,11 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Several new methods starting with `fetch` on the `MeridianSDK.API` class
+- `api.fetchTagsByFloor`
+- `api.fetchTagsByLocation`
+- `api.fetchPlacemarksByFloor`
+- `api.fetchFloorsByLocation`
+- `api.fetchSVG`
 
 ### Deprecated
 
-- The `.axios` property on a `MeridianSDK.API` instance
+- `api.axios`
 
 ## [0.8.1] - 2020-09-09
 

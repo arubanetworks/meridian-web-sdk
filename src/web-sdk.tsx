@@ -501,14 +501,14 @@ export class API {
   }
 
   /** TODO: Docs */
-  async fetchSVGAsBlob(svgURL: string): Promise<Blob> {
+  async fetchSVG(svgURL: string): Promise<string> {
     if (!svgURL) {
-      requiredParam("fetchSVGAsBlob", "svgURL");
+      requiredParam("fetchSVG", "svgURL");
     }
     const { data } = await this._axiosEditorAPI.get(svgURL, {
       responseType: "blob"
     });
-    return data;
+    return URL.createObjectURL(data);
   }
 
   /**

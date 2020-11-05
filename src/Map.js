@@ -159,6 +159,7 @@ export default class Map extends Component {
       this.toggleMapMarkerOverlay({ open: false });
       this.toggleFloorOverlay({ open: false });
       this.zoomToDefault();
+      this.freeMapImageURL();
       this.setState({ mapImageURL: null, placemarks: {} });
       this.loadData();
       return;
@@ -168,6 +169,7 @@ export default class Map extends Component {
       this.validateFloorID();
     }
     if (prevProps.floorID !== this.props.floorID) {
+      this.freeMapImageURL();
       this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
       this.updatePlacemarks();
@@ -180,6 +182,13 @@ export default class Map extends Component {
     if (this.tagsTimeout) {
       clearTimeout(this.tagsTimeout);
     }
+    this.freeMapImageURL();
+  }
+
+  freeMapImageURL() {
+    if (this.state.mapImageURL) {
+      URL.revokeObjectURL(this.state.mapImageURL);
+    }
   }
 
   async fetchMapImageURL() {
@@ -188,12 +197,14 @@ export default class Map extends Component {
     if (!mapData) {
       return;
     }
-    const blob = await api.fetchSVGAsBlob(mapData.svg_url);
+    const url = await api.fetchSVG(mapData.svg_url);
     if (
       floorID === this.props.floorID &&
       locationID === this.props.locationID
     ) {
-      this.setState({ mapImageURL: URL.createObjectURL(blob) });
+      this.setState({ mapImageURL: url });
+    } else {
+      URL.revokeObjectURL(url);
     }
   }
 

@@ -389,19 +389,19 @@ export class API {
    * Otherwise anyone using your page could take your token and modify all of
    * your Meridian data.
    */
-  token: string;
+  readonly token: string;
 
   /**
    * Meridian environment (`"production"` or `"eu"`). Defaults to
    * `"production"`.
    */
-  environment: EnvOptions;
+  readonly environment: EnvOptions;
 
   /** @internal */
-  private _axiosEditorAPI: AxiosInstance;
+  private readonly _axiosEditorAPI: AxiosInstance;
 
   /** @internal */
-  private _axiosTagsAPI: AxiosInstance;
+  private readonly _axiosTagsAPI: AxiosInstance;
 
   /**
    * Pass the result to `init()` or `createMap()`.
@@ -473,7 +473,8 @@ export class API {
   }
 
   /**
-   * [async] Returns an array of all placemarks on the specified location and floor
+   * [async] Returns an array of all placemarks on the specified location and
+   * floor
    */
   async fetchPlacemarksByFloor(
     locationID: string,

@@ -3,8 +3,6 @@
  * @packageDocumentation
  */
 
-import { API } from "./web-sdk";
-
 export function deprecated(...args: any[]) {
   // eslint-disable-next-line no-console
   console.warn("[deprecated]", ...args);
@@ -67,22 +65,7 @@ export function getPlacemarkIconURL(type: string) {
   return getAssetURL(`placemarks/${name}.svg`);
 }
 
-export async function fetchAllPaginatedData<T>(
-  api: API,
-  url: string
-): Promise<T[]> {
-  const { data } = await api.axios.get(url);
-  const results = data.results;
-  let next = data.next;
-  while (next) {
-    const { data } = await api.axios.get(next);
-    results.push(...data.results);
-    next = data.next;
-  }
-  return results;
-}
-
-export function validateEnvironment(env: string) {
+export function validateEnvironment(env: string): boolean {
   return (
     env === "staging" ||
     env === "production" ||
@@ -91,55 +74,3 @@ export function validateEnvironment(env: string) {
     env === "devCloud"
   );
 }
-
-export async function fetchTagsByFloor(options: {
-  api: API;
-  locationID: string;
-  floorID: string;
-}): Promise<Record<string, any>[]> {
-  const response = await options.api.axios.post(
-    envToTagTrackerRestURL[options.api.environment],
-    {
-      floor_id: options.floorID,
-      location_id: options.locationID
-    }
-  );
-  return response.data.asset_updates;
-}
-
-export async function fetchTagsByLocation(options: {
-  api: API;
-  locationID: string;
-}): Promise<Record<string, any>[]> {
-  const response = await options.api.axios.post(
-    envToTagTrackerRestURL[options.api.environment],
-    {
-      location_id: options.locationID
-    }
-  );
-  return response.data.asset_updates;
-}
-
-export const envToTagTrackerRestURL = {
-  development: "http://localhost:8091/api/v1/track/assets",
-  devCloud: "https://dev-tags.meridianapps.com/api/v1/track/assets",
-  production: "https://tags.meridianapps.com/api/v1/track/assets",
-  eu: "https://tags-eu.meridianapps.com/api/v1/track/assets",
-  staging: "https://staging-tags.meridianapps.com/api/v1/track/assets"
-} as const;
-
-export const envToTagTrackerStreamingURL = {
-  development: "ws://localhost:8091/streams/v1/track/assets",
-  devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
-  production: "wss://tags.meridianapps.com/streams/v1/track/assets",
-  eu: "wss://tags-eu.meridianapps.com/streams/v1/track/assets",
-  staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets"
-} as const;
-
-export const envToEditorRestURL = {
-  development: "http://localhost:8091/websdk/api",
-  devCloud: "https://dev-edit.meridianapps.com/websdk/api",
-  production: "https://edit.meridianapps.com/websdk/api",
-  eu: "https://edit-eu.meridianapps.com/websdk/api",
-  staging: "https://staging-edit.meridianapps.com/websdk/api"
-} as const;

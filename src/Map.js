@@ -25,13 +25,8 @@ import ErrorOverlay from "./ErrorOverlay";
 import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
-import { fetchTagsByLocation } from "./util";
 import { css, cx } from "./style";
-import {
-  fetchAllPaginatedData,
-  asyncClientCall,
-  validateEnvironment
-} from "./util";
+import { asyncClientCall, validateEnvironment } from "./util";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -188,19 +183,17 @@ export default class Map extends Component {
   }
 
   async fetchMapImageURL() {
-    const { locationID, floorID } = this.props;
+    const { api, locationID, floorID } = this.props;
     const mapData = this.getMapData();
     if (!mapData) {
       return;
     }
-    const response = await this.props.api.axios.get(mapData.svg_url, {
-      responseType: "blob"
-    });
+    const blob = await api.svgAsBlob(mapData.svg_url);
     if (
       floorID === this.props.floorID &&
       locationID === this.props.locationID
     ) {
-      this.setState({ mapImageURL: URL.createObjectURL(response.data) });
+      this.setState({ mapImageURL: URL.createObjectURL(blob) });
     }
   }
 
@@ -227,7 +220,7 @@ export default class Map extends Component {
     // list is open?
     const loop = async () => {
       const { api, locationID } = this.props;
-      const allTagData = await fetchTagsByLocation({ api, locationID });
+      const allTagData = await api.tagsByLocation(locationID);
       if (locationID !== this.props.locationID) {
         return;
       }
@@ -304,13 +297,12 @@ export default class Map extends Component {
 
   async updatePlacemarks() {
     const { locationID, floorID, api } = this.props;
-    const placemarksURL = `locations/${locationID}/maps/${floorID}/placemarks`;
     let results = [];
 
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
 
     if (this.props.loadPlacemarks) {
-      results = await fetchAllPaginatedData(api, placemarksURL);
+      results = await api.placemarksByFloor(locationID, floorID);
     }
 
     // If the user switches floors, we want to get rid of the value
@@ -327,10 +319,9 @@ export default class Map extends Component {
 
   async getFloors() {
     const { locationID, api } = this.props;
-    const mapURL = `locations/${locationID}/maps`;
     let results;
     try {
-      results = await fetchAllPaginatedData(api, mapURL);
+      results = await api.floorsByLocation(locationID);
     } catch (e) {
       // TODO: compare with other error objects, similar?
       if (e.response && e.response.data && e.response.data.detail) {

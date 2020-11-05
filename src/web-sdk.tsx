@@ -438,15 +438,7 @@ export class API {
 
   /**
    * @deprecated
-   * Axios REST API client with authentication credentials already added. See
-   * the [Axios documentation](https://github.com/axios/axios) and [Meridian API
-   * documentation](https://docs.meridianapps.com/hc/en-us/categories/360002761313-Developers).
-   *
-   * ```js
-   * const api = new MeridianSDK.API({ token: "<TOKEN>" });
-   * const result = await api.axios.get(`locations/${locationID}`);
-   * console.log(result.data);
-   * ```
+   * Use the fetch methods instead
    */
   get axios(): AxiosInstance {
     deprecated(
@@ -456,7 +448,7 @@ export class API {
   }
 
   /** TODO: Docs */
-  async tagsByFloor(
+  async fetchTagsByFloor(
     locationID: string,
     floorID: string
   ): Promise<Record<string, any>[]> {
@@ -474,7 +466,7 @@ export class API {
   }
 
   /** TODO: Docs */
-  async placemarksByFloor(
+  async fetchPlacemarksByFloor(
     locationID: string,
     floorID: string
   ): Promise<Record<string, any>[]> {
@@ -491,7 +483,9 @@ export class API {
   }
 
   /** TODO: Docs */
-  async floorsByLocation(locationID: string): Promise<Record<string, any>[]> {
+  async fetchFloorsByLocation(
+    locationID: string
+  ): Promise<Record<string, any>[]> {
     if (!locationID) {
       requiredParam("floorsByLocation", "locationID");
     }
@@ -502,7 +496,9 @@ export class API {
   }
 
   /** TODO: Docs */
-  async tagsByLocation(locationID: string): Promise<Record<string, any>[]> {
+  async fetchTagsByLocation(
+    locationID: string
+  ): Promise<Record<string, any>[]> {
     const response = await this._axiosTagsAPI.post("/track/assets", {
       location_id: locationID
     });
@@ -510,7 +506,7 @@ export class API {
   }
 
   /** TODO: Docs */
-  async svgAsBlob(svgURL: string): Promise<Blob> {
+  async fetchSVGAsBlob(svgURL: string): Promise<Blob> {
     const { data } = await this._axiosEditorAPI.get(svgURL, {
       responseType: "blob"
     });
@@ -578,7 +574,7 @@ export class API {
         }
       ]
     };
-    this.tagsByFloor(options.locationID, options.floorID).then(tags => {
+    this.fetchTagsByFloor(options.locationID, options.floorID).then(tags => {
       options.onInitialTags?.(tags);
     });
     ws.addEventListener("open", () => {

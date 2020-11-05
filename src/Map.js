@@ -188,7 +188,7 @@ export default class Map extends Component {
     if (!mapData) {
       return;
     }
-    const blob = await api.svgAsBlob(mapData.svg_url);
+    const blob = await api.fetchSVGAsBlob(mapData.svg_url);
     if (
       floorID === this.props.floorID &&
       locationID === this.props.locationID
@@ -220,7 +220,7 @@ export default class Map extends Component {
     // list is open?
     const loop = async () => {
       const { api, locationID } = this.props;
-      const allTagData = await api.tagsByLocation(locationID);
+      const allTagData = await api.fetchTagsByLocation(locationID);
       if (locationID !== this.props.locationID) {
         return;
       }
@@ -302,7 +302,7 @@ export default class Map extends Component {
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
 
     if (this.props.loadPlacemarks) {
-      results = await api.placemarksByFloor(locationID, floorID);
+      results = await api.fetchPlacemarksByFloor(locationID, floorID);
     }
 
     // If the user switches floors, we want to get rid of the value
@@ -321,7 +321,7 @@ export default class Map extends Component {
     const { locationID, api } = this.props;
     let results;
     try {
-      results = await api.floorsByLocation(locationID);
+      results = await api.fetchFloorsByLocation(locationID);
     } catch (e) {
       // TODO: compare with other error objects, similar?
       if (e.response && e.response.data && e.response.data.detail) {

@@ -23,71 +23,59 @@ function missingPropertyProxy(name, target) {
   });
 }
 
-function toRoute(url) {
-  const path = new URL(url, "http://example.com").pathname;
-  // Replace IDs with * so we can ignore them easier
-  return path.replace(/\/[0-9_]+/g, () => "/*");
-}
-
 async function sleep(time) {
   return new Promise(resolve => {
     setTimeout(resolve, time);
   });
 }
 
-class FakeAxios {
-  async get(url) {
-    await sleep(0);
-    const route = toRoute(url);
-    if (route === "/locations/*/maps") {
-      return { data: mockMaps };
-    } else if (route === "/locations/*/maps/*/placemarks") {
-      const mapID = url.split("/")[3];
-      const placemarksOnFloor = mockPlacemarks.results.filter(
-        item => item.map === mapID
-      );
-      return { data: { ...mockPlacemarks, results: placemarksOnFloor } };
-    } else if (route.endsWith(".svg")) {
-      return { data: new Blob([mockSvg], { type: "image/svg+xml" }) };
-    } else {
-      throw new Error(`unknown route "${route}"`);
-    }
-  }
-
-  async post(url) {
-    await sleep(0);
-    const route = toRoute(url);
-    if (route === "/api/v1/track/assets") {
-      return { data: mockAllAssets };
-    } else {
-      throw new Error(`unknown route "${route}"`);
-    }
-  }
-}
-
 class FakeAPI {
   constructor() {
     this.token = "[FAKE_TOKEN]";
     this.environment = "production";
-    this.axios = missingPropertyProxy("API.axios", new FakeAxios());
+  }
+
+  async fetchTagsByFloor(_locationID, floorID) {
+    await sleep(0);
+    return mockFloorAssets.filter(item => item.map_id === floorID);
+  }
+
+  async fetchTagsByLocation() {
+    await sleep(0);
+    return mockAllAssets.asset_updates;
+  }
+
+  async fetchPlacemarksByFloor(_locationID, floorID) {
+    await sleep(0);
+    return mockPlacemarks.results.filter(item => item.map === floorID);
+  }
+
+  async fetchFloorsByLocation() {
+    await sleep(0);
+    return mockMaps.results;
+  }
+
+  async fetchSVG() {
+    await sleep(0);
+    const blob = new Blob([mockSvg], { type: "image/svg+xml" });
+    return URL.createObjectURL(blob);
   }
 
   openStream({
-    // locationID,
-    floorID: mapID,
+    locationID,
+    floorID,
     onInitialTags
     // onTagLeave,
     // onTagUpdate,
     // onException,
     // onClose
   }) {
-    sleep(0).then(() => {
-      const assetsOnFloor = mockFloorAssets.filter(
-        item => item.map_id === mapID
-      );
-      onInitialTags(assetsOnFloor);
+    this.fetchTagsByFloor(locationID, floorID).then(tags => {
+      onInitialTags(tags);
     });
-    return { close() {} };
+    return {
+      close() {}
+    };
   }
 }
 

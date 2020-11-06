@@ -36,17 +36,21 @@
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
-      MeridianSDK.init({
-        api: new MeridianSDK.API({
-          environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        })
+      const api = new MeridianSDK.API({
+        environment: "production",
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
       });
-      MeridianSDK.createMap(document.getElementById("meridian-map"), {
-        locationID: "5198682008846336",
-        floorID: "5755685136498688",
-        height: "100%"
-      });
+
+      MeridianSDK.init({ api: api });
+
+      const meridianMap = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          locationID: "5198682008846336",
+          floorID: "5755685136498688",
+          height: "100%"
+        }
+      );
     </script>
   </body>
 </html>

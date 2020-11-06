@@ -46,14 +46,7 @@ import axios, { AxiosInstance } from "axios";
 import ReconnectingWebSocket from "reconnecting-websocket";
 
 import Map from "./Map";
-import {
-  requiredParam,
-  asyncClientCall,
-  envToEditorRestURL,
-  fetchTagsByFloor,
-  envToTagTrackerStreamingURL,
-  deprecated
-} from "./util";
+import { requiredParam, asyncClientCall, deprecated } from "./util";
 import { sendAnalyticsCodeEvent } from "./analytics";
 
 // Wait to load Preact's debug module until the page is loaded since it assumes
@@ -345,9 +338,9 @@ export function createMap(
 }
 
 /**
+ * @deprecated
  * Deprecated function used to create an instance of [[API]]. Instead of
  * `createAPI(options)` you should now use `new API(options)`.
- * @deprecated
  */
 export function createAPI(options: APIOptions): API {
   deprecated(
@@ -365,38 +358,30 @@ export function createAPI(options: APIOptions): API {
  * create multiple API instances in case you want to use multiple tokens (e.g.
  * to show data from multiple locations or organizations on a single page).
  *
- * ```js
+ * @example
+ * // Basic usage
  * const api = new MeridianSDK.API({
  *   token: "<TOKEN GOES HERE>"
  * });
- *
  * MeridianSDK.init({ api: api });
- * ```
  *
- * You can use multiple API instances if you want to use multiple
- * tokens/environments on a single page:
- *
- * ```js
+ * // Multiple APIs at once
  * const apiOrg1 = new MeridianSDK.API({
  *   token: "Insert Org 1 token here"
  * });
- *
  * const apiOrg2 = new MeridianSDK.API({
  *   token: "Insert Org 2 token here"
  * });
- *
  * MeridianSDK.createMap(elementOrg1, {
  *   api: apiCustomer1,
  *   locationID: "Insert Org 1 location ID here",
  *   floorID: "Insert Org 1 floor ID here"
  * });
- *
  * MeridianSDK.createMap(elementOrg2, {
  *   api: apiCustomer2,
  *   locationID: "Insert Org 2 location ID here",
  *   floorID: "Insert Org 2 floor ID here"
  * });
- * ```
  */
 export class API {
   /**
@@ -404,25 +389,19 @@ export class API {
    * Otherwise anyone using your page could take your token and modify all of
    * your Meridian data.
    */
-  token: string;
+  readonly token: string;
 
   /**
    * Meridian environment (`"production"` or `"eu"`). Defaults to
    * `"production"`.
    */
-  environment: EnvOptions;
+  readonly environment: EnvOptions;
 
-  /**
-   * Axios REST API client with authentication credentials already added. See
-   * the [Axios documentation](https://github.com/axios/axios) and [Meridian API
-   * documentation](https://docs.meridianapps.com/hc/en-us/categories/360002761313-Developers).
-   *
-   * ```js
-   * const api = new MeridianSDK.API({ token: "<TOKEN>" });
-   * const result = await api.axios.get(`locations/${locationID}`);
-   * console.log(result.data);
-   */
-  axios: AxiosInstance;
+  /** @internal */
+  private readonly _axiosEditorAPI: AxiosInstance;
+
+  /** @internal */
+  private readonly _axiosTagsAPI: AxiosInstance;
 
   /**
    * Pass the result to `init()` or `createMap()`.
@@ -434,8 +413,15 @@ export class API {
     }
     this.token = options.token;
     this.environment = options.environment || "production";
-    this.axios = axios.create({
+    this._axiosEditorAPI = axios.create({
       baseURL: envToEditorRestURL[this.environment],
+      headers: {
+        Authorization: `Token ${options.token}`,
+        "Meridian-SDK": `WebSDK/${version}`
+      }
+    });
+    this._axiosTagsAPI = axios.create({
+      baseURL: envToTagTrackerBaseRestURL[this.environment],
       headers: {
         Authorization: `Token ${options.token}`
       }
@@ -443,10 +429,111 @@ export class API {
   }
 
   /**
-   * Opens a tag stream for a given location and floor. `onInitialTags` is called with the full list of tags for that
-   * floor, then `onTagUpdate` is called every time a tag moves on the floor.
+   * @deprecated
+   * Use the fetch methods instead
+   */
+  get axios(): AxiosInstance {
+    deprecated("axios is deprecated; use the MeridianSDK.API fetch methods");
+    return this._axiosEditorAPI;
+  }
+
+  /**
+   * [async] Returns an array of all tags on the specified location and floor
+   */
+  async fetchTagsByFloor(
+    locationID: string,
+    floorID: string
+  ): Promise<Record<string, any>[]> {
+    if (!locationID) {
+      requiredParam("fetchTagsByFloor", "locationID");
+    }
+    if (!floorID) {
+      requiredParam("fetchTagsByFloor", "floorID");
+    }
+    const response = await this._axiosTagsAPI.post("track/assets", {
+      floor_id: floorID,
+      location_id: locationID
+    });
+    return response.data.asset_updates;
+  }
+
+  /**
+   * [async] Returns an array of all tags at the specified location
+   */
+  async fetchTagsByLocation(
+    locationID: string
+  ): Promise<Record<string, any>[]> {
+    if (!locationID) {
+      requiredParam("fetchTagsByLocation", "locationID");
+    }
+    const response = await this._axiosTagsAPI.post("/track/assets", {
+      location_id: locationID
+    });
+    return response.data.asset_updates;
+  }
+
+  /**
+   * [async] Returns an array of all placemarks on the specified location and
+   * floor
+   */
+  async fetchPlacemarksByFloor(
+    locationID: string,
+    floorID: string
+  ): Promise<Record<string, any>[]> {
+    if (!locationID) {
+      requiredParam("fetchPlacemarksByFloor", "locationID");
+    }
+    if (!floorID) {
+      requiredParam("fetchPlacemarksByFloor", "floorID");
+    }
+    return await fetchAllPaginatedData(async url => {
+      const { data } = await this._axiosEditorAPI.get(url);
+      return data;
+    }, `locations/${locationID}/maps/${floorID}/placemarks`);
+  }
+
+  /**
+   * [async] Returns an array of all floors at the specified location
+   */
+  async fetchFloorsByLocation(
+    locationID: string
+  ): Promise<Record<string, any>[]> {
+    if (!locationID) {
+      requiredParam("fetchFloorsByLocation", "locationID");
+    }
+    return await fetchAllPaginatedData(async url => {
+      const { data } = await this._axiosEditorAPI.get(url);
+      return data;
+    }, `locations/${locationID}/maps`);
+  }
+
+  /**
+   * [async] Returns an object URL for the given SVG URL
    *
-   * ```js
+   * This object URL can be used as the `src` for an `img` tag.
+   *
+   * This method fetches the SVG URL using your API token, since `img` tags
+   * can't pass API tokens. The SVG URL can be obtained from the `svg_url`
+   * property on a floor. When you're finished using this URL, you should call
+   * `URL.revokeObjectURL` with the URL, so the browser can save memory by
+   * releasing the data.
+   */
+  async fetchSVG(svgURL: string): Promise<string> {
+    if (!svgURL) {
+      requiredParam("fetchSVG", "svgURL");
+    }
+    const { data } = await this._axiosEditorAPI.get(svgURL, {
+      responseType: "blob"
+    });
+    return URL.createObjectURL(data);
+  }
+
+  /**
+   * Opens a tag stream for a given location and floor. `onInitialTags` is
+   * called with the full list of tags for that floor, then `onTagUpdate` is
+   * called every time a tag moves on the floor.
+   *
+   * @example
    * const api = new MeridianSDK.API({
    *   token: token,
    *   environment: "production"
@@ -465,7 +552,6 @@ export class API {
    *
    * // call `stream.close()` when switching pages to avoid leaving the stream
    * // open and wasting bandwidth in the background
-   * ```
    */
   openStream(options: {
     /** Meridian location ID */
@@ -503,11 +589,7 @@ export class API {
         }
       ]
     };
-    fetchTagsByFloor({
-      api: this,
-      locationID: options.locationID,
-      floorID: options.floorID
-    }).then(tags => {
+    this.fetchTagsByFloor(options.locationID, options.floorID).then(tags => {
       options.onInitialTags?.(tags);
     });
     ws.addEventListener("open", () => {
@@ -551,6 +633,49 @@ export class API {
     };
   }
 }
+
+/** @internal */
+async function fetchAllPaginatedData<T>(
+  get: (url: string) => Promise<{ next: string; results: T[] }>,
+  url: string
+): Promise<T[]> {
+  const data = await get(url);
+  const results = data.results;
+  let next = data.next;
+  while (next) {
+    const data = await get(next);
+    results.push(...data.results);
+    next = data.next;
+  }
+  return results;
+}
+
+/** @internal */
+const envToTagTrackerBaseRestURL = {
+  development: "http://localhost:8091/api/v1",
+  devCloud: "https://dev-tags.meridianapps.com/api/v1",
+  production: "https://tags.meridianapps.com/api/v1",
+  eu: "https://tags-eu.meridianapps.com/api/v1",
+  staging: "https://staging-tags.meridianapps.com/api/v1"
+} as const;
+
+/** @internal */
+const envToTagTrackerStreamingURL = {
+  development: "ws://localhost:8091/streams/v1/track/assets",
+  devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
+  production: "wss://tags.meridianapps.com/streams/v1/track/assets",
+  eu: "wss://tags-eu.meridianapps.com/streams/v1/track/assets",
+  staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets"
+} as const;
+
+/** @internal */
+const envToEditorRestURL = {
+  development: "http://localhost:8091/api",
+  devCloud: "https://dev-edit.meridianapps.com/api",
+  production: "https://edit.meridianapps.com/api",
+  eu: "https://edit-eu.meridianapps.com/api",
+  staging: "https://staging-edit.meridianapps.com/api"
+} as const;
 
 /**
  * Environment name used in [[APIOptions]]. If unsure, use `"production"`.

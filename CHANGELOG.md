@@ -10,7 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `map.destroy()` method which should be called when you're done with a map, to
-  close network connections
+  close network connections (e.g. in a single page app, or when using JS that
+  removes the map container from the DOM, or replaces its contents via
+  `innerHTML`)
 
 ## [0.9.0] - 2020-11-06
 

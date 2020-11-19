@@ -37,7 +37,14 @@
  *    height: "500px"
  *  }
  * );
- * // Call this before navigating to a new page, to close network connections.
+ * ```
+ *
+ * Call this before navigating to a new page, to close network connections. This
+ * is critical for usage within a single page application, or even just an
+ * interactive page with JS that unmounts the map container element (e.g.
+ * removing it from the DOM or setting the `innerHTML`).
+ *
+ * ```js
  * map.destroy();
  * ```
  * @packageDocumentation
@@ -276,7 +283,14 @@ export type MeridianMap = {
  *    height: "500px"
  *  }
  * );
- * // Call this before navigating to a new page, to close network connections.
+ * ```
+ *
+ * Call this before navigating to a new page, to close network connections. This
+ * is critical for usage within a single page application, or even just an
+ * interactive page with JS that unmounts the map container element (e.g.
+ * removing it from the DOM or setting the `innerHTML`).
+ *
+ * ```js
  * map.destroy();
  * ```
  */

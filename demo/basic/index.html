@@ -42,9 +42,10 @@
       }
 
       .button {
+        --color: hsl(240, 80%, 50%);
         margin: auto;
         margin-right: 1rem;
-        background: var(--color, hsl(240, 80%, 50%));
+        background: var(--color);
         color: white;
         border: 0;
         font: inherit;
@@ -62,8 +63,8 @@
   <body>
     <div class="map" id="meridian-map"></div>
     <main>
-      <button class="button" onclick="onCreate()">Create</button>
-      <button class="button button-red" onclick="onDestroy()">Destroy</button>
+      <button class="button" onclick="create()">Create</button>
+      <button class="button button-red" onclick="destroy()">Destroy</button>
       <p>
         Don't forget to call <code>.destroy()</code> when you're done with the
         map.
@@ -72,7 +73,7 @@
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
-      function onCreate() {
+      function create() {
         const api = new MeridianSDK.API({
           environment: "production",
           token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
@@ -87,10 +88,12 @@
           }
         );
       }
-      function onDestroy() {
+
+      function destroy() {
         window.meridianMap.destroy();
       }
-      onCreate();
+
+      create();
     </script>
   </body>
 </html>

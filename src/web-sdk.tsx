@@ -28,15 +28,24 @@
  *
  * ```js
  * const api = new MeridianSDK.API({ token: "<TOKEN>" });
- * MeridianSDK.init({ api: api });
  * const map = MeridianSDK.createMap(
  *  document.querySelector("#map-container"),
  *  {
+ *    api: api,
  *    locationID: "<location ID>",
  *    floorID: "<floor ID>",
  *    height: "500px"
  *  }
- * )
+ * );
+ * ```
+ *
+ * Call this before navigating to a new page, to close network connections. This
+ * is critical for usage within a single page application, or even just an
+ * interactive page with JS that unmounts the map container element (e.g.
+ * removing it from the DOM or setting the `innerHTML`).
+ *
+ * ```js
+ * map.destroy();
  * ```
  * @packageDocumentation
  */
@@ -236,6 +245,15 @@ export type MeridianEvent = {
  */
 export type MeridianMap = {
   /**
+   * Remove the Meridian Map from the DOM and clean up all ongoing network
+   * connections.
+   *
+   * If you are writing a single page app you MUST use this call before hiding
+   * the Meridian Map, or you will having network connections that keep going in
+   * the background.
+   */
+  destroy: () => void;
+  /**
    * Update the Meridian map to have new options.
    */
   update: (updatedOptions: Partial<CreateMapOptions>) => void;
@@ -256,14 +274,24 @@ export type MeridianMap = {
  *
  * ```js
  * const api = new MeridianSDK.API({ token: "<TOKEN>" });
- * MeridianSDK.init({ api: api });
  * const map = MeridianSDK.createMap(
  *  document.querySelector("#map-container"),
  *  {
+ *    api: api,
  *    locationID: "<location ID>",
- *    floorID: "<floor ID>"
+ *    floorID: "<floor ID>",
+ *    height: "500px"
  *  }
- * )
+ * );
+ * ```
+ *
+ * Call this before navigating to a new page, to close network connections. This
+ * is critical for usage within a single page application, or even just an
+ * interactive page with JS that unmounts the map container element (e.g.
+ * removing it from the DOM or setting the `innerHTML`).
+ *
+ * ```js
+ * map.destroy();
  * ```
  */
 export function createMap(
@@ -313,6 +341,9 @@ export function createMap(
     placemarksFilter: Boolean(options.placemarks && options.placemarks.filter)
   });
   return {
+    destroy: () => {
+      render(null, element);
+    },
     update: updatedOptions => {
       _update(updatedOptions, { internalUpdate: false });
     },

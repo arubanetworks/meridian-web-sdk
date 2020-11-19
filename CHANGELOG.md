@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.0] - 2020-11-19
+
+### Added
+
+- `map.destroy()` method which should be called when you're done with a map, to
+  close network connections (e.g. in a single page app, or when using JS that
+  removes the map container from the DOM, or replaces its contents via
+  `innerHTML`)
+
 ## [0.9.0] - 2020-11-06
 
 ### Fixed

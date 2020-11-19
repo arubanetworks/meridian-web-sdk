@@ -1,5 +1,5 @@
 describe("Tag Response", () => {
-  it("visits the webSDK basic example page and select the existing tag", () => {
+  it.skip("visits the webSDK basic example page and select the existing tag", () => {
     cy.visit(
       "https://arubanetworks.github.io/meridian-web-sdk/examples/basic/"
     );

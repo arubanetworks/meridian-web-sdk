@@ -27,35 +27,18 @@
         border: 1px solid #ccc;
       }
 
-      /* Miscellaneous CSS starts here */
       body {
         font-family: sans-serif;
+        line-height: 1.5;
         display: grid;
         grid-gap: 1rem;
-        line-height: 1.5;
+        margin: 2rem;
       }
 
       main {
         width: 500px;
         margin: auto;
         display: flex;
-      }
-
-      .button {
-        --color: hsl(240, 80%, 50%);
-        margin: auto;
-        margin-right: 1rem;
-        background: var(--color);
-        color: white;
-        border: 0;
-        font: inherit;
-        padding: 0.5rem 1rem;
-        border-radius: 0.25rem;
-        font-weight: bold;
-      }
-
-      .button-red {
-        --color: hsl(0, 80%, 30%);
       }
     </style>
   </head>
@@ -64,7 +47,9 @@
     <div class="map" id="meridian-map"></div>
     <main>
       <button class="button" onclick="create()">Create</button>
+      <div class="gap"></div>
       <button class="button button-red" onclick="destroy()">Destroy</button>
+      <div class="gap"></div>
       <p>
         Don't forget to call <code>.destroy()</code> when you're done with the
         map.
@@ -73,12 +58,14 @@
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
+      let meridianMap;
+
       function create() {
         const api = new MeridianSDK.API({
           environment: "production",
           token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
         });
-        window.meridianMap = MeridianSDK.createMap(
+        meridianMap = MeridianSDK.createMap(
           document.getElementById("meridian-map"),
           {
             api: api,
@@ -90,7 +77,7 @@
       }
 
       function destroy() {
-        window.meridianMap.destroy();
+        meridianMap.destroy();
       }
 
       create();

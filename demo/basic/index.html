@@ -19,11 +19,34 @@
     <style>
       body {
         font-family: sans-serif;
+        display: grid;
+        grid-gap: 1rem;
+        line-height: 1.5;
       }
 
       .map {
-        max-width: 500px;
+        width: 500px;
         margin: auto;
+      }
+
+      main {
+        width: 500px;
+        margin: auto;
+        display: flex;
+      }
+
+      .button {
+        margin: auto;
+        margin-right: 1rem;
+        background: white;
+        color: hsl(240, 100%, 60%);
+        border: 2px solid;
+        font: inherit;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+      }
+
+      .meridian-map-container {
         border: 1px solid #ccc;
       }
     </style>
@@ -31,20 +54,36 @@
 
   <body>
     <div class="map" id="meridian-map"></div>
+    <main>
+      <button class="button" onclick="onCreate()">Create</button>
+      <button class="button" onclick="onDestroy()">Destroy</button>
+      <p>
+        Don't forget to call <code>.destroy()</code> when you're done with the
+        map.
+      </p>
+    </main>
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
-      MeridianSDK.init({
-        api: new MeridianSDK.API({
+      function onCreate() {
+        const api = new MeridianSDK.API({
           environment: "production",
           token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        })
-      });
-      var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
-        locationID: "5198682008846336",
-        floorID: "5755685136498688",
-        height: "500px"
-      });
+        });
+        window.meridianMap = MeridianSDK.createMap(
+          document.getElementById("meridian-map"),
+          {
+            api: api,
+            locationID: "5198682008846336",
+            floorID: "5755685136498688",
+            height: "500px"
+          }
+        );
+      }
+      function onDestroy() {
+        window.meridianMap.destroy();
+      }
+      onCreate();
     </script>
   </body>
 </html>

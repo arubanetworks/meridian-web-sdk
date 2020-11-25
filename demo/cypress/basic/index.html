@@ -20,20 +20,16 @@
   </head>
 
   <body>
-    <div class="map" id="meridian-map"></div>
+    <meridian-map
+      data-location-id="5198682008846336"
+      data-floor-id="5755685136498688"
+    ></meridian-map>
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
       import { fakeAPI } from "../utils/fake-api.js";
 
-      const root = document.getElementById("meridian-map");
-      const meridianMap = MeridianSDK.createMap(root, {
-        api: fakeAPI,
-        locationID: "5198682008846336",
-        floorID: "5755685136498688",
-        height: "600px"
-      });
-
-      Object.assign(window, { meridianMap });
+      const map = document.querySelector("meridian-map");
+      map.updateMap({ api: fakeAPI });
     </script>
   </body>
 </html>

@@ -804,19 +804,31 @@ export class MeridianMapElement extends HTMLElement {
   }
 
   private _getOptions(): UpdateMapOptions {
-    const { width, height, floorID, locationID, api, ...rest } = this._options;
+    const {
+      loadPlacemarks,
+      width,
+      height,
+      floorID,
+      locationID,
+      api,
+      ...rest
+    } = this._options;
     const env = this.dataset.apiEnvironment || "production";
-    return {
-      locationID: locationID || this.dataset.locationId || "no-location",
-      floorID: floorID || this.dataset.floorId || "no-floor",
-      width: width || this.dataset.width || "500px",
-      height: height || this.dataset.height || "500px",
-      api:
-        api ||
-        new API({
+    const fallbackAPI = this.dataset.apiToken
+      ? new API({
           token: this.dataset.apiToken || "",
           environment: isEnvironment(env) ? env : "production"
-        }),
+        })
+      : undefined;
+    return {
+      locationID: locationID ?? this.dataset.locationId ?? "no-location",
+      floorID: floorID ?? this.dataset.floorId ?? "no-floor",
+      width: width ?? this.dataset.width ?? "100%",
+      height: height ?? this.dataset.height ?? "500px",
+      api: api ?? fallbackAPI,
+      loadPlacemarks:
+        loadPlacemarks ??
+        Boolean(JSON.parse(this.dataset.loadPlacemarks ?? "false")),
       ...rest
     };
   }
@@ -825,8 +837,16 @@ export class MeridianMapElement extends HTMLElement {
    * Use this to update map options after a map element has been created
    */
   updateMap(options: UpdateMapOptions): void {
-    this._options = options;
+    this._options = { ...this._options, ...options };
     this._markDirty();
+  }
+
+  zoomToDefault() {
+    this._map?.zoomToDefault();
+  }
+
+  zoomToPoint(point: { x: number; y: number; scale: number }): void {
+    this._map?.zoomToPoint(point);
   }
 }
 

@@ -11,7 +11,7 @@
         font-family: sans-serif;
       }
 
-      .map {
+      meridian-map {
         max-width: 800px;
         margin: auto;
         border: 1px solid #ccc;
@@ -21,20 +21,18 @@
 
   <body>
     <div class="map" id="meridian-map"></div>
+    <meridian-map
+      data-location-id="5198682008846336"
+      data-floor-id="5755685136498688"
+      data-height="600px"
+      data-load-placemarks="false"
+    ></meridian-map>
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
       import { fakeAPI } from "../utils/fake-api.js";
 
-      const root = document.getElementById("meridian-map");
-      const meridianMap = MeridianSDK.createMap(root, {
-        api: fakeAPI,
-        locationID: "5198682008846336",
-        floorID: "5755685136498688",
-        height: "600px",
-        loadPlacemarks: false
-      });
-
-      Object.assign(window, { meridianMap });
+      const meridianMap = document.querySelector("meridian-map");
+      meridianMap.updateMap({ api: fakeAPI });
     </script>
   </body>
 </html>

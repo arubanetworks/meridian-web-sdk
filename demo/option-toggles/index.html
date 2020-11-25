@@ -21,7 +21,12 @@
 
   <body>
     <div class="container">
-      <div class="map" id="meridian-map"></div>
+      <meridian-map
+        data-api-token="6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        data-location-id="5198682008846336"
+        data-floor-id="5755685136498688"
+        data-height="360px"
+      ></meridian-map>
 
       <div class="controls-container">
         <div class="controls">
@@ -149,23 +154,8 @@
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
-      // ---vvv SDK setup vvv---
-      MeridianSDK.init({
-        api: new MeridianSDK.API({
-          environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        })
-      });
+      var map = document.querySelector("meridian-map");
 
-      var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
-        locationID: "5198682008846336",
-        floorID: "5755685136498688",
-        height: "360px",
-        loadPlacemarks: true
-      });
-      // ---^^^ SDK setup ^^^---
-
-      // ---vvv UI controls vvv---
       var state = {
         loadPlacemarks: true,
         placemarks: {},
@@ -185,7 +175,7 @@
       }
 
       function updateMap() {
-        map.update(state);
+        map.updateMap(state);
         map.zoomToDefault();
       }
 
@@ -268,7 +258,6 @@
         updateMap();
       });
 
-      // ---^^^ UI controls ^^^---
     </script>
   </body>
 </html>

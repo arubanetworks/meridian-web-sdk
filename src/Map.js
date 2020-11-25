@@ -130,7 +130,7 @@ export default class Map extends Component {
 
   componentDidMount() {
     const { api, locationID } = this.props;
-    if (!isEnvironment(api.environment)) {
+    if (api && !isEnvironment(api.environment)) {
       this.toggleErrorOverlay({
         open: true,
         message: `API error: "${api.environment}" is not a valid environment`
@@ -153,7 +153,17 @@ export default class Map extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.locationID !== prevProps.locationID) {
+    console.log(
+      "loadPlacemarks",
+      prevProps.loadPlacemarks,
+      "->",
+      this.props.loadPlacemarks
+    );
+    if (
+      this.props.api !== prevProps.api ||
+      this.props.locationID !== prevProps.locationID
+    ) {
+      console.info("if 1");
       this.toggleTagListOverlay({ open: false });
       this.toggleErrorOverlay({ open: false });
       this.toggleMapMarkerOverlay({ open: false });
@@ -165,15 +175,18 @@ export default class Map extends Component {
       return;
     }
     if (prevProps.floorID !== this.props.floorID) {
+      console.info("if 2");
       this.zoomToDefault();
       this.validateFloorID();
     }
     if (prevProps.floorID !== this.props.floorID) {
+      console.info("if 3");
       this.freeMapImageURL();
       this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
       this.updatePlacemarks();
     } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
+      console.info("if 3 else if");
       this.updatePlacemarks();
     }
   }
@@ -193,6 +206,9 @@ export default class Map extends Component {
 
   async fetchMapImageURL() {
     const { api, locationID, floorID } = this.props;
+    if (!api) {
+      return;
+    }
     const mapData = this.getMapData();
     if (!mapData) {
       return;
@@ -231,6 +247,9 @@ export default class Map extends Component {
     // list is open?
     const loop = async () => {
       const { api, locationID } = this.props;
+      if (!api) {
+        return;
+      }
       const allTagData = await api.fetchTagsByLocation(locationID);
       if (locationID !== this.props.locationID) {
         return;
@@ -310,6 +329,10 @@ export default class Map extends Component {
     const { locationID, floorID, api } = this.props;
     let results = [];
 
+    if (!api) {
+      return;
+    }
+
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
 
     if (this.props.loadPlacemarks) {
@@ -330,6 +353,10 @@ export default class Map extends Component {
 
   async getFloors() {
     const { locationID, api } = this.props;
+    if (!api) {
+      return [];
+    }
+
     let results;
     try {
       results = await api.fetchFloorsByLocation(locationID);
@@ -551,6 +578,10 @@ export default class Map extends Component {
 
   renderTagListOverlay() {
     const { locationID, floorID, api, tags } = this.props;
+    if (!api) {
+      return null;
+    }
+
     const {
       isTagListOverlayOpen,
       floors,
@@ -678,7 +709,7 @@ export default class Map extends Component {
                 this.mapImage = el;
               }}
             />
-            {!errors.length && mapData ? (
+            {!errors.length && mapData && api ? (
               <PlacemarkLayer
                 selectedItem={selectedItem}
                 isPanningOrZooming={isPanningOrZooming}
@@ -693,7 +724,7 @@ export default class Map extends Component {
               />
             ) : null}
 
-            {!errors.length && mapData ? (
+            {!errors.length && mapData && api ? (
               <TagLayer
                 selectedItem={selectedItem}
                 isPanningOrZooming={isPanningOrZooming}

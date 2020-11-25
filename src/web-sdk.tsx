@@ -755,7 +755,7 @@ export type Stream = {
  * ></meridian-map>
  * ```
  *
- * You can also specify width and height as data attributes:
+ * You can also specify width, height, and pan-zoom behavior:
  *
  * ```html
  * <meridian-map
@@ -764,6 +764,7 @@ export type Stream = {
  *   data-floor-id="..."
  *   data-width="100%"
  *   data-height="500px"
+ *   data-pan-zoom="restricted"
  * ></meridian-map>
  * ```
  *
@@ -811,6 +812,7 @@ export class MeridianMapElement extends HTMLElement {
       floorID,
       locationID,
       api,
+      shouldMapPanZoom,
       ...rest
     } = this._options;
     const env = this.dataset.apiEnvironment || "production";
@@ -820,6 +822,8 @@ export class MeridianMapElement extends HTMLElement {
           environment: isEnvironment(env) ? env : "production"
         })
       : undefined;
+    const fallbackPanZoom =
+      this.dataset.panZoom === "restricted" ? restrictedPanZoom : undefined;
     return {
       locationID: locationID ?? this.dataset.locationId ?? "no-location",
       floorID: floorID ?? this.dataset.floorId ?? "no-floor",
@@ -829,6 +833,7 @@ export class MeridianMapElement extends HTMLElement {
       loadPlacemarks:
         loadPlacemarks ??
         Boolean(JSON.parse(this.dataset.loadPlacemarks ?? "true")),
+      shouldMapPanZoom: shouldMapPanZoom ?? fallbackPanZoom,
       ...rest
     };
   }

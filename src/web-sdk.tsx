@@ -755,7 +755,8 @@ export type Stream = {
  * ></meridian-map>
  * ```
  *
- * You can also specify width, height, and pan-zoom behavior:
+ * You can also specify a handful of other peropties in the HTML element
+ * directly, for ease of implementation.
  *
  * ```html
  * <meridian-map
@@ -765,6 +766,8 @@ export type Stream = {
  *   data-width="100%"
  *   data-height="500px"
  *   data-pan-zoom="restricted"
+ *   data-show-floors-control="false"
+ *   data-show-tags-control="false"
  * ></meridian-map>
  * ```
  *
@@ -772,6 +775,7 @@ export type Stream = {
  */
 export class MeridianMapElement extends HTMLElement {
   private _map?: MeridianMap;
+  private _api?: API;
   private _isDirty = false;
   private _options: UpdateMapOptions = {};
 
@@ -800,6 +804,15 @@ export class MeridianMapElement extends HTMLElement {
 
   private _render(): void {
     if (this._map) {
+      if (!this._api) {
+        const env = this.dataset.apiEnvironment || "production";
+        this._api = this.dataset.apiToken
+          ? new API({
+              token: this.dataset.apiToken || "",
+              environment: isEnvironment(env) ? env : "production"
+            })
+          : undefined;
+      }
       this._map.update(this._getOptions());
     }
   }
@@ -813,15 +826,10 @@ export class MeridianMapElement extends HTMLElement {
       locationID,
       api,
       shouldMapPanZoom,
+      showFloorsControl,
+      showTagsControl,
       ...rest
     } = this._options;
-    const env = this.dataset.apiEnvironment || "production";
-    const fallbackAPI = this.dataset.apiToken
-      ? new API({
-          token: this.dataset.apiToken || "",
-          environment: isEnvironment(env) ? env : "production"
-        })
-      : undefined;
     const fallbackPanZoom =
       this.dataset.panZoom === "restricted" ? restrictedPanZoom : undefined;
     return {
@@ -829,10 +837,16 @@ export class MeridianMapElement extends HTMLElement {
       floorID: floorID ?? this.dataset.floorId ?? "no-floor",
       width: width ?? this.dataset.width ?? "100%",
       height: height ?? this.dataset.height ?? "500px",
-      api: api ?? fallbackAPI,
+      api: api ?? this._api,
       loadPlacemarks:
         loadPlacemarks ??
         Boolean(JSON.parse(this.dataset.loadPlacemarks ?? "true")),
+      showTagsControl:
+        showTagsControl ??
+        Boolean(JSON.parse(this.dataset.showTagsControl ?? "true")),
+      showFloorsControl:
+        showFloorsControl ??
+        Boolean(JSON.parse(this.dataset.showFloorsControl ?? "true")),
       shouldMapPanZoom: shouldMapPanZoom ?? fallbackPanZoom,
       ...rest
     };

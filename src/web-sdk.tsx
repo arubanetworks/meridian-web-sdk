@@ -737,9 +737,6 @@ export type Stream = {
   close: () => void;
 };
 
-// TODO:
-// - Deal with attribute changes
-
 /**
  * HTML custom element used for rendering a Meridian map.
  *

@@ -58,7 +58,7 @@ meridian-map {
     max-width: auto;
   }
 
-  .map {
+  meridian-map {
     float: none;
     width: 100%;
   }

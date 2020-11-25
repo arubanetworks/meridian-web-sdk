@@ -22,25 +22,26 @@
         font-family: sans-serif;
       }
 
-      .map {
+      meridian-map {
         max-width: 500px;
         margin: auto;
         border: 1px solid #ccc;
       }
-
+    </style>
+    <style id="the-code">
       .meridian-placemark-icon[data-meridian-placemark-id="5750085036015616"] {
         width: 50px;
         height: 50px;
         border-color: red;
         background-color: red;
         background-image: url("./heart.png");
-        animation: pulsing 5s infinite;
+        animation: shrink 2s infinite ease;
+        border-width: 6px;;
       }
 
-      @keyframes pulsing {
+      @keyframes shrink {
         50% {
-          width: 24px;
-          height: 24px;
+          transform: scale(0.7);
         }
       }
     </style>
@@ -48,36 +49,18 @@
 
   <body>
     <div class="container">
-      <div class="map" id="meridian-map"></div>
-        <div class="controls-container">
-          <div class="controls">
-            <span>
-              The custom styling on the red heart placemark is achieved using the placemark ID with the
-              following code:
-              <img src="code.png" alt="code block" width="468" height="125" />
-              This can be used style placemarks as needed or to indicate "you
-              are here".
-            </span>
-          </div>
+      <meridian-map
+        data-api-token="6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        data-location-id="5198682008846336"
+        data-floor-id="5755685136498688"
+      ></meridian-map>
+      <div class="controls-container">
+        <div class="controls">
+            Click "Code" at the bottom left of the screen to see the custom CSS
+            used to color and animate the heart placemark.
         </div>
       </div>
     </div>
     <script src="../meridian-sdk.js"></script>
-        <script id="the-code">
-          MeridianSDK.init({
-            api: new MeridianSDK.API({
-              environment: "production",
-              token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-            })
-          });
-          var map = MeridianSDK.createMap(
-            document.getElementById("meridian-map"),
-            {
-              locationID: "5198682008846336",
-              floorID: "5755685136498688",
-              height: "500px",
-            }
-          );
-        </script>
   </body>
 </html>

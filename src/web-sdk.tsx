@@ -828,7 +828,7 @@ export class MeridianMapElement extends HTMLElement {
       api: api ?? fallbackAPI,
       loadPlacemarks:
         loadPlacemarks ??
-        Boolean(JSON.parse(this.dataset.loadPlacemarks ?? "false")),
+        Boolean(JSON.parse(this.dataset.loadPlacemarks ?? "true")),
       ...rest
     };
   }

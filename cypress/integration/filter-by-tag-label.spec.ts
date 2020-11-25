@@ -8,8 +8,8 @@ describe("Filter by tag label", () => {
     cy.get('[data-meridian-tag-id="546C0E032A87"]').should("exist");
     cy.get('[data-meridian-tag-id="546C0E082AFB"]').should("not.exist");
 
-    getMeridianMap().then(meridianMap => {
-      meridianMap.update({
+    getMeridianMap().then(([map]) => {
+      map.updateMap({
         tags: { filter: () => true }
       });
     });
@@ -19,8 +19,8 @@ describe("Filter by tag label", () => {
     cy.get('[data-meridian-tag-id="546C0E082AFB"]').should("exist");
     cy.get('[data-meridian-tag-id="546C0E014866"]').should("exist");
 
-    getMeridianMap().then(meridianMap => {
-      meridianMap.update({
+    getMeridianMap().then(([map]) => {
+      map.updateMap({
         tags: {
           filter: assetTag =>
             assetTag.tags.some(

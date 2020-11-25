@@ -317,18 +317,13 @@ export default class Map extends Component {
 
   async updatePlacemarks() {
     const { locationID, floorID, api } = this.props;
-    let results = [];
-
     if (!api) {
       return;
     }
-
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
-
-    if (this.props.loadPlacemarks) {
-      results = await api.fetchPlacemarksByFloor(locationID, floorID);
-    }
-
+    const results = this.props.loadPlacemarks
+      ? await api.fetchPlacemarksByFloor(locationID, floorID)
+      : [];
     // If the user switches floors, we want to get rid of the value
     if (
       floorID === this.props.floorID &&

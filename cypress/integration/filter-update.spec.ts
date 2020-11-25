@@ -9,8 +9,8 @@ describe("Filter update", () => {
     cy.get("[data-meridian-placemark-id='5717271485874176']").should("exist");
     cy.get("[data-meridian-placemark-id]").should("have.length", 31);
 
-    getMeridianMap().then(meridianMap => {
-      meridianMap.update({
+    getMeridianMap().then(([map]) => {
+      map.updateMap({
         tags: {
           filter: tag => tag.name === "Jamboard - Blue"
         },
@@ -25,8 +25,8 @@ describe("Filter update", () => {
     cy.get("[data-meridian-placemark-id='5717271485874176']").should("exist");
     cy.get("[data-meridian-placemark-id]").should("have.length", 1);
 
-    getMeridianMap().then(meridianMap => {
-      meridianMap.update({
+    getMeridianMap().then(([map]) => {
+      map.updateMap({
         tags: {},
         placemarks: {}
       });

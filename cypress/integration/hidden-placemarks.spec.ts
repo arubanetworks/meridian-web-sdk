@@ -10,8 +10,8 @@ describe("Hidden Placemarks", () => {
       "not.exist"
     );
 
-    getMeridianMap().then(meridianMap => {
-      meridianMap.update({
+    getMeridianMap().then(([map]) => {
+      map.updateMap({
         placemarks: { showHiddenPlacemarks: true }
       });
     });
@@ -25,8 +25,8 @@ describe("Hidden Placemarks", () => {
     cy.get("[data-meridian-placemark-id]").should("have.length", 32);
     cy.get('[data-meridian-placemark-id="5766466041282560"]').should("exist");
 
-    getMeridianMap().then(meridianMap => {
-      meridianMap.update({
+    getMeridianMap().then(([map]) => {
+      map.updateMap({
         placemarks: { showHiddenPlacemarks: false }
       });
     });

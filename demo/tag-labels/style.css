@@ -7,7 +7,7 @@ body {
   margin: 0 auto;
 }
 
-.map {
+meridian-map {
   border: 1px solid #ccc;
   float: left;
   width: 500px;
@@ -57,7 +57,7 @@ body {
     max-width: auto;
   }
 
-  .map {
+  meridian-map {
     float: none;
     width: 100%;
   }

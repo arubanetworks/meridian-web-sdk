@@ -13,8 +13,8 @@ describe("Control Tags", () => {
     cy.get("[data-meridian-tag-id]").should("have.length", 3);
     cy.get('[data-meridian-tag-id="546C0E014517"]').should("not.exist");
 
-    getMeridianMap().then(meridianMap => {
-      meridianMap.update({
+    getMeridianMap().then(([map]) => {
+      map.updateMap({
         tags: { showControlTags: true }
       });
     });
@@ -35,8 +35,8 @@ describe("Control Tags", () => {
     cy.get('[data-meridian-tag-id="546C0E014517"]').should("exist");
     cy.get("[data-meridian-tag-id]").should("have.length", 4);
 
-    getMeridianMap().then(meridianMap => {
-      meridianMap.update({
+    getMeridianMap().then(([map]) => {
+      map.updateMap({
         tags: { showControlTags: false }
       });
     });

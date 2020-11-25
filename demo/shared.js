@@ -70,8 +70,12 @@ $(function() {
     for (const attr of elem.getAttributeNames()) {
       props.push(`  ${attr}=${JSON.stringify(elem.getAttribute(attr))}`);
     }
-    const scriptInner = trimIndent($("#the-code").text());
-    const script = scriptInner ? `\n\n<script>\n${scriptInner}\n</script>` : "";
+    const $code = $("#the-code");
+    const scriptInner = trimIndent($code.text());
+    const codeTag = $code.get(0).nodeName.toLowerCase();
+    const script = scriptInner
+      ? `\n\n<${codeTag}>\n${scriptInner}\n</${codeTag}>`
+      : "";
     const tag = elem.nodeName.toLowerCase();
     const code = `\
 <${tag}

@@ -18,7 +18,8 @@
     <script src="../shared.js"></script>
     <style>
       /* Map code starts here */
-      .map {
+      /* NOTE: This is an element selector, not a class selector */
+      meridian-map {
         width: 500px;
         margin: auto;
       }
@@ -44,43 +45,13 @@
   </head>
 
   <body>
-    <div class="map" id="meridian-map"></div>
-    <main>
-      <button class="button" onclick="create()">Create</button>
-      <div class="gap"></div>
-      <button class="button button-red" onclick="destroy()">Destroy</button>
-      <div class="gap"></div>
-      <p>
-        Don't forget to call <code>.destroy()</code> when you're done with the
-        map.
-      </p>
-    </main>
+    <meridian-map
+      class="map"
+      data-api-token="6c09d265b1413fc768f4e08447ea95c8923a9c78"
+      data-location-id="5198682008846336"
+      data-floor-id="5755685136498688"
+    ></meridian-map>
 
     <script src="../meridian-sdk.js"></script>
-    <script id="the-code">
-      let meridianMap;
-
-      function create() {
-        const api = new MeridianSDK.API({
-          environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        });
-        meridianMap = MeridianSDK.createMap(
-          document.getElementById("meridian-map"),
-          {
-            api: api,
-            locationID: "5198682008846336",
-            floorID: "5755685136498688",
-            height: "500px"
-          }
-        );
-      }
-
-      function destroy() {
-        meridianMap.destroy();
-      }
-
-      create();
-    </script>
   </body>
 </html>

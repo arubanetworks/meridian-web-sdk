@@ -870,10 +870,11 @@ export class MeridianMapElement extends HTMLElement {
 if (customElements.get("meridian-map")) {
   // eslint-disable-next-line no-console
   console.warn(
-    "Meridian Web SDK has been loaded twice; skipping registration of <meridian-map> custom element"
+    "Meridian Web SDK has been loaded twice; skipping definition of <meridian-map> custom element"
   );
 } else {
   customElements.define("meridian-map", MeridianMapElement);
+  // Custom elements are `display: inline` by default; let's change that
   injectGlobal({
     "meridian-map": {
       display: "block"

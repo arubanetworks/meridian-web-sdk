@@ -153,17 +153,10 @@ export default class Map extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(
-      "loadPlacemarks",
-      prevProps.loadPlacemarks,
-      "->",
-      this.props.loadPlacemarks
-    );
     if (
       this.props.api !== prevProps.api ||
       this.props.locationID !== prevProps.locationID
     ) {
-      console.info("if 1");
       this.toggleTagListOverlay({ open: false });
       this.toggleErrorOverlay({ open: false });
       this.toggleMapMarkerOverlay({ open: false });

@@ -175,18 +175,15 @@ export default class Map extends Component {
       return;
     }
     if (prevProps.floorID !== this.props.floorID) {
-      console.info("if 2");
       this.zoomToDefault();
       this.validateFloorID();
     }
     if (prevProps.floorID !== this.props.floorID) {
-      console.info("if 3");
       this.freeMapImageURL();
       this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
       this.updatePlacemarks();
     } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
-      console.info("if 3 else if");
       this.updatePlacemarks();
     }
   }

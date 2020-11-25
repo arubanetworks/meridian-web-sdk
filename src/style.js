@@ -131,7 +131,7 @@ export const {
   cx,
   // merge,
   // getRegisteredStyles,
-  // injectGlobal,
+  injectGlobal,
   keyframes,
   css
   // sheet,

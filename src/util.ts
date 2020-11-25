@@ -3,6 +3,8 @@
  * @packageDocumentation
  */
 
+import { EnvOptions } from "./web-sdk";
+
 export function deprecated(...args: any[]) {
   // eslint-disable-next-line no-console
   console.warn("[deprecated]", ...args);
@@ -65,7 +67,7 @@ export function getPlacemarkIconURL(type: string) {
   return getAssetURL(`placemarks/${name}.svg`);
 }
 
-export function validateEnvironment(env: string): boolean {
+export function isEnvironment(env: string): env is EnvOptions {
   return (
     env === "staging" ||
     env === "production" ||

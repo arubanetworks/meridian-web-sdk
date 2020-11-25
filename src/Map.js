@@ -26,7 +26,7 @@ import TagLayer from "./TagLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import FloorAndTagControls from "./FloorAndTagControls";
 import { css, cx } from "./style";
-import { asyncClientCall, validateEnvironment } from "./util";
+import { asyncClientCall, isEnvironment } from "./util";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -130,7 +130,7 @@ export default class Map extends Component {
 
   componentDidMount() {
     const { api, locationID } = this.props;
-    if (!validateEnvironment(api.environment)) {
+    if (!isEnvironment(api.environment)) {
       this.toggleErrorOverlay({
         open: true,
         message: `API error: "${api.environment}" is not a valid environment`

@@ -6,23 +6,23 @@
 $(function() {
   // Take code from a script tag and strip bad whitespace
   function trimIndent(str) {
-    var match = str.match(/^[ \t]*(?=\S)/gm);
+    const match = str.match(/^[ \t]*(?=\S)/gm);
     if (!match) {
       return str;
     }
-    var lengths = match.map(function(x) {
+    const lengths = match.map(function(x) {
       return x.length;
     });
-    var indent = Math.min.apply(Math, lengths);
-    var re = new RegExp("^[ \\t]{" + indent + "}", "gm");
-    var s = indent > 0 ? str.replace(re, "") : str;
+    const indent = Math.min(...lengths);
+    const re = new RegExp("^[ \\t]{" + indent + "}", "gm");
+    const s = indent > 0 ? str.replace(re, "") : str;
     return s.trim();
   }
 
   // Show the performance monitor on screen
-  var stats;
+  let stats;
   function initPerf() {
-    var url = "https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js";
+    const url = "https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js";
     $.getScript(url, function() {
       stats = new Stats();
       $(document.body).append(stats.dom);
@@ -50,8 +50,8 @@ $(function() {
   // Show the code dialog
   function showTheCode() {
     hidePerf();
-    var dialog = $("<div>").addClass("dialog flex flex-column");
-    var heading = $("<div>")
+    const dialog = $("<div>").addClass("dialog flex flex-column");
+    const heading = $("<div>")
       .addClass("flex flex-center section top-bar")
       .appendTo(dialog);
     $("<div>")
@@ -65,8 +65,21 @@ $(function() {
         dialog.remove();
       })
       .appendTo(heading);
-    var code = trimIndent($("#the-code").text());
-    var html = hljs.highlight("javascript", code).value;
+    const elem = $("meridian-map")[0] || $("#meridian-map")[0];
+    const props = [];
+    for (const attr of elem.getAttributeNames()) {
+      props.push(`  ${attr}=${JSON.stringify(elem.getAttribute(attr))}`);
+    }
+    const scriptInner = trimIndent($("#the-code").text());
+    const script = scriptInner ? `\n\n<script>\n${scriptInner}\n</script>` : "";
+    const tag = elem.nodeName.toLowerCase();
+    const code = `\
+<${tag}
+${props.join("\n")}
+></${tag}>
+${script}
+`;
+    const html = hljs.highlight("html", code).value;
     $("<pre>")
       .html(html)
       .addClass("section")
@@ -76,16 +89,16 @@ $(function() {
 
   // Add the toolbar to each page
   function addToolbar() {
-    var container = $("<div>").addClass("back");
-    var back = $("<button>")
+    const container = $("<div>").addClass("back");
+    const back = $("<button>")
       .text("Back")
       .on("click", function() {
         window.location = "..";
       });
-    var code = $("<button>")
+    const code = $("<button>")
       .text("Code")
       .on("click", showTheCode);
-    var perf = $("<button>")
+    const perf = $("<button>")
       .text("Perf")
       .on("click", togglePerf);
     container.append(back);

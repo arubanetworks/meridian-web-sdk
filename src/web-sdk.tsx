@@ -24,29 +24,7 @@
  */
 
 /**
- * See [[init]] and [[createMap]] for getting started.
- *
- * ```js
- * const api = new MeridianSDK.API({ token: "<TOKEN>" });
- * const map = MeridianSDK.createMap(
- *  document.querySelector("#map-container"),
- *  {
- *    api: api,
- *    locationID: "<location ID>",
- *    floorID: "<floor ID>",
- *    height: "500px"
- *  }
- * );
- * ```
- *
- * Call this before navigating to a new page, to close network connections. This
- * is critical for usage within a single page application, or even just an
- * interactive page with JS that unmounts the map container element (e.g.
- * removing it from the DOM or setting the `innerHTML`).
- *
- * ```js
- * map.destroy();
- * ```
+ * See [[MeridianMapElement]] to get started.
  * @packageDocumentation
  */
 
@@ -55,8 +33,14 @@ import axios, { AxiosInstance } from "axios";
 import ReconnectingWebSocket from "reconnecting-websocket";
 
 import Map from "./Map";
-import { requiredParam, asyncClientCall, deprecated } from "./util";
+import {
+  requiredParam,
+  asyncClientCall,
+  deprecated,
+  isEnvironment
+} from "./util";
 import { sendAnalyticsCodeEvent } from "./analytics";
+import { injectGlobal } from "./style";
 
 // Wait to load Preact's debug module until the page is loaded since it assumes
 // document.body exists, which is not true if someone loads our script in the
@@ -131,9 +115,10 @@ export function restrictedPanZoom(
 }
 
 /**
- * Initializes a share MeridianSDK API instance for use across all calls to
- * [[createMap]]. You can either call this function or pass your [[API]]
- * instance directly to [[createMap]].
+ * @deprecated
+ * Deprecated: Initializes a share MeridianSDK API instance for use across all
+ * calls to [[createMap]]. You can either call this function or pass your
+ * [[API]] instance directly to [[createMap]].
  *
  * ```js
  * const api = new MeridianSDK.API({
@@ -177,9 +162,9 @@ export type CreateMapPlacemarksOptions = {
 };
 
 /**
- * Options passed to [[createMap]].
+ * Options passed to [[MeridianMapElement.updateMap]].
  */
-export type CreateMapOptions = {
+export type UpdateMapOptions = {
   /** See [[restrictedPanZoom]]. */
   shouldMapPanZoom?: (event: TouchEvent | WheelEvent | MouseEvent) => boolean;
   /** Width of the map (e.g. "100%" or "300px"). */
@@ -187,9 +172,9 @@ export type CreateMapOptions = {
   /** Height of the map (e.g. "100%" or "200px") */
   height?: string;
   /** Meridian location ID. */
-  locationID: string;
+  locationID?: string;
   /** Meridian floor ID. */
-  floorID: string;
+  floorID?: string;
   /** An [[API]] instance. Defaults to the one passed to [[init]]. */
   api?: API;
   /** Should we show the floor switcher UI control? Defaults to true. */
@@ -256,7 +241,7 @@ export type MeridianMap = {
   /**
    * Update the Meridian map to have new options.
    */
-  update: (updatedOptions: Partial<CreateMapOptions>) => void;
+  update: (updatedOptions: Partial<UpdateMapOptions>) => void;
   /**
    * Zoom to the default zoom level and pan to the default position.
    */
@@ -268,6 +253,9 @@ export type MeridianMap = {
 };
 
 /**
+ * @deprecated
+ * DEPRECATED: Please use the `<meridian-map>` custom element instead.
+ *
  * Creates and returns a map object mounted at the given HTML element. If you
  * are using the tags.filter or onTagClick or onTagsUpdate functions, refer to
  * <https://tags.meridianapps.com/docs/track> for the schema.
@@ -296,7 +284,7 @@ export type MeridianMap = {
  */
 export function createMap(
   element: HTMLElement,
-  options: CreateMapOptions
+  options: UpdateMapOptions
 ): MeridianMap {
   if (!element) {
     requiredParam("createMap", "node");
@@ -309,7 +297,7 @@ export function createMap(
     mapRef = newMapRef;
   };
   const _update = (
-    updatedOptions: Partial<CreateMapOptions>,
+    updatedOptions: Partial<UpdateMapOptions>,
     { internalUpdate = true } = {}
   ) => {
     options = { ...options, ...updatedOptions };
@@ -320,7 +308,7 @@ export function createMap(
     ) as any;
     sendAnalyticsCodeEvent({
       action: "map.update",
-      locationID: options.locationID,
+      locationID: options.locationID || "unknown-location",
       onTagsUpdate: Boolean(options.onTagsUpdate),
       tagsFilter: Boolean(options.tags && options.tags.filter),
       placemarksFilter: Boolean(
@@ -335,7 +323,7 @@ export function createMap(
   ) as any;
   sendAnalyticsCodeEvent({
     action: "createMap",
-    locationID: options.locationID,
+    locationID: options.locationID || "unknown-location",
     onTagsUpdate: Boolean(options.onTagsUpdate),
     tagsFilter: Boolean(options.tags && options.tags.filter),
     placemarksFilter: Boolean(options.placemarks && options.placemarks.filter)
@@ -719,7 +707,7 @@ export type EnvOptions =
   | "devCloud";
 
 /**
- * Options passed to [[createAPI]].
+ * Options passed to [[API]].
  *
  * ```js
  * const api = new MeridianSDK.API({
@@ -748,3 +736,110 @@ export type APIOptions = { environment?: EnvOptions; token: string };
 export type Stream = {
   close: () => void;
 };
+
+// TODO:
+// - Deal with attribute changes
+
+/**
+ * HTML custom element used for rendering a Meridian map.
+ *
+ * NOTE: This class inherits many methods from `HTMLElement`. Please uncheck the
+ * "Inherited" checkbox at the top of the screen to see methods unique to this
+ * class.
+ *
+ * ```html
+ * <meridian-map
+ *   data-api-token="..."
+ *   data-location-id="..."
+ *   data-floor-id="..."
+ * ></meridian-map>
+ * ```
+ *
+ * You can also specify width and height as data attributes:
+ *
+ * ```html
+ * <meridian-map
+ *   data-api-token="..."
+ *   data-location-id="..."
+ *   data-floor-id="..."
+ *   data-width="100%"
+ *   data-height="500px"
+ * ></meridian-map>
+ * ```
+ *
+ * All other options are set via calling [[updateMap]] on this element.
+ */
+export class MeridianMapElement extends HTMLElement {
+  private _map?: MeridianMap;
+  private _isDirty = false;
+  private _options: UpdateMapOptions = {};
+
+  /** @internal */
+  connectedCallback() {
+    this._map = createMap(this, this._getOptions());
+  }
+
+  /** @internal */
+  disconnectedCallback() {
+    if (this._map) {
+      this._map.destroy();
+    }
+  }
+
+  private _markDirty(): void {
+    if (this._isDirty) {
+      return;
+    }
+    this._isDirty = true;
+    requestAnimationFrame(() => {
+      this._isDirty = false;
+      this._render();
+    });
+  }
+
+  private _render(): void {
+    if (this._map) {
+      this._map.update(this._getOptions());
+    }
+  }
+
+  private _getOptions(): UpdateMapOptions {
+    const { width, height, floorID, locationID, api, ...rest } = this._options;
+    const env = this.dataset.apiEnvironment || "production";
+    return {
+      locationID: locationID || this.dataset.locationId || "no-location",
+      floorID: floorID || this.dataset.floorId || "no-floor",
+      width: width || this.dataset.width || "500px",
+      height: height || this.dataset.height || "500px",
+      api:
+        api ||
+        new API({
+          token: this.dataset.apiToken || "",
+          environment: isEnvironment(env) ? env : "production"
+        }),
+      ...rest
+    };
+  }
+
+  /**
+   * Use this to update map options after a map element has been created
+   */
+  updateMap(options: UpdateMapOptions): void {
+    this._options = options;
+    this._markDirty();
+  }
+}
+
+if (customElements.get("meridian-map")) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    "Meridian Web SDK has been loaded twice; skipping registration of <meridian-map> custom element"
+  );
+} else {
+  customElements.define("meridian-map", MeridianMapElement);
+  injectGlobal({
+    "meridian-map": {
+      display: "block"
+    }
+  });
+}

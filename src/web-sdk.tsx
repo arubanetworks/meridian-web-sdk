@@ -761,6 +761,7 @@ export type Stream = {
  * ```html
  * <meridian-map
  *   data-api-token="..."
+ *   data-api-environment="production"
  *   data-location-id="..."
  *   data-floor-id="..."
  *   data-width="100%"

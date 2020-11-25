@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unrleased
+
+### Added
+
+- `<meridian-map>` custom HTML element
+
+  Please see documentation for how to initialize a custom element. Most functionality is the same as `createMap`, but the `.update()` method is now `.updateMap()`.
+
+  ```html
+  <meridian-map
+    data-api-token="..."
+    data-location-id="..."
+    data-floor-id="..."
+  ></meridian-map>
+
+  <script>
+    const map = document.querySelector("meridian-map");
+    map.updateMap({ ...options });
+  </script>
+  ```
+
+  `<meridian-map>` does not have a `.destroy()` method because custom elements
+  automatically clean up when they are unmounted from the DOM.
+
+### Changed
+
+- `CreateMapOptions` type is now named `UpdateMapOptions` and all properties are
+  optional
+
+### Fixed
+
+- Changing `api` after creating a map didn't work
+
+### Deprecated
+
+- `MeridianSDK.createMap`
+
+  Use `<meridian-map>` instead
+
 ## [0.10.0] - 2020-11-19
 
 ### Added

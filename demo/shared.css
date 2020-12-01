@@ -129,7 +129,6 @@
 
 .button {
   --color: hsl(240, 80%, 60%);
-  margin: auto;
   background: var(--color);
   color: white;
   border: 0;

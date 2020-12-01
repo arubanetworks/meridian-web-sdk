@@ -59,6 +59,7 @@ const cssNoTouchZoom = css({
 
 export default class Map extends Component {
   static propTypes = {
+    destroy: PropTypes.func.isRequired,
     shouldMapPanZoom: PropTypes.func,
     update: PropTypes.func.isRequired,
     width: PropTypes.string,
@@ -122,13 +123,16 @@ export default class Map extends Component {
       areTagsLoading: true,
       allTagData: []
     };
+    this.isMounted = false;
     this.tagsTimeout = null;
     this.mapSelection = null;
     this.mapRef = null;
+    this.mapContainerRef = null;
     this.validateFloorID();
   }
 
   componentDidMount() {
+    this.isMounted = true;
     const { api, locationID } = this.props;
     if (!validateEnvironment(api.environment)) {
       this.toggleErrorOverlay({
@@ -143,6 +147,21 @@ export default class Map extends Component {
     } else {
       this.loadData();
     }
+    // I wanted to use something fancier here, like a `MutationObserver`, but it
+    // turns out that if you want a 100% rock solid way to tell if your element
+    // has been removed from the DOM, you either have to watch the entire
+    // document.body for every single subtree modification, or just rely on
+    // polling. It would be really nice if the custom element
+    // `disonnectedCallback()` had some kind of regular DOM equivalent.
+    this.intervalAutoDestroy = setInterval(() => {
+      if (
+        this.isMounted &&
+        this.mapContainerRef &&
+        !document.body.contains(this.mapContainerRef)
+      ) {
+        this.props.destroy();
+      }
+    }, 1000);
   }
 
   async loadData() {
@@ -179,10 +198,12 @@ export default class Map extends Component {
   }
 
   componentWillUnmount() {
+    this.isMounted = false;
     if (this.tagsTimeout) {
       clearTimeout(this.tagsTimeout);
     }
     this.freeMapImageURL();
+    clearInterval(this.intervalAutoDestroy);
   }
 
   freeMapImageURL() {
@@ -640,6 +661,9 @@ export default class Map extends Component {
         )}
         style={{ width, height }}
         data-testid="meridian--private--map-container"
+        ref={ref => {
+          this.mapContainerRef = ref;
+        }}
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />

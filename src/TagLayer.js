@@ -42,9 +42,11 @@ export default class TagLayer extends Component {
       connectionsByFloorID: {}
     };
     this.tagUpdates = {};
+    this.isMounted = false;
   }
 
   componentDidMount() {
+    this.isMounted = true;
     const { markers } = this.props;
     if (markers) {
       this.connect(this.props.floorID);
@@ -68,6 +70,7 @@ export default class TagLayer extends Component {
   }
 
   componentWillUnmount() {
+    this.isMounted = false;
     this.disconnect(this.props.floorID);
   }
 
@@ -81,6 +84,9 @@ export default class TagLayer extends Component {
   }
 
   removeTag(data) {
+    if (!this.isMounted) {
+      return;
+    }
     this.setState(prevState => {
       const { tagsByMAC } = prevState;
       const macs = Object.keys(tagsByMAC);
@@ -105,6 +111,9 @@ export default class TagLayer extends Component {
   }
 
   commitTagUpdates = throttle(() => {
+    if (!this.isMounted) {
+      return;
+    }
     this.setState(
       prevState => ({
         tagsByMAC: {
@@ -127,6 +136,9 @@ export default class TagLayer extends Component {
   }
 
   setInitialTags(tags) {
+    if (!this.isMounted) {
+      return;
+    }
     this.setState({ tagsByMAC: this.tagsByMAC(tags) }, () => {
       this.onUpdate();
       this.props.toggleLoadingSpinner({ show: false, source: "tags" });
@@ -155,6 +167,9 @@ export default class TagLayer extends Component {
         }
       }
     });
+    if (!this.isMounted) {
+      return;
+    }
     this.setState(
       prevState => {
         return {
@@ -176,6 +191,9 @@ export default class TagLayer extends Component {
       connection.close();
     }
     this.tagUpdates = {};
+    if (!this.isMounted) {
+      return;
+    }
     this.setState(
       prevState => {
         const tagsByMAC = { ...prevState.tagsByMAC };

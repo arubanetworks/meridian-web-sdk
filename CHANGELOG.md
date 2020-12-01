@@ -31,11 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `api.fetchTagsByFloor`
-- `api.fetchTagsByLocation`
-- `api.fetchPlacemarksByFloor`
-- `api.fetchFloorsByLocation`
-- `api.fetchSVG`
+- `api.fetchTagsByFloor()`
+- `api.fetchTagsByLocation()`
+- `api.fetchPlacemarksByFloor()`
+- `api.fetchFloorsByLocation()`
+- `api.fetchSVG()`
 
 ### Changed
 

@@ -147,17 +147,23 @@ export default class Map extends Component {
     } else {
       this.loadData();
     }
-    // I wanted to use something fancier here, like a `MutationObserver`, but it
-    // turns out that if you want a 100% rock solid way to tell if your element
-    // has been removed from the DOM, you either have to watch the entire
-    // document.body for every single subtree modification, or just rely on
-    // polling. It would be really nice if the custom element
-    // `disonnectedCallback()` had some kind of regular DOM equivalent.
+    // It would be really nice if the custom element `disonnectedCallback()` had
+    // some kind of regular DOM equivalent.
+    //
+    // Basically, with `MutationObserver` you can either watch for direct
+    // children or ALL descendants of a node. But there's no way to *just* know
+    // if a node in question has become disconnected from the DOM. So you'd
+    // either have to listen to `document.body` and have a callback called on
+    // every single DOM modification in the entire app.
+    //
+    // Or we can simply poll periodically to see if we're connected to the DOM.
+    // I haven't done benchmarking, but my gut instinct says the polling method
+    // is probably less resource intensive, and is certainly easier to write.
     this.intervalAutoDestroy = setInterval(() => {
       if (
         this.isMounted &&
         this.mapContainerRef &&
-        !document.body.contains(this.mapContainerRef)
+        !this.mapContainerRef.isConnected
       ) {
         this.props.destroy();
       }

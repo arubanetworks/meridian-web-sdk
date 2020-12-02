@@ -37,9 +37,6 @@
 
     <script src="../meridian-sdk.js"></script>
     <script id="the-code">
-      async function getData() {
-        return { name: "John Doe" };
-      }
       MeridianSDK.init({
         api: new MeridianSDK.API({
           environment: "production",
@@ -54,14 +51,15 @@
           alert(
             "You clicked on a Tag. Check your development console to see the data payload and options"
           );
+          options.preventDefault();
           console.info("Tag data", data);
           console.info("options", options);
         },
-        onPlacemarkClick: async (data, options) => {
-          const { name } = await getData();
+        onPlacemarkClick: (data, options) => {
           alert(
-            `You clicked on a Placemark and called an async function that returned the name: ${name}`
+            "You clicked on a Placemark. Check your development console to see the data payload and options"
           );
+          options.preventDefault();
           console.info("Placemark data", data);
           console.info("options", options);
         }

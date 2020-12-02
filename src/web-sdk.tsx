@@ -229,6 +229,12 @@ export type CreateMapOptions = {
    * Called with an array of floors after the floors list is updated.
    */
   onFloorsUpdate?: (floors: Record<string, any>[]) => void;
+  /**
+   * Called when the map has been destroyed, either by manually calling
+   * [[destroy]] or by being automatically destroyed when its DOM is tampered
+   * with.
+   */
+  onDestroy?: () => void;
 };
 
 /**
@@ -253,6 +259,8 @@ export type MeridianMap = {
    * the background.
    */
   destroy: () => void;
+  /** Has this map been destroyed */
+  isDestroyed: boolean;
   /**
    * Update the Meridian map to have new options.
    */
@@ -304,6 +312,18 @@ export function createMap(
   if (!options) {
     requiredParam("createMap", "options");
   }
+  const destroy = () => {
+    if (map.isDestroyed) {
+      // eslint-disable-next-line no-console
+      console.error("can't call update on a destroyed MeridianMap");
+      return;
+    }
+    map.isDestroyed = true;
+    render(null, element);
+    if (options.onDestroy) {
+      options.onDestroy();
+    }
+  };
   let mapRef: Map | null = null;
   const setMapRef = (newMapRef: Map) => {
     mapRef = newMapRef;
@@ -314,7 +334,13 @@ export function createMap(
   ) => {
     options = { ...options, ...updatedOptions };
     domRef = render(
-      <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
+      <Map
+        api={context.api}
+        {...options}
+        update={_update}
+        ref={setMapRef}
+        destroy={destroy}
+      />,
       element,
       domRef
     ) as any;
@@ -330,7 +356,13 @@ export function createMap(
     });
   };
   let domRef: HTMLElement = render(
-    <Map api={context.api} update={_update} {...options} ref={setMapRef} />,
+    <Map
+      api={context.api}
+      {...options}
+      update={_update}
+      ref={setMapRef}
+      destroy={destroy}
+    />,
     element
   ) as any;
   sendAnalyticsCodeEvent({
@@ -340,17 +372,31 @@ export function createMap(
     tagsFilter: Boolean(options.tags && options.tags.filter),
     placemarksFilter: Boolean(options.placemarks && options.placemarks.filter)
   });
-  return {
-    destroy: () => {
-      render(null, element);
-    },
+  const map: MeridianMap = {
+    destroy,
+    isDestroyed: false,
     update: updatedOptions => {
+      if (map.isDestroyed) {
+        // eslint-disable-next-line no-console
+        console.error("can't call update on a destroyed MeridianMap");
+        return;
+      }
       _update(updatedOptions, { internalUpdate: false });
     },
     zoomToDefault: () => {
+      if (map.isDestroyed) {
+        // eslint-disable-next-line no-console
+        console.error("can't call zoomToDefault on a destroyed MeridianMap");
+        return;
+      }
       mapRef?.zoomToDefault();
     },
     zoomToPoint: options => {
+      if (map.isDestroyed) {
+        // eslint-disable-next-line no-console
+        console.error("can't call update on a destroyed MeridianMap");
+        return;
+      }
       if (!options) {
         requiredParam("map.zoomToPoint", "options");
       }
@@ -366,6 +412,7 @@ export function createMap(
       mapRef?.zoomToPoint(options.x, options.y, options.scale);
     }
   };
+  return map;
 }
 
 /**

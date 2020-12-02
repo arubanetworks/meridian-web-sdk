@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- `map.destroy()` is now optional; a `MeridianMap` can detect being disconnected
+  from the DOM and automatically destroy itself
+
 ## [0.10.0] - 2020-11-19
 
 ### Added
@@ -24,11 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `api.fetchTagsByFloor`
-- `api.fetchTagsByLocation`
-- `api.fetchPlacemarksByFloor`
-- `api.fetchFloorsByLocation`
-- `api.fetchSVG`
+- `api.fetchTagsByFloor()`
+- `api.fetchTagsByLocation()`
+- `api.fetchPlacemarksByFloor()`
+- `api.fetchFloorsByLocation()`
+- `api.fetchSVG()`
 
 ### Changed
 

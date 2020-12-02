@@ -59,6 +59,7 @@ const cssNoTouchZoom = css({
 
 export default class Map extends Component {
   static propTypes = {
+    destroy: PropTypes.func.isRequired,
     shouldMapPanZoom: PropTypes.func,
     update: PropTypes.func.isRequired,
     width: PropTypes.string,
@@ -122,13 +123,16 @@ export default class Map extends Component {
       areTagsLoading: true,
       allTagData: []
     };
+    this.isMounted = false;
     this.tagsTimeout = null;
     this.mapSelection = null;
     this.mapRef = null;
+    this.mapContainerRef = null;
     this.validateFloorID();
   }
 
   componentDidMount() {
+    this.isMounted = true;
     const { api, locationID } = this.props;
     if (!validateEnvironment(api.environment)) {
       this.toggleErrorOverlay({
@@ -143,6 +147,27 @@ export default class Map extends Component {
     } else {
       this.loadData();
     }
+    // It would be really nice if the custom element `disonnectedCallback()` had
+    // some kind of regular DOM equivalent.
+    //
+    // Basically, with `MutationObserver` you can either watch for direct
+    // children or ALL descendants of a node. But there's no way to *just* know
+    // if a node in question has become disconnected from the DOM. So you'd
+    // either have to listen to `document.body` and have a callback called on
+    // every single DOM modification in the entire app.
+    //
+    // Or we can simply poll periodically to see if we're connected to the DOM.
+    // I haven't done benchmarking, but my gut instinct says the polling method
+    // is probably less resource intensive, and is certainly easier to write.
+    this.intervalAutoDestroy = setInterval(() => {
+      if (
+        this.isMounted &&
+        this.mapContainerRef &&
+        !this.mapContainerRef.isConnected
+      ) {
+        this.props.destroy();
+      }
+    }, 1000);
   }
 
   async loadData() {
@@ -179,10 +204,12 @@ export default class Map extends Component {
   }
 
   componentWillUnmount() {
+    this.isMounted = false;
     if (this.tagsTimeout) {
       clearTimeout(this.tagsTimeout);
     }
     this.freeMapImageURL();
+    clearInterval(this.intervalAutoDestroy);
   }
 
   freeMapImageURL() {
@@ -198,6 +225,9 @@ export default class Map extends Component {
       return;
     }
     const url = await api.fetchSVG(mapData.svg_url);
+    if (!this.isMounted) {
+      return;
+    }
     if (
       floorID === this.props.floorID &&
       locationID === this.props.locationID
@@ -232,6 +262,9 @@ export default class Map extends Component {
     const loop = async () => {
       const { api, locationID } = this.props;
       const allTagData = await api.fetchTagsByLocation(locationID);
+      if (!this.isMounted) {
+        return;
+      }
       if (locationID !== this.props.locationID) {
         return;
       }
@@ -247,14 +280,23 @@ export default class Map extends Component {
   }
 
   toggleTagListOverlay = ({ open }) => {
+    if (!this.isMounted) {
+      return;
+    }
     this.setState({ isTagListOverlayOpen: open });
   };
 
   toggleFloorOverlay = ({ open }) => {
+    if (!this.isMounted) {
+      return;
+    }
     this.setState({ isFloorOverlayOpen: open });
   };
 
   toggleErrorOverlay = ({ open, message = "Unknown" }) => {
+    if (!this.isMounted) {
+      return;
+    }
     if (open) {
       this.setState(prevState => ({
         errors: [...prevState.errors, message],
@@ -266,6 +308,9 @@ export default class Map extends Component {
   };
 
   toggleLoadingSpinner = ({ show, source = "unknown" }) => {
+    if (!this.isMounted) {
+      return;
+    }
     this.setState(prevState => ({
       loadingSources: {
         ...prevState.loadingSources,
@@ -315,6 +360,9 @@ export default class Map extends Component {
     if (this.props.loadPlacemarks) {
       results = await api.fetchPlacemarksByFloor(locationID, floorID);
     }
+    if (!this.isMounted) {
+      return;
+    }
 
     // If the user switches floors, we want to get rid of the value
     if (
@@ -333,6 +381,9 @@ export default class Map extends Component {
     let results;
     try {
       results = await api.fetchFloorsByLocation(locationID);
+      if (!this.isMounted) {
+        return [];
+      }
     } catch (e) {
       // TODO: compare with other error objects, similar?
       if (e.response && e.response.data && e.response.data.detail) {
@@ -367,6 +418,9 @@ export default class Map extends Component {
     this.toggleLoadingSpinner({ show: true, source: "map" });
     const { onFloorsUpdate, locationID } = this.props;
     const floors = await this.getFloors();
+    if (!this.isMounted) {
+      return;
+    }
     if (locationID !== this.props.locationID) {
       return;
     }
@@ -640,6 +694,9 @@ export default class Map extends Component {
         )}
         style={{ width, height }}
         data-testid="meridian--private--map-container"
+        ref={ref => {
+          this.mapContainerRef = ref;
+        }}
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />

@@ -7,9 +7,8 @@
 
 import { h } from "preact";
 import PropTypes from "prop-types";
-
-import { getPlacemarkIconURL } from "./util";
 import { css, cx, mixins, theme } from "./style";
+import { placemarkIconURL } from "./web-sdk";
 
 const SIZE = 24;
 
@@ -42,9 +41,9 @@ const Placemark = ({
 
   function getIconStyle(data) {
     const color = "#" + data.color;
-    const iconURL = getPlacemarkIconURL(data.type);
+    const url = placemarkIconURL(data.type);
     return {
-      "--meridian-placemark-iconURL": `url('${iconURL}')`,
+      "--meridian-placemark-placemarkIconURL": `url('${url}')`,
       "--meridian-placemark-borderColor": color,
       "--meridian-placemark-backgroundColor": color
     };
@@ -142,7 +141,7 @@ const cssPlacemarkIcon = css(
     height: SIZE,
     borderRadius: "100%",
     backgroundColor: "var(--meridian-placemark-backgroundColor)",
-    backgroundImage: "var(--meridian-placemark-iconURL)",
+    backgroundImage: "var(--meridian-placemark-placemarkIconURL)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",

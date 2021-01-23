@@ -7,11 +7,11 @@
 
 import { h } from "preact";
 import PropTypes from "prop-types";
-
-import Overlay from "./Overlay";
-import { getPlacemarkIconURL, STRINGS, getTagLabels } from "./util";
-import { css, theme } from "./style";
 import LabelList from "./LabelList";
+import Overlay from "./Overlay";
+import { css, theme } from "./style";
+import { getTagLabels, STRINGS } from "./util";
+import { placemarkIconURL } from "./web-sdk";
 
 const cssOverlayImage = css({
   label: "overlay-image",
@@ -38,7 +38,7 @@ const cssTagData = css({
 
 function getImageStyle({ kind, item }) {
   if (kind === "placemark") {
-    const url = getPlacemarkIconURL(item.type);
+    const url = placemarkIconURL(item.type);
     return {
       backgroundSize: "70%",
       backgroundImage: `url('${url}')`,

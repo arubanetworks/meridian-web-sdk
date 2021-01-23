@@ -5,7 +5,6 @@ const path = require("path");
 const webpack = require("webpack");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const nodeExternals = require("webpack-node-externals");
-
 const Package = require("./package.json");
 
 const definePlugin = new webpack.DefinePlugin({
@@ -19,6 +18,15 @@ const common = {
         test: /\.(js|ts|tsx)$/,
         use: [{ loader: "ts-loader" }],
         exclude: /node_modules/
+      },
+      {
+        use: [
+          {
+            loader: "file-loader",
+            options: { name: "[path][name].[ext]" }
+          }
+        ],
+        include: [path.resolve(__dirname, "files")]
       }
     ]
   },
@@ -35,7 +43,8 @@ const common = {
     filename: "meridian-sdk.js",
     library: "MeridianSDK",
     libraryTarget: "var",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
+    publicPath: `https://files.meridianapps.com/meridian-web-sdk/${Package.version}/`
   },
   devServer: {
     filename: "meridian-sdk.js",
@@ -62,7 +71,11 @@ const npmConfig = {
 
 const development = {
   ...common,
-  devtool: "source-map"
+  devtool: "source-map",
+  output: {
+    ...common.output,
+    publicPath: "http://localhost:3011/"
+  }
 };
 
 // Build the browser JS bundle as well as the npm bundle

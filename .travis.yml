@@ -3,12 +3,15 @@ branches:
   only:
     - master
     - /^v[0-9]/
+    - MR-974-add-built-in-icon-support
 language: node_js
 node_js:
   - "node"
   - "lts/*"
 cache:
   npm: true
+before_install:
+  - openssl aes-256-cbc -K $encrypted_9888058ce616_key -iv $encrypted_9888058ce616_iv -in gcs-key.json.enc -out gcs-key.json -d
 install:
   - npm ci
 script:
@@ -17,13 +20,11 @@ script:
   - npm run travis-cypress
 deploy:
   - provider: gcs
-    # TODO: Create a service account
-    # https://cloud.google.com/iam/docs/creating-managing-service-account-keys#iam-service-account-keys-create-gcloud
-    access_key_id: $GCS_ACCESS_KEY_ID
-    secret_access_key: $GCS_SECRET_ACCESS_KEY
+    key_file: gcs-key.json
     bucket: files.meridianapps.com
     skip_cleanup: true
     acl: public-read
+    local_dir: dist
     on:
       # TODO: Switch this out for the correct condition before merging
       branch: MR-974-add-built-in-icon-support

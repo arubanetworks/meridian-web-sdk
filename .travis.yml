@@ -29,6 +29,7 @@ deploy:
     skip_cleanup: true
     acl: public-read
     local_dir: dist
+    upload_dir: meridian-web-sdk
     on:
       # TODO: Switch this out for the correct condition before merging
       branch: MR-974-add-built-in-icon-support

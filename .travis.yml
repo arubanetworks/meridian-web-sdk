@@ -20,6 +20,9 @@ script:
   - npm run travis-cypress
 deploy:
   - provider: gcs
+    # Opt-in to dpl v2 so we can use key_file
+    # https://docs.travis-ci.com/user/deployment-v2/providers/gcs/
+    edge: true
     key_file: gcs-key.json
     bucket: files.meridianapps.com
     skip_cleanup: true

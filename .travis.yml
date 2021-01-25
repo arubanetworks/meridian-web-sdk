@@ -28,6 +28,7 @@ deploy:
     on:
       # TODO: Switch this out for the correct condition before merging
       branch: MR-974-add-built-in-icon-support
+      node_js: "lts/*"
   # - provider: npm
   #   # Don't delete `dist/` and `docs/` since we need them to deploy
   #   skip_cleanup: true

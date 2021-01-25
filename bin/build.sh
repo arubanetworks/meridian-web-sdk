@@ -7,5 +7,5 @@ npx webpack -p --mode production --env production
 npm run docs
 dir="$npm_package_version"
 mkdir -p "$dir"
-cp dist/* "$dir"
+cp -r dist/* "$dir"
 mv "$dir" gcs-files

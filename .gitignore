@@ -30,4 +30,5 @@ cypress/videos
 cypress/screenshots
 cypress.env.json
 
+gcs-files/
 gcs-key.json

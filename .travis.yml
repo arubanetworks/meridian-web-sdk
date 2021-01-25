@@ -20,6 +20,7 @@ script:
   - npm run travis-cypress
 deploy:
   - provider: gcs
+    # 2021-01-25 14.56.05
     # Opt-in to dpl v2 so we can use key_file
     # https://docs.travis-ci.com/user/deployment-v2/providers/gcs/
     edge: true

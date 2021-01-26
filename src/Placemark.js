@@ -43,7 +43,7 @@ const Placemark = ({
     const color = "#" + data.color;
     const url = placemarkIconURL(data.type);
     return {
-      "--meridian-placemark-placemarkIconURL": `url('${url}')`,
+      "--meridian-placemark-iconURL": `url('${url}')`,
       "--meridian-placemark-borderColor": color,
       "--meridian-placemark-backgroundColor": color
     };
@@ -141,7 +141,7 @@ const cssPlacemarkIcon = css(
     height: SIZE,
     borderRadius: "100%",
     backgroundColor: "var(--meridian-placemark-backgroundColor)",
-    backgroundImage: "var(--meridian-placemark-placemarkIconURL)",
+    backgroundImage: "var(--meridian-placemark-iconURL)",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",

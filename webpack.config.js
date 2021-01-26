@@ -63,7 +63,8 @@ const npmConfig = {
   output: {
     filename: "web-sdk.js",
     libraryTarget: "commonjs",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
+    publicPath: `https://files.meridianapps.com/meridian-web-sdk/${Package.version}/`
   },
   target: "node",
   externals: [nodeExternals()]

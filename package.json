@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@types/d3-zoom": "^1.7.4",
+    "@types/webpack-env": "^1.16.0",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
     "acorn": "^7.1.0",
@@ -50,6 +51,7 @@
     "declaration-bundler-webpack-plugin": "^1.0.3",
     "eslint": "^6.7.2",
     "eslint-plugin-react": "^7.17.0",
+    "file-loader": "^6.2.0",
     "fsevents": "^2.1.2",
     "gh-pages": "^2.1.1",
     "prettier": "^1.19.1",

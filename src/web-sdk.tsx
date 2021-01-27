@@ -50,13 +50,43 @@
  * @packageDocumentation
  */
 
-import { h, render } from "preact";
 import axios, { AxiosInstance } from "axios";
+import path from "path";
+import { h, render } from "preact";
 import ReconnectingWebSocket from "reconnecting-websocket";
-
-import Map from "./Map";
-import { requiredParam, asyncClientCall, deprecated } from "./util";
 import { sendAnalyticsCodeEvent } from "./analytics";
+import MapComponent from "./Map";
+import { asyncClientCall, deprecated, requiredParam } from "./util";
+import placemarkIconGeneric from "../files/placemarks/generic.svg";
+
+/** @internal */
+const placemarkFiles = require.context("../files/placemarks", false, /\.svg$/);
+/** @internal */
+const placemarkIcons: Map<string, string> = new Map();
+for (const filename of placemarkFiles.keys()) {
+  const name = path.basename(filename, ".svg");
+  const url = placemarkFiles(filename).default;
+  placemarkIcons.set(name, url);
+}
+
+/**
+ * Takes a placemark type and returns a URL to a white SVG icon representing it
+ *
+ * @example
+ * function onPlacemarkClick(placemark) {
+ *   const url = MeridianSDK.placemarkIconURL(placemark.type);
+ *   console.log(url);
+ * }
+ */
+export function placemarkIconURL(type: string): string {
+  const url = placemarkIcons.get(type);
+  if (!url) {
+    // eslint-disable-next-line no-console
+    console.error(`placemarkIconURL: no such icon '${type}'`);
+    return placemarkIconGeneric;
+  }
+  return url;
+}
 
 // Wait to load Preact's debug module until the page is loaded since it assumes
 // document.body exists, which is not true if someone loads our script in the
@@ -324,8 +354,8 @@ export function createMap(
       options.onDestroy();
     }
   };
-  let mapRef: Map | null = null;
-  const setMapRef = (newMapRef: Map) => {
+  let mapRef: MapComponent | null = null;
+  const setMapRef = (newMapRef: MapComponent) => {
     mapRef = newMapRef;
   };
   const _update = (
@@ -334,7 +364,7 @@ export function createMap(
   ) => {
     options = { ...options, ...updatedOptions };
     domRef = render(
-      <Map
+      <MapComponent
         api={context.api}
         {...options}
         update={_update}
@@ -356,7 +386,7 @@ export function createMap(
     });
   };
   let domRef: HTMLElement = render(
-    <Map
+    <MapComponent
       api={context.api}
       {...options}
       update={_update}

@@ -8,9 +8,6 @@ export function deprecated(...args: any[]) {
   console.warn("[deprecated]", ...args);
 }
 
-const ASSETS_URL =
-  "https://files.meridianapps.com/meridian-web-sdk-assets/0.2.0";
-
 export const STRINGS = {
   enDash: "–",
   unnamedBuilding: "Unassigned",
@@ -54,15 +51,6 @@ export function asyncClientCall(
   ...args: any[]
 ) {
   setTimeout(func, 0, ...args);
-}
-
-export function getAssetURL(suffix: string) {
-  return `${ASSETS_URL}/${suffix}`;
-}
-
-export function getPlacemarkIconURL(type: string) {
-  const name = "placemark-" + type.replace(/_/g, "-");
-  return getAssetURL(`placemarks/${name}.svg`);
 }
 
 export function validateEnvironment(env: string): boolean {

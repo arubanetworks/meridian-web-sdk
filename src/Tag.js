@@ -7,14 +7,13 @@
 
 import { h } from "preact";
 import PropTypes from "prop-types";
-
-import { getAssetURL, getTagLabels } from "./util";
+import defaultTagImageURL from "../files/tags/generic.svg";
 import { css, cx, mixins } from "./style";
+import { getTagLabels } from "./util";
 
 const SIZE = 48;
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;
-const DEFAULT_TAG_IMAGE = getAssetURL("tags/tag.svg");
 
 const cssTag = css(
   mixins.shadow,
@@ -75,11 +74,12 @@ const Tag = ({
     : cx("meridian-tag", labelClassNames, cssTag);
 
   function getTagStyle(data) {
+    const url = data.image_url || defaultTagImageURL;
     return {
       left: data.x,
       top: data.y,
       transform: `translate(-50%, -50%) scale(${k})`,
-      "--meridian-tag-imageURL": `url('${data.image_url || DEFAULT_TAG_IMAGE}')`
+      "--meridian-tag-imageURL": `url('${url}')`
     };
   }
   return (

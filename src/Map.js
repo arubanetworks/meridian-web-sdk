@@ -5,28 +5,28 @@
  * @packageDocumentation
  */
 
-import { h, Component } from "preact";
-import PropTypes from "prop-types";
+import { event as d3Event, select as d3Select } from "d3-selection";
 import {
   zoom as d3Zoom,
-  zoomTransform as d3ZoomTransform,
-  zoomIdentity as d3ZoomIdentity
+  zoomIdentity as d3ZoomIdentity,
+  zoomTransform as d3ZoomTransform
 } from "d3-zoom";
-import { select as d3Select, event as d3Event } from "d3-selection";
-
-import Watermark from "./Watermark";
-import ZoomControls from "./ZoomControls";
+import { Component, Fragment, h } from "preact";
+import PropTypes from "prop-types";
+import ErrorOverlay from "./ErrorOverlay";
+import FloorAndTagControls from "./FloorAndTagControls";
 import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
-import TagListOverlay from "./TagListOverlay";
-import MapMarkerOverlay from "./MapMarkerOverlay";
 import LoadingSpinner from "./LoadingSpinner";
-import ErrorOverlay from "./ErrorOverlay";
-import TagLayer from "./TagLayer";
+import MapMarkerOverlay from "./MapMarkerOverlay";
+import OverlayLayer from "./OverlayLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
-import FloorAndTagControls from "./FloorAndTagControls";
 import { css, cx } from "./style";
+import TagLayer from "./TagLayer";
+import TagListOverlay from "./TagListOverlay";
 import { asyncClientCall, validateEnvironment } from "./util";
+import Watermark from "./Watermark";
+import ZoomControls from "./ZoomControls";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
@@ -80,6 +80,7 @@ export default class Map extends Component {
       filter: PropTypes.func,
       disabled: PropTypes.bool
     }),
+    overlays: PropTypes.array,
     onMarkerClick: PropTypes.func,
     onTagClick: PropTypes.func,
     onPlacemarkClick: PropTypes.func,
@@ -97,6 +98,7 @@ export default class Map extends Component {
     height: "400px",
     placemarks: {},
     tags: {},
+    overlays: [],
     onTagsUpdate: () => {},
     onFloorsUpdate: () => {}
   };
@@ -681,6 +683,7 @@ export default class Map extends Component {
       api,
       tags,
       placemarks,
+      overlays,
       width,
       height,
       onTagsUpdate
@@ -735,34 +738,37 @@ export default class Map extends Component {
                 this.mapImage = el;
               }}
             />
-            {!errors.length && mapData ? (
-              <PlacemarkLayer
-                selectedItem={selectedItem}
-                isPanningOrZooming={isPanningOrZooming}
-                mapZoomFactor={mapZoomFactor}
-                locationID={locationID}
-                floorID={floorID}
-                api={api}
-                markers={placemarks}
-                onMarkerClick={this.onMarkerClick}
-                toggleLoadingSpinner={this.toggleLoadingSpinner}
-                placemarks={this.state.placemarks}
-              />
-            ) : null}
-
-            {!errors.length && mapData ? (
-              <TagLayer
-                selectedItem={selectedItem}
-                isPanningOrZooming={isPanningOrZooming}
-                mapZoomFactor={mapZoomFactor}
-                locationID={locationID}
-                floorID={floorID}
-                api={api}
-                markers={tags}
-                onMarkerClick={this.onMarkerClick}
-                onUpdate={onTagsUpdate}
-                toggleLoadingSpinner={this.toggleLoadingSpinner}
-              />
+            {errors.length === 0 && mapData ? (
+              <Fragment>
+                <OverlayLayer
+                  mapZoomFactor={mapZoomFactor}
+                  overlays={overlays}
+                />
+                <PlacemarkLayer
+                  selectedItem={selectedItem}
+                  isPanningOrZooming={isPanningOrZooming}
+                  mapZoomFactor={mapZoomFactor}
+                  locationID={locationID}
+                  floorID={floorID}
+                  api={api}
+                  markers={placemarks}
+                  onMarkerClick={this.onMarkerClick}
+                  toggleLoadingSpinner={this.toggleLoadingSpinner}
+                  placemarks={this.state.placemarks}
+                />
+                <TagLayer
+                  selectedItem={selectedItem}
+                  isPanningOrZooming={isPanningOrZooming}
+                  mapZoomFactor={mapZoomFactor}
+                  locationID={locationID}
+                  floorID={floorID}
+                  api={api}
+                  markers={tags}
+                  onMarkerClick={this.onMarkerClick}
+                  onUpdate={onTagsUpdate}
+                  toggleLoadingSpinner={this.toggleLoadingSpinner}
+                />
+              </Fragment>
             ) : null}
           </div>
         </div>

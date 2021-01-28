@@ -207,6 +207,26 @@ export type CreateMapPlacemarksOptions = {
 };
 
 /**
+ * Object describing a polygon overlay drawn on the map
+ */
+export type CustomOverlayPolygon = {
+  type: "polygon";
+  points: number[];
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+};
+
+/**
+ * Object describing a custom overlay
+ *
+ * NOTE: Only polygons are supported right now, but polylines will be added
+ * later
+ */
+export type CustomOverlay = CustomOverlayPolygon;
+
+/**
  * Options passed to [[createMap]].
  */
 export type CreateMapOptions = {
@@ -232,6 +252,8 @@ export type CreateMapOptions = {
   loadPlacemarks?: boolean;
   /** Options related to placemarks. */
   placemarks?: CreateMapPlacemarksOptions;
+  /** An array of custom overlays to draw on the map. */
+  overlays?: CustomOverlay[];
   /**
    * Called when a tag is clicked. Use `event.preventDefault()` to prevent the
    * default dialog from appearing.

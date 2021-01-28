@@ -40,7 +40,7 @@ const Placemark = ({
   };
 
   function getIconStyle(data) {
-    const color = "#" + data.color;
+    const color = `#${data.color}`;
     const url = placemarkIconURL(data.type);
     return {
       "--meridian-placemark-iconURL": `url('${url}')`,

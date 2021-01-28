@@ -188,6 +188,7 @@ export default class Map extends Component {
       this.toggleFloorOverlay({ open: false });
       this.zoomToDefault();
       this.freeMapImageURL();
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ mapImageURL: null, placemarks: {} });
       this.loadData();
       return;
@@ -198,6 +199,7 @@ export default class Map extends Component {
     }
     if (prevProps.floorID !== this.props.floorID) {
       this.freeMapImageURL();
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ mapImageURL: null, placemarks: {} });
       this.fetchMapImageURL();
       this.updatePlacemarks();
@@ -330,7 +332,7 @@ export default class Map extends Component {
   }
 
   toggleMapMarkerOverlay = ({ open, selectedItem = null }) => {
-    this.setState({ isMapMarkerOverlayOpen: open, selectedItem: selectedItem });
+    this.setState({ isMapMarkerOverlayOpen: open, selectedItem });
   };
 
   selectFloorByID = floorID => {
@@ -526,10 +528,8 @@ export default class Map extends Component {
       setTimeout(() => {
         this.props.onMapClick(event);
       }, 0);
-    } else {
-      if (mapClicked) {
-        this.toggleMapMarkerOverlay({ open: false });
-      }
+    } else if (mapClicked) {
+      this.toggleMapMarkerOverlay({ open: false });
     }
   };
 

@@ -9,11 +9,11 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    "plugin:react/recommended",
+    "preact",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
-  plugins: ["react", "@typescript-eslint"],
+  plugins: ["@typescript-eslint"],
   rules: {
     curly: "error",
     "spaced-comment": [

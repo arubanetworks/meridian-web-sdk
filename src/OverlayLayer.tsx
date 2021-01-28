@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unknown-property */
 /** @jsx h */
 
 /**
@@ -15,10 +14,7 @@ type OverlayLayerProps = {
   overlays: CustomOverlay[];
 };
 
-// TODO: Fix eslint to use PREACT instead of REACT
-// https://github.com/preactjs/eslint-config-preact
 const OverlayLayer = ({ mapZoomFactor, overlays }: OverlayLayerProps) => {
-  // TODO: Validate the overlays input
   return (
     <svg className={cssOverlay}>
       {overlays.map((obj, i) => {
@@ -26,10 +22,9 @@ const OverlayLayer = ({ mapZoomFactor, overlays }: OverlayLayerProps) => {
           case "polygon": {
             const {
               points,
-              // TODO: Pick better colors and sizes here
-              fill = "red",
-              stroke = "green",
-              strokeWidth = 3,
+              fill = "hsla(207, 65%, 46%,  0.5)",
+              stroke = "hsl(207, 65%, 46%)",
+              strokeWidth = 2,
               strokeLineJoin = "miter"
             } = obj;
             return (
@@ -38,6 +33,10 @@ const OverlayLayer = ({ mapZoomFactor, overlays }: OverlayLayerProps) => {
                 d={pointsToPath(points)}
                 fill={fill}
                 stroke={stroke}
+                // Preact's TS types specify `strokeWidth` and `strokeLinejoin`,
+                // but those don't actually seem to work correctly at all.
+                // Luckily, Preact passes thru unknowns props as string
+                // attributes, so using dashes works here.
                 stroke-width={strokeWidth / mapZoomFactor}
                 stroke-linejoin={strokeLineJoin}
               />

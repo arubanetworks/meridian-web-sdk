@@ -21,7 +21,7 @@ const cssTag = css(
   mixins.pointer,
   mixins.focusNone,
   {
-    label: "meridian-tag",
+    label: "tag",
     width: SIZE,
     height: SIZE,
     borderRadius: "100%",

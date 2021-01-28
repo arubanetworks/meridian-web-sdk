@@ -101,7 +101,7 @@ Placemark.propTypes = {
 };
 
 const cssLabel = css(mixins.textStrokeWhite, {
-  label: "meridian-label",
+  label: "label",
   marginLeft: "50%",
   position: "absolute",
   minWidth: 55,
@@ -119,13 +119,13 @@ const cssLabel = css(mixins.textStrokeWhite, {
   }
 });
 const cssLabelOnly = css({
-  label: "meridian-label-only",
+  label: "label-only",
   textTransform: "uppercase",
   color: "#666",
   fontSize: 16
 });
 const cssPlacemark = css({
-  label: "meridian-placemark",
+  label: "placemark",
   position: "absolute"
 });
 const cssPlacemarkIcon = css(
@@ -134,7 +134,7 @@ const cssPlacemarkIcon = css(
   mixins.focusNone,
   {
     "--meridian-placemark-backgroundColor": theme.brandBlue,
-    label: "meridian-placemark-icon",
+    label: "placemark-icon",
     transition: "width 80ms ease, height 80ms ease",
     display: "block",
     width: SIZE,

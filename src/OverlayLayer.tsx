@@ -68,7 +68,7 @@ function pointsToPath(points: number[]): string {
 }
 
 const cssOverlay = css({
-  label: "meridian-overlay",
+  label: "overlay",
   position: "absolute",
   top: 0,
   left: 0,

@@ -4,7 +4,7 @@ describe("Overlays: Polygon", () => {
   it("should render a polygon added thru .update", () => {
     cy.visit("/cypress/basic");
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
-    getMeridianMap().should(map => {
+    getMeridianMap().then(map => {
       map.update({
         overlays: [
           {

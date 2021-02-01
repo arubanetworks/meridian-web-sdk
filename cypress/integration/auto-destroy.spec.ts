@@ -10,7 +10,7 @@ describe("Auto-Destroy", () => {
         onDestroy: onDestroyStub
       });
     });
-    cy.window().then(win => {
+    cy.window().should(win => {
       const mapContainer = win.document.querySelector("#meridian-map");
       if (!mapContainer) {
         throw new Error("no map container");
@@ -24,8 +24,8 @@ describe("Auto-Destroy", () => {
     // Wait for the auto-destroy polling (1 second interval)
     cy.wait(1200);
     getMeridianMap().then(meridianMap => {
-      expect(onDestroyStub).to.have.callCount(1);
-      expect(meridianMap.isDestroyed).to.equal(true);
+      expect(onDestroyStub).callCount(1);
+      expect(meridianMap.isDestroyed).equal(true);
     });
   });
 
@@ -40,7 +40,7 @@ describe("Auto-Destroy", () => {
     });
     // Wait for MeridianMap to be rendered...
     cy.wait(500);
-    cy.window().then(win => {
+    cy.window().should(win => {
       const mapContainer = win.document.querySelector("#meridian-map");
       if (!mapContainer) {
         throw new Error("no map container");
@@ -52,8 +52,8 @@ describe("Auto-Destroy", () => {
     // Wait for the auto-destroy polling (1 second interval)
     cy.wait(1200);
     getMeridianMap().then(meridianMap => {
-      expect(onDestroyStub).to.have.callCount(1);
-      expect(meridianMap.isDestroyed).to.equal(true);
+      expect(onDestroyStub).callCount(1);
+      expect(meridianMap.isDestroyed).equal(true);
     });
   });
 });

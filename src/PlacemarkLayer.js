@@ -5,15 +5,16 @@
  * @packageDocumentation
  */
 
-import { h, Component } from "preact";
+import { Component, h } from "preact";
 import PropTypes from "prop-types";
-
 import MapMarker from "./MapMarker";
+import { asyncClientCall } from "./util";
 
 export default class PlacemarkLayer extends Component {
   static defaultProps = {
     markers: {},
-    placemarks: {}
+    placemarks: {},
+    onUpdate: () => {}
   };
 
   static propTypes = {
@@ -29,6 +30,7 @@ export default class PlacemarkLayer extends Component {
       disabled: PropTypes.bool
     }),
     onMarkerClick: PropTypes.func,
+    onUpdate: PropTypes.func,
     placemarks: PropTypes.object
   };
 
@@ -39,6 +41,16 @@ export default class PlacemarkLayer extends Component {
       return false;
     }
     return true;
+  }
+
+  componentDidUpdate(prevProps) {
+    const { markers, placemarks, onUpdate } = this.props;
+    if (placemarks !== prevProps.placemarks || markers !== prevProps.markers) {
+      asyncClientCall(onUpdate, {
+        allPlacemarks: Object.values(placemarks),
+        filteredPlacemarks: this.getVisibleMarkers(placemarks)
+      });
+    }
   }
 
   getFilterFunction() {
@@ -53,8 +65,7 @@ export default class PlacemarkLayer extends Component {
     return markers;
   }
 
-  render() {
-    const { markers, onMarkerClick, mapZoomFactor, selectedItem } = this.props;
+  getVisibleMarkers(markers) {
     const filter = this.getFilterFunction();
     const filteredMarkers = Object.keys(this.props.placemarks)
       .map(id => this.props.placemarks[id])
@@ -71,18 +82,26 @@ export default class PlacemarkLayer extends Component {
         return true;
       })
       .filter(filter);
-    const culledMarkers = this.cullMarkers(filteredMarkers);
-    const finalMarkers = culledMarkers.map(placemark => (
-      <MapMarker
-        selectedItem={selectedItem}
-        mapZoomFactor={mapZoomFactor}
-        key={placemark.id}
-        kind="placemark"
-        data={placemark}
-        onClick={onMarkerClick}
-        disabled={markers.disabled}
-      />
-    ));
-    return <div>{finalMarkers}</div>;
+    return this.cullMarkers(filteredMarkers);
+  }
+
+  render() {
+    const { markers, onMarkerClick, mapZoomFactor, selectedItem } = this.props;
+    const culledMarkers = this.getVisibleMarkers(markers);
+    return (
+      <div>
+        {culledMarkers.map(placemark => (
+          <MapMarker
+            selectedItem={selectedItem}
+            mapZoomFactor={mapZoomFactor}
+            key={placemark.id}
+            kind="placemark"
+            data={placemark}
+            onClick={onMarkerClick}
+            disabled={markers.disabled}
+          />
+        ))}
+      </div>
+    );
   }
 }

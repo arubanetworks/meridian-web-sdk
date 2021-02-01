@@ -64,23 +64,22 @@ const ZoomButton = ({ onClick, dir }) => {
         </svg>
       </button>
     );
-  } else {
-    return (
-      <button
-        className={cx(
-          "meridian-zoom-button",
-          "meridian-zoom-button-out",
-          cssZoomButtonOut
-        )}
-        data-testid="meridian--private--zoom-button-out"
-        onClick={onClick}
-      >
-        <svg viewBox="0 0 36 36">
-          <path d="M26 19H10a1 1 0 0 1 0-2h16a1 1 0 0 1 0 2" />
-        </svg>
-      </button>
-    );
   }
+  return (
+    <button
+      className={cx(
+        "meridian-zoom-button",
+        "meridian-zoom-button-out",
+        cssZoomButtonOut
+      )}
+      data-testid="meridian--private--zoom-button-out"
+      onClick={onClick}
+    >
+      <svg viewBox="0 0 36 36">
+        <path d="M26 19H10a1 1 0 0 1 0-2h16a1 1 0 0 1 0 2" />
+      </svg>
+    </button>
+  );
 };
 
 ZoomButton.propTypes = {

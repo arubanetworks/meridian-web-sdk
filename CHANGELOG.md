@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `MeridianSDK.placemarkIconURL(type)` return URL to an icon representing the
   given placemark type
+- `onPlacemarksUpdate({ allPlacemarks, filteredPlacemarks })` callback to
+  `createMap`
+- `overlays` array in `createMap`, to draw custom polygons over the map
 
 ## [0.11.0] - 2020-11-19
 

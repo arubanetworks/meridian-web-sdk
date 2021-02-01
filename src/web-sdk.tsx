@@ -88,6 +88,16 @@ export function placemarkIconURL(type: string): string {
   return url;
 }
 
+/**
+ * Returns an array of points (numbers) based on a placemarks's area property
+ */
+export function pointsFromArea(area: string | null | undefined): number[] {
+  if (!area) {
+    return [];
+  }
+  return area.split(",").map(Number);
+}
+
 // Wait to load Preact's debug module until the page is loaded since it assumes
 // document.body exists, which is not true if someone loads our script in the
 // <head> of a document
@@ -207,6 +217,26 @@ export type CreateMapPlacemarksOptions = {
 };
 
 /**
+ * Object describing a polygon overlay drawn on the map
+ */
+export type CustomOverlayPolygon = {
+  type: "polygon";
+  points: number[];
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+};
+
+/**
+ * Object describing a custom overlay
+ *
+ * NOTE: Only polygons are supported right now, but polylines will be added
+ * later
+ */
+export type CustomOverlay = CustomOverlayPolygon;
+
+/**
  * Options passed to [[createMap]].
  */
 export type CreateMapOptions = {
@@ -232,6 +262,8 @@ export type CreateMapOptions = {
   loadPlacemarks?: boolean;
   /** Options related to placemarks. */
   placemarks?: CreateMapPlacemarksOptions;
+  /** An array of custom overlays to draw on the map. */
+  overlays?: CustomOverlay[];
   /**
    * Called when a tag is clicked. Use `event.preventDefault()` to prevent the
    * default dialog from appearing.
@@ -254,6 +286,16 @@ export type CreateMapOptions = {
   onTagsUpdate?: (tags: {
     allTags: Record<string, any>[];
     filteredTags: Record<string, any>[];
+  }) => void;
+  /**
+   * Called when tags on the current floor are updated. `allPlacemarks` is every
+   * placemark on the current floor, even ones not shown on the map.
+   * `filteredPlacemarks` is only the tags shown on the map (i.e. it respects
+   * `showHiddenPlacemarks` and `filter`).
+   */
+  onPlacemarksUpdate?: (placemarks: {
+    allPlacemarks: Record<string, any>[];
+    filteredPlacemarks: Record<string, any>[];
   }) => void;
   /**
    * Called with an array of floors after the floors list is updated.

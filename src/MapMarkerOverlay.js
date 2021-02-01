@@ -45,17 +45,17 @@ function getImageStyle({ kind, item }) {
       backgroundColor: `#${item.color}`,
       height: 300
     };
-  } else if (kind === "tag" && item.image_url) {
+  }
+  if (kind === "tag" && item.image_url) {
     return {
       backgroundImage: `url('${item.image_url}')`,
       height: 300
     };
-  } else {
-    return {
-      background: theme.brandBrightBlue,
-      height: 300
-    };
   }
+  return {
+    background: theme.brandBrightBlue,
+    height: 300
+  };
 }
 
 const MapMarkerOverlay = ({ kind, item, toggleMapMarkerOverlay }) => {

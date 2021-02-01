@@ -120,9 +120,6 @@ export const mixins = {
   }
 };
 
-// This doesn't seem strictly necessary based on the docs but idk
-const context = typeof global !== "undefined" ? global : {};
-
 // Feel free to uncomment these as we need more functions from Emotion,
 // especially `keyframes` if we need to start doing animations.
 export const {
@@ -136,6 +133,4 @@ export const {
   css
   // sheet,
   // caches
-} = createEmotion(context, {
-  key: "meridian--private-"
-});
+} = createEmotion({ key: "meridian--private-" });

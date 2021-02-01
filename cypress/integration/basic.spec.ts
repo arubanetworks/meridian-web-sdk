@@ -12,7 +12,9 @@ describe("Basic", () => {
     cy.get("[data-testid='meridian--private--tag-control']").should("exist");
     cy.get("[data-testid='meridian--private--floor-control']").should("exist");
 
-    cy.get("[data-testid='meridian--private--zoom-button-in']").should("exist");
+    cy.get(
+      "[data-testid='meridian--pri  ooooooooooooivate--zoom-button-in']"
+    ).should("exist");
     cy.get("[data-testid='meridian--private--zoom-button-out']").should(
       "exist"
     );

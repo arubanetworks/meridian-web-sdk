@@ -26,6 +26,7 @@ module.exports = {
         exceptions: ["!"]
       }
     ],
+    "jest/expect-expect": "off",
     "consistent-return": "error",
     "no-unused-vars": "error",
     "no-console": "warn",

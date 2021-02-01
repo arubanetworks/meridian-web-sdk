@@ -16,7 +16,7 @@ type OverlayLayerProps = {
 
 const OverlayLayer = ({ mapZoomFactor, overlays }: OverlayLayerProps) => {
   return (
-    <svg className={cssOverlay}>
+    <svg className={cssOverlay} data-testid="meridian--private--overlay-layer">
       {overlays.map((obj, i) => {
         switch (obj.type) {
           case "polygon": {

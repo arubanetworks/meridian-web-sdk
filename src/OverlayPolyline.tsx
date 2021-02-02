@@ -22,6 +22,7 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   return (
     <polyline
       points={pointsToPolyline(points)}
+      fill="none"
       stroke={stroke}
       // Preact's TS types specify `strokeWidth` and `strokeLinejoin`,
       // but those don't actually seem to work correctly at all.

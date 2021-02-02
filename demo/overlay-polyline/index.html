@@ -41,17 +41,24 @@
         token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
       });
 
-      // Generate a polygon centered at (x, y), with "radius" r, and `n` sides
-      function createPolygonPoints(x, y, r, n) {
-        const points = [];
-        const turn = Math.PI * 2;
-        const step = turn / n;
-        for (let theta = 0; theta < turn; theta += step) {
-          const dx = Math.sin(theta) * r;
-          const dy = Math.cos(theta) * r;
-          points.push(x + dx, y + dy);
-        }
-        return points;
+      async function getDirections(startID, endID) {
+        const origin = "https://edit.meridianapps.com";
+        const path = "/api/locations/5198682008846336/directions";
+        const params = new URLSearchParams({
+          from_map_id: "5755685136498688",
+          from_placemark_id: startID,
+          to_placemark_ids: endID
+        });
+        const url = `${origin}${path}?${params}`;
+        const headers = {
+          Authorization: "Token 6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        };
+        const response = await fetch(url, { headers });
+        const directions = await response.json();
+        const route = directions.routes[0];
+        return route.steps.flatMap(step => {
+          return step.points.split(",").map(Number);
+        });
       }
 
       const meridianMap = MeridianSDK.createMap(
@@ -61,33 +68,25 @@
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "100%",
-          overlays: [
-            {
-              type: "polygon",
-              points: [1000, 1000, 1500, 1500, 500, 1500, 250, 1000]
-            },
-            {
-              type: "polygon",
-              points: [2000, 2000, 2500, 2500, 1500, 2500],
-              fill: "rgba(0, 0, 0, 0.3)",
-              stroke: "#fcaf3e",
-              strokeWidth: 8,
-              strokeLineJoin: "round"
-            },
-            {
-              type: "polygon",
-              points: createPolygonPoints(3200, 1500, 500, 6),
-              fill: "transparent",
-              stroke: "#cc0000",
-              strokeWidth: 1
-            },
-            {
-              type: "polygon",
-              points: createPolygonPoints(4000, 2000, 300, 5),
-              fill: "#cc00cc",
-              strokeWidth: 0
-            }
-          ]
+          overlays: [],
+          onPlacemarksUpdate: ({ filteredPlacemarks }) => {
+            const lobby = filteredPlacemarks.find(p => p.name === "Lobby");
+            const cafe = filteredPlacemarks.find(p => p.name === "Cafe");
+            getDirections(lobby.id, cafe.id).then(directions => {
+              meridianMap.update({
+                overlays: [
+                  {
+                    type: "polyline",
+                    points: directions,
+                    stroke: "orange",
+                    strokeWidth: 8,
+                    strokeLineJoin: "round",
+                    strokeLineCap: "round"
+                  }
+                ]
+              });
+            });
+          }
         }
       );
     </script>

@@ -229,12 +229,21 @@ export type CustomOverlayPolygon = {
 };
 
 /**
- * Object describing a custom overlay
- *
- * NOTE: Only polygons are supported right now, but polylines will be added
- * later
+ * Object describing a polyline overlay drawn on the map
  */
-export type CustomOverlay = CustomOverlayPolygon;
+export type CustomOverlayPolyline = {
+  type: "polyline";
+  points: number[];
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
+};
+
+/**
+ * Object describing a custom overlay
+ */
+export type CustomOverlay = CustomOverlayPolygon | CustomOverlayPolyline;
 
 /**
  * Options passed to [[createMap]].

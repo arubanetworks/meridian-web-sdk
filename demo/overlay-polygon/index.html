@@ -41,8 +41,6 @@
         token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
       });
 
-      MeridianSDK.init({ api: api });
-
       // Generate a polygon centered at (x, y), with "radius" r, and `n` sides
       function createPolygonPoints(x, y, r, n) {
         const points = [];
@@ -59,6 +57,7 @@
       const meridianMap = MeridianSDK.createMap(
         document.getElementById("meridian-map"),
         {
+          api,
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "100%",

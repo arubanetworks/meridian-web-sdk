@@ -237,6 +237,7 @@ export type CustomOverlayPolyline = {
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
 };
 
 /**

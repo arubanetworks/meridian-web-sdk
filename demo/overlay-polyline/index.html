@@ -41,17 +41,52 @@
         token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
       });
 
-      MeridianSDK.init({ api: api });
-
+      async function getDirections(startID, endID) {
+        const origin = "https://edit.meridianapps.com";
+        const path = "/api/locations/5198682008846336/directions";
+        const params = new URLSearchParams({
+          from_map_id: "5755685136498688",
+          from_placemark_id: startID,
+          to_placemark_ids: endID
+        });
+        const url = `${origin}${path}?${params}`;
+        const headers = {
+          Authorization: "Token 6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        };
+        const response = await fetch(url, { headers });
+        const directions = await response.json();
+        const route = directions.routes[0];
+        return route.steps.flatMap(step => {
+          return step.points.split(",").map(Number);
+        });
+      }
 
       const meridianMap = MeridianSDK.createMap(
         document.getElementById("meridian-map"),
         {
+          api,
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "100%",
-          // TODO: Polyline example
-          overlays: []
+          overlays: [],
+          onPlacemarksUpdate: ({ filteredPlacemarks }) => {
+            const lobby = filteredPlacemarks.find(p => p.name === "Lobby");
+            const cafe = filteredPlacemarks.find(p => p.name === "Cafe");
+            getDirections(lobby.id, cafe.id).then(directions => {
+              meridianMap.update({
+                overlays: [
+                  {
+                    type: "polyline",
+                    points: directions,
+                    stroke: "orange",
+                    strokeWidth: 8,
+                    strokeLineJoin: "round",
+                    strokeLineCap: "round"
+                  }
+                ]
+              });
+            });
+          }
         }
       );
     </script>

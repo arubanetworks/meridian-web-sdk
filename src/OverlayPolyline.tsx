@@ -17,6 +17,7 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   stroke = "hsl(207, 65%, 46%)",
   strokeWidth = 2,
   strokeLineJoin = "miter",
+  strokeLineCap = "butt",
   mapZoomFactor
 }) => {
   return (
@@ -30,6 +31,7 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
       // attributes, so using dashes works here.
       stroke-width={strokeWidth / mapZoomFactor}
       stroke-linejoin={strokeLineJoin}
+      stroke-linecap={strokeLineCap}
     />
   );
 };

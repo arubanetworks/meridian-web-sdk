@@ -52,11 +52,32 @@
             console.log("onFloorChange", floor);
           },
           annotations: [
-            { type: "point", x: 0, y: 0, },
-            { type: "point", x: 1000, y: 1000, },
-            { type: "point", x: 2000, y: 2000, },
-            { type: "point", x: 3000, y: 3000, },
-            { type: "point", x: 4000, y: 4000, },
+            { type: "point", x: 0, y: 0 },
+            { type: "point", x: 1000, y: 1000 },
+            { type: "point", x: 2000, y: 2000 },
+            { type: "point", x: 3000, y: 3000 },
+            { type: "point", x: 4000, y: 4000 },
+            {
+              type: "point",
+              x: 3000,
+              y: 2000,
+              backgroundColor: "#c00",
+              title: "Red"
+            },
+            {
+              type: "point",
+              x: 2000,
+              y: 3000,
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+              title: "Transparent White with a Long Title"
+            },
+            {
+              type: "point",
+              x: 4000,
+              y: 3000,
+              backgroundColor: "rgb(0, 0, 0, 0.8)",
+              backgroundImage: MeridianSDK.placemarkIconURL("generic"),
+            }
           ]
         }
       );

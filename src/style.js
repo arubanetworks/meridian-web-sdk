@@ -42,12 +42,14 @@ export const mixins = {
   },
   textStrokeWhite: {
     WebkitFontSmoothing: "antialiased",
-    textShadow: `
-      rgba(255, 255, 255, 0.75) 0 0 1px,
-      rgba(255, 255, 255, 0.75) 0 0 1px,
-      rgba(255, 255, 255, 0.75) 0 0 1px,
-      rgba(255, 255, 255, 0.75) 0 0 1px
-    `
+    textShadow: [
+      "rgba(255, 255, 255, 0.5) 1px 1px 0",
+      "rgba(255, 255, 255, 0.5) -1px -1px 0",
+      "white 0 0 1px",
+      "white 0 0 2px",
+      "white 0 0 3px",
+      "white 0 0 4px"
+    ].join(", ")
   },
   buttonReset: {
     padding: 0,

@@ -311,6 +311,10 @@ export type CreateMapOptions = {
    */
   onFloorsUpdate?: (floors: Record<string, any>[]) => void;
   /**
+   * Called with a floor object when the floor is changed.
+   */
+  onFloorChange?: (floor: Record<string, any>) => void;
+  /**
    * Called when the map has been destroyed, either by manually calling
    * [[destroy]] or by being automatically destroyed when its DOM is tampered
    * with.

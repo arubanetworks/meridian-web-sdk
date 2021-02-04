@@ -101,6 +101,7 @@ export default class Map extends Component {
     tags: {},
     overlays: [],
     onTagsUpdate: () => {},
+    onFloorChange: () => {},
     onFloorsUpdate: () => {}
   };
 
@@ -337,6 +338,10 @@ export default class Map extends Component {
 
   selectFloorByID = floorID => {
     this.updateMap({ floorID });
+    asyncClientCall(
+      this.props.onFloorChange,
+      this.state.floors.find(f => f.id === floorID)
+    );
   };
 
   groupPlacemarksByID = placemarks => {

@@ -41,17 +41,23 @@
         token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
       });
 
-      MeridianSDK.init({ api: api });
-
       const meridianMap = MeridianSDK.createMap(
         document.getElementById("meridian-map"),
         {
+          api,
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "100%",
           onFloorChange: floor => {
             console.log("onFloorChange", floor);
-          }
+          },
+          annotations: [
+            { type: "point", x: 0, y: 0, },
+            { type: "point", x: 1000, y: 1000, },
+            { type: "point", x: 2000, y: 2000, },
+            { type: "point", x: 3000, y: 3000, },
+            { type: "point", x: 4000, y: 4000, },
+          ]
         }
       );
     </script>

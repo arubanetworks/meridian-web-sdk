@@ -246,6 +246,24 @@ export type CustomOverlayPolyline = {
 export type CustomOverlay = CustomOverlayPolygon | CustomOverlayPolyline;
 
 /**
+ * Object describing a point annotation drawn on the map
+ */
+export type CustomAnnotationPoint = {
+  type: "point";
+  x: number;
+  y: number;
+  size?: number;
+  backgroundColor?: string;
+  backgroundImage?: string;
+  title?: string;
+};
+
+/**
+ * Object describing a custom annotation
+ */
+export type CustomAnnotation = CustomAnnotationPoint;
+
+/**
  * Options passed to [[createMap]].
  */
 export type CreateMapOptions = {

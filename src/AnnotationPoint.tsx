@@ -35,8 +35,16 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
           ? `url('${backgroundImage}')`
           : "none"
       }}
+      data-testid="meridian--private--annotation-point"
     >
-      {title ? <div className={cssAnnotationPointLabel}>{title}</div> : null}
+      {title ? (
+        <div
+          className={cssAnnotationPointLabel}
+          data-testid="meridian--private--annotation-point-title"
+        >
+          {title}
+        </div>
+      ) : null}
     </div>
   );
 };

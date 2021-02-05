@@ -109,7 +109,7 @@ const cssLabel = css(mixins.textStrokeWhite, {
   fontSize: 14,
   textAlign: "center",
   paddingTop: 4,
-  color: "black",
+  color: "#222",
   userSelect: "none",
   transform: "translate(-50%, 0)",
   fontWeight: "bold",

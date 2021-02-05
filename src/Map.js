@@ -13,6 +13,7 @@ import {
 } from "d3-zoom";
 import { Component, Fragment, h } from "preact";
 import PropTypes from "prop-types";
+import AnnotationLayer from "./AnnotationLayer";
 import ErrorOverlay from "./ErrorOverlay";
 import FloorAndTagControls from "./FloorAndTagControls";
 import FloorLabel from "./FloorLabel";
@@ -100,7 +101,9 @@ export default class Map extends Component {
     placemarks: {},
     tags: {},
     overlays: [],
+    annotations: [],
     onTagsUpdate: () => {},
+    onFloorChange: () => {},
     onFloorsUpdate: () => {}
   };
 
@@ -336,7 +339,11 @@ export default class Map extends Component {
   };
 
   selectFloorByID = floorID => {
-    this.updateMap({ floorID });
+    this.updateMap({ floorID, annotations: [], overlays: [] });
+    asyncClientCall(
+      this.props.onFloorChange,
+      this.state.floors.find(f => f.id === floorID)
+    );
   };
 
   groupPlacemarksByID = placemarks => {
@@ -679,6 +686,7 @@ export default class Map extends Component {
       tags,
       placemarks,
       overlays,
+      annotations,
       width,
       height,
       onTagsUpdate,
@@ -764,6 +772,10 @@ export default class Map extends Component {
                   onMarkerClick={this.onMarkerClick}
                   onUpdate={onTagsUpdate}
                   toggleLoadingSpinner={this.toggleLoadingSpinner}
+                />
+                <AnnotationLayer
+                  mapZoomFactor={mapZoomFactor}
+                  annotations={annotations}
                 />
               </Fragment>
             ) : null}

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Overlay Polyline Route | Meridian Web SDK</title>
+    <title>Full Page | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -41,26 +41,6 @@
         token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
       });
 
-      async function getDirections(startID, endID) {
-        const origin = "https://edit.meridianapps.com";
-        const path = "/api/locations/5198682008846336/directions";
-        const params = new URLSearchParams({
-          from_map_id: "5755685136498688",
-          from_placemark_id: startID,
-          to_placemark_ids: endID
-        });
-        const url = `${origin}${path}?${params}`;
-        const headers = {
-          Authorization: "Token 6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        };
-        const response = await fetch(url, { headers });
-        const directions = await response.json();
-        const route = directions.routes[0];
-        return route.steps.flatMap(step => {
-          return step.points.split(",").map(Number);
-        });
-      }
-
       const meridianMap = MeridianSDK.createMap(
         document.getElementById("meridian-map"),
         {
@@ -68,25 +48,62 @@
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "100%",
-          overlays: [],
-          onPlacemarksUpdate: ({ filteredPlacemarks }) => {
-            const lobby = filteredPlacemarks.find(p => p.name === "Lobby");
-            const cafe = filteredPlacemarks.find(p => p.name === "Cafe");
-            getDirections(lobby.id, cafe.id).then(directions => {
-              meridianMap.update({
-                overlays: [
-                  {
-                    type: "polyline",
-                    points: directions,
-                    stroke: "orange",
-                    strokeWidth: 8,
-                    strokeLineJoin: "round",
-                    strokeLineCap: "round"
-                  }
-                ]
-              });
-            });
-          }
+          onFloorChange: floor => {
+            console.log("onFloorChange", floor);
+          },
+          annotations: [
+            { type: "point", x: 0, y: 0 },
+            {
+              type: "point",
+              x: 1000,
+              y: 1000,
+              backgroundColor: "#222",
+              size: 8
+            },
+            {
+              type: "point",
+              x: 1050,
+              y: 1050,
+              backgroundColor: "#444",
+              size: 8
+            },
+            {
+              type: "point",
+              x: 1100,
+              y: 1100,
+              backgroundColor: "#666",
+              size: 8
+            },
+            {
+              type: "point",
+              x: 1150,
+              y: 1150,
+              backgroundColor: "#888",
+              size: 8
+            },
+            {
+              type: "point",
+              x: 3000,
+              y: 2000,
+              backgroundColor: "#c00",
+              title: "Red"
+            },
+            {
+              type: "point",
+              x: 2000,
+              y: 3000,
+              backgroundColor: "rgba(255, 255, 255, 0.5)",
+              title: "Transparent White with a Long Title"
+            },
+            {
+              type: "point",
+              x: 4000,
+              y: 3000,
+              backgroundColor: "rgb(32, 32, 32, 0.5)",
+              backgroundSize: "75%",
+              backgroundImage: MeridianSDK.placemarkIconURL("generic")
+            }
+          ]
         }
       );
     </script>

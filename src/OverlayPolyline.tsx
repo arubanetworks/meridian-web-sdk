@@ -8,9 +8,9 @@
 import { FunctionComponent, h } from "preact";
 import { CustomOverlayPolyline } from "./web-sdk";
 
-type OverlayPolygonProps = CustomOverlayPolyline & {
+interface OverlayPolygonProps extends CustomOverlayPolyline {
   mapZoomFactor: number;
-};
+}
 
 const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   points,

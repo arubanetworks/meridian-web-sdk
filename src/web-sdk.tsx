@@ -219,31 +219,50 @@ export type CreateMapPlacemarksOptions = {
 /**
  * Object describing a polygon overlay drawn on the map
  */
-export type CustomOverlayPolygon = {
+export interface CustomOverlayPolygon {
   type: "polygon";
   points: number[];
   fill?: string;
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
-};
+}
 
 /**
  * Object describing a polyline overlay drawn on the map
  */
-export type CustomOverlayPolyline = {
+export interface CustomOverlayPolyline {
   type: "polyline";
   points: number[];
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
   strokeLineCap?: "butt" | "round" | "square";
-};
+}
 
 /**
  * Object describing a custom overlay
  */
 export type CustomOverlay = CustomOverlayPolygon | CustomOverlayPolyline;
+
+/**
+ * Object describing a point annotation drawn on the map
+ */
+export interface CustomAnnotationPoint {
+  type: "point";
+  x: number;
+  y: number;
+  size?: number;
+  backgroundColor?: string;
+  backgroundSize?: string;
+  backgroundImage?: string;
+  title?: string;
+}
+
+/**
+ * Object describing a custom annotation
+ */
+export type CustomAnnotation = CustomAnnotationPoint;
 
 /**
  * Options passed to [[createMap]].
@@ -310,6 +329,10 @@ export type CreateMapOptions = {
    * Called with an array of floors after the floors list is updated.
    */
   onFloorsUpdate?: (floors: Record<string, any>[]) => void;
+  /**
+   * Called with a floor object when the floor is changed.
+   */
+  onFloorChange?: (floor: Record<string, any>) => void;
   /**
    * Called when the map has been destroyed, either by manually calling
    * [[destroy]] or by being automatically destroyed when its DOM is tampered

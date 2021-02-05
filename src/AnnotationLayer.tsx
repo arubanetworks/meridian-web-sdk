@@ -10,10 +10,10 @@ import AnnotationPoint from "./AnnotationPoint";
 import { css } from "./style";
 import { CustomAnnotation } from "./web-sdk";
 
-type AnnotationLayerProps = {
+interface AnnotationLayerProps {
   mapZoomFactor: number;
   annotations: CustomAnnotation[];
-};
+}
 
 const AnnotationLayer: FunctionComponent<AnnotationLayerProps> = ({
   mapZoomFactor,

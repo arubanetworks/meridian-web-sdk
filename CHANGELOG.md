@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `overlays` array in `createMap`, to draw custom polygons or polylines over the
   map
 - `onFloorChange` callback in `createMap`
+- `annotations` array in `createMap`, to draw custom images and text
 
 ## [0.11.0] - 2020-11-19
 

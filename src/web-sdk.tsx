@@ -219,26 +219,26 @@ export type CreateMapPlacemarksOptions = {
 /**
  * Object describing a polygon overlay drawn on the map
  */
-export type CustomOverlayPolygon = {
+export interface CustomOverlayPolygon {
   type: "polygon";
   points: number[];
   fill?: string;
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
-};
+}
 
 /**
  * Object describing a polyline overlay drawn on the map
  */
-export type CustomOverlayPolyline = {
+export interface CustomOverlayPolyline {
   type: "polyline";
   points: number[];
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
   strokeLineCap?: "butt" | "round" | "square";
-};
+}
 
 /**
  * Object describing a custom overlay
@@ -248,15 +248,16 @@ export type CustomOverlay = CustomOverlayPolygon | CustomOverlayPolyline;
 /**
  * Object describing a point annotation drawn on the map
  */
-export type CustomAnnotationPoint = {
+export interface CustomAnnotationPoint {
   type: "point";
   x: number;
   y: number;
   size?: number;
   backgroundColor?: string;
+  backgroundSize?: string;
   backgroundImage?: string;
   title?: string;
-};
+}
 
 /**
  * Object describing a custom annotation

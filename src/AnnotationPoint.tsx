@@ -9,9 +9,9 @@ import { FunctionComponent, h } from "preact";
 import { css, mixins } from "./style";
 import { CustomAnnotationPoint } from "./web-sdk";
 
-type AnnotationPointProps = CustomAnnotationPoint & {
+interface AnnotationPointProps extends CustomAnnotationPoint {
   mapZoomFactor: number;
-};
+}
 
 const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
   mapZoomFactor,
@@ -19,6 +19,7 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
   y,
   size = 24,
   backgroundColor = "hsl(207, 65%, 46%)",
+  backgroundSize = "cover",
   backgroundImage,
   title
 }) => {
@@ -31,6 +32,7 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
         "--meridian-annotation-scale": 1 / mapZoomFactor,
         "--meridian-annotation-size": `${size}px`,
         "--meridian-annotation-backgroundColor": backgroundColor,
+        "--meridian-annotation-backgroundSize": backgroundSize,
         "--meridian-annotation-backgroundImage": backgroundImage
           ? `url('${backgroundImage}')`
           : "none"
@@ -59,7 +61,9 @@ const cssAnnotationPoint = css({
   height: "var(--meridian-annotation-size)",
   backgroundColor: "var(--meridian-annotation-backgroundColor)",
   backgroundImage: "var(--meridian-annotation-backgroundImage)",
-  backgroundSize: "cover",
+  backgroundSize: "var(--meridian-annotation-backgroundSize)",
+  backgroundRepeat: "no-repeat",
+  backgroundPosition: "center",
   borderRadius: 9999,
   userSelect: "none"
 });

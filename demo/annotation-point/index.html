@@ -53,10 +53,34 @@
           },
           annotations: [
             { type: "point", x: 0, y: 0 },
-            { type: "point", x: 1000, y: 1000 },
-            { type: "point", x: 2000, y: 2000 },
-            { type: "point", x: 3000, y: 3000 },
-            { type: "point", x: 4000, y: 4000 },
+            {
+              type: "point",
+              x: 1000,
+              y: 1000,
+              backgroundColor: "#222",
+              size: 8
+            },
+            {
+              type: "point",
+              x: 1050,
+              y: 1050,
+              backgroundColor: "#444",
+              size: 8
+            },
+            {
+              type: "point",
+              x: 1100,
+              y: 1100,
+              backgroundColor: "#666",
+              size: 8
+            },
+            {
+              type: "point",
+              x: 1150,
+              y: 1150,
+              backgroundColor: "#888",
+              size: 8
+            },
             {
               type: "point",
               x: 3000,
@@ -75,8 +99,9 @@
               type: "point",
               x: 4000,
               y: 3000,
-              backgroundColor: "rgb(0, 0, 0, 0.8)",
-              backgroundImage: MeridianSDK.placemarkIconURL("generic"),
+              backgroundColor: "rgb(32, 32, 32, 0.5)",
+              backgroundSize: "75%",
+              backgroundImage: MeridianSDK.placemarkIconURL("generic")
             }
           ]
         }

@@ -27,13 +27,13 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
     <div
       className={cssAnnotationPoint}
       style={{
-        "--meridian-annotation-x": `${x}px`,
-        "--meridian-annotation-y": `${y}px`,
-        "--meridian-annotation-scale": 1 / mapZoomFactor,
-        "--meridian-annotation-size": `${size}px`,
-        "--meridian-annotation-backgroundColor": backgroundColor,
-        "--meridian-annotation-backgroundSize": backgroundSize,
-        "--meridian-annotation-backgroundImage": backgroundImage
+        "--meridian-annotationPoint-x": `${x}px`,
+        "--meridian-annotationPoint-y": `${y}px`,
+        "--meridian-annotationPoint-scale": 1 / mapZoomFactor,
+        "--meridian-annotationPoint-size": `${size}px`,
+        "--meridian-annotationPoint-backgroundColor": backgroundColor,
+        "--meridian-annotationPoint-backgroundSize": backgroundSize,
+        "--meridian-annotationPoint-backgroundImage": backgroundImage
           ? `url('${backgroundImage}')`
           : "none"
       }}
@@ -54,14 +54,14 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
 const cssAnnotationPoint = css({
   label: "AnnotationPoint",
   position: "absolute",
-  top: "var(--meridian-annotation-y)",
-  left: "var(--meridian-annotation-x)",
-  transform: "scale(var(--meridian-annotation-scale))",
-  width: "var(--meridian-annotation-size)",
-  height: "var(--meridian-annotation-size)",
-  backgroundColor: "var(--meridian-annotation-backgroundColor)",
-  backgroundImage: "var(--meridian-annotation-backgroundImage)",
-  backgroundSize: "var(--meridian-annotation-backgroundSize)",
+  top: "var(--meridian-annotationPoint-y)",
+  left: "var(--meridian-annotationPoint-x)",
+  transform: "scale(var(--meridian-annotationPoint-scale))",
+  width: "var(--meridian-annotationPoint-size)",
+  height: "var(--meridian-annotationPoint-size)",
+  backgroundColor: "var(--meridian-annotationPoint-backgroundColor)",
+  backgroundImage: "var(--meridian-annotationPoint-backgroundImage)",
+  backgroundSize: "var(--meridian-annotationPoint-backgroundSize)",
   backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
   borderRadius: 9999,
@@ -76,7 +76,7 @@ const cssAnnotationPointLabel = css(mixins.textStrokeWhite, {
   maxWidth: 120,
   fontSize: 14,
   textAlign: "center",
-  marginTop: "var(--meridian-annotation-size)",
+  marginTop: "var(--meridian-annotationPoint-size)",
   paddingTop: 4,
   color: "#222",
   userSelect: "none",

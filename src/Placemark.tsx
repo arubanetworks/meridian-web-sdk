@@ -17,7 +17,7 @@ interface PlacemarkProps {
   isSelected: boolean;
   data: Record<string, any>;
   mapZoomFactor: number;
-  onClick?: (placemark: Record<string, any>) => void;
+  onClick?: (event: MouseEvent) => void;
   disabled?: boolean;
 }
 

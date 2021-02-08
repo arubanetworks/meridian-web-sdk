@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed console error: `placemarkIconURL: no such icon 'label_department'`
+- Console error: `placemarkIconURL: no such icon 'label_department'`
 
 ## [0.12.0] - 2021-02-08
 

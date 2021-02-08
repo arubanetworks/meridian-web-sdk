@@ -5,11 +5,34 @@
  * @packageDocumentation
  */
 
-import { h } from "preact";
-import PropTypes from "prop-types";
-
-import { css, theme, mixins } from "./style";
+import { FunctionComponent, h } from "preact";
 import IconClose from "./IconClose";
+import { css, mixins, theme } from "./style";
+
+interface OverlayProps {
+  position: "left" | "right";
+  onCloseClicked: () => void;
+}
+
+const Overlay: FunctionComponent<OverlayProps> = ({
+  position,
+  onCloseClicked,
+  children
+}) => (
+  <div
+    className={position === "left" ? cssOverlayLeft : cssOverlayRight}
+    data-testid="meridian--private--map-overlay"
+  >
+    <button
+      className={cssClose}
+      onClick={onCloseClicked}
+      data-testid="meridian--private--close-overlay"
+    >
+      <IconClose />
+    </button>
+    {children}
+  </div>
+);
 
 const cssOverlay = css(mixins.shadow, mixins.rounded, {
   label: "overlay",
@@ -61,36 +84,5 @@ const cssClose = css(
     boxShadow: "0 0 2px rgba(0, 0, 0, 0.4)"
   }
 );
-
-const CloseButton = ({ onClick }) => (
-  <button
-    className={cssClose}
-    onClick={onClick}
-    data-testid="meridian--private--close-overlay"
-  >
-    <IconClose />
-  </button>
-);
-
-CloseButton.propTypes = {
-  onClick: PropTypes.func.isRequired
-};
-
-const Overlay = ({ position, onCloseClicked, children }) => (
-  <div
-    className={position === "left" ? cssOverlayLeft : cssOverlayRight}
-    data-testid="meridian--private--map-overlay"
-  >
-    <CloseButton onClick={onCloseClicked} />
-    {children}
-  </div>
-);
-
-Overlay.propTypes = {
-  position: PropTypes.oneOf(["left", "right"]).isRequired,
-  children: PropTypes.any.isRequired,
-  onCloseClicked: PropTypes.func.isRequired,
-  label: PropTypes.string
-};
 
 export default Overlay;

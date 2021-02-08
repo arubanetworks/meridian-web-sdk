@@ -79,9 +79,9 @@ for (const filename of placemarkFiles.keys()) {
  * }
  */
 export function placemarkIconURL(type: string): string {
-  // if (!type || type.startsWith("label_")) {
-  //   return placemarkIconGeneric;
-  // }
+  if (!type || type.startsWith("label_")) {
+    return placemarkIconGeneric;
+  }
   const url = placemarkIcons.get(type);
   if (!url) {
     // eslint-disable-next-line no-console

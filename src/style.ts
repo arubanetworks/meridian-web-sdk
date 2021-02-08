@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import createEmotion from "create-emotion";
+import createEmotion, { Interpolation } from "create-emotion";
 
 export const theme = {
   fontSizeSmallest: "12px",
@@ -24,22 +24,22 @@ export const theme = {
   borderColor: "#ebeef2",
   borderColorDarker: "#dfe1e5",
   borderRadius: 6
-};
+} as const;
 
 export const mixins = {
   flexRow: {
     display: "flex",
     flexDirection: "row"
-  },
+  } as Interpolation,
   flexColumn: {
     display: "flex",
     flexDirection: "column"
-  },
+  } as Interpolation,
   overflowEllipses: {
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis"
-  },
+  } as Interpolation,
   textStrokeWhite: {
     WebkitFontSmoothing: "antialiased",
     textShadow: [
@@ -50,7 +50,7 @@ export const mixins = {
       "white 0 0 3px",
       "white 0 0 4px"
     ].join(", ")
-  },
+  } as Interpolation,
   buttonReset: {
     padding: 0,
     margin: 0,
@@ -61,21 +61,25 @@ export const mixins = {
     color: "inherit",
     "&::-moz-focus-inner": {
       border: 0
-    }
-  },
+    } as Interpolation
+  } as Interpolation,
   buttonHoverActive: {
-    "&:hover": { background: theme.buttonHoverColor },
-    "&:active": { background: theme.buttonActiveColor }
-  },
+    "&:hover": {
+      background: theme.buttonHoverColor
+    } as Interpolation,
+    "&:active": {
+      background: theme.buttonActiveColor
+    } as Interpolation
+  } as Interpolation,
   borderBox: {
     boxSizing: "border-box"
-  },
+  } as Interpolation,
   focusRing: {
     "&:focus": {
       outline: 0,
       boxShadow: `inset 0 0 0 1px ${theme.brandBrightBlue}`
     }
-  },
+  } as Interpolation,
   focusRingMenuItem: {
     "&:focus": {
       outline: 0,
@@ -84,43 +88,43 @@ export const mixins = {
         inset 0 0 0 2px ${theme.brandBrightBlue}
       `
     }
-  },
+  } as Interpolation,
   focusOutline: {
     "&:focus": {
       outline: 0,
       boxShadow: "0 0 0 2px currentcolor"
     }
-  },
+  } as Interpolation,
   focusDarken: {
     "&:focus": {
       outline: 0,
       boxShadow: "inset 0 0 0 9999px rgba(0, 0, 0, 0.1)"
-    }
-  },
+    } as Interpolation
+  } as Interpolation,
   focusNone: {
     "&:focus": {
       outline: "none"
     }
-  },
+  } as Interpolation,
   shadow: {
     boxShadow: "0 0 3px rgba(0, 0, 0, 0.25)"
-  },
+  } as Interpolation,
   rounded: {
     borderRadius: theme.borderRadius
-  },
+  } as Interpolation,
   maxRounded: {
     borderRadius: 99999
-  },
+  } as Interpolation,
   paddingMedium: {
     padding: "20px"
-  },
+  } as Interpolation,
   pointer: {
     cursor: "pointer",
     "&:disabled": {
       cursor: "default"
-    }
-  }
-};
+    } as Interpolation
+  } as Interpolation
+} as const;
 
 // Feel free to uncomment these as we need more functions from Emotion,
 // especially `keyframes` if we need to start doing animations.

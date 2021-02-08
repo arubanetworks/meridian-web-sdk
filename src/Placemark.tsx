@@ -5,26 +5,35 @@
  * @packageDocumentation
  */
 
-import { h } from "preact";
-import PropTypes from "prop-types";
+import { FunctionComponent, h } from "preact";
 import { css, cx, mixins, theme } from "./style";
 import { placemarkIconURL } from "./web-sdk";
 
 const SIZE = 24;
+const SHRINK_POINT = 0.2;
+const SHRINK_FACTOR = 1.4;
 
-const Placemark = ({
+interface PlacemarkProps {
+  isSelected: boolean;
+  data: Record<string, any>;
+  mapZoomFactor: number;
+  onClick?: (event: MouseEvent) => void;
+  disabled?: boolean;
+}
+
+const Placemark: FunctionComponent<PlacemarkProps> = ({
   isSelected,
   data,
   mapZoomFactor,
   onClick = () => {},
   disabled = false
 }) => {
-  const SHRINK_POINT = 0.2;
-  const SHRINK_FACTOR = 1.4;
   const cssTypeName = `meridian-placemark-type-${data.type}`;
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
+  const color = `#${data.color}`;
+  const iconURL = placemarkIconURL(data.type);
   const iconClassName = isSelected
     ? cx(
         "meridian-placemark-icon-selected",
@@ -37,17 +46,7 @@ const Placemark = ({
     left: data.x,
     top: data.y,
     transform: `translate(-50%, -50%) scale(${k})`
-  };
-
-  function getIconStyle(data) {
-    const color = `#${data.color}`;
-    const url = placemarkIconURL(data.type);
-    return {
-      "--meridian-placemark-iconURL": `url('${url}')`,
-      "--meridian-placemark-borderColor": color,
-      "--meridian-placemark-backgroundColor": color
-    };
-  }
+  } as const;
 
   if (labelOnly) {
     return (
@@ -66,16 +65,21 @@ const Placemark = ({
       </div>
     );
   }
-
   return (
     <div className={cx("meridian-placemark", cssPlacemark)} style={style}>
       <button
         disabled={disabled}
         className={iconClassName}
         data-meridian-placemark-id={data.next_id}
-        style={getIconStyle(data)}
+        style={{
+          "--meridian-placemark-iconURL": `url('${iconURL}')`,
+          "--meridian-placemark-borderColor": color,
+          "--meridian-placemark-backgroundColor": color
+        }}
         onClick={event => {
-          event.target.focus();
+          if (event.target instanceof HTMLElement) {
+            event.target.focus();
+          }
           onClick(event);
         }}
         onMouseDown={event => {
@@ -92,16 +96,8 @@ const Placemark = ({
   );
 };
 
-Placemark.propTypes = {
-  isSelected: PropTypes.bool.isRequired,
-  mapZoomFactor: PropTypes.number.isRequired,
-  data: PropTypes.object.isRequired,
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool
-};
-
 const cssLabel = css(mixins.textStrokeWhite, {
-  label: "label",
+  label: "placemark-label",
   marginLeft: "50%",
   position: "absolute",
   minWidth: 55,
@@ -114,27 +110,31 @@ const cssLabel = css(mixins.textStrokeWhite, {
   transform: "translate(-50%, 0)",
   fontWeight: "bold",
   visibility: "visible",
+
   "&[hidden]": {
     visibility: "hidden"
   }
 });
+
 const cssLabelOnly = css({
-  label: "label-only",
+  label: "placemark-labelOnly",
   textTransform: "uppercase",
   color: "#666",
   fontSize: 16
 });
+
 const cssPlacemark = css({
   label: "placemark",
   position: "absolute"
 });
+
 const cssPlacemarkIcon = css(
   mixins.buttonReset,
   mixins.pointer,
   mixins.focusNone,
   {
-    "--meridian-placemark-backgroundColor": theme.brandBlue,
     label: "placemark-icon",
+    "--meridian-placemark-backgroundColor": theme.brandBlue,
     transition: "width 80ms ease, height 80ms ease",
     display: "block",
     width: SIZE,
@@ -150,6 +150,7 @@ const cssPlacemarkIcon = css(
     zIndex: 1
   }
 );
+
 const cssPlacemarkIconSelected = css(cssPlacemarkIcon, {
   zIndex: 3,
   width: SIZE * 1.25,

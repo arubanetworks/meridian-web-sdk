@@ -5,9 +5,17 @@
  * @packageDocumentation
  */
 
-import { h } from "preact";
+import { FunctionComponent, h } from "preact";
 import { css, theme } from "./style";
 import IconSpinner from "./IconSpinner";
+
+const LoadingOverlay: FunctionComponent = () => {
+  return (
+    <div className={cssLoadingSpinner}>
+      <IconSpinner />
+    </div>
+  );
+};
 
 const cssLoadingSpinner = css({
   label: "loading",
@@ -23,11 +31,5 @@ const cssLoadingSpinner = css({
   textAlign: "center",
   pointerEvents: "none"
 });
-
-const LoadingOverlay = () => (
-  <div className={cssLoadingSpinner}>
-    <IconSpinner />
-  </div>
-);
 
 export default LoadingOverlay;

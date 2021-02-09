@@ -5,13 +5,20 @@
  * @packageDocumentation
  */
 
-import { h } from "preact";
-import PropTypes from "prop-types";
-
-import Tag from "./Tag";
+import { FunctionComponent, h } from "preact";
 import Placemark from "./Placemark";
+import Tag from "./Tag";
 
-const MapMarker = ({
+interface MapMarkerProps {
+  selectedItem?: Record<string, any>;
+  kind: "tag" | "placemark";
+  data: Record<string, any>;
+  mapZoomFactor: number;
+  disabled?: boolean;
+  onClick?: (data: Record<string, any>) => void;
+}
+
+const MapMarker: FunctionComponent<MapMarkerProps> = ({
   selectedItem,
   kind,
   data,
@@ -31,7 +38,8 @@ const MapMarker = ({
         disabled={disabled}
       />
     );
-  } else if (kind === "placemark") {
+  }
+  if (kind === "placemark") {
     return (
       <Placemark
         isSelected={selectedItem ? selectedItem.id === data.id : false}
@@ -45,15 +53,6 @@ const MapMarker = ({
     );
   }
   return null;
-};
-
-MapMarker.propTypes = {
-  selectedItem: PropTypes.object,
-  mapZoomFactor: PropTypes.number.isRequired,
-  kind: PropTypes.string.isRequired,
-  data: PropTypes.object.isRequired,
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool
 };
 
 export default MapMarker;

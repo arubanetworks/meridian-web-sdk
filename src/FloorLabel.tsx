@@ -5,11 +5,26 @@
  * @packageDocumentation
  */
 
-import { h } from "preact";
-import PropTypes from "prop-types";
-
-import { css, mixins, cx } from "./style";
+import { FunctionComponent, h } from "preact";
+import { css, cx, mixins } from "./style";
 import { STRINGS } from "./util";
+
+interface FloorLabelProps {
+  buildingName: string;
+  floorName: string;
+}
+
+const FloorLabel: FunctionComponent<FloorLabelProps> = ({
+  buildingName,
+  floorName
+}) => (
+  <div
+    className={cx("meridian-floor-label", cssFloorLabel)}
+    data-testid="meridian--private--floor-label"
+  >
+    {buildingName || STRINGS.unnamedBuilding} {STRINGS.enDash} {floorName}
+  </div>
+);
 
 const cssFloorLabel = css(
   mixins.buttonReset,
@@ -32,19 +47,5 @@ const cssFloorLabel = css(
     fontSize: 16
   }
 );
-
-const FloorLabel = ({ buildingName, floorName }) => (
-  <div
-    className={cx("meridian-floor-label", cssFloorLabel)}
-    data-testid="meridian--private--floor-label"
-  >
-    {buildingName || STRINGS.unnamedBuilding} {STRINGS.enDash} {floorName}
-  </div>
-);
-
-FloorLabel.propTypes = {
-  buildingName: PropTypes.string.isRequired,
-  floorName: PropTypes.string.isRequired
-};
 
 export default FloorLabel;

@@ -5,13 +5,19 @@
  * @packageDocumentation
  */
 
-import { h } from "preact";
+import { FunctionComponent, h } from "preact";
 import { css, keyframes } from "./style";
 
-const cssSpin = keyframes`
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-`;
+const IconSpinner: FunctionComponent = () => <div className={cssSpinner} />;
+
+const cssSpin = keyframes({
+  from: {
+    transform: "rotate(0turn)"
+  },
+  to: {
+    transform: "rotate(1turn)"
+  }
+});
 
 const cssSpinner = css({
   label: "spinner",
@@ -23,7 +29,5 @@ const cssSpinner = css({
   borderRadius: "50%",
   animation: `${cssSpin} 600ms infinite linear`
 });
-
-const IconSpinner = () => <div className={cssSpinner} />;
 
 export default IconSpinner;

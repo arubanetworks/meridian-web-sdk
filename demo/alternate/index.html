@@ -13,7 +13,7 @@
   <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
   <link rel="stylesheet" href="../shared.css">
   <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
-  <script src="../shared.js"></script>
+  <script type="module" src="../shared.js"></script>
   <style>
     body {
       font-family: sans-serif;
@@ -32,7 +32,7 @@
   <div class="map" id="meridian-map"></div>
 
   <script src="../meridian-sdk.js"></script>
-  <script id="the-code">
+  <script type="module" id="the-code">
     MeridianSDK.createMap(document.getElementById("meridian-map"), {
       api: new MeridianSDK.API({
         environment: "production",

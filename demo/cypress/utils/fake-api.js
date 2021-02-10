@@ -33,30 +33,37 @@ class FakeAPI {
   constructor() {
     this.token = "[FAKE_TOKEN]";
     this.environment = "production";
+    this._live = false;
+    this._loadTime = 1000;
+    this._updateInterval = 2000;
+  }
+
+  async _sleep() {
+    await sleep(this._live ? this._loadTime : 0);
   }
 
   async fetchTagsByFloor(_locationID, floorID) {
-    await sleep(0);
+    await this._sleep();
     return mockFloorAssets.filter(item => item.map_id === floorID);
   }
 
   async fetchTagsByLocation() {
-    await sleep(0);
+    await this._sleep();
     return mockAllAssets.asset_updates;
   }
 
   async fetchPlacemarksByFloor(_locationID, floorID) {
-    await sleep(0);
+    await this._sleep();
     return mockPlacemarks.results.filter(item => item.map === floorID);
   }
 
   async fetchFloorsByLocation() {
-    await sleep(0);
+    await this._sleep();
     return mockMaps.results;
   }
 
   async fetchSVG() {
-    await sleep(0);
+    await this._sleep();
     const blob = new Blob([mockSvg], { type: "image/svg+xml" });
     return URL.createObjectURL(blob);
   }
@@ -64,19 +71,37 @@ class FakeAPI {
   openStream({
     locationID,
     floorID,
-    onInitialTags
+    onInitialTags,
     // onTagLeave,
-    // onTagUpdate,
+    onTagUpdate
     // onException,
     // onClose
   }) {
-    this.fetchTagsByFloor(locationID, floorID).then(tags => {
+    let interval;
+    const fn = async () => {
+      const tags = await this.fetchTagsByFloor(locationID, floorID);
       onInitialTags(tags);
-    });
+      if (this._live) {
+        interval = setInterval(() => {
+          const tag = tags[rand(0, tags.length - 1)];
+          tag.x += rand(-4, 4) * 10;
+          tag.y += rand(-4, 4) * 10;
+          onTagUpdate(tag);
+        }, this._updateInterval);
+      }
+    };
+    fn();
     return {
-      close() {}
+      close() {
+        clearInterval(interval);
+      }
     };
   }
+}
+
+function rand(a, b) {
+  const c = b - a;
+  return a + Math.floor(c * Math.random());
 }
 
 export const fakeAPI = missingPropertyProxy("API", new FakeAPI());

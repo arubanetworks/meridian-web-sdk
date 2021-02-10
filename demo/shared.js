@@ -5,11 +5,15 @@
 import { fakeAPI } from "./cypress/utils/fake-api.js";
 
 if (MeridianSDK) {
-  // This uses a regular function, not an arrow function, so that we can safely
-  // use `new` with it.
-  MeridianSDK.API = function() {
-    return fakeAPI;
-  };
+  if (document.documentElement.dataset.fakeApi !== "false") {
+    // Enable live updates for demo usage
+    fakeAPI._live = true;
+    // This uses a regular function, not an arrow function, so that we can safely
+    // use `new` with it.
+    MeridianSDK.API = function() {
+      return fakeAPI;
+    };
+  }
 } else {
   // eslint-disable-next-line no-console
   console.error("Failed to monkey patch fakeAPI into MeridianSDK");

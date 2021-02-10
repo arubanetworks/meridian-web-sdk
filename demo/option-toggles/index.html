@@ -107,9 +107,9 @@
               autocomplete="off"
               type="radio"
               name="tag-filter"
-              value="filter-CafeCart"
+              value="filter-Single"
             />
-            <span>Show tag <b>CC78ABC6D187</b> (cafe cart 1) </span>
+            <span>Show tag <b>546C0E082AFB</b></span>
           </label>
         </div>
         <div class="controls">
@@ -171,17 +171,17 @@
         placemarks: {},
         tags: {},
         onTagsUpdate: function(tags) {
-          if (state.tags.filter === filterCafeCart) {
-            var tag = tags.allTags.filter(t => t.mac === cafeCartMAC)[0];
+          if (state.tags.filter === filterSingle) {
+            var tag = tags.allTags.filter(t => t.mac === singleMAC)[0];
             map.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
           }
         }
       };
 
-      var cafeCartMAC = "CC78ABC6D187";
+      var singleMAC = "546C0E082AFB";
 
-      function filterCafeCart(tag) {
-        return tag.mac === cafeCartMAC;
+      function filterSingle(tag) {
+        return tag.mac === singleMAC;
       }
 
       function updateMap() {
@@ -234,8 +234,8 @@
               return tag.tags.map(x => x.name).includes("Jamboard");
             };
             break;
-          case "filter-CafeCart":
-            state.tags.filter = filterCafeCart;
+          case "filter-Single":
+            state.tags.filter = filterSingle;
             break;
           default:
             throw new Error("unexpected option " + event.target.value);

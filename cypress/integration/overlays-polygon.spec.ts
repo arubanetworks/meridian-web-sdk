@@ -21,7 +21,7 @@ describe("Overlays: Polygon", () => {
     cy.get(
       "[data-testid=meridian--private--overlay-layer] > polygon:only-child"
     )
-      .should("have.attr", "d", "M400,100 L800,600 L100,800 Z")
+      .should("have.attr", "points", "400 100 800 600 100 800")
       .should("have.attr", "fill", "green")
       .should("have.attr", "stroke", "red")
       .should("have.attr", "stroke-linejoin", "round");
@@ -35,7 +35,7 @@ describe("Overlays: Polygon", () => {
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
     cy.get(
       "[data-testid=meridian--private--overlay-layer] > polygon:only-child"
-    ).should("have.attr", "d", "M400,100 L800,600 L100,800 Z");
+    ).should("have.attr", "points", "400 100 800 600 100 800");
     cy.get("[data-testid=meridian--private--overlay-layer] > polygon").should(
       "have.length.above",
       1

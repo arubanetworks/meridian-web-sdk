@@ -73,10 +73,12 @@ for (const filename of placemarkFiles.keys()) {
  * Takes a placemark type and returns a URL to a white SVG icon representing it
  *
  * @example
+ * ```ts
  * function onPlacemarkClick(placemark) {
  *   const url = MeridianSDK.placemarkIconURL(placemark.type);
  *   console.log(url);
  * }
+ * ```
  */
 export function placemarkIconURL(type: string): string {
   if (!type || type.startsWith("label_")) {
@@ -544,6 +546,7 @@ export function createAPI(options: APIOptions): API {
  * to show data from multiple locations or organizations on a single page).
  *
  * @example
+ * ```ts
  * // Basic usage
  * const api = new MeridianSDK.API({
  *   token: "<TOKEN GOES HERE>"
@@ -567,6 +570,7 @@ export function createAPI(options: APIOptions): API {
  *   locationID: "Insert Org 2 location ID here",
  *   floorID: "Insert Org 2 floor ID here"
  * });
+ * ```
  */
 export class API {
   /**
@@ -719,6 +723,7 @@ export class API {
    * called every time a tag moves on the floor.
    *
    * @example
+   * ```ts
    * const api = new MeridianSDK.API({
    *   token: token,
    *   environment: "production"
@@ -737,6 +742,7 @@ export class API {
    *
    * // call `stream.close()` when switching pages to avoid leaving the stream
    * // open and wasting bandwidth in the background
+   * ```
    */
   openStream(options: {
     /** Meridian location ID */

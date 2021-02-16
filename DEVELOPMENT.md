@@ -15,6 +15,14 @@
 
 7. That's it!
 
+## Local Docs
+
+1. `npm run docs`
+
+2. `npx serve docs`
+
+You will need to re-run `npm run docs` every time you change the docs.
+
 ## Running Local Tag Tracker
 
 Local tag tracker requires Go and Redis to work correctly.

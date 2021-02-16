@@ -151,11 +151,10 @@ export const version: string = GLOBAL_VERSION;
  * ```js
  * const api = new MeridianSDK.API({ token: "<TOKEN>" });
  *
- * MeridianSDK.init({ api: api });
- *
  * const map = MeridianSDK.createMap(
  *  document.querySelector("#map-container"),
  *  {
+ *    api,
  *    locationID: "<location ID>",
  *    floorID: "<floor ID>",
  *    height: "500px",
@@ -184,6 +183,7 @@ export function restrictedPanZoom(
  * const api = new MeridianSDK.API({
  *   token: "<TOKEN GOES HERE>"
  * });
+ *
  * MeridianSDK.init({ api: api });
  * ```
  */
@@ -551,22 +551,22 @@ export function createAPI(options: APIOptions): API {
  * const api = new MeridianSDK.API({
  *   token: "<TOKEN GOES HERE>"
  * });
- * MeridianSDK.init({ api: api });
  *
  * // Multiple APIs at once
  * const apiOrg1 = new MeridianSDK.API({
  *   token: "Insert Org 1 token here"
  * });
- * const apiOrg2 = new MeridianSDK.API({
- *   token: "Insert Org 2 token here"
- * });
  * MeridianSDK.createMap(elementOrg1, {
- *   api: apiCustomer1,
+ *   api: apiOrg1,
  *   locationID: "Insert Org 1 location ID here",
  *   floorID: "Insert Org 1 floor ID here"
  * });
+ *
+ * const apiOrg2 = new MeridianSDK.API({
+ *   token: "Insert Org 2 token here"
+ * });
  * MeridianSDK.createMap(elementOrg2, {
- *   api: apiCustomer2,
+ *   api: apiOrg2,
  *   locationID: "Insert Org 2 location ID here",
  *   floorID: "Insert Org 2 floor ID here"
  * });

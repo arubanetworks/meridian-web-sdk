@@ -21,8 +21,8 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
   mapZoomFactor
 }) => {
   return (
-    <path
-      d={pointsToPath(points)}
+    <polygon
+      points={points.join(" ")}
       fill={fill}
       stroke={stroke}
       // Preact's TS types specify `strokeWidth` and `strokeLinejoin`,
@@ -36,21 +36,5 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
 };
 
 OverlayPolygon.displayName = "OverlayPolygon";
-
-// Input  : [1, 2, 3, 4, 5, 6]
-// Output : "M1,2 L3,4 L5,6 Z"
-// Check out CSS Tricks for a great tutorial on how this sytanx works
-// https://css-tricks.com/svg-path-syntax-illustrated-guide/
-function pointsToPath(points: number[]): string {
-  let x = points[0];
-  let y = points[1];
-  let d = `M${x},${y}`;
-  for (let i = 2; i < points.length - 1; i += 2) {
-    x = points[i];
-    y = points[i + 1];
-    d += ` L${x},${y}`;
-  }
-  return `${d} Z`;
-}
 
 export default OverlayPolygon;

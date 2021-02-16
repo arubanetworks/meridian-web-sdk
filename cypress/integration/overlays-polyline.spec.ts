@@ -51,7 +51,7 @@ describe("Overlays: Polyline", () => {
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
     cy.get(
       "[data-testid=meridian--private--overlay-layer] > polyline:only-child"
-    ).should("have.attr", "points", "0,100 1000,2000");
+    ).should("have.attr", "points", "0 100 1000 2000");
     cy.get(
       "[data-testid=meridian--private--overlay-layer] > polyline:only-child"
     ).should(

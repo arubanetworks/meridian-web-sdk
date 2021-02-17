@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An issue where a loading spinner would stay indefinitely when using the Web
   SDK on a location without access to tags
 
-## [0.12.3] - 2021-02-16
+## [0.12.3] - 2021-02-17
 
 ### Changed
 

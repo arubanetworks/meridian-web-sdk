@@ -73,10 +73,12 @@ for (const filename of placemarkFiles.keys()) {
  * Takes a placemark type and returns a URL to a white SVG icon representing it
  *
  * @example
+ * ```ts
  * function onPlacemarkClick(placemark) {
  *   const url = MeridianSDK.placemarkIconURL(placemark.type);
  *   console.log(url);
  * }
+ * ```
  */
 export function placemarkIconURL(type: string): string {
   if (!type || type.startsWith("label_")) {
@@ -149,11 +151,10 @@ export const version: string = GLOBAL_VERSION;
  * ```js
  * const api = new MeridianSDK.API({ token: "<TOKEN>" });
  *
- * MeridianSDK.init({ api: api });
- *
  * const map = MeridianSDK.createMap(
  *  document.querySelector("#map-container"),
  *  {
+ *    api,
  *    locationID: "<location ID>",
  *    floorID: "<floor ID>",
  *    height: "500px",
@@ -182,6 +183,7 @@ export function restrictedPanZoom(
  * const api = new MeridianSDK.API({
  *   token: "<TOKEN GOES HERE>"
  * });
+ *
  * MeridianSDK.init({ api: api });
  * ```
  */
@@ -544,29 +546,31 @@ export function createAPI(options: APIOptions): API {
  * to show data from multiple locations or organizations on a single page).
  *
  * @example
+ * ```ts
  * // Basic usage
  * const api = new MeridianSDK.API({
  *   token: "<TOKEN GOES HERE>"
  * });
- * MeridianSDK.init({ api: api });
  *
  * // Multiple APIs at once
  * const apiOrg1 = new MeridianSDK.API({
  *   token: "Insert Org 1 token here"
  * });
- * const apiOrg2 = new MeridianSDK.API({
- *   token: "Insert Org 2 token here"
- * });
  * MeridianSDK.createMap(elementOrg1, {
- *   api: apiCustomer1,
+ *   api: apiOrg1,
  *   locationID: "Insert Org 1 location ID here",
  *   floorID: "Insert Org 1 floor ID here"
  * });
+ *
+ * const apiOrg2 = new MeridianSDK.API({
+ *   token: "Insert Org 2 token here"
+ * });
  * MeridianSDK.createMap(elementOrg2, {
- *   api: apiCustomer2,
+ *   api: apiOrg2,
  *   locationID: "Insert Org 2 location ID here",
  *   floorID: "Insert Org 2 floor ID here"
  * });
+ * ```
  */
 export class API {
   /**
@@ -719,6 +723,7 @@ export class API {
    * called every time a tag moves on the floor.
    *
    * @example
+   * ```ts
    * const api = new MeridianSDK.API({
    *   token: token,
    *   environment: "production"
@@ -737,6 +742,7 @@ export class API {
    *
    * // call `stream.close()` when switching pages to avoid leaving the stream
    * // open and wasting bandwidth in the background
+   * ```
    */
   openStream(options: {
     /** Meridian location ID */

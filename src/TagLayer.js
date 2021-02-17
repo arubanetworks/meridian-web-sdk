@@ -46,7 +46,6 @@ export default class TagLayer extends Component {
   }
 
   componentDidMount() {
-    console.log("TagLayer mounted");
     this.isMounted = true;
     const { markers } = this.props;
     if (markers) {

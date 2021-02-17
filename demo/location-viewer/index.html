@@ -102,7 +102,7 @@
       $("#floor-id").val(localStorage.LAST_FLOOR_ID || "");
 
       // Add form submit handler
-      $("#map-form").on("submit", function onMapFormSubmit(event) {
+      $("#map-form").on("submit", event => {
         event.preventDefault();
 
         // Show the map
@@ -110,10 +110,10 @@
         $("#meridian-map").show();
 
         // Gather the form values
-        var environment = $("#environment").val();
-        var token = $("#token").val();
-        var locationID = $("#location-id").val();
-        var floorID = $("#floor-id").val();
+        const environment = $("#environment").val();
+        const token = $("#token").val();
+        const locationID = $("#location-id").val();
+        const floorID = $("#floor-id").val();
 
         // Save the form values for next page load
         localStorage.LAST_ENVIRONMENT = environment;
@@ -130,14 +130,16 @@
         });
 
         // Create the map
-        var map = MeridianSDK.createMap(
+        const meridianMap = MeridianSDK.createMap(
           document.getElementById("meridian-map"),
           {
             locationID: locationID,
             floorID: floorID,
-            height: "100%"
+            height: "100%",
           }
         );
+
+        Object.assign(window, { meridianMap });
       });
     </script>
   </body>

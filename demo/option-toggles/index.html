@@ -142,6 +142,10 @@
             />
             <span>Enable loading placemarks</span>
           </label>
+          <label class="controls__item">
+            <input autocomplete="off" type="checkbox" id="load-tags" checked />
+            <span>Enable loading tags</span>
+          </label>
         </div>
       </div>
       <!-- /.controls-container -->
@@ -150,66 +154,61 @@
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
       // ---vvv SDK setup vvv---
-      MeridianSDK.init({
-        api: new MeridianSDK.API({
-          environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        })
+      const api = new MeridianSDK.API({
+        environment: "production",
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
       });
 
-      var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
+      const state = {
+        api,
         locationID: "5198682008846336",
         floorID: "5755685136498688",
-        height: "360px",
-        loadPlacemarks: true
-      });
-      // ---^^^ SDK setup ^^^---
-
-      // ---vvv UI controls vvv---
-      var state = {
+        height: "700px",
         loadPlacemarks: true,
+        loadTags: true,
         placemarks: {},
         tags: {},
-        onTagsUpdate: function(tags) {
+        onTagsUpdate: tags => {
           if (state.tags.filter === filterSingle) {
-            var tag = tags.allTags.filter(t => t.mac === singleMAC)[0];
-            map.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
+            const tag = tags.allTags.filter(t => t.mac === singleMAC)[0];
+            meridianMap.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
           }
         }
       };
 
-      var singleMAC = "546C0E082AFB";
+      const meridianMap = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        state
+      );
+      // ---^^^ SDK setup ^^^---
+
+      // ---vvv UI controls vvv---
+
+      const singleMAC = "546C0E082AFB";
 
       function filterSingle(tag) {
         return tag.mac === singleMAC;
       }
 
       function updateMap() {
-        map.update(state);
-        map.zoomToDefault();
+        meridianMap.update(state);
+        meridianMap.zoomToDefault();
       }
 
-      $("[name='placemark-filter']").on("change", function(event) {
+      $("[name='placemark-filter']").on("change", event => {
         switch (event.target.value) {
           case "filter-none":
-            state.placemarks.filter = function() {
-              return false;
-            };
+            state.placemarks.filter = () => false;
             break;
           case "filter-all":
-            state.placemarks.filter = function() {
-              return true;
-            };
+            state.placemarks.filter = () => true;
             break;
           case "filter-cafe":
-            state.placemarks.filter = function(placemark) {
-              return placemark.type === "cafe";
-            };
+            state.placemarks.filter = placemark => placemark.type === "cafe";
             break;
           case "filter-water_fountain":
-            state.placemarks.filter = function(placemark) {
-              return placemark.type === "water_fountain";
-            };
+            state.placemarks.filter = placemark =>
+              placemark.type === "water_fountain";
             break;
           default:
             throw new Error("unexpected option " + event.target.value);
@@ -217,22 +216,17 @@
         updateMap();
       });
 
-      $("[name='tag-filter']").on("change", function(event) {
+      $("[name='tag-filter']").on("change", event => {
         switch (event.target.value) {
           case "filter-none":
-            state.tags.filter = function() {
-              return false;
-            };
+            state.tags.filter = () => false;
             break;
           case "filter-all":
-            state.tags.filter = function() {
-              return true;
-            };
+            state.tags.filter = () => true;
             break;
           case "filter-Jamboard":
-            state.tags.filter = function(tag) {
-              return tag.tags.map(x => x.name).includes("Jamboard");
-            };
+            state.tags.filter = tag =>
+              tag.tags.map(x => x.name).includes("Jamboard");
             break;
           case "filter-Single":
             state.tags.filter = filterSingle;
@@ -243,32 +237,38 @@
         updateMap();
       });
 
-      $("#show-control-tags").on("change", function(event) {
+      $("#show-control-tags").on("change", event => {
         state.tags.showControlTags = event.target.checked;
         updateMap();
       });
 
-      $("#show-hidden-placemarks").on("change", function(event) {
+      $("#show-hidden-placemarks").on("change", event => {
         state.placemarks.showHiddenPlacemarks = event.target.checked;
         updateMap();
       });
 
-      $("#disable-placemarks").on("change", function(event) {
+      $("#disable-placemarks").on("change", event => {
         state.placemarks.disabled = event.target.checked;
         updateMap();
       });
 
-      $("#disable-tags").on("change", function(event) {
+      $("#disable-tags").on("change", event => {
         state.tags.disabled = event.target.checked;
         updateMap();
       });
 
-      $("#load-placemarks").on("change", function(event) {
+      $("#load-placemarks").on("change", event => {
         state.loadPlacemarks = event.target.checked;
         updateMap();
       });
 
+      $("#load-tags").on("change", event => {
+        state.loadTags = event.target.checked;
+        updateMap();
+      });
       // ---^^^ UI controls ^^^---
+
+      Object.assign(window, { meridianMap });
     </script>
   </body>
 </html>

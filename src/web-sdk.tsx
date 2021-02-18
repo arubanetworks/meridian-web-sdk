@@ -289,6 +289,8 @@ export type CreateMapOptions = {
   showFloorsControl?: boolean;
   /** Should we show the tag switcher UI control? Defaults to true. */
   showTagsControl?: boolean;
+  /** Set to false to disable loading tags (default: true) */
+  loadTags?: boolean;
   /** Options related to tags. */
   tags?: CreateMapTagsOptions;
   /** Set to false to disable loading placemarks (default: true) */

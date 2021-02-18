@@ -146,43 +146,48 @@ export default class TagLayer extends Component {
   }
 
   connect(floorID) {
-    const { locationID, api, toggleLoadingSpinner } = this.props;
-    toggleLoadingSpinner({ show: true, source: "tags" });
-    const connection = api.openStream({
-      locationID,
-      floorID,
-      onInitialTags: data => {
-        if (floorID === this.props.floorID) {
-          this.setInitialTags(data);
-        }
-      },
-      onTagDisappear: data => {
-        if (floorID === this.props.floorID) {
-          this.removeTag(data);
-        }
-      },
-      onTagUpdate: data => {
-        if (floorID === this.props.floorID) {
-          this.handleTagUpdates([data]);
-        }
-      }
-    });
-    if (!this.isMounted) {
-      return;
-    }
-    this.setState(
-      prevState => {
-        return {
-          connectionsByFloorID: {
-            ...prevState.connectionsByFloorID,
-            [floorID]: connection
+    try {
+      const { locationID, api, toggleLoadingSpinner } = this.props;
+      toggleLoadingSpinner({ show: true, source: "tags" });
+      const connection = api.openStream({
+        locationID,
+        floorID,
+        onInitialTags: data => {
+          if (floorID === this.props.floorID) {
+            this.setInitialTags(data);
           }
-        };
-      },
-      () => {
-        this.onUpdate();
+        },
+        onTagDisappear: data => {
+          if (floorID === this.props.floorID) {
+            this.removeTag(data);
+          }
+        },
+        onTagUpdate: data => {
+          if (floorID === this.props.floorID) {
+            this.handleTagUpdates([data]);
+          }
+        }
+      });
+      if (!this.isMounted) {
+        return;
       }
-    );
+      this.setState(
+        prevState => {
+          return {
+            connectionsByFloorID: {
+              ...prevState.connectionsByFloorID,
+              [floorID]: connection
+            }
+          };
+        },
+        () => {
+          this.onUpdate();
+        }
+      );
+    } catch (err) {
+      this.props.toggleLoadingSpinner({ show: false, source: "tags" });
+      throw err;
+    }
   }
 
   disconnect(floorID) {

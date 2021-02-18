@@ -31,10 +31,6 @@ import ZoomControls from "./ZoomControls";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
-const isIE =
-  window.navigator.userAgent.indexOf("MSIE ") !== -1 ||
-  window.navigator.userAgent.indexOf("Trident/") !== -1 ||
-  window.navigator.userAgent.indexOf("Edge/") !== -1;
 
 const cssMapContainer = css({
   label: "map-container",
@@ -54,10 +50,6 @@ const cssMap = css({
   overflow: "hidden"
 });
 
-const cssNoTouchZoom = css({
-  touchAction: "none"
-});
-
 export default class Map extends Component {
   static propTypes = {
     destroy: PropTypes.func.isRequired,
@@ -70,6 +62,7 @@ export default class Map extends Component {
     api: PropTypes.object,
     showFloorsControl: PropTypes.bool,
     showTagsControl: PropTypes.bool,
+    loadTags: PropTypes.bool,
     tags: PropTypes.shape({
       showControlTags: PropTypes.bool,
       filter: PropTypes.func,
@@ -92,6 +85,7 @@ export default class Map extends Component {
   };
 
   static defaultProps = {
+    loadTags: true,
     loadPlacemarks: true,
     showTagsControl: true,
     showFloorsControl: true,
@@ -126,7 +120,7 @@ export default class Map extends Component {
       tagsConnection: null,
       tagsStatus: "Connecting",
       selectedItem: null,
-      areTagsLoading: true,
+      areTagsLoading: props.loadTags,
       allTagData: []
     };
     this.isMounted = false;
@@ -195,6 +189,8 @@ export default class Map extends Component {
       this.setState({ mapImageURL: null, placemarks: {} });
       this.loadData();
       return;
+    } else if (this.props.loadTags && !prevProps.loadTags) {
+      this.initializeTags();
     }
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
@@ -263,26 +259,30 @@ export default class Map extends Component {
   }
 
   initializeTags() {
-    // TODO: We should update this to not poll for updates unless the tab is
-    // active. In that case it would also make sense to ask for an update when
-    // they switch back. Might even make sense to block updates while the tag
-    // list is open?
     const loop = async () => {
-      const { api, locationID } = this.props;
-      const allTagData = await api.fetchTagsByLocation(locationID);
-      if (!this.isMounted) {
-        return;
+      try {
+        // Clear any existing timers so we don't have two running at once
+        if (this.tagsTimeout) {
+          clearTimeout(this.tagsTimeout);
+        }
+        const { api, locationID } = this.props;
+        this.setState({ areTagsLoading: true });
+        const allTagData = await api.fetchTagsByLocation(locationID);
+        if (!this.isMounted) {
+          return;
+        }
+        if (locationID !== this.props.locationID || !this.props.loadTags) {
+          return;
+        }
+        this.setState({ allTagData });
+        this.tagsTimeout = setTimeout(loop, 5 * 60 * 1000);
+      } finally {
+        this.setState({ areTagsLoading: false });
       }
-      if (locationID !== this.props.locationID) {
-        return;
-      }
-      this.setState({
-        areTagsLoading: false,
-        allTagData
-      });
-      this.tagsTimeout = setTimeout(loop, 5 * 60 * 1000);
     };
-    loop();
+    if (this.props.loadTags) {
+      loop();
+    }
     // We're not using setInterval for this because we want to wait on the async
     // function to complete to avoid race conditions
   }
@@ -608,14 +608,14 @@ export default class Map extends Component {
   }
 
   renderTagListOverlay() {
-    const { locationID, floorID, api, tags } = this.props;
+    const { locationID, floorID, api, tags, loadTags } = this.props;
     const {
       isTagListOverlayOpen,
       floors,
       allTagData,
       areTagsLoading
     } = this.state;
-    if (isTagListOverlayOpen) {
+    if (isTagListOverlayOpen && loadTags) {
       return (
         <TagListOverlay
           onMarkerClick={this.onMarkerClick}
@@ -694,11 +694,7 @@ export default class Map extends Component {
     } = this.props;
     return (
       <div
-        className={cx(
-          "meridian-map-container",
-          cssMapContainer,
-          isIE && cssNoTouchZoom
-        )}
+        className={cx("meridian-map-container", cssMapContainer)}
         style={{ width, height }}
         data-testid="meridian--private--map-container"
         ref={ref => {
@@ -748,31 +744,35 @@ export default class Map extends Component {
                   mapZoomFactor={mapZoomFactor}
                   overlays={overlays}
                 />
-                <PlacemarkLayer
-                  selectedItem={selectedItem}
-                  isPanningOrZooming={isPanningOrZooming}
-                  mapZoomFactor={mapZoomFactor}
-                  locationID={locationID}
-                  floorID={floorID}
-                  api={api}
-                  markers={placemarks}
-                  onMarkerClick={this.onMarkerClick}
-                  toggleLoadingSpinner={this.toggleLoadingSpinner}
-                  placemarks={this.state.placemarks}
-                  onUpdate={onPlacemarksUpdate}
-                />
-                <TagLayer
-                  selectedItem={selectedItem}
-                  isPanningOrZooming={isPanningOrZooming}
-                  mapZoomFactor={mapZoomFactor}
-                  locationID={locationID}
-                  floorID={floorID}
-                  api={api}
-                  markers={tags}
-                  onMarkerClick={this.onMarkerClick}
-                  onUpdate={onTagsUpdate}
-                  toggleLoadingSpinner={this.toggleLoadingSpinner}
-                />
+                {this.props.loadPlacemarks ? (
+                  <PlacemarkLayer
+                    selectedItem={selectedItem}
+                    isPanningOrZooming={isPanningOrZooming}
+                    mapZoomFactor={mapZoomFactor}
+                    locationID={locationID}
+                    floorID={floorID}
+                    api={api}
+                    markers={placemarks}
+                    onMarkerClick={this.onMarkerClick}
+                    toggleLoadingSpinner={this.toggleLoadingSpinner}
+                    placemarks={this.state.placemarks}
+                    onUpdate={onPlacemarksUpdate}
+                  />
+                ) : null}
+                {this.props.loadTags ? (
+                  <TagLayer
+                    selectedItem={selectedItem}
+                    isPanningOrZooming={isPanningOrZooming}
+                    mapZoomFactor={mapZoomFactor}
+                    locationID={locationID}
+                    floorID={floorID}
+                    api={api}
+                    markers={tags}
+                    onMarkerClick={this.onMarkerClick}
+                    onUpdate={onTagsUpdate}
+                    toggleLoadingSpinner={this.toggleLoadingSpinner}
+                  />
+                ) : null}
                 <AnnotationLayer
                   mapZoomFactor={mapZoomFactor}
                   annotations={annotations}

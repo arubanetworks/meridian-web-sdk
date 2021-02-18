@@ -146,48 +146,46 @@ export default class TagLayer extends Component {
   }
 
   connect(floorID) {
-    try {
-      const { locationID, api, toggleLoadingSpinner } = this.props;
-      toggleLoadingSpinner({ show: true, source: "tags" });
-      const connection = api.openStream({
-        locationID,
-        floorID,
-        onInitialTags: data => {
-          if (floorID === this.props.floorID) {
-            this.setInitialTags(data);
-          }
-        },
-        onTagDisappear: data => {
-          if (floorID === this.props.floorID) {
-            this.removeTag(data);
-          }
-        },
-        onTagUpdate: data => {
-          if (floorID === this.props.floorID) {
-            this.handleTagUpdates([data]);
-          }
+    const { locationID, api, toggleLoadingSpinner } = this.props;
+    toggleLoadingSpinner({ show: true, source: "tags" });
+    const connection = api.openStream({
+      locationID,
+      floorID,
+      onInitialTags: data => {
+        if (floorID === this.props.floorID) {
+          this.setInitialTags(data);
         }
-      });
-      if (!this.isMounted) {
-        return;
+      },
+      onTagDisappear: data => {
+        if (floorID === this.props.floorID) {
+          this.removeTag(data);
+        }
+      },
+      onTagUpdate: data => {
+        if (floorID === this.props.floorID) {
+          this.handleTagUpdates([data]);
+        }
+      },
+      onClose: () => {
+        this.props.toggleLoadingSpinner({ show: false, source: "tags" });
       }
-      this.setState(
-        prevState => {
-          return {
-            connectionsByFloorID: {
-              ...prevState.connectionsByFloorID,
-              [floorID]: connection
-            }
-          };
-        },
-        () => {
-          this.onUpdate();
-        }
-      );
-    } catch (err) {
-      this.props.toggleLoadingSpinner({ show: false, source: "tags" });
-      throw err;
+    });
+    if (!this.isMounted) {
+      return;
     }
+    this.setState(
+      prevState => {
+        return {
+          connectionsByFloorID: {
+            ...prevState.connectionsByFloorID,
+            [floorID]: connection
+          }
+        };
+      },
+      () => {
+        this.onUpdate();
+      }
+    );
   }
 
   disconnect(floorID) {

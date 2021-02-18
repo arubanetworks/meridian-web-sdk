@@ -690,7 +690,8 @@ export default class Map extends Component {
       width,
       height,
       onTagsUpdate,
-      onPlacemarksUpdate
+      onPlacemarksUpdate,
+      loadTags
     } = this.props;
     return (
       <div
@@ -710,7 +711,7 @@ export default class Map extends Component {
         {this.renderTagListOverlay()}
         <FloorAndTagControls
           showFloors={this.shouldShowFloors()}
-          showTagList={showTagsControl}
+          showTagList={showTagsControl && loadTags}
           toggleFloorOverlay={this.toggleFloorOverlay}
           toggleTagListOverlay={this.toggleTagListOverlay}
           toggleLoadingSpinner={this.toggleLoadingSpinner}

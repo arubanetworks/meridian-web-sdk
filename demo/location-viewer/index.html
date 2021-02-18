@@ -121,21 +121,18 @@
         localStorage.LAST_LOCATION_ID = locationID;
         localStorage.LAST_FLOOR_ID = floorID;
 
-        // Initialize the SDK
-        MeridianSDK.init({
-          api: new MeridianSDK.API({
-            environment: environment,
-            token: token
-          })
-        });
-
         // Create the map
+        const api = new MeridianSDK.API({
+          environment: environment,
+          token: token
+        });
         const meridianMap = MeridianSDK.createMap(
           document.getElementById("meridian-map"),
           {
+            api,
             locationID: locationID,
             floorID: floorID,
-            height: "100%",
+            height: "100%"
           }
         );
 

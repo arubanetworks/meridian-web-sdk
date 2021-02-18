@@ -805,16 +805,15 @@ export class API {
       asyncClientCall(onClose);
       ws.close();
     };
-    (async () => {
+    const loadInitialTags = async () => {
       try {
         const tags = await this.fetchTagsByFloor(locationID, floorID);
         asyncClientCall(onInitialTags, tags);
       } catch (err) {
-        isClosed = true;
         asyncClientCall(onException, err);
         close();
       }
-    })();
+    };
     ws.addEventListener("open", () => {
       if (isClosed) {
         return;
@@ -857,6 +856,7 @@ export class API {
       }
       onClose();
     });
+    loadInitialTags();
     return { close };
   }
 }

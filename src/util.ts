@@ -3,6 +3,8 @@
  * @packageDocumentation
  */
 
+import { EnvOptions } from "./web-sdk";
+
 export function deprecated(...args: any[]) {
   // eslint-disable-next-line no-console
   console.warn("[deprecated]", ...args);
@@ -46,14 +48,14 @@ export function requiredParam(funcName: string, argName: string) {
  * ```
  * @internal
  */
-export function asyncClientCall(
-  func: (...args: any[]) => void,
-  ...args: any[]
+export function asyncClientCall<T extends any[]>(
+  func: (...args: T) => void,
+  ...args: T
 ) {
   setTimeout(func, 0, ...args);
 }
 
-export function validateEnvironment(env: string): boolean {
+export function isEnvOptions(env: string): env is EnvOptions {
   return (
     env === "staging" ||
     env === "production" ||

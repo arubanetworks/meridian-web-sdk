@@ -25,7 +25,7 @@ import PlacemarkLayer from "./PlacemarkLayer";
 import { css, cx } from "./style";
 import TagLayer from "./TagLayer";
 import TagListOverlay from "./TagListOverlay";
-import { asyncClientCall, validateEnvironment } from "./util";
+import { asyncClientCall, isEnvOptions } from "./util";
 import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
 
@@ -134,7 +134,7 @@ export default class Map extends Component {
   componentDidMount() {
     this.isMounted = true;
     const { api, locationID } = this.props;
-    if (!validateEnvironment(api.environment)) {
+    if (!isEnvOptions(api.environment)) {
       this.toggleErrorOverlay({
         open: true,
         message: `API error: "${api.environment}" is not a valid environment`

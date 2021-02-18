@@ -542,6 +542,26 @@ export function createAPI(options: APIOptions): API {
 }
 
 /**
+ * Options passed to [[openStream]].
+ */
+export interface OpenStreamOptions {
+  /** Meridian location ID */
+  locationID: string;
+  /** Meridian floor ID */
+  floorID: string;
+  /** Called with ALL tags on first load */
+  onInitialTags?: (tags: Record<string, any>[]) => void;
+  /** Called when a tag exits the floor */
+  onTagLeave?: (tag: Record<string, any>) => void;
+  /** Called when a tag location updates */
+  onTagUpdate?: (tag: Record<string, any>) => void;
+  /** Called when an error happens */
+  onException?: (error: Error) => void;
+  /** Called when the stream closes */
+  onClose?: () => void;
+}
+
+/**
  * Holds an API token and environment. Can be used to access an `axios` instance
  * for REST API calls, or `openStream()` for opening a tag stream. You can
  * create multiple API instances in case you want to use multiple tokens (e.g.
@@ -746,65 +766,77 @@ export class API {
    * // open and wasting bandwidth in the background
    * ```
    */
-  openStream(options: {
-    /** Meridian location ID */
-    locationID: string;
-    /** Meridian floor ID */
-    floorID: string;
-    /** Called with ALL tags on first load */
-    onInitialTags?: (tags: Record<string, any>[]) => void;
-    /** Called when a tag exits the floor */
-    onTagLeave?: (tag: Record<string, any>) => void;
-    /** Called when a tag location updates */
-    onTagUpdate?: (tag: Record<string, any>) => void;
-    /** Called when an error happens */
-    onException?: (error: Error) => void;
-    /** Called when the stream closes */
-    onClose?: () => void;
-  }): Stream {
-    if (!options.locationID) {
+  openStream({
+    locationID,
+    floorID,
+    onInitialTags = () => {},
+    onTagLeave = () => {},
+    onTagUpdate = () => {},
+    onException = () => {},
+    onClose = () => {}
+  }: OpenStreamOptions): Stream {
+    if (!locationID) {
       requiredParam("openStream", "locationID");
     }
-    if (!options.floorID) {
+    if (!floorID) {
       requiredParam("openStream", "floorID");
     }
-    const params = new URLSearchParams();
-    params.set("method", "POST");
-    params.set("authorization", `Token ${this.token}`);
+    let isClosed = false;
+    const params = new URLSearchParams({
+      method: "POST",
+      authorization: `Token ${this.token}`
+    });
     const url = envToTagTrackerStreamingURL[this.environment];
     const ws = new ReconnectingWebSocket(`${url}?${params}`);
     const request = {
       asset_requests: [
         {
           resource_type: "FLOOR",
-          location_id: options.locationID,
-          resource_ids: [options.floorID]
+          location_id: locationID,
+          resource_ids: [floorID]
         }
       ]
     };
-    this.fetchTagsByFloor(options.locationID, options.floorID).then(tags => {
-      options.onInitialTags?.(tags);
-    });
+    const close = () => {
+      if (isClosed) {
+        return;
+      }
+      isClosed = true;
+      asyncClientCall(onClose);
+      ws.close();
+    };
+    (async () => {
+      try {
+        const tags = await this.fetchTagsByFloor(locationID, floorID);
+        asyncClientCall(onInitialTags, tags);
+      } catch (err) {
+        isClosed = true;
+        asyncClientCall(onException, err);
+        close();
+      }
+    })();
     ws.addEventListener("open", () => {
+      if (isClosed) {
+        return;
+      }
       ws.send(JSON.stringify(request));
     });
     ws.addEventListener("message", event => {
+      if (isClosed) {
+        return;
+      }
       const data = JSON.parse(event.data);
       if (data.error) {
-        options.onException?.(new Error(data.error.message));
+        onException(new Error(data.error.message));
         return;
       }
       if (data.result) {
         for (const assetUpdate of data.result.asset_updates) {
           const eventType = assetUpdate.event_type;
           if (eventType === "DELETE") {
-            if (options.onTagLeave) {
-              asyncClientCall(options.onTagLeave, assetUpdate);
-            }
+            asyncClientCall(onTagLeave, assetUpdate);
           } else if (eventType === "UPDATE") {
-            if (options.onTagUpdate) {
-              asyncClientCall(options.onTagUpdate, assetUpdate);
-            }
+            asyncClientCall(onTagUpdate, assetUpdate);
           } else {
             throw new Error(`Unknown event type: ${eventType}`);
           }
@@ -814,16 +846,18 @@ export class API {
       throw new Error(`Unknown message: ${event.data}`);
     });
     ws.addEventListener("error", () => {
-      options.onException?.(
-        new Error("MeridianSDK.openStream connection error")
-      );
+      if (isClosed) {
+        return;
+      }
+      onException(new Error("MeridianSDK.openStream connection error"));
     });
     ws.addEventListener("close", () => {
-      options.onClose?.();
+      if (isClosed) {
+        return;
+      }
+      onClose();
     });
-    return {
-      close: () => ws.close()
-    };
+    return { close };
   }
 }
 

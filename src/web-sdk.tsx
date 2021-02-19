@@ -54,10 +54,15 @@ import axios, { AxiosInstance } from "axios";
 import path from "path";
 import { h, render } from "preact";
 import ReconnectingWebSocket from "reconnecting-websocket";
+import placemarkIconGeneric from "../files/placemarks/generic.svg";
 import { sendAnalyticsCodeEvent } from "./analytics";
 import MapComponent from "./Map";
-import { asyncClientCall, deprecated, requiredParam } from "./util";
-import placemarkIconGeneric from "../files/placemarks/generic.svg";
+import {
+  asyncClientCall,
+  logDeprecated,
+  logError,
+  requiredParam
+} from "./util";
 
 /** @internal */
 const placemarkFiles = require.context("../files/placemarks", false, /\.svg$/);
@@ -86,8 +91,7 @@ export function placemarkIconURL(type: string): string {
   }
   const url = placemarkIcons.get(type);
   if (!url) {
-    // eslint-disable-next-line no-console
-    console.error(`placemarkIconURL: no such icon '${type}'`);
+    logError(`placemarkIconURL: no such icon '${type}'`);
     return placemarkIconGeneric;
   }
   return url;
@@ -425,8 +429,7 @@ export function createMap(
   }
   const destroy = () => {
     if (map.isDestroyed) {
-      // eslint-disable-next-line no-console
-      console.error("can't call update on a destroyed MeridianMap");
+      logError("can't call update on a destroyed MeridianMap");
       return;
     }
     map.isDestroyed = true;
@@ -488,24 +491,21 @@ export function createMap(
     isDestroyed: false,
     update: updatedOptions => {
       if (map.isDestroyed) {
-        // eslint-disable-next-line no-console
-        console.error("can't call update on a destroyed MeridianMap");
+        logError("can't call update on a destroyed MeridianMap");
         return;
       }
       _update(updatedOptions, { internalUpdate: false });
     },
     zoomToDefault: () => {
       if (map.isDestroyed) {
-        // eslint-disable-next-line no-console
-        console.error("can't call zoomToDefault on a destroyed MeridianMap");
+        logError("can't call zoomToDefault on a destroyed MeridianMap");
         return;
       }
       mapRef?.zoomToDefault();
     },
     zoomToPoint: options => {
       if (map.isDestroyed) {
-        // eslint-disable-next-line no-console
-        console.error("can't call update on a destroyed MeridianMap");
+        logError("can't call update on a destroyed MeridianMap");
         return;
       }
       if (!options) {
@@ -532,7 +532,7 @@ export function createMap(
  * `createAPI(options)` you should now use `new API(options)`.
  */
 export function createAPI(options: APIOptions): API {
-  deprecated(
+  logDeprecated(
     "use `new MeridianSDK.API(options)` instead of `MeridianSDK.createAPI(options)`"
   );
   if (!options) {
@@ -644,7 +644,7 @@ export class API {
    * Use the fetch methods instead
    */
   get axios(): AxiosInstance {
-    deprecated("axios is deprecated; use the MeridianSDK.API fetch methods");
+    logDeprecated("axios is deprecated; use the MeridianSDK.API fetch methods");
     return this._axiosEditorAPI;
   }
 

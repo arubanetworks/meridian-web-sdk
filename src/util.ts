@@ -5,10 +5,12 @@
 
 import { EnvOptions } from "./web-sdk";
 
-export function deprecated(...args: any[]) {
-  // eslint-disable-next-line no-console
-  console.warn("[deprecated]", ...args);
-}
+const consoleTag = "[@meridian/web-sdk]";
+// eslint-disable-next-line no-console
+export const logWarn = console.warn.bind(console, consoleTag);
+// eslint-disable-next-line no-console
+export const logError = console.error.bind(console, consoleTag);
+export const logDeprecated = logWarn.bind(null, "[deprecated]");
 
 export const STRINGS = {
   enDash: "–",
@@ -32,8 +34,7 @@ export function getTagLabels(tag: Record<string, any>) {
 }
 
 export function requiredParam(funcName: string, argName: string) {
-  // eslint-disable-next-line no-console
-  console.error(`${funcName}: argument \`${argName}\` is required`);
+  logError(`${funcName}: argument \`${argName}\` is required`);
 }
 
 /**

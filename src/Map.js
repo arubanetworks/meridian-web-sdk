@@ -25,7 +25,7 @@ import PlacemarkLayer from "./PlacemarkLayer";
 import { css, cx } from "./style";
 import TagLayer from "./TagLayer";
 import TagListOverlay from "./TagListOverlay";
-import { asyncClientCall, isEnvOptions } from "./util";
+import { asyncClientCall, isEnvOptions, logError, logWarn } from "./util";
 import Watermark from "./Watermark";
 import ZoomControls from "./ZoomControls";
 
@@ -267,7 +267,16 @@ export default class Map extends Component {
         }
         const { api, locationID } = this.props;
         this.setState({ areTagsLoading: true });
-        const allTagData = await api.fetchTagsByLocation(locationID);
+        let allTagData = [];
+        try {
+          allTagData = await api.fetchTagsByLocation(locationID);
+        } catch (err) {
+          logError(
+            "Failed to load tags; use `loadTags: false` if this location does not have the tags paid feature"
+          );
+          // Exit early so that we don't continue to fail fetching tags
+          return;
+        }
         if (!this.isMounted) {
           return;
         }
@@ -530,8 +539,7 @@ export default class Map extends Component {
       this.mapRef.isEqualNode(event.target) ||
       this.mapImage.isEqualNode(event.target);
     if (this.props.onMapClick && mapClicked) {
-      // eslint-disable-next-line no-console
-      console.warn("onMapClick() is experimental, please do not use it");
+      logWarn("onMapClick() is experimental, please do not use it");
       setTimeout(() => {
         this.props.onMapClick(event);
       }, 0);
@@ -549,18 +557,15 @@ export default class Map extends Component {
         try {
           await callback(data, { preventDefault });
         } catch (err) {
-          // eslint-disable-next-line no-console
-          console.error(err);
+          logError(err);
         }
       }
       if (onMarkerClick) {
-        // eslint-disable-next-line no-console
-        console.warn("onMarkerClick() is experimental, please do not use it");
+        logWarn("onMarkerClick() is experimental, please do not use it");
         try {
           await onMarkerClick(data, { preventDefault });
         } catch (err) {
-          // eslint-disable-next-line no-console
-          console.error(err);
+          logError(err);
         }
       }
     };

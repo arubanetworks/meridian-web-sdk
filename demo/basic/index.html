@@ -55,7 +55,7 @@
     <script type="module" id="the-code">
       let meridianMap;
 
-      function create() {
+      window.create = () => {
         const api = new MeridianSDK.API({
           environment: "production",
           token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
@@ -69,11 +69,11 @@
             height: "500px"
           }
         );
-      }
+      };
 
-      function destroy() {
+      window.destroy = () => {
         meridianMap.destroy();
-      }
+      };
 
       create();
     </script>

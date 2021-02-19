@@ -272,7 +272,7 @@ export default class Map extends Component {
           allTagData = await api.fetchTagsByLocation(locationID);
         } catch (err) {
           logError(
-            "Failed to load tags; use `loadTags: false` if this location does not have tags"
+            "Failed to load tags; use `loadTags: false` if this location does not have the tags paid feature"
           );
           // Exit early so that we don't continue to fail fetching tags
           return;

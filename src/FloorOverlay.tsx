@@ -29,25 +29,24 @@ class FloorOverlay extends Component<FloorOverlayProps> {
     }
   }
 
-  // Move "" to the end of the list (Unassigned)
-  processedFloorsByBuilding() {
+  render() {
+    const {
+      currentFloorID,
+      toggleFloorOverlay,
+      selectFloorByID,
+      floors
+    } = this.props;
     const { searchFilter } = this.state;
-    const { floors } = this.props;
+    // TODO: Put "Unassigned" at the bottom of the results
     const match = createSearchMatcher(searchFilter);
-    return floors.filter(floor => {
+    const processedFloors = floors.filter(floor => {
       return (
         floor.published &&
         (match(floor.name || "") ||
           match(floor.group_name || uiText.unnamedBuilding))
       );
     });
-  }
-
-  renderList() {
-    const { currentFloorID, toggleFloorOverlay, selectFloorByID } = this.props;
-    // TODO: Put "Unassigned" at the bottom of the results
-    const floors = this.processedFloorsByBuilding();
-    const groupedFloors = groupBy(floors, "group_name");
+    const groupedFloors = groupBy(processedFloors, "group_name");
     // TODO: Put "" at the bottom
     const buildingNames = Object.keys(groupedFloors).sort();
     if (buildingNames[0] === "") {
@@ -57,55 +56,6 @@ class FloorOverlay extends Component<FloorOverlayProps> {
     for (const name of buildingNames) {
       groupedFloors[name].sort((a, b) => Math.sign(a.level - b.level));
     }
-    if (buildingNames.length > 0) {
-      return (
-        <div
-          className={cssFloorsList}
-          data-testid="meridian--private--floors-list"
-        >
-          {buildingNames.map(buildingName => (
-            <div key={buildingName}>
-              <div className={cssOverlayBuildingName}>
-                {buildingName || uiText.unnamedBuilding}
-              </div>
-              {groupedFloors[buildingName].map(floor => (
-                <button
-                  key={floor.name}
-                  onClick={() => {
-                    selectFloorByID(floor.id);
-                    toggleFloorOverlay({ open: false });
-                  }}
-                  className={cx(
-                    cssOverlayFloorButton,
-                    floor.id === currentFloorID
-                      ? cssOverlayCurrentFloor
-                      : undefined
-                  )}
-                  data-testid={
-                    floor.id === currentFloorID
-                      ? "meridian--private--current-floor"
-                      : "meridian--private--floor"
-                  }
-                >
-                  {floor.name}
-                  {floor.id === currentFloorID ? (
-                    <svg viewBox="0 0 10 7" className={cssFloorCheckmark}>
-                      <path d="M3.9 7C3.7 7 3.4 6.9 3.2 6.7L0.3 3.8C-0.1 3.4 -0.1 2.8 0.3 2.4C0.7 2 1.3 2 1.7 2.4L3.9 4.6L8.2 0.3C8.6 -0.1 9.2 -0.1 9.6 0.3C10 0.7 10 1.3 9.6 1.7L4.6 6.7C4.4 6.9 4.2 7 3.9 7Z" />
-                    </svg>
-                  ) : null}
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
-      );
-    }
-    return <div className={cssFloorsListEmpty}>{uiText.noResultsFound}</div>;
-  }
-
-  render() {
-    const { searchFilter } = this.state;
-    const { toggleFloorOverlay } = this.props;
     return (
       <Overlay
         position="right"
@@ -119,7 +69,49 @@ class FloorOverlay extends Component<FloorOverlayProps> {
             this.setState({ searchFilter });
           }}
         />
-        {this.renderList()}
+        {buildingNames.length === 0 ? (
+          <div className={cssFloorsListEmpty}>{uiText.noResultsFound}</div>
+        ) : (
+          <div
+            className={cssFloorsList}
+            data-testid="meridian--private--floors-list"
+          >
+            {buildingNames.map(buildingName => (
+              <div key={buildingName}>
+                <div className={cssOverlayBuildingName}>
+                  {buildingName || uiText.unnamedBuilding}
+                </div>
+                {groupedFloors[buildingName].map(floor => (
+                  <button
+                    key={floor.name}
+                    onClick={() => {
+                      selectFloorByID(floor.id);
+                      toggleFloorOverlay({ open: false });
+                    }}
+                    className={cx(
+                      cssOverlayFloorButton,
+                      floor.id === currentFloorID
+                        ? cssOverlayCurrentFloor
+                        : undefined
+                    )}
+                    data-testid={
+                      floor.id === currentFloorID
+                        ? "meridian--private--current-floor"
+                        : "meridian--private--floor"
+                    }
+                  >
+                    {floor.name}
+                    {floor.id === currentFloorID ? (
+                      <svg viewBox="0 0 10 7" className={cssFloorCheckmark}>
+                        <path d="M3.9 7C3.7 7 3.4 6.9 3.2 6.7L0.3 3.8C-0.1 3.4 -0.1 2.8 0.3 2.4C0.7 2 1.3 2 1.7 2.4L3.9 4.6L8.2 0.3C8.6 -0.1 9.2 -0.1 9.6 0.3C10 0.7 10 1.3 9.6 1.7L4.6 6.7C4.4 6.9 4.2 7 3.9 7Z" />
+                      </svg>
+                    ) : null}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </Overlay>
     );
   }

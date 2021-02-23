@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/arubanetworks/meridian-web-sdk#readme",
   "dependencies": {
+    "@types/lodash.throttle": "^4.1.6",
     "axios": "^0.21.1",
     "create-emotion": "^10.0.14",
     "d3-selection": "^1.4.1",

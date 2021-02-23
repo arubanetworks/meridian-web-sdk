@@ -5,55 +5,59 @@
  * @packageDocumentation
  */
 
-import { h, Component } from "preact";
-import PropTypes from "prop-types";
 import throttle from "lodash.throttle";
-
+import { Component, h } from "preact";
 import MapMarker from "./MapMarker";
 import { objectWithoutKey } from "./util";
+import { API } from "./web-sdk";
 
-export default class TagLayer extends Component {
+export interface TagLayerProps {
+  selectedItem?: Record<string, any>;
+  isPanningOrZooming: boolean;
+  mapZoomFactor: number;
+  locationID: string;
+  floorID: string;
+  api: API;
+  markers?: {
+    filter?: (tag: Record<string, any>) => boolean;
+    showControlTags?: boolean;
+    disabled?: boolean;
+  };
+  onMarkerClick: (tag: Record<string, any>) => void;
+  onUpdate: (data: {
+    allTags: Record<string, any>[];
+    filteredTags: Record<string, any>[];
+  }) => void;
+  toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
+}
+
+export interface TagLayerState {
+  tagsByMAC: Record<string, Record<string, any>>;
+  connectionsByFloorID: Record<string, any>;
+}
+
+export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   static defaultProps = {
     markers: {},
     onUpdate: () => {}
   };
 
-  static propTypes = {
-    selectedItem: PropTypes.object,
-    isPanningOrZooming: PropTypes.bool.isRequired,
-    mapZoomFactor: PropTypes.number.isRequired,
-    locationID: PropTypes.string.isRequired,
-    floorID: PropTypes.string.isRequired,
-    api: PropTypes.object,
-    markers: PropTypes.shape({
-      filter: PropTypes.func,
-      showControlTags: PropTypes.bool,
-      disabled: PropTypes.bool
-    }),
-    onMarkerClick: PropTypes.func,
-    onUpdate: PropTypes.func,
-    toggleLoadingSpinner: PropTypes.func.isRequired
+  state: TagLayerState = {
+    tagsByMAC: {},
+    connectionsByFloorID: {}
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      tagsByMAC: {},
-      connectionsByFloorID: {}
-    };
-    this.tagUpdates = {};
-    this.isMounted = false;
-  }
+  tagUpdates = {};
+  isMounted = false;
 
   componentDidMount() {
     this.isMounted = true;
-    const { markers } = this.props;
+    const { markers, floorID } = this.props;
     if (markers) {
-      this.connect(this.props.floorID);
+      this.connect(floorID);
     }
   }
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps: TagLayerProps) {
     const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
     // Don't re-render when panning only (no zoom change)
     if (this.props.isPanningOrZooming && !zoomChanged) {
@@ -62,7 +66,7 @@ export default class TagLayer extends Component {
     return true;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: TagLayerProps) {
     if (prevProps.floorID !== this.props.floorID) {
       this.disconnect(prevProps.floorID);
       this.connect(this.props.floorID);
@@ -83,27 +87,27 @@ export default class TagLayer extends Component {
     return tags;
   }
 
-  removeTag(data) {
+  removeTag(tag: Record<string, any>) {
     if (!this.isMounted) {
       return;
     }
     this.setState(prevState => {
       const { tagsByMAC } = prevState;
       const macs = Object.keys(tagsByMAC);
-      const newMACs = macs.filter(mac => mac !== data.mac);
+      const newMACs = macs.filter(mac => mac !== tag.mac);
       const newTagsByMAC = newMACs.reduce((obj, mac) => {
         obj[mac] = tagsByMAC[mac];
         return obj;
-      }, {});
+      }, {} as Record<string, Record<string, any>>);
       return { tagsByMAC: newTagsByMAC };
     });
   }
 
-  handleTagUpdates(data) {
+  handleTagUpdates(tags: Record<string, any>[]) {
     const { isPanningOrZooming } = this.props;
     this.tagUpdates = {
       ...this.tagUpdates,
-      ...this.tagsByMAC(data)
+      ...this.tagsByMAC(tags)
     };
     if (!isPanningOrZooming) {
       this.commitTagUpdates();
@@ -128,14 +132,14 @@ export default class TagLayer extends Component {
     );
   }, 1000);
 
-  tagsByMAC(tags) {
+  tagsByMAC(tags: Record<string, any>[]) {
     return tags.reduce((obj, tag) => {
       obj[tag.mac] = tag;
       return obj;
-    }, {});
+    }, {} as Record<string, Record<string, any>>);
   }
 
-  setInitialTags(tags) {
+  setInitialTags(tags: Record<string, any>[]) {
     if (!this.isMounted) {
       return;
     }
@@ -145,7 +149,7 @@ export default class TagLayer extends Component {
     });
   }
 
-  connect(floorID) {
+  connect(floorID: string) {
     const { locationID, api, toggleLoadingSpinner } = this.props;
     toggleLoadingSpinner({ show: true, source: "tags" });
     const connection = api.openStream({
@@ -156,7 +160,7 @@ export default class TagLayer extends Component {
           this.setInitialTags(data);
         }
       },
-      onTagDisappear: data => {
+      onTagLeave: data => {
         if (floorID === this.props.floorID) {
           this.removeTag(data);
         }
@@ -188,7 +192,7 @@ export default class TagLayer extends Component {
     );
   }
 
-  disconnect(floorID) {
+  disconnect(floorID: string) {
     const connection = this.state.connectionsByFloorID[floorID];
     if (connection) {
       connection.close();
@@ -217,24 +221,24 @@ export default class TagLayer extends Component {
     );
   }
 
-  filterControlTags(tags) {
+  filterControlTags(tags: Record<string, any>[]) {
     const { markers } = this.props;
     return tags.filter(tag => {
-      if (markers.showControlTags !== true) {
+      if (markers?.showControlTags !== true) {
         return !tag.is_control_tag;
       }
       return true;
     });
   }
 
-  filterTags(tags) {
-    const { markers } = this.props;
+  filterTags(tags: Record<string, any>[]) {
+    const { markers = {} } = this.props;
     const { filter = () => true } = markers;
     return this.filterControlTags(tags).filter(filter);
   }
 
   onUpdate = () => {
-    const { onUpdate, markers } = this.props;
+    const { onUpdate, markers = {} } = this.props;
     const { filter = () => true } = markers;
     const allTags = this.filterControlTags(this.getTags());
     const filteredTags = allTags.filter(filter);
@@ -242,19 +246,26 @@ export default class TagLayer extends Component {
   };
 
   render() {
-    const { selectedItem, markers, onMarkerClick, mapZoomFactor } = this.props;
-    const filteredTags = this.filterTags(this.getTags());
-    const filteredMarkers = filteredTags.map(tag => (
-      <MapMarker
-        selectedItem={selectedItem}
-        mapZoomFactor={mapZoomFactor}
-        key={tag.mac}
-        kind="tag"
-        data={tag}
-        onClick={onMarkerClick}
-        disabled={markers.disabled}
-      />
-    ));
-    return <div>{filteredMarkers}</div>;
+    const {
+      selectedItem,
+      markers = {},
+      onMarkerClick,
+      mapZoomFactor
+    } = this.props;
+    return (
+      <div>
+        {this.filterTags(this.getTags()).map(tag => (
+          <MapMarker
+            selectedItem={selectedItem}
+            mapZoomFactor={mapZoomFactor}
+            key={tag.mac}
+            kind="tag"
+            data={tag}
+            onClick={onMarkerClick}
+            disabled={markers.disabled}
+          />
+        ))}
+      </div>
+    );
   }
 }

@@ -6,7 +6,7 @@
  */
 
 import groupBy from "lodash.groupby";
-import { Component, h } from "preact";
+import { Component, createRef, h } from "preact";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, cx, mixins, theme } from "./style";
@@ -21,11 +21,11 @@ export interface FloorOverlayProps {
 
 class FloorOverlay extends Component<FloorOverlayProps> {
   state = { searchFilter: "" };
-  searchInput: HTMLInputElement | null = null;
+  searchInputRef = createRef<HTMLInputElement>();
 
   componentDidMount() {
-    if (this.searchInput) {
-      this.searchInput.focus();
+    if (this.searchInputRef.current) {
+      this.searchInputRef.current.focus();
     }
   }
 
@@ -37,7 +37,6 @@ class FloorOverlay extends Component<FloorOverlayProps> {
       floors
     } = this.props;
     const { searchFilter } = this.state;
-    // TODO: Put "Unassigned" at the bottom of the results
     const match = createSearchMatcher(searchFilter);
     const processedFloors = floors.filter(floor => {
       return (
@@ -47,7 +46,6 @@ class FloorOverlay extends Component<FloorOverlayProps> {
       );
     });
     const groupedFloors = groupBy(processedFloors, "group_name");
-    // TODO: Put "" at the bottom
     const buildingNames = Object.keys(groupedFloors).sort();
     if (buildingNames[0] === "") {
       buildingNames.push(buildingNames[0]);

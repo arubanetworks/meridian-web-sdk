@@ -7,28 +7,27 @@
 
 import groupBy from "lodash.groupby";
 import { Component, h } from "preact";
-import PropTypes from "prop-types";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, cx, mixins, theme } from "./style";
 import { createSearchMatcher, uiText } from "./util";
 
-class FloorOverlay extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { searchFilter: "" };
-    this.searchInput = null;
-  }
+export interface FloorOverlayProps {
+  toggleFloorOverlay: (options: { open: boolean }) => void;
+  currentFloorID: string;
+  floors: Record<string, any>[];
+  selectFloorByID: (floorID: string) => void;
+}
+
+class FloorOverlay extends Component<FloorOverlayProps> {
+  state = { searchFilter: "" };
+  searchInput: HTMLInputElement | null = null;
 
   componentDidMount() {
     if (this.searchInput) {
       this.searchInput.focus();
     }
   }
-
-  handleSearchFilterChange = event => {
-    this.setState({ searchFilter: event.target.value });
-  };
 
   // Move "" to the end of the list (Unassigned)
   processedFloorsByBuilding() {
@@ -52,10 +51,11 @@ class FloorOverlay extends Component {
     // TODO: Put "" at the bottom
     const buildingNames = Object.keys(groupedFloors).sort();
     if (buildingNames[0] === "") {
-      buildingNames.push(buildingNames.shift());
+      buildingNames.push(buildingNames[0]);
+      buildingNames.shift();
     }
     for (const name of buildingNames) {
-      groupedFloors[name].sort((a, b) => a.level - b.level);
+      groupedFloors[name].sort((a, b) => Math.sign(a.level - b.level));
     }
     if (buildingNames.length > 0) {
       return (
@@ -177,12 +177,5 @@ const cssFloorCheckmark = css({
   width: "0.8em",
   height: "0.8em"
 });
-
-FloorOverlay.propTypes = {
-  toggleFloorOverlay: PropTypes.func.isRequired,
-  currentFloorID: PropTypes.string.isRequired,
-  floors: PropTypes.array.isRequired,
-  selectFloorByID: PropTypes.func.isRequired
-};
 
 export default FloorOverlay;

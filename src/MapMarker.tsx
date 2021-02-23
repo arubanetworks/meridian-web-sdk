@@ -23,7 +23,7 @@ const MapMarker: FunctionComponent<MapMarkerProps> = ({
   kind,
   data,
   mapZoomFactor,
-  disabled,
+  disabled = false,
   onClick = () => {}
 }) => {
   if (kind === "tag") {

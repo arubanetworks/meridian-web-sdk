@@ -8,67 +8,15 @@
 // TODO (2018-09-17) Brian Mock
 // - Probably share some code with FloorOverlay eventually
 
-import { h, Component } from "preact";
-import PropTypes from "prop-types";
 import groupBy from "lodash.groupby";
-
+import { Component, h } from "preact";
+import PropTypes from "prop-types";
 import IconSpinner from "./IconSpinner";
+import LabelList from "./LabelList";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
-import { css, theme, mixins } from "./style";
-import { createSearchMatcher, STRINGS, getTagLabels } from "./util";
-import LabelList from "./LabelList";
-
-const cssOverlayBuildingName = css({
-  label: "overlay-building-name",
-  top: 0,
-  position: "sticky",
-  textTransform: "uppercase",
-  fontWeight: "bold",
-  color: theme.brandBlue,
-  background: theme.almostWhite,
-  fontSize: theme.fontSizeSmaller,
-  padding: 10
-});
-
-const cssTagList = css({
-  label: "tags-list",
-  overflowY: "auto",
-  flex: "1 1 auto"
-});
-
-const cssOverlayTagButton = css(
-  mixins.buttonReset,
-  mixins.focusRingMenuItem,
-  mixins.buttonHoverActive,
-  {
-    label: "overlay-tags-button",
-    minHeight: 56,
-    padding: 10,
-    paddingLeft: 20,
-    display: "block",
-    width: "100%",
-    textAlign: "left"
-  }
-);
-
-const cssOverlayTagButtonInner = css(mixins.flexRow, {
-  label: "overlay-tags-button-inner",
-  alignItems: "center"
-});
-
-const cssOverlayTagButtonName = css({
-  label: "overlay-tags-button-name",
-  flex: "1 1 auto"
-});
-
-const cssTagListEmpty = css({
-  label: "overlay-tags-list-empty",
-  padding: "60px 20px",
-  textAlign: "center",
-  fontSize: theme.fontSizeBigger,
-  color: theme.textColorBluish
-});
+import { css, mixins, theme } from "./style";
+import { createSearchMatcher, getTagLabels, uiText } from "./util";
 
 class TagListOverlay extends Component {
   constructor(props) {
@@ -90,8 +38,8 @@ class TagListOverlay extends Component {
     const floorToGroup = {};
     for (const floor of floors) {
       floorToGroup[floor.id] = [
-        floor.group_name || STRINGS.unnamedBuilding,
-        STRINGS.enDash,
+        floor.group_name || uiText.unnamedBuilding,
+        uiText.enDash,
         floor.name
       ].join(" ");
     }
@@ -171,7 +119,7 @@ class TagListOverlay extends Component {
         return 0;
       });
     if (processedTags.length === 0) {
-      return <div className={cssTagListEmpty}>{STRINGS.noResultsFound}</div>;
+      return <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>;
     }
     const organizedTags = this.getOrganizedTags(processedTags);
     const sortedGroups = this.getSortedGroups(organizedTags);
@@ -235,6 +183,57 @@ class TagListOverlay extends Component {
     );
   }
 }
+
+const cssOverlayBuildingName = css({
+  label: "overlay-building-name",
+  top: 0,
+  position: "sticky",
+  textTransform: "uppercase",
+  fontWeight: "bold",
+  color: theme.brandBlue,
+  background: theme.almostWhite,
+  fontSize: theme.fontSizeSmaller,
+  padding: 10
+});
+
+const cssTagList = css({
+  label: "tags-list",
+  overflowY: "auto",
+  flex: "1 1 auto"
+});
+
+const cssOverlayTagButton = css(
+  mixins.buttonReset,
+  mixins.focusRingMenuItem,
+  mixins.buttonHoverActive,
+  {
+    label: "overlay-tags-button",
+    minHeight: 56,
+    padding: 10,
+    paddingLeft: 20,
+    display: "block",
+    width: "100%",
+    textAlign: "left"
+  }
+);
+
+const cssOverlayTagButtonInner = css(mixins.flexRow, {
+  label: "overlay-tags-button-inner",
+  alignItems: "center"
+});
+
+const cssOverlayTagButtonName = css({
+  label: "overlay-tags-button-name",
+  flex: "1 1 auto"
+});
+
+const cssTagListEmpty = css({
+  label: "overlay-tags-list-empty",
+  padding: "60px 20px",
+  textAlign: "center",
+  fontSize: theme.fontSizeBigger,
+  color: theme.textColorBluish
+});
 
 TagListOverlay.propTypes = {
   onMarkerClick: PropTypes.func.isRequired,

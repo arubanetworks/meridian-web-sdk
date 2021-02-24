@@ -7,7 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import { css, cx, mixins } from "./style";
-import { STRINGS } from "./util";
+import { uiText } from "./util";
 
 interface FloorLabelProps {
   buildingName: string;
@@ -22,7 +22,7 @@ const FloorLabel: FunctionComponent<FloorLabelProps> = ({
     className={cx("meridian-floor-label", cssFloorLabel)}
     data-testid="meridian--private--floor-label"
   >
-    {buildingName || STRINGS.unnamedBuilding} {STRINGS.enDash} {floorName}
+    {buildingName || uiText.unnamedBuilding} {uiText.enDash} {floorName}
   </div>
 );
 

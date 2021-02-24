@@ -106,13 +106,8 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       },
       onTagLeave: tag => {
         if (floorID === this.props.floorID && this.isMounted) {
-          this.setState(prevState => {
-            const { tagsByMAC } = prevState;
-            const macs = Object.keys(tagsByMAC);
-            const newMACs = macs.filter(mac => mac !== tag.mac);
-            const newTags = newMACs.map(mac => tagsByMAC[mac]);
-            const newTagsByMAC = keyBy(newTags, tag => tag.mac);
-            return { tagsByMAC: newTagsByMAC };
+          this.setState(({ tagsByMAC }) => {
+            return objectWithoutKey(tagsByMAC, tag.mac);
           });
         }
       },

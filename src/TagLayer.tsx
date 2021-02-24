@@ -8,7 +8,7 @@
 import throttle from "lodash.throttle";
 import { Component, h } from "preact";
 import MapMarker from "./MapMarker";
-import { objectWithoutKey } from "./util";
+import { groupBy1, objectWithoutKey } from "./util";
 import { API } from "./web-sdk";
 
 export interface TagLayerProps {
@@ -37,11 +37,6 @@ export interface TagLayerState {
 }
 
 export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
-  static defaultProps = {
-    markers: {},
-    onUpdate: () => {}
-  };
-
   state: TagLayerState = {
     tagsByMAC: {},
     connectionsByFloorID: {}
@@ -58,12 +53,11 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   }
 
   shouldComponentUpdate(nextProps: TagLayerProps) {
-    const zoomChanged = nextProps.mapZoomFactor !== this.props.mapZoomFactor;
     // Don't re-render when panning only (no zoom change)
-    if (this.props.isPanningOrZooming && !zoomChanged) {
-      return false;
-    }
-    return true;
+    return !(
+      this.props.isPanningOrZooming &&
+      nextProps.mapZoomFactor === this.props.mapZoomFactor
+    );
   }
 
   componentDidUpdate(prevProps: TagLayerProps) {
@@ -76,42 +70,6 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   componentWillUnmount() {
     this.isMounted = false;
     this.disconnect(this.props.floorID);
-  }
-
-  getTags() {
-    const { tagsByMAC } = this.state;
-    const tags = [];
-    for (const mac of Object.keys(tagsByMAC)) {
-      tags.push(tagsByMAC[mac]);
-    }
-    return tags;
-  }
-
-  removeTag(tag: Record<string, any>) {
-    if (!this.isMounted) {
-      return;
-    }
-    this.setState(prevState => {
-      const { tagsByMAC } = prevState;
-      const macs = Object.keys(tagsByMAC);
-      const newMACs = macs.filter(mac => mac !== tag.mac);
-      const newTagsByMAC = newMACs.reduce((obj, mac) => {
-        obj[mac] = tagsByMAC[mac];
-        return obj;
-      }, {} as Record<string, Record<string, any>>);
-      return { tagsByMAC: newTagsByMAC };
-    });
-  }
-
-  handleTagUpdates(tags: Record<string, any>[]) {
-    const { isPanningOrZooming } = this.props;
-    this.tagUpdates = {
-      ...this.tagUpdates,
-      ...this.tagsByMAC(tags)
-    };
-    if (!isPanningOrZooming) {
-      this.commitTagUpdates();
-    }
   }
 
   commitTagUpdates = throttle(() => {
@@ -132,42 +90,38 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     );
   }, 1000);
 
-  tagsByMAC(tags: Record<string, any>[]) {
-    return tags.reduce((obj, tag) => {
-      obj[tag.mac] = tag;
-      return obj;
-    }, {} as Record<string, Record<string, any>>);
-  }
-
-  setInitialTags(tags: Record<string, any>[]) {
-    if (!this.isMounted) {
-      return;
-    }
-    this.setState({ tagsByMAC: this.tagsByMAC(tags) }, () => {
-      this.onUpdate();
-      this.props.toggleLoadingSpinner({ show: false, source: "tags" });
-    });
-  }
-
   connect(floorID: string) {
     const { locationID, api, toggleLoadingSpinner } = this.props;
     toggleLoadingSpinner({ show: true, source: "tags" });
     const connection = api.openStream({
       locationID,
       floorID,
-      onInitialTags: data => {
-        if (floorID === this.props.floorID) {
-          this.setInitialTags(data);
+      onInitialTags: tags => {
+        if (floorID === this.props.floorID && this.isMounted) {
+          this.setState({ tagsByMAC: groupBy1(tags, tag => tag.mac) }, () => {
+            this.onUpdate();
+            this.props.toggleLoadingSpinner({ show: false, source: "tags" });
+          });
         }
       },
-      onTagLeave: data => {
-        if (floorID === this.props.floorID) {
-          this.removeTag(data);
+      onTagLeave: tag => {
+        if (floorID === this.props.floorID && this.isMounted) {
+          this.setState(prevState => {
+            const { tagsByMAC } = prevState;
+            const macs = Object.keys(tagsByMAC);
+            const newMACs = macs.filter(mac => mac !== tag.mac);
+            const newTags = newMACs.map(mac => tagsByMAC[mac]);
+            const newTagsByMAC = groupBy1(newTags, tag => tag.mac);
+            return { tagsByMAC: newTagsByMAC };
+          });
         }
       },
-      onTagUpdate: data => {
-        if (floorID === this.props.floorID) {
-          this.handleTagUpdates([data]);
+      onTagUpdate: tag => {
+        if (floorID === this.props.floorID && this.isMounted) {
+          this.tagUpdates = { ...this.tagUpdates, [tag.mac]: tag };
+          if (!this.props.isPanningOrZooming) {
+            this.commitTagUpdates();
+          }
         }
       },
       onClose: () => {
@@ -231,16 +185,12 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     });
   }
 
-  filterTags(tags: Record<string, any>[]) {
-    const { markers = {} } = this.props;
-    const { filter = () => true } = markers;
-    return this.filterControlTags(tags).filter(filter);
-  }
-
   onUpdate = () => {
+    const { tagsByMAC } = this.state;
     const { onUpdate, markers = {} } = this.props;
     const { filter = () => true } = markers;
-    const allTags = this.filterControlTags(this.getTags());
+    const tags = Object.values(tagsByMAC);
+    const allTags = this.filterControlTags(tags);
     const filteredTags = allTags.filter(filter);
     onUpdate({ allTags, filteredTags });
   };
@@ -252,19 +202,24 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       onMarkerClick,
       mapZoomFactor
     } = this.props;
+    const { tagsByMAC } = this.state;
+    const { filter = () => true } = markers;
+    const tags = Object.values(tagsByMAC);
     return (
       <div>
-        {this.filterTags(this.getTags()).map(tag => (
-          <MapMarker
-            selectedItem={selectedItem}
-            mapZoomFactor={mapZoomFactor}
-            key={tag.mac}
-            kind="tag"
-            data={tag}
-            onClick={onMarkerClick}
-            disabled={markers.disabled}
-          />
-        ))}
+        {this.filterControlTags(tags)
+          .filter(filter)
+          .map(tag => (
+            <MapMarker
+              selectedItem={selectedItem}
+              mapZoomFactor={mapZoomFactor}
+              key={tag.mac}
+              kind="tag"
+              data={tag}
+              onClick={onMarkerClick}
+              disabled={markers.disabled}
+            />
+          ))}
       </div>
     );
   }

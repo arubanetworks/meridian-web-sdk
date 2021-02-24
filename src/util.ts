@@ -24,6 +24,17 @@ export function objectWithoutKey<T>(object: T, key: keyof typeof object): T {
   return newObject;
 }
 
+export function groupBy1<T, K extends string | number | symbol>(
+  data: T[],
+  fn: (item: T) => K
+): Record<K, T> {
+  const ret = {} as Record<K, T>;
+  for (const item of data) {
+    ret[fn(item)] = item;
+  }
+  return ret;
+}
+
 export function createSearchMatcher(query: string) {
   return (target: string) =>
     target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;

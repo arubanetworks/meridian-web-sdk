@@ -24,7 +24,8 @@ export function objectWithoutKey<T>(object: T, key: keyof typeof object): T {
   return newObject;
 }
 
-export function groupBy1<T, K extends string | number | symbol>(
+/** Like lodash.groupBy, but the values are not in arrays. */
+export function keyBy<T, K extends string | number | symbol>(
   data: T[],
   fn: (item: T) => K
 ): Record<K, T> {

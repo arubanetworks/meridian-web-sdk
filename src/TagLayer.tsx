@@ -8,7 +8,7 @@
 import throttle from "lodash.throttle";
 import { Component, h } from "preact";
 import MapMarker from "./MapMarker";
-import { groupBy1, objectWithoutKey } from "./util";
+import { keyBy, objectWithoutKey } from "./util";
 import { API } from "./web-sdk";
 
 export interface TagLayerProps {
@@ -98,7 +98,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       floorID,
       onInitialTags: tags => {
         if (floorID === this.props.floorID && this.isMounted) {
-          this.setState({ tagsByMAC: groupBy1(tags, tag => tag.mac) }, () => {
+          this.setState({ tagsByMAC: keyBy(tags, tag => tag.mac) }, () => {
             this.onUpdate();
             this.props.toggleLoadingSpinner({ show: false, source: "tags" });
           });
@@ -111,7 +111,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
             const macs = Object.keys(tagsByMAC);
             const newMACs = macs.filter(mac => mac !== tag.mac);
             const newTags = newMACs.map(mac => tagsByMAC[mac]);
-            const newTagsByMAC = groupBy1(newTags, tag => tag.mac);
+            const newTagsByMAC = keyBy(newTags, tag => tag.mac);
             return { tagsByMAC: newTagsByMAC };
           });
         }

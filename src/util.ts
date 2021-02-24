@@ -12,7 +12,7 @@ export const logWarn = console.warn.bind(console, consoleTag);
 export const logError = console.error.bind(console, consoleTag);
 export const logDeprecated = logWarn.bind(null, "[deprecated]");
 
-export const STRINGS = {
+export const uiText = {
   enDash: "–",
   unnamedBuilding: "Unassigned",
   noResultsFound: "No results found."

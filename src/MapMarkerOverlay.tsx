@@ -9,7 +9,7 @@ import { FunctionComponent, h } from "preact";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
 import { css, theme } from "./style";
-import { getTagLabels, STRINGS } from "./util";
+import { getTagLabels, uiText } from "./util";
 import { placemarkIconURL } from "./web-sdk";
 
 interface MapMarkerOverlayProps {
@@ -53,7 +53,7 @@ const MapMarkerOverlay: FunctionComponent<MapMarkerOverlayProps> = ({
     >
       <div className={cssOverlayImage} style={imageStyle} />
       <div className={cssOverlayContent}>
-        <p className={cssOverlayName}>{item.name || STRINGS.enDash}</p>
+        <p className={cssOverlayName}>{item.name || uiText.enDash}</p>
         {kind === "tag" ? (
           <div className={cssTagData}>
             <LabelList

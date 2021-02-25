@@ -6,34 +6,28 @@
  */
 
 import { event as d3Event, select as d3Select, Selection } from "d3-selection";
+import "d3-transition";
 import {
   zoom as d3Zoom,
   ZoomBehavior,
   zoomIdentity as d3ZoomIdentity,
   zoomTransform as d3ZoomTransform
 } from "d3-zoom";
-import "d3-transition";
 import { Component, createRef, Fragment, h } from "preact";
 import AnnotationLayer from "./AnnotationLayer";
+import { FloorData, PlacemarkData, TagData } from "./data";
+import DetailsOverlay from "./DetailsOverlay";
 import ErrorOverlay from "./ErrorOverlay";
 import FloorAndTagControls from "./FloorAndTagControls";
 import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
 import LoadingSpinner from "./LoadingSpinner";
-import DetailsOverlay from "./DetailsOverlay";
 import OverlayLayer from "./OverlayLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import { css, cx } from "./style";
 import TagLayer from "./TagLayer";
 import TagListOverlay from "./TagListOverlay";
-import { FloorData, PlacemarkData, TagData } from "./data";
-import {
-  asyncClientCall,
-  isEnvOptions,
-  keyBy,
-  logError,
-  logWarn
-} from "./util";
+import { asyncClientCall, isEnvOptions, keyBy, logError } from "./util";
 import Watermark from "./Watermark";
 import {
   API,
@@ -74,7 +68,6 @@ export interface MapComponentProps {
   annotations?: CustomAnnotation[];
   onTagClick?: (tag: TagData, event: MeridianEvent) => void;
   onPlacemarkClick?: (placemark: PlacemarkData, event: MeridianEvent) => void;
-  // TODO: Document and support this! It's useful!!
   onMapClick?: () => void;
   onTagsUpdate?: (data: {
     allTags: TagData[];
@@ -596,7 +589,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       (this.mapRef.current?.isEqualNode?.(event.target) ||
         this.mapImageref.current?.isEqualNode(event.target));
     if (this.props.onMapClick && mapClicked) {
-      logWarn("onMapClick() is experimental, please do not use it");
       asyncClientCall(this.props.onMapClick);
     } else if (mapClicked) {
       this.toggleDetailsOverlay({ open: false });

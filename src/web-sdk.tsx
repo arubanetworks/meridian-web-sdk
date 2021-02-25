@@ -307,6 +307,12 @@ export type CreateMapOptions = {
   /** An array of custom annotations to draw on the map. */
   annotations?: CustomAnnotation[];
   /**
+   * Called when the user clicks on the map. This is mostly useful as a way of
+   * knowing that the user has potentially unfocused a tag or placemark. This is
+   * NOT called when the user pans or zooms the map.
+   */
+  onMapClick?: () => void;
+  /**
    * Called when a tag is clicked. Use `event.preventDefault()` to prevent the
    * default dialog from appearing.
    */

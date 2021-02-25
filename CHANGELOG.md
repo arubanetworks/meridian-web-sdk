@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded the map SVG for the examples
 
+### Added
+
+- `onMapClick()` option which is called when the map is clicked
+
 ### Removed
 
 - Removed support for undocumented and unsupported option `onMarkerClick`

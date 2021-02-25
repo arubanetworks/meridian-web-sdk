@@ -708,7 +708,7 @@ class Map extends Component<MapProps, MapState> {
       return (
         <MapMarkerOverlay
           toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
-          kind={selectedItem.kind === "placemark" ? "placemark" : "tag"}
+          kind={"mac" in selectedItem ? "tag" : "placemark"}
           item={selectedItem}
         />
       );

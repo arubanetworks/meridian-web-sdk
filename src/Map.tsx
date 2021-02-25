@@ -80,7 +80,10 @@ export interface MapProps {
     allTags: TagData[];
     filteredTags: TagData[];
   }) => void;
-  onPlacemarksUpdate?: (placemarks: PlacemarkData[]) => void;
+  onPlacemarksUpdate?: (data: {
+    allPlacemarks: PlacemarkData[];
+    filteredPlacemarks: PlacemarkData[];
+  }) => void;
   onFloorsUpdate?: (floors: FloorData[]) => void;
   onFloorChange?: (floor: FloorData) => void;
 }
@@ -812,7 +815,6 @@ class Map extends Component<MapProps, MapState> {
                     api={api}
                     markers={placemarks}
                     onPlacemarkClick={this.onPlacemarkClick}
-                    toggleLoadingSpinner={this.toggleLoadingSpinner}
                     placemarks={this.state.placemarks}
                     onUpdate={onPlacemarksUpdate}
                   />

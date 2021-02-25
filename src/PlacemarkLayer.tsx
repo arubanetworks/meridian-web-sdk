@@ -7,7 +7,8 @@
 
 import { Component, h } from "preact";
 import { PlacemarkData, TagData } from "./data";
-import MapMarker from "./MapMarker";
+import { MapProps } from "./Map";
+import Placemark from "./Placemark";
 import { asyncClientCall } from "./util";
 import { API, CreateMapOptions } from "./web-sdk";
 
@@ -20,10 +21,7 @@ export interface PlacemarkLayerProps {
   api: API;
   markers: CreateMapOptions["placemarks"];
   onPlacemarkClick: (placemark: PlacemarkData) => void;
-  onUpdate: (data: {
-    allPlacemarks: PlacemarkData[];
-    filteredPlacemarks: PlacemarkData[];
-  }) => void;
+  onUpdate: MapProps["onPlacemarksUpdate"];
   placemarks: Record<string, PlacemarkData>;
 }
 
@@ -44,7 +42,10 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
 
   componentDidUpdate(prevProps: PlacemarkLayerProps) {
     const { markers, placemarks, onUpdate } = this.props;
-    if (placemarks !== prevProps.placemarks || markers !== prevProps.markers) {
+    if (
+      onUpdate &&
+      (placemarks !== prevProps.placemarks || markers !== prevProps.markers)
+    ) {
       asyncClientCall(onUpdate, {
         allPlacemarks: Object.values(placemarks),
         filteredPlacemarks: this.getFilteredPlacemarks()
@@ -84,12 +85,9 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     return (
       <div>
         {filteredPlacemarks.map(placemark => (
-          // TODO: MapMarker should be split up for Placemarks vs Tags
-          <MapMarker
-            selectedItem={selectedItem}
+          <Placemark
+            isSelected={selectedItem ? selectedItem.id === placemark.id : false}
             mapZoomFactor={mapZoomFactor}
-            key={placemark.id}
-            kind="placemark"
             data={placemark}
             onClick={onPlacemarkClick}
             disabled={markers?.disabled}

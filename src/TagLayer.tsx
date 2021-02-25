@@ -8,7 +8,8 @@
 import throttle from "lodash.throttle";
 import { Component, h } from "preact";
 import { PlacemarkData, TagData } from "./data";
-import MapMarker from "./MapMarker";
+import { MapProps } from "./Map";
+import Tag from "./Tag";
 import { keyBy, objectWithoutKey } from "./util";
 import { API } from "./web-sdk";
 
@@ -25,7 +26,7 @@ export interface TagLayerProps {
     disabled?: boolean;
   };
   onTagClick: (tag: TagData) => void;
-  onUpdate: (data: { allTags: TagData[]; filteredTags: TagData[] }) => void;
+  onUpdate: MapProps["onTagsUpdate"];
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
 }
 
@@ -182,10 +183,11 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     const { tagsByMAC } = this.state;
     const { onUpdate, markers = {} } = this.props;
     const { filter = () => true } = markers;
-    const tags = Object.values(tagsByMAC);
-    const allTags = this.filterControlTags(tags);
+    const allTags = this.filterControlTags(Object.values(tagsByMAC));
     const filteredTags = allTags.filter(filter);
-    onUpdate({ allTags, filteredTags });
+    if (onUpdate) {
+      onUpdate({ allTags, filteredTags });
+    }
   };
 
   render() {
@@ -203,12 +205,10 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
         {this.filterControlTags(tags)
           .filter(filter)
           .map(tag => (
-            // TODO: Break up MapMarker
-            <MapMarker
-              selectedItem={selectedItem}
-              mapZoomFactor={mapZoomFactor}
+            <Tag
               key={tag.mac}
-              kind="tag"
+              isSelected={selectedItem ? selectedItem.mac === tag.mac : false}
+              mapZoomFactor={mapZoomFactor}
               data={tag}
               onClick={onTagClick}
               disabled={markers.disabled}

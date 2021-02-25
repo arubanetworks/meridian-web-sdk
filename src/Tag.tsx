@@ -56,7 +56,7 @@ const Tag: FunctionComponent<TagProps> = ({
         if (event.target instanceof HTMLElement) {
           event.target.focus();
         }
-        onClick(event);
+        onClick(data);
       }}
       onMouseDown={event => {
         event.stopPropagation();

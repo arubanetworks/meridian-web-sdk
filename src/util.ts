@@ -3,6 +3,7 @@
  * @packageDocumentation
  */
 
+import { TagData } from "./data";
 import { EnvOptions } from "./web-sdk";
 
 const consoleTag = "[@meridian/web-sdk]";
@@ -41,7 +42,7 @@ export function createSearchMatcher(query: string) {
     target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
 }
 
-export function getTagLabels(tag: Record<string, any>) {
+export function getTagLabels(tag: TagData) {
   return (tag.tags || []).map((tag: Record<string, any>) => tag.name);
 }
 

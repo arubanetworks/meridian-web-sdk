@@ -639,7 +639,7 @@ class Map extends Component<MapProps, MapState> {
   };
 
   shouldShowFloors() {
-    const { showFloorsControl } = this.props;
+    const { showFloorsControl = true } = this.props;
     const { floors } = this.state;
     return showFloorsControl && floors.length > 1;
   }
@@ -743,19 +743,19 @@ class Map extends Component<MapProps, MapState> {
       errors
     } = this.state;
     const {
-      showTagsControl,
+      showTagsControl = true,
       locationID,
       floorID,
       api,
       tags,
       placemarks,
-      overlays,
-      annotations,
+      overlays = [],
+      annotations = [],
       width = "",
       height = "",
       onTagsUpdate,
       onPlacemarksUpdate,
-      loadTags
+      loadTags = true
     } = this.props;
     return (
       <div
@@ -778,8 +778,6 @@ class Map extends Component<MapProps, MapState> {
           showTagList={showTagsControl && loadTags}
           toggleFloorOverlay={this.toggleFloorOverlay}
           toggleTagListOverlay={this.toggleTagListOverlay}
-          toggleLoadingSpinner={this.toggleLoadingSpinner}
-          toggleErrorOverlay={this.toggleErrorOverlay}
         />
         {this.renderFloorLabel()}
         <div
@@ -802,7 +800,7 @@ class Map extends Component<MapProps, MapState> {
               <Fragment>
                 <OverlayLayer
                   mapZoomFactor={mapZoomFactor}
-                  overlays={overlays ?? []}
+                  overlays={overlays}
                 />
                 {this.props.loadPlacemarks ? (
                   <PlacemarkLayer
@@ -813,7 +811,7 @@ class Map extends Component<MapProps, MapState> {
                     floorID={floorID}
                     api={api}
                     markers={placemarks}
-                    onPlacemarkClick={this.onMarkerClick}
+                    onPlacemarkClick={this.onPlacemarkClick}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
                     placemarks={this.state.placemarks}
                     onUpdate={onPlacemarksUpdate}
@@ -828,7 +826,7 @@ class Map extends Component<MapProps, MapState> {
                     floorID={floorID}
                     api={api}
                     markers={tags}
-                    onTagClick={this.onMarkerClick}
+                    onTagClick={this.onTagClick}
                     onUpdate={onTagsUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
                   />

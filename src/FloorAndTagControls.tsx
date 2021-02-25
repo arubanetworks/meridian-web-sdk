@@ -6,13 +6,14 @@
  */
 
 import { FunctionComponent, h } from "preact";
+import Map from "./Map";
 import { css, theme, mixins, cx } from "./style";
 
 interface FloorAndTagControlsProps {
   showFloors: boolean;
   showTagList: boolean;
-  toggleFloorOverlay: (state: Record<string, boolean>) => void;
-  toggleTagListOverlay: (state: Record<string, boolean>) => void;
+  toggleFloorOverlay: Map["toggleFloorOverlay"];
+  toggleTagListOverlay: Map["toggleTagListOverlay"];
 }
 
 const FloorAndTagControls: FunctionComponent<FloorAndTagControlsProps> = ({

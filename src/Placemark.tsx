@@ -6,6 +6,7 @@
  */
 
 import { FunctionComponent, h } from "preact";
+import { PlacemarkData } from "./data";
 import { css, cx, mixins, theme } from "./style";
 import { placemarkIconURL } from "./web-sdk";
 
@@ -15,9 +16,9 @@ const SHRINK_FACTOR = 1.4;
 
 interface PlacemarkProps {
   isSelected: boolean;
-  data: Record<string, any>;
+  data: PlacemarkData;
   mapZoomFactor: number;
-  onClick?: (event: MouseEvent) => void;
+  onClick?: (placemark: PlacemarkData) => void;
   disabled?: boolean;
 }
 

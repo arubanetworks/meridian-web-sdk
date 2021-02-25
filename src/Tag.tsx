@@ -7,6 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import defaultTagImageURL from "../files/tags/generic.svg";
+import { TagData } from "./data";
 import { css, cx, mixins } from "./style";
 import { getTagLabels } from "./util";
 
@@ -16,9 +17,9 @@ const SHRINK_FACTOR = 1.4;
 
 interface TagProps {
   isSelected: boolean;
-  data: Record<string, any>;
+  data: TagData;
   mapZoomFactor: number;
-  onClick?: (event: MouseEvent) => void;
+  onClick?: (tag: TagData) => void;
   disabled?: boolean;
 }
 

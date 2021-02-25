@@ -209,7 +209,7 @@ export type CreateMapTagsOptions = {
    * Filter function used to hide tags. Return false to hide a tag. Defaults
    * to `() => true`.
    */
-  filter?: (tag: Record<string, any>) => boolean;
+  filter?: (tag: TagData) => boolean;
   /** Disable clicking tags when true. Defaults to false. */
   disabled?: boolean;
 };
@@ -221,7 +221,7 @@ export type CreateMapPlacemarksOptions = {
    * Filter function used to hide placemarks. Return false to hide a
    * placemark. Defaults to `() => true`.
    */
-  filter?: (placemark: Record<string, any>) => boolean;
+  filter?: (placemark: PlacemarkData) => boolean;
   /** Disable clicking placemarks when true. Defaults to false. */
   disabled?: boolean;
 };

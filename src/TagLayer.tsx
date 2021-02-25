@@ -24,7 +24,7 @@ export interface TagLayerProps {
     showControlTags?: boolean;
     disabled?: boolean;
   };
-  onMarkerClick: (tag: TagData) => void;
+  onTagClick: (tag: TagData) => void;
   onUpdate: (data: { allTags: TagData[]; filteredTags: TagData[] }) => void;
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
 }
@@ -192,7 +192,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     const {
       selectedItem,
       markers = {},
-      onMarkerClick,
+      onTagClick,
       mapZoomFactor
     } = this.props;
     const { tagsByMAC } = this.state;
@@ -210,7 +210,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
               key={tag.mac}
               kind="tag"
               data={tag}
-              onClick={onMarkerClick}
+              onClick={onTagClick}
               disabled={markers.disabled}
             />
           ))}

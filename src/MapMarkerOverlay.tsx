@@ -7,6 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import LabelList from "./LabelList";
+import Map from "./Map";
 import Overlay from "./Overlay";
 import { css, theme } from "./style";
 import { getTagLabels, uiText } from "./util";
@@ -15,7 +16,7 @@ import { placemarkIconURL } from "./web-sdk";
 interface MapMarkerOverlayProps {
   kind: "tag" | "placemark";
   item: Record<string, any>;
-  toggleMapMarkerOverlay: (states: Record<string, boolean>) => void;
+  toggleMapMarkerOverlay: Map["toggleMapMarkerOverlay"];
 }
 
 const MapMarkerOverlay: FunctionComponent<MapMarkerOverlayProps> = ({

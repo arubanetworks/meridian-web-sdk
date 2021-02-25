@@ -35,7 +35,13 @@ import {
   logWarn
 } from "./util";
 import Watermark from "./Watermark";
-import { API, CreateMapOptions, CustomOverlay, MeridianEvent } from "./web-sdk";
+import {
+  API,
+  CreateMapOptions,
+  CustomAnnotation,
+  CustomOverlay,
+  MeridianEvent
+} from "./web-sdk";
 import ZoomControls from "./ZoomControls";
 
 const ZOOM_FACTOR = 0.5;
@@ -65,6 +71,7 @@ export interface MapProps {
     disabled?: boolean;
   };
   overlays?: CustomOverlay[];
+  annotations?: CustomAnnotation[];
   onTagClick?: (tag: TagData, event: MeridianEvent) => void;
   onPlacemarkClick?: (placemark: PlacemarkData, event: MeridianEvent) => void;
   // TODO: Document and support this! It's useful!!
@@ -744,8 +751,8 @@ class Map extends Component<MapProps, MapState> {
       placemarks,
       overlays,
       annotations,
-      width,
-      height,
+      width = "",
+      height = "",
       onTagsUpdate,
       onPlacemarksUpdate,
       loadTags
@@ -821,7 +828,7 @@ class Map extends Component<MapProps, MapState> {
                     floorID={floorID}
                     api={api}
                     markers={tags}
-                    onMarkerClick={this.onMarkerClick}
+                    onTagClick={this.onMarkerClick}
                     onUpdate={onTagsUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
                   />

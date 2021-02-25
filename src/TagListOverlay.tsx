@@ -7,14 +7,13 @@
 
 import groupBy from "lodash.groupby";
 import { Component, createRef, h } from "preact";
-import { FloorData, TagData } from "./data";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, mixins, theme } from "./style";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
-import { API, CreateMapOptions } from "./web-sdk";
+import { API, CreateMapOptions, FloorData, TagData } from "./web-sdk";
 
 export interface TagListOverlayProps {
   onTagClick: (tag: TagData) => void;

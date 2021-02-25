@@ -15,7 +15,6 @@ import {
 } from "d3-zoom";
 import { Component, createRef, Fragment, h } from "preact";
 import AnnotationLayer from "./AnnotationLayer";
-import { FloorData, PlacemarkData, TagData } from "./data";
 import DetailsOverlay from "./DetailsOverlay";
 import ErrorOverlay from "./ErrorOverlay";
 import FloorAndTagControls from "./FloorAndTagControls";
@@ -34,7 +33,10 @@ import {
   CreateMapOptions,
   CustomAnnotation,
   CustomOverlay,
-  MeridianEvent
+  FloorData,
+  MeridianEvent,
+  PlacemarkData,
+  TagData
 } from "./web-sdk";
 import ZoomControls from "./ZoomControls";
 

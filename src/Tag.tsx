@@ -7,9 +7,9 @@
 
 import { FunctionComponent, h } from "preact";
 import defaultTagImageURL from "../files/tags/generic.svg";
-import { TagData } from "./data";
 import { css, cx, mixins } from "./style";
 import { getTagLabels } from "./util";
+import { TagData } from "./web-sdk";
 
 const SIZE = 48;
 const SHRINK_POINT = 0.2;

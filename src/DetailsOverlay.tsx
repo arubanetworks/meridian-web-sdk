@@ -6,13 +6,12 @@
  */
 
 import { FunctionComponent, h } from "preact";
-import { PlacemarkData, TagData } from "./data";
 import LabelList from "./LabelList";
 import MapComponent from "./MapComponent";
 import Overlay from "./Overlay";
 import { css, theme } from "./style";
 import { getTagLabels, uiText } from "./util";
-import { placemarkIconURL } from "./web-sdk";
+import { PlacemarkData, placemarkIconURL, TagData } from "./web-sdk";
 
 interface DetailsOverlayProps {
   kind: "tag" | "placemark";

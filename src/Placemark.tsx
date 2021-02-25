@@ -6,9 +6,8 @@
  */
 
 import { FunctionComponent, h } from "preact";
-import { PlacemarkData } from "./data";
 import { css, cx, mixins, theme } from "./style";
-import { placemarkIconURL } from "./web-sdk";
+import { PlacemarkData, placemarkIconURL } from "./web-sdk";
 
 const SIZE = 24;
 const SHRINK_POINT = 0.2;

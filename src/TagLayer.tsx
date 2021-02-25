@@ -7,11 +7,10 @@
 
 import throttle from "lodash.throttle";
 import { Component, h } from "preact";
-import { PlacemarkData, TagData } from "./data";
 import { MapComponentProps } from "./MapComponent";
 import Tag from "./Tag";
 import { keyBy, objectWithoutKey } from "./util";
-import { API } from "./web-sdk";
+import { API, PlacemarkData, TagData } from "./web-sdk";
 
 export interface TagLayerProps {
   selectedItem?: TagData | PlacemarkData;

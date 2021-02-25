@@ -6,11 +6,10 @@
  */
 
 import { Component, h } from "preact";
-import { PlacemarkData, TagData } from "./data";
 import { MapComponentProps } from "./MapComponent";
 import Placemark from "./Placemark";
 import { asyncClientCall } from "./util";
-import { API, CreateMapOptions } from "./web-sdk";
+import { API, CreateMapOptions, PlacemarkData, TagData } from "./web-sdk";
 
 export interface PlacemarkLayerProps {
   selectedItem?: TagData | PlacemarkData;

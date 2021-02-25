@@ -3,8 +3,7 @@
  * @packageDocumentation
  */
 
-import { TagData } from "./data";
-import { EnvOptions } from "./web-sdk";
+import { EnvOptions, TagData } from "./web-sdk";
 
 const consoleTag = "[@meridian/web-sdk]";
 // eslint-disable-next-line no-console

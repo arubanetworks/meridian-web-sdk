@@ -56,7 +56,6 @@ import { h, render } from "preact";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import placemarkIconGeneric from "../files/placemarks/generic.svg";
 import { sendAnalyticsCodeEvent } from "./analytics";
-import { FloorData, LocationData, PlacemarkData, TagData } from "./data";
 import MapComponent from "./MapComponent";
 import {
   asyncClientCall,
@@ -120,9 +119,9 @@ if (document.readyState === "complete") {
 }
 
 /** @internal */
-type APIContext = {
+interface APIContext {
   api?: API;
-};
+}
 
 /** @internal */
 const context: APIContext = {
@@ -202,7 +201,7 @@ export function init(options: { api: API }): void {
   context.api = options.api;
 }
 
-export type CreateMapTagsOptions = {
+export interface CreateMapTagsOptions {
   /** Should we show control tags? Defaults to false. */
   showControlTags?: boolean;
   /**
@@ -212,9 +211,9 @@ export type CreateMapTagsOptions = {
   filter?: (tag: TagData) => boolean;
   /** Disable clicking tags when true. Defaults to false. */
   disabled?: boolean;
-};
+}
 
-export type CreateMapPlacemarksOptions = {
+export interface CreateMapPlacemarksOptions {
   /** Should we show hidden placemarks? Defaults to false. */
   showHiddenPlacemarks?: boolean;
   /**
@@ -224,7 +223,7 @@ export type CreateMapPlacemarksOptions = {
   filter?: (placemark: PlacemarkData) => boolean;
   /** Disable clicking placemarks when true. Defaults to false. */
   disabled?: boolean;
-};
+}
 
 /**
  * Object describing a polygon overlay drawn on the map
@@ -277,7 +276,7 @@ export type CustomAnnotation = CustomAnnotationPoint;
 /**
  * Options passed to [[createMap]].
  */
-export type CreateMapOptions = {
+export interface CreateMapOptions {
   /** See [[restrictedPanZoom]]. */
   shouldMapPanZoom?: (event: TouchEvent | WheelEvent | MouseEvent) => boolean;
   /** Width of the map (e.g. "100%" or "300px"). */
@@ -356,21 +355,21 @@ export type CreateMapOptions = {
    * with.
    */
   onDestroy?: () => void;
-};
+}
 
 /**
  * MeridanSDK specific event object, used to `preventDefault` when overriding a
  * handler.
  */
-export type MeridianEvent = {
+export interface MeridianEvent {
   preventDefault: () => void;
-};
+}
 
 /**
  * Returned from [[createMap]], this object allows you to manipulate a map that
  * has already been created in the page.
  */
-export type MeridianMap = {
+export interface MeridianMap {
   /**
    * Remove the Meridian Map from the DOM and clean up all ongoing network
    * connections.
@@ -394,7 +393,7 @@ export type MeridianMap = {
    * Zoom to a given x, y coordinate and scale to a given zoom factor.
    */
   zoomToPoint: (options: { x: number; y: number; scale: number }) => void;
-};
+}
 
 /**
  * Creates and returns a map object mounted at the given HTML element. If you
@@ -936,7 +935,10 @@ export type EnvOptions =
  * });
  * ```
  */
-export type APIOptions = { environment?: EnvOptions; token: string };
+export interface APIOptions {
+  environment?: EnvOptions;
+  token: string;
+}
 
 /**
  * An open tag stream that can be closed. Returned by [[API.openStream]].
@@ -953,8 +955,34 @@ export type APIOptions = { environment?: EnvOptions; token: string };
  * stream.close();
  * ```
  */
-export type Stream = {
+export interface Stream {
   close: () => void;
-};
+}
 
-export * from "./data";
+/** Meridian Tag data */
+export interface TagData {
+  [key: string]: any;
+  /** Tag MAC address (uppercase, no punctuation) */
+  mac: string;
+}
+
+/** Meridian Placemark data */
+export interface PlacemarkData {
+  [key: string]: any;
+  /** Placemark ID */
+  id: string;
+}
+
+/** Meridian Floor data */
+export interface FloorData {
+  [key: string]: any;
+  /** Floor ID */
+  id: string;
+}
+
+/** Meridian Location data */
+export interface LocationData {
+  [key: string]: any;
+  /** Location ID */
+  id: string;
+}

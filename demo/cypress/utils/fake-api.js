@@ -78,14 +78,22 @@ class FakeAPI {
     // onClose
   }) {
     let interval;
+    const originalPositions = new Map();
     const fn = async () => {
       const tags = await this.fetchTagsByFloor(locationID, floorID);
+      for (const { x, y, mac } of tags) {
+        originalPositions.set(mac, { x, y });
+      }
       onInitialTags(tags);
       if (this._live) {
+        // Simulate a tiny amount of jitter around the actual (x, y) position
         interval = setInterval(() => {
           const tag = tags[rand(0, tags.length - 1)];
-          tag.x += rand(-4, 4) * 10;
-          tag.y += rand(-4, 4) * 10;
+          const dx = rand(-1, 1) * 100;
+          const dy = rand(-1, 1) * 100;
+          const { x, y } = originalPositions.get(tag.mac);
+          tag.x = x + dx;
+          tag.y = y + dy;
           onTagUpdate(tag);
         }, this._updateInterval);
       }

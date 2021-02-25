@@ -26,12 +26,6 @@ export interface PlacemarkLayerProps {
 }
 
 export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
-  // static defaultProps = {
-  //   markers: {},
-  //   placemarks: {},
-  //   onUpdate: () => {}
-  // };
-
   shouldComponentUpdate(nextProps: PlacemarkLayerProps) {
     // Don't re-render when panning only (no zoom change)
     return !(

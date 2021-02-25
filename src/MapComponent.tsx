@@ -20,7 +20,7 @@ import FloorAndTagControls from "./FloorAndTagControls";
 import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
 import LoadingSpinner from "./LoadingSpinner";
-import MapMarkerOverlay from "./MapMarkerOverlay";
+import DetailsOverlay from "./DetailsOverlay";
 import OverlayLayer from "./OverlayLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import { css, cx } from "./style";
@@ -207,7 +207,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     if (this.props.locationID !== prevProps.locationID) {
       this.toggleTagListOverlay({ open: false });
       this.toggleErrorOverlay({ open: false });
-      this.toggleMapMarkerOverlay({ open: false });
+      this.toggleDetailsOverlay({ open: false });
       this.toggleFloorOverlay({ open: false });
       this.zoomToDefault();
       this.freeMapImageURL();
@@ -381,7 +381,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     });
   }
 
-  toggleMapMarkerOverlay = ({
+  toggleDetailsOverlay = ({
     open,
     selectedItem
   }: {
@@ -443,7 +443,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         return [];
       }
     } catch (err) {
-      // TODO: compare with other error objects, similar?
       if (err.response && err.response.data && err.response.data.detail) {
         this.toggleErrorOverlay({
           open: true,
@@ -460,7 +459,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     return results;
   }
 
-  // TODO: We might want to memoize this based on floorID eventually
   getMapData() {
     const { floorID } = this.props;
     const { floors } = this.state;
@@ -601,7 +599,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       logWarn("onMapClick() is experimental, please do not use it");
       asyncClientCall(this.props.onMapClick);
     } else if (mapClicked) {
-      this.toggleMapMarkerOverlay({ open: false });
+      this.toggleDetailsOverlay({ open: false });
     }
   };
 
@@ -619,7 +617,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       logError(err);
     }
     if (showOverlay) {
-      this.toggleMapMarkerOverlay({ open: true, selectedItem: tag });
+      this.toggleDetailsOverlay({ open: true, selectedItem: tag });
     }
   };
 
@@ -637,7 +635,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       logError(err);
     }
     if (showOverlay) {
-      this.toggleMapMarkerOverlay({ open: true, selectedItem: placemark });
+      this.toggleDetailsOverlay({ open: true, selectedItem: placemark });
     }
   };
 
@@ -701,13 +699,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     return null;
   }
 
-  renderMapMarkerOverlay() {
+  renderDetailsOverlay() {
     const { isMapMarkerOverlayOpen, selectedItem } = this.state;
     if (isMapMarkerOverlayOpen && selectedItem) {
-      // TODO: Break this into two components: TagOverlay and PlacemarkOverlay
       return (
-        <MapMarkerOverlay
-          toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
+        <DetailsOverlay
+          toggleDetailsOverlay={this.toggleDetailsOverlay}
           kind={"mac" in selectedItem ? "tag" : "placemark"}
           item={selectedItem}
         />
@@ -773,7 +770,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
         {this.renderLoadingSpinner()}
         {this.renderErrorOverlay()}
-        {this.renderMapMarkerOverlay()}
+        {this.renderDetailsOverlay()}
         {this.renderFloorOverlay()}
         {this.renderTagListOverlay()}
         <FloorAndTagControls

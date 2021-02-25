@@ -14,16 +14,16 @@ import { css, theme } from "./style";
 import { getTagLabels, uiText } from "./util";
 import { placemarkIconURL } from "./web-sdk";
 
-interface MapMarkerOverlayProps {
+interface DetailsOverlayProps {
   kind: "tag" | "placemark";
   item: TagData | PlacemarkData;
-  toggleMapMarkerOverlay: MapComponent["toggleMapMarkerOverlay"];
+  toggleDetailsOverlay: MapComponent["toggleDetailsOverlay"];
 }
 
-const MapMarkerOverlay: FunctionComponent<MapMarkerOverlayProps> = ({
+const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
   kind,
   item,
-  toggleMapMarkerOverlay
+  toggleDetailsOverlay
 }) => {
   const imageStyle: Record<string, any> = (() => {
     if (kind === "placemark") {
@@ -50,7 +50,7 @@ const MapMarkerOverlay: FunctionComponent<MapMarkerOverlayProps> = ({
     <Overlay
       position="left"
       onCloseClicked={() => {
-        toggleMapMarkerOverlay({ open: false });
+        toggleDetailsOverlay({ open: false });
       }}
     >
       <div className={cssOverlayImage} style={imageStyle} />
@@ -94,4 +94,4 @@ const cssTagData = css({
   fontSize: 14
 });
 
-export default MapMarkerOverlay;
+export default DetailsOverlay;

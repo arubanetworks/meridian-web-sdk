@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `onMapClick()` option which is called when the map is clicked
+- `TagData` interface (replaces `Record<string, any>`)
+- `PlacemarkData` interface (replaces `Record<string, any>`)
+- `FloorData` interface (replaces `Record<string, any>`)
+- `LocationData` interface (replaces `Record<string, any>`)
 
 ### Removed
 

@@ -12,7 +12,7 @@
     "docs": "bash bin/docs.sh",
     "build": "bash bin/build.sh",
     "analyze": "webpack -p --mode production --env analyze",
-    "postversion": "git push origin --tags && git push origin HEAD",
+    "postversion": "git push --follow-tags",
     "test": "bash bin/test.sh"
   },
   "repository": {
@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/arubanetworks/meridian-web-sdk#readme",
   "dependencies": {
+    "@types/lodash.throttle": "^4.1.6",
     "@types/lodash.groupby": "^4.6.6",
     "axios": "^0.21.1",
     "create-emotion": "^10.0.14",

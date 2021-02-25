@@ -56,6 +56,7 @@ import { h, render } from "preact";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import placemarkIconGeneric from "../files/placemarks/generic.svg";
 import { sendAnalyticsCodeEvent } from "./analytics";
+import { FloorData, LocationData, PlacemarkData, TagData } from "./data";
 import MapComponent from "./Map";
 import {
   asyncClientCall,
@@ -303,19 +304,18 @@ export type CreateMapOptions = {
   placemarks?: CreateMapPlacemarksOptions;
   /** An array of custom overlays to draw on the map. */
   overlays?: CustomOverlay[];
+  /** An array of custom annotations to draw on the map. */
+  annotations?: CustomAnnotation[];
   /**
    * Called when a tag is clicked. Use `event.preventDefault()` to prevent the
    * default dialog from appearing.
    */
-  onTagClick?: (tag: Record<string, any>, event: MeridianEvent) => void;
+  onTagClick?: (tag: TagData, event: MeridianEvent) => void;
   /**
    * Called when a placemark is clicked. Use `event.preventDefault()` to prevent
    * the default dialog from appearing.
    */
-  onPlacemarkClick?: (
-    placemark: Record<string, any>,
-    event: MeridianEvent
-  ) => void;
+  onPlacemarkClick?: (placemark: PlacemarkData, event: MeridianEvent) => void;
   /**
    * Called when tags on the current floor are updated. `allTags` is every tag
    * on the current floor, even ones not shown on the map. `filteredTags` is
@@ -323,8 +323,8 @@ export type CreateMapOptions = {
    * `filter`).
    */
   onTagsUpdate?: (tags: {
-    allTags: Record<string, any>[];
-    filteredTags: Record<string, any>[];
+    allTags: TagData[];
+    filteredTags: TagData[];
   }) => void;
   /**
    * Called when tags on the current floor are updated. `allPlacemarks` is every
@@ -333,17 +333,17 @@ export type CreateMapOptions = {
    * `showHiddenPlacemarks` and `filter`).
    */
   onPlacemarksUpdate?: (placemarks: {
-    allPlacemarks: Record<string, any>[];
-    filteredPlacemarks: Record<string, any>[];
+    allPlacemarks: PlacemarkData[];
+    filteredPlacemarks: PlacemarkData[];
   }) => void;
   /**
    * Called with an array of floors after the floors list is updated.
    */
-  onFloorsUpdate?: (floors: Record<string, any>[]) => void;
+  onFloorsUpdate?: (floors: FloorData[]) => void;
   /**
    * Called with a floor object when the floor is changed.
    */
-  onFloorChange?: (floor: Record<string, any>) => void;
+  onFloorChange?: (floor: FloorData) => void;
   /**
    * Called when the map has been destroyed, either by manually calling
    * [[destroy]] or by being automatically destroyed when its DOM is tampered
@@ -447,9 +447,14 @@ export function createMap(
     { internalUpdate = true } = {}
   ) => {
     options = { ...options, ...updatedOptions };
+    const api = context.api || options.api;
+    if (!api) {
+      requiredParam("createMap", "options.api");
+      throw new Error("couldn't create MeridianMap");
+    }
     domRef = render(
       <MapComponent
-        api={context.api}
+        api={api}
         {...options}
         update={_update}
         ref={setMapRef}
@@ -469,9 +474,14 @@ export function createMap(
       internalUpdate
     });
   };
+  const api = context.api || options.api;
+  if (!api) {
+    requiredParam("createMap", "options.api");
+    throw new Error("couldn't create MeridianMap");
+  }
   let domRef: HTMLElement = render(
     <MapComponent
-      api={context.api}
+      api={api}
       {...options}
       update={_update}
       ref={setMapRef}
@@ -550,11 +560,11 @@ export interface OpenStreamOptions {
   /** Meridian floor ID */
   floorID: string;
   /** Called with ALL tags on first load */
-  onInitialTags?: (tags: Record<string, any>[]) => void;
+  onInitialTags?: (tags: TagData[]) => void;
   /** Called when a tag exits the floor */
-  onTagLeave?: (tag: Record<string, any>) => void;
+  onTagLeave?: (tag: TagData) => void;
   /** Called when a tag location updates */
-  onTagUpdate?: (tag: Record<string, any>) => void;
+  onTagUpdate?: (tag: TagData) => void;
   /** Called when an error happens */
   onException?: (error: Error) => void;
   /** Called when the stream closes */
@@ -654,7 +664,7 @@ export class API {
   async fetchTagsByFloor(
     locationID: string,
     floorID: string
-  ): Promise<Record<string, any>[]> {
+  ): Promise<TagData[]> {
     if (!locationID) {
       requiredParam("fetchTagsByFloor", "locationID");
     }
@@ -671,9 +681,7 @@ export class API {
   /**
    * [async] Returns an array of all tags at the specified location
    */
-  async fetchTagsByLocation(
-    locationID: string
-  ): Promise<Record<string, any>[]> {
+  async fetchTagsByLocation(locationID: string): Promise<TagData[]> {
     if (!locationID) {
       requiredParam("fetchTagsByLocation", "locationID");
     }
@@ -690,7 +698,7 @@ export class API {
   async fetchPlacemarksByFloor(
     locationID: string,
     floorID: string
-  ): Promise<Record<string, any>[]> {
+  ): Promise<FloorData[]> {
     if (!locationID) {
       requiredParam("fetchPlacemarksByFloor", "locationID");
     }
@@ -706,9 +714,7 @@ export class API {
   /**
    * [async] Returns an array of all floors at the specified location
    */
-  async fetchFloorsByLocation(
-    locationID: string
-  ): Promise<Record<string, any>[]> {
+  async fetchFloorsByLocation(locationID: string): Promise<LocationData[]> {
     if (!locationID) {
       requiredParam("fetchFloorsByLocation", "locationID");
     }
@@ -944,3 +950,5 @@ export type APIOptions = { environment?: EnvOptions; token: string };
 export type Stream = {
   close: () => void;
 };
+
+export * from "./data";

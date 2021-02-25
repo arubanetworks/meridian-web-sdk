@@ -7,32 +7,30 @@
 
 import throttle from "lodash.throttle";
 import { Component, h } from "preact";
+import { PlacemarkData, TagData } from "./data";
 import MapMarker from "./MapMarker";
 import { keyBy, objectWithoutKey } from "./util";
 import { API } from "./web-sdk";
 
 export interface TagLayerProps {
-  selectedItem?: Record<string, any>;
+  selectedItem?: TagData | PlacemarkData;
   isPanningOrZooming: boolean;
   mapZoomFactor: number;
   locationID: string;
   floorID: string;
   api: API;
   markers?: {
-    filter?: (tag: Record<string, any>) => boolean;
+    filter?: (tag: TagData) => boolean;
     showControlTags?: boolean;
     disabled?: boolean;
   };
-  onMarkerClick: (tag: Record<string, any>) => void;
-  onUpdate: (data: {
-    allTags: Record<string, any>[];
-    filteredTags: Record<string, any>[];
-  }) => void;
+  onMarkerClick: (tag: TagData) => void;
+  onUpdate: (data: { allTags: TagData[]; filteredTags: TagData[] }) => void;
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
 }
 
 export interface TagLayerState {
-  tagsByMAC: Record<string, Record<string, any>>;
+  tagsByMAC: Record<string, TagData>;
   connectionsByFloorID: Record<string, any>;
 }
 
@@ -170,7 +168,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     );
   }
 
-  filterControlTags(tags: Record<string, any>[]) {
+  filterControlTags(tags: TagData[]) {
     const { markers } = this.props;
     return tags.filter(tag => {
       if (markers?.showControlTags !== true) {
@@ -205,6 +203,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
         {this.filterControlTags(tags)
           .filter(filter)
           .map(tag => (
+            // TODO: Break up MapMarker
             <MapMarker
               selectedItem={selectedItem}
               mapZoomFactor={mapZoomFactor}

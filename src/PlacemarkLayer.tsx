@@ -6,32 +6,33 @@
  */
 
 import { Component, h } from "preact";
+import { PlacemarkData, TagData } from "./data";
 import MapMarker from "./MapMarker";
 import { asyncClientCall } from "./util";
 import { API, CreateMapOptions } from "./web-sdk";
 
 export interface PlacemarkLayerProps {
-  selectedItem: Record<string, any>;
+  selectedItem?: TagData | PlacemarkData;
   isPanningOrZooming: boolean;
   mapZoomFactor: number;
   locationID: string;
   floorID: string;
   api: API;
   markers: CreateMapOptions["placemarks"];
-  onMarkerClick: (marker: Record<string, any>) => void;
+  onPlacemarkClick: (placemark: PlacemarkData) => void;
   onUpdate: (data: {
-    allPlacemarks: Record<string, any>[];
-    filteredPlacemarks: Record<string, any>[];
+    allPlacemarks: PlacemarkData[];
+    filteredPlacemarks: PlacemarkData[];
   }) => void;
-  placemarks: Record<string, Record<string, any>>;
+  placemarks: Record<string, PlacemarkData>;
 }
 
 export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
-  static defaultProps = {
-    markers: {},
-    placemarks: {},
-    onUpdate: () => {}
-  };
+  // static defaultProps = {
+  //   markers: {},
+  //   placemarks: {},
+  //   onUpdate: () => {}
+  // };
 
   shouldComponentUpdate(nextProps: PlacemarkLayerProps) {
     // Don't re-render when panning only (no zoom change)
@@ -73,18 +74,24 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   render() {
-    const { markers, onMarkerClick, mapZoomFactor, selectedItem } = this.props;
+    const {
+      markers,
+      onPlacemarkClick,
+      mapZoomFactor,
+      selectedItem
+    } = this.props;
     const filteredPlacemarks = this.getFilteredPlacemarks();
     return (
       <div>
         {filteredPlacemarks.map(placemark => (
+          // TODO: MapMarker should be split up for Placemarks vs Tags
           <MapMarker
             selectedItem={selectedItem}
             mapZoomFactor={mapZoomFactor}
             key={placemark.id}
             kind="placemark"
             data={placemark}
-            onClick={onMarkerClick}
+            onClick={onPlacemarkClick}
             disabled={markers?.disabled}
           />
         ))}

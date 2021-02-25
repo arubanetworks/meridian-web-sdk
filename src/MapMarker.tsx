@@ -8,9 +8,10 @@
 import { FunctionComponent, h } from "preact";
 import Placemark from "./Placemark";
 import Tag from "./Tag";
+import { PlacemarkData, TagData } from "./data";
 
 interface MapMarkerProps {
-  selectedItem?: Record<string, any>;
+  selectedItem?: Record<string, TagData | PlacemarkData>;
   kind: "tag" | "placemark";
   data: Record<string, any>;
   mapZoomFactor: number;

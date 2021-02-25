@@ -10,12 +10,13 @@ import { Component, createRef, h } from "preact";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, cx, mixins, theme } from "./style";
+import { FloorData } from "./data";
 import { createSearchMatcher, uiText } from "./util";
 
 export interface FloorOverlayProps {
   toggleFloorOverlay: (options: { open: boolean }) => void;
   currentFloorID: string;
-  floors: Record<string, any>[];
+  floors: FloorData[];
   selectFloorByID: (floorID: string) => void;
 }
 

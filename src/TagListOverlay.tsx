@@ -7,6 +7,7 @@
 
 import groupBy from "lodash.groupby";
 import { Component, createRef, h } from "preact";
+import { FloorData, TagData } from "./data";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
@@ -16,11 +17,11 @@ import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { API, CreateMapOptions } from "./web-sdk";
 
 export interface TagListOverlayProps {
-  onMarkerClick: (marker: Record<string, any>) => void;
+  onTagClick: (tag: TagData) => void;
   loading: boolean;
-  tags: Record<string, any>[];
+  tags: TagData[];
   showControlTags: boolean;
-  floors: Record<string, any>[];
+  floors: FloorData[];
   tagOptions: CreateMapOptions["tags"];
   updateMap: (options: CreateMapOptions) => void;
   api: API;
@@ -47,7 +48,7 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       tagOptions = {},
       tags,
       loading,
-      onMarkerClick,
+      onTagClick,
       toggleTagListOverlay
     } = this.props;
     const { searchFilter } = this.state;
@@ -146,7 +147,7 @@ class TagListOverlay extends Component<TagListOverlayProps> {
                           floorID: tag.map_id,
                           tags: { ...tagOptions, filter: () => true }
                         });
-                        onMarkerClick(tag);
+                        onTagClick(tag);
                         toggleTagListOverlay({ open: false });
                       }}
                     >

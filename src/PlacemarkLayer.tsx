@@ -7,7 +7,7 @@
 
 import { Component, h } from "preact";
 import { PlacemarkData, TagData } from "./data";
-import { MapProps } from "./Map";
+import { MapComponentProps } from "./MapComponent";
 import Placemark from "./Placemark";
 import { asyncClientCall } from "./util";
 import { API, CreateMapOptions } from "./web-sdk";
@@ -21,7 +21,7 @@ export interface PlacemarkLayerProps {
   api: API;
   markers: CreateMapOptions["placemarks"];
   onPlacemarkClick: (placemark: PlacemarkData) => void;
-  onUpdate: MapProps["onPlacemarksUpdate"];
+  onUpdate: MapComponentProps["onPlacemarksUpdate"];
   placemarks: Record<string, PlacemarkData>;
 }
 

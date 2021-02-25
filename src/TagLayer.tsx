@@ -8,7 +8,7 @@
 import throttle from "lodash.throttle";
 import { Component, h } from "preact";
 import { PlacemarkData, TagData } from "./data";
-import { MapProps } from "./Map";
+import { MapComponentProps } from "./MapComponent";
 import Tag from "./Tag";
 import { keyBy, objectWithoutKey } from "./util";
 import { API } from "./web-sdk";
@@ -26,7 +26,7 @@ export interface TagLayerProps {
     disabled?: boolean;
   };
   onTagClick: (tag: TagData) => void;
-  onUpdate: MapProps["onTagsUpdate"];
+  onUpdate: MapComponentProps["onTagsUpdate"];
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
 }
 

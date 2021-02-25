@@ -8,7 +8,7 @@
 import { FunctionComponent, h } from "preact";
 import { PlacemarkData, TagData } from "./data";
 import LabelList from "./LabelList";
-import Map from "./Map";
+import MapComponent from "./MapComponent";
 import Overlay from "./Overlay";
 import { css, theme } from "./style";
 import { getTagLabels, uiText } from "./util";
@@ -17,7 +17,7 @@ import { placemarkIconURL } from "./web-sdk";
 interface MapMarkerOverlayProps {
   kind: "tag" | "placemark";
   item: TagData | PlacemarkData;
-  toggleMapMarkerOverlay: Map["toggleMapMarkerOverlay"];
+  toggleMapMarkerOverlay: MapComponent["toggleMapMarkerOverlay"];
 }
 
 const MapMarkerOverlay: FunctionComponent<MapMarkerOverlayProps> = ({

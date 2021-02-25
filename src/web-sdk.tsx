@@ -57,7 +57,7 @@ import ReconnectingWebSocket from "reconnecting-websocket";
 import placemarkIconGeneric from "../files/placemarks/generic.svg";
 import { sendAnalyticsCodeEvent } from "./analytics";
 import { FloorData, LocationData, PlacemarkData, TagData } from "./data";
-import MapComponent from "./Map";
+import MapComponent from "./MapComponent";
 import {
   asyncClientCall,
   logDeprecated,

@@ -47,7 +47,7 @@ import ZoomControls from "./ZoomControls";
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
 
-export interface MapProps {
+export interface MapComponentProps {
   destroy: () => void;
   update: (options: Partial<CreateMapOptions>) => void;
   shouldMapPanZoom: CreateMapOptions["shouldMapPanZoom"];
@@ -88,7 +88,7 @@ export interface MapProps {
   onFloorChange?: (floor: FloorData) => void;
 }
 
-export interface MapState {
+export interface MapComponentState {
   mapImageURL?: string;
   isFloorOverlayOpen: boolean;
   isTagListOverlayOpen: boolean;
@@ -109,7 +109,7 @@ export interface MapState {
   allTagData: TagData[];
 }
 
-class Map extends Component<MapProps, MapState> {
+class MapComponent extends Component<MapComponentProps, MapComponentState> {
   static defaultProps = {
     loadTags: true,
     loadPlacemarks: true,
@@ -127,7 +127,7 @@ class Map extends Component<MapProps, MapState> {
     onFloorsUpdate: () => {}
   };
 
-  state: MapState = {
+  state: MapComponentState = {
     mapImageURL: undefined,
     isFloorOverlayOpen: false,
     isTagListOverlayOpen: false,
@@ -203,7 +203,7 @@ class Map extends Component<MapProps, MapState> {
     this.fetchMapImageURL();
   }
 
-  componentDidUpdate(prevProps: MapProps) {
+  componentDidUpdate(prevProps: MapComponentProps) {
     if (this.props.locationID !== prevProps.locationID) {
       this.toggleTagListOverlay({ open: false });
       this.toggleErrorOverlay({ open: false });
@@ -386,7 +386,7 @@ class Map extends Component<MapProps, MapState> {
     selectedItem
   }: {
     open: boolean;
-    selectedItem?: MapState["selectedItem"];
+    selectedItem?: MapComponentState["selectedItem"];
   }) => {
     this.setState({ isMapMarkerOverlayOpen: open, selectedItem });
   };
@@ -864,4 +864,4 @@ const cssMap = css({
   overflow: "hidden"
 });
 
-export default Map;
+export default MapComponent;

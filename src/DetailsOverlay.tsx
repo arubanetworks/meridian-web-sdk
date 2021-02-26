@@ -7,21 +7,22 @@
 
 import { FunctionComponent, h } from "preact";
 import LabelList from "./LabelList";
+import MapComponent from "./MapComponent";
 import Overlay from "./Overlay";
 import { css, theme } from "./style";
 import { getTagLabels, uiText } from "./util";
-import { placemarkIconURL } from "./web-sdk";
+import { PlacemarkData, placemarkIconURL, TagData } from "./web-sdk";
 
-interface MapMarkerOverlayProps {
+interface DetailsOverlayProps {
   kind: "tag" | "placemark";
-  item: Record<string, any>;
-  toggleMapMarkerOverlay: (states: Record<string, boolean>) => void;
+  item: TagData | PlacemarkData;
+  toggleDetailsOverlay: MapComponent["toggleDetailsOverlay"];
 }
 
-const MapMarkerOverlay: FunctionComponent<MapMarkerOverlayProps> = ({
+const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
   kind,
   item,
-  toggleMapMarkerOverlay
+  toggleDetailsOverlay
 }) => {
   const imageStyle: Record<string, any> = (() => {
     if (kind === "placemark") {
@@ -48,7 +49,7 @@ const MapMarkerOverlay: FunctionComponent<MapMarkerOverlayProps> = ({
     <Overlay
       position="left"
       onCloseClicked={() => {
-        toggleMapMarkerOverlay({ open: false });
+        toggleDetailsOverlay({ open: false });
       }}
     >
       <div className={cssOverlayImage} style={imageStyle} />
@@ -58,7 +59,7 @@ const MapMarkerOverlay: FunctionComponent<MapMarkerOverlayProps> = ({
           <div className={cssTagData}>
             <LabelList
               align="left"
-              labels={getTagLabels(item)}
+              labels={getTagLabels(item as TagData)}
               fontSize={theme.fontSize}
             />
             <p>MAC: {item.mac}</p>
@@ -92,4 +93,4 @@ const cssTagData = css({
   fontSize: 14
 });
 
-export default MapMarkerOverlay;
+export default DetailsOverlay;

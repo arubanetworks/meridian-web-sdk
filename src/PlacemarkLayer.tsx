@@ -6,33 +6,25 @@
  */
 
 import { Component, h } from "preact";
-import MapMarker from "./MapMarker";
+import { MapComponentProps } from "./MapComponent";
+import Placemark from "./Placemark";
 import { asyncClientCall } from "./util";
-import { API, CreateMapOptions } from "./web-sdk";
+import { API, CreateMapOptions, PlacemarkData, TagData } from "./web-sdk";
 
 export interface PlacemarkLayerProps {
-  selectedItem: Record<string, any>;
+  selectedItem?: TagData | PlacemarkData;
   isPanningOrZooming: boolean;
   mapZoomFactor: number;
   locationID: string;
   floorID: string;
   api: API;
   markers: CreateMapOptions["placemarks"];
-  onMarkerClick: (marker: Record<string, any>) => void;
-  onUpdate: (data: {
-    allPlacemarks: Record<string, any>[];
-    filteredPlacemarks: Record<string, any>[];
-  }) => void;
-  placemarks: Record<string, Record<string, any>>;
+  onPlacemarkClick: (placemark: PlacemarkData) => void;
+  onUpdate: MapComponentProps["onPlacemarksUpdate"];
+  placemarks: Record<string, PlacemarkData>;
 }
 
 export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
-  static defaultProps = {
-    markers: {},
-    placemarks: {},
-    onUpdate: () => {}
-  };
-
   shouldComponentUpdate(nextProps: PlacemarkLayerProps) {
     // Don't re-render when panning only (no zoom change)
     return !(
@@ -43,7 +35,10 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
 
   componentDidUpdate(prevProps: PlacemarkLayerProps) {
     const { markers, placemarks, onUpdate } = this.props;
-    if (placemarks !== prevProps.placemarks || markers !== prevProps.markers) {
+    if (
+      onUpdate &&
+      (placemarks !== prevProps.placemarks || markers !== prevProps.markers)
+    ) {
       asyncClientCall(onUpdate, {
         allPlacemarks: Object.values(placemarks),
         filteredPlacemarks: this.getFilteredPlacemarks()
@@ -73,18 +68,21 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   render() {
-    const { markers, onMarkerClick, mapZoomFactor, selectedItem } = this.props;
+    const {
+      markers,
+      onPlacemarkClick,
+      mapZoomFactor,
+      selectedItem
+    } = this.props;
     const filteredPlacemarks = this.getFilteredPlacemarks();
     return (
       <div>
         {filteredPlacemarks.map(placemark => (
-          <MapMarker
-            selectedItem={selectedItem}
+          <Placemark
+            isSelected={selectedItem ? selectedItem.id === placemark.id : false}
             mapZoomFactor={mapZoomFactor}
-            key={placemark.id}
-            kind="placemark"
             data={placemark}
-            onClick={onMarkerClick}
+            onClick={onPlacemarkClick}
             disabled={markers?.disabled}
           />
         ))}

@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { EnvOptions } from "./web-sdk";
+import { EnvOptions, TagData } from "./web-sdk";
 
 const consoleTag = "[@meridian/web-sdk]";
 // eslint-disable-next-line no-console
@@ -41,7 +41,7 @@ export function createSearchMatcher(query: string) {
     target.toLowerCase().indexOf(query.toLowerCase().trim()) >= 0;
 }
 
-export function getTagLabels(tag: Record<string, any>) {
+export function getTagLabels(tag: TagData) {
   return (tag.tags || []).map((tag: Record<string, any>) => tag.name);
 }
 

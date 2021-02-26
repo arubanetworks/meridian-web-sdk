@@ -7,10 +7,11 @@
 
 import { FunctionComponent, h } from "preact";
 import IconClose from "./IconClose";
+import MapComponent from "./MapComponent";
 import { css, mixins, theme } from "./style";
 
 interface ErrorOverlayProps {
-  toggleErrorOverlay: (state: Record<string, boolean>) => void;
+  toggleErrorOverlay: MapComponent["toggleErrorOverlay"];
   messages: string[];
 }
 

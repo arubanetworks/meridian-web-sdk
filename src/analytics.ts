@@ -11,20 +11,20 @@ const pixelRatio = window.devicePixelRatio || 1;
 const screen = window.screen;
 const screenRes = `${screen.width * pixelRatio}x${screen.height * pixelRatio}`;
 
-type SendAnalyticsCodeEventOptions = {
+interface SendAnalyticsCodeEventOptions {
   action: string;
   locationID: string;
   onTagsUpdate?: boolean;
   tagsFilter?: boolean;
   placemarksFilter?: boolean;
   internalUpdate?: boolean;
-};
+}
 
 export async function sendAnalyticsCodeEvent(
   options: SendAnalyticsCodeEventOptions
 ) {
   // Skip Google Analytics when using Cypress automation testing
-  if ((window as any).Cypress) {
+  if ("Cypress" in window) {
     return;
   }
   const {

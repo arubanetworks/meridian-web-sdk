@@ -5,85 +5,106 @@
  * @packageDocumentation
  */
 
-import { event as d3Event, select as d3Select } from "d3-selection";
+import { event as d3Event, select as d3Select, Selection } from "d3-selection";
+import "d3-transition";
 import {
   zoom as d3Zoom,
+  ZoomBehavior,
   zoomIdentity as d3ZoomIdentity,
   zoomTransform as d3ZoomTransform
 } from "d3-zoom";
-import { Component, Fragment, h } from "preact";
-import PropTypes from "prop-types";
+import { Component, createRef, Fragment, h } from "preact";
 import AnnotationLayer from "./AnnotationLayer";
+import DetailsOverlay from "./DetailsOverlay";
 import ErrorOverlay from "./ErrorOverlay";
 import FloorAndTagControls from "./FloorAndTagControls";
 import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
 import LoadingSpinner from "./LoadingSpinner";
-import MapMarkerOverlay from "./MapMarkerOverlay";
 import OverlayLayer from "./OverlayLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import { css, cx } from "./style";
 import TagLayer from "./TagLayer";
 import TagListOverlay from "./TagListOverlay";
-import { asyncClientCall, isEnvOptions, logError, logWarn } from "./util";
+import { asyncClientCall, isEnvOptions, keyBy, logError } from "./util";
 import Watermark from "./Watermark";
+import {
+  API,
+  CreateMapOptions,
+  CustomAnnotation,
+  CustomOverlay,
+  FloorData,
+  MeridianEvent,
+  PlacemarkData,
+  TagData
+} from "./web-sdk";
 import ZoomControls from "./ZoomControls";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
 
-const cssMapContainer = css({
-  label: "map-container",
-  display: "block",
-  position: "relative",
-  borderRadius: "inherit",
-  background: "#fafafa",
-  color: "#000",
-  fontFamily: "inherit",
-  textAlign: "left"
-});
-
-const cssMap = css({
-  label: "map-outer",
-  borderRadius: "inherit",
-  display: "block",
-  overflow: "hidden"
-});
-
-export default class Map extends Component {
-  static propTypes = {
-    destroy: PropTypes.func.isRequired,
-    shouldMapPanZoom: PropTypes.func,
-    update: PropTypes.func.isRequired,
-    width: PropTypes.string,
-    height: PropTypes.string,
-    locationID: PropTypes.string.isRequired,
-    floorID: PropTypes.string.isRequired,
-    api: PropTypes.object,
-    showFloorsControl: PropTypes.bool,
-    showTagsControl: PropTypes.bool,
-    loadTags: PropTypes.bool,
-    tags: PropTypes.shape({
-      showControlTags: PropTypes.bool,
-      filter: PropTypes.func,
-      disabled: PropTypes.bool
-    }),
-    loadPlacemarks: PropTypes.bool,
-    placemarks: PropTypes.shape({
-      showHiddenPlacemarks: PropTypes.bool,
-      filter: PropTypes.func,
-      disabled: PropTypes.bool
-    }),
-    overlays: PropTypes.array,
-    onMarkerClick: PropTypes.func,
-    onTagClick: PropTypes.func,
-    onPlacemarkClick: PropTypes.func,
-    onMapClick: PropTypes.func,
-    onTagsUpdate: PropTypes.func,
-    onPlacemarksUpdate: PropTypes.func,
-    onFloorsUpdate: PropTypes.func
+export interface MapComponentProps {
+  destroy: () => void;
+  update: (options: Partial<CreateMapOptions>) => void;
+  shouldMapPanZoom: CreateMapOptions["shouldMapPanZoom"];
+  width?: string;
+  height?: string;
+  locationID: string;
+  floorID: string;
+  api: API;
+  showFloorsControl?: boolean;
+  showTagsControl?: boolean;
+  loadTags?: boolean;
+  tags?: {
+    showControlTags?: boolean;
+    filter?: (tag: TagData) => boolean;
+    disabled?: boolean;
   };
+  loadPlacemarks?: boolean;
+  placemarks?: {
+    showHiddenPlacemarks?: boolean;
+    filter?: (placemark: PlacemarkData) => boolean;
+    disabled?: boolean;
+  };
+  overlays?: CustomOverlay[];
+  annotations?: CustomAnnotation[];
+  onTagClick?: (tag: TagData, event: MeridianEvent) => void;
+  onPlacemarkClick?: (placemark: PlacemarkData, event: MeridianEvent) => void;
+  onMapClick?: () => void;
+  onTagsUpdate?: (data: {
+    allTags: TagData[];
+    filteredTags: TagData[];
+  }) => void;
+  onPlacemarksUpdate?: (data: {
+    allPlacemarks: PlacemarkData[];
+    filteredPlacemarks: PlacemarkData[];
+  }) => void;
+  onFloorsUpdate?: (floors: FloorData[]) => void;
+  onFloorChange?: (floor: FloorData) => void;
+}
 
+export interface MapComponentState {
+  mapImageURL?: string;
+  isFloorOverlayOpen: boolean;
+  isTagListOverlayOpen: boolean;
+  isMapMarkerOverlayOpen: boolean;
+  isErrorOverlayOpen: boolean;
+  isPanningOrZooming: boolean;
+  loadingSources: Record<string, any>;
+  errors: any[];
+  mapTransform: string;
+  mapZoomFactor: number;
+  floors: FloorData[];
+  placemarks: Record<string, PlacemarkData>;
+  svgURL?: string;
+  tagsConnection: any;
+  tagsStatus: string;
+  selectedItem?: PlacemarkData | TagData;
+  areTagsLoading: boolean;
+  allTagData: TagData[];
+}
+
+class MapComponent extends Component<MapComponentProps, MapComponentState> {
   static defaultProps = {
     loadTags: true,
     loadPlacemarks: true,
@@ -101,37 +122,37 @@ export default class Map extends Component {
     onFloorsUpdate: () => {}
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      mapImageURL: null,
-      isFloorOverlayOpen: false,
-      isTagListOverlayOpen: false,
-      isMapMarkerOverlayOpen: false,
-      isErrorOverlayOpen: false,
-      isPanningOrZooming: false,
-      loadingSources: {},
-      errors: [],
-      mapTransform: "",
-      mapZoomFactor: 0.5,
-      floors: [],
-      placemarks: {},
-      svgURL: null,
-      tagsConnection: null,
-      tagsStatus: "Connecting",
-      selectedItem: null,
-      areTagsLoading: props.loadTags,
-      allTagData: []
-    };
-    this.isMounted = false;
-    this.tagsTimeout = null;
-    this.mapSelection = null;
-    this.mapRef = null;
-    this.mapContainerRef = null;
-    this.validateFloorID();
-  }
+  state: MapComponentState = {
+    mapImageURL: undefined,
+    isFloorOverlayOpen: false,
+    isTagListOverlayOpen: false,
+    isMapMarkerOverlayOpen: false,
+    isErrorOverlayOpen: false,
+    isPanningOrZooming: false,
+    loadingSources: {},
+    errors: [],
+    mapTransform: "",
+    mapZoomFactor: 0.5,
+    floors: [],
+    placemarks: {},
+    svgURL: undefined,
+    tagsConnection: undefined,
+    tagsStatus: "Connecting",
+    selectedItem: undefined,
+    areTagsLoading: this.props.loadTags ?? true,
+    allTagData: []
+  };
+  isMounted = false;
+  tagsTimeout: any;
+  mapRef = createRef<HTMLDivElement>();
+  mapContainerRef = createRef<HTMLDivElement>();
+  mapImageref = createRef<HTMLImageElement>();
+  intervalAutoDestroy: any;
+  zoomD3?: ZoomBehavior<HTMLDivElement, unknown>;
+  mapSelection?: Selection<HTMLDivElement, unknown, null, undefined>;
 
   componentDidMount() {
+    this.validateFloorID();
     this.isMounted = true;
     const { api, locationID } = this.props;
     if (!isEnvOptions(api.environment)) {
@@ -162,8 +183,8 @@ export default class Map extends Component {
     this.intervalAutoDestroy = setInterval(() => {
       if (
         this.isMounted &&
-        this.mapContainerRef &&
-        !this.mapContainerRef.isConnected
+        this.mapContainerRef.current &&
+        !this.mapContainerRef.current.isConnected
       ) {
         this.props.destroy();
       }
@@ -177,16 +198,16 @@ export default class Map extends Component {
     this.fetchMapImageURL();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: MapComponentProps) {
     if (this.props.locationID !== prevProps.locationID) {
       this.toggleTagListOverlay({ open: false });
       this.toggleErrorOverlay({ open: false });
-      this.toggleMapMarkerOverlay({ open: false });
+      this.toggleDetailsOverlay({ open: false });
       this.toggleFloorOverlay({ open: false });
       this.zoomToDefault();
       this.freeMapImageURL();
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ mapImageURL: null, placemarks: {} });
+      this.setState({ mapImageURL: undefined, placemarks: {} });
       this.loadData();
       return;
     } else if (this.props.loadTags && !prevProps.loadTags) {
@@ -199,7 +220,7 @@ export default class Map extends Component {
     if (prevProps.floorID !== this.props.floorID) {
       this.freeMapImageURL();
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ mapImageURL: null, placemarks: {} });
+      this.setState({ mapImageURL: undefined, placemarks: {} });
       this.fetchMapImageURL();
       this.updatePlacemarks();
     } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
@@ -242,7 +263,7 @@ export default class Map extends Component {
     }
   }
 
-  updateMap = newOptions => {
+  updateMap = (newOptions: Partial<CreateMapOptions>) => {
     const { update } = this.props;
     update(newOptions);
   };
@@ -296,21 +317,27 @@ export default class Map extends Component {
     // function to complete to avoid race conditions
   }
 
-  toggleTagListOverlay = ({ open }) => {
+  toggleTagListOverlay = ({ open }: { open: boolean }) => {
     if (!this.isMounted) {
       return;
     }
     this.setState({ isTagListOverlayOpen: open });
   };
 
-  toggleFloorOverlay = ({ open }) => {
+  toggleFloorOverlay = ({ open }: { open: boolean }) => {
     if (!this.isMounted) {
       return;
     }
     this.setState({ isFloorOverlayOpen: open });
   };
 
-  toggleErrorOverlay = ({ open, message = "Unknown" }) => {
+  toggleErrorOverlay = ({
+    open,
+    message = "Unknown"
+  }: {
+    open: boolean;
+    message?: string;
+  }) => {
     if (!this.isMounted) {
       return;
     }
@@ -324,7 +351,13 @@ export default class Map extends Component {
     }
   };
 
-  toggleLoadingSpinner = ({ show, source = "unknown" }) => {
+  toggleLoadingSpinner = ({
+    show,
+    source = "unknown"
+  }: {
+    show: boolean;
+    source?: string;
+  }) => {
     if (!this.isMounted) {
       return;
     }
@@ -343,44 +376,47 @@ export default class Map extends Component {
     });
   }
 
-  toggleMapMarkerOverlay = ({ open, selectedItem = null }) => {
+  toggleDetailsOverlay = ({
+    open,
+    selectedItem
+  }: {
+    open: boolean;
+    selectedItem?: MapComponentState["selectedItem"];
+  }) => {
     this.setState({ isMapMarkerOverlayOpen: open, selectedItem });
   };
 
-  selectFloorByID = floorID => {
+  selectFloorByID = (floorID: string) => {
     this.updateMap({ floorID, annotations: [], overlays: [] });
-    asyncClientCall(
-      this.props.onFloorChange,
-      this.state.floors.find(f => f.id === floorID)
+    if (this.props.onFloorChange) {
+      const floor = this.state.floors.find(f => f.id === floorID);
+      if (floor) {
+        asyncClientCall(this.props.onFloorChange, floor);
+      }
+    }
+  };
+
+  groupPlacemarksByID = (placemarks: PlacemarkData[]) => {
+    return keyBy(
+      placemarks.map(placemark => this.normalizePlacemark(placemark)),
+      placemark => placemark.id
     );
   };
 
-  groupPlacemarksByID = placemarks => {
-    return placemarks
-      .map(placemark => this.normalizePlacemark(placemark))
-      .reduce((obj, placemark) => {
-        obj[placemark.id] = placemark;
-        return obj;
-      }, {});
-  };
-
-  normalizePlacemark(placemark) {
+  normalizePlacemark(placemark: PlacemarkData): PlacemarkData {
     return { kind: "placemark", ...placemark };
   }
 
   async updatePlacemarks() {
     const { locationID, floorID, api } = this.props;
-    let results = [];
-
+    let results: PlacemarkData[] = [];
     this.toggleLoadingSpinner({ show: true, source: "placemarks" });
-
     if (this.props.loadPlacemarks) {
       results = await api.fetchPlacemarksByFloor(locationID, floorID);
     }
     if (!this.isMounted) {
       return;
     }
-
     // If the user switches floors, we want to get rid of the value
     if (
       floorID === this.props.floorID &&
@@ -402,7 +438,6 @@ export default class Map extends Component {
         return [];
       }
     } catch (err) {
-      // TODO: compare with other error objects, similar?
       if (err.response && err.response.data && err.response.data.detail) {
         this.toggleErrorOverlay({
           open: true,
@@ -419,21 +454,15 @@ export default class Map extends Component {
     return results;
   }
 
-  // TODO: We might want to memoize this based on floorID eventually
   getMapData() {
     const { floorID } = this.props;
     const { floors } = this.state;
-    for (const floor of floors) {
-      if (floor.id === floorID) {
-        return floor;
-      }
-    }
-    return null;
+    return floors.find(f => f.id === floorID);
   }
 
   async initializeFloors() {
     this.toggleLoadingSpinner({ show: true, source: "map" });
-    const { onFloorsUpdate, locationID } = this.props;
+    const { onFloorsUpdate = () => {}, locationID } = this.props;
     const floors = await this.getFloors();
     if (!this.isMounted) {
       return;
@@ -454,9 +483,12 @@ export default class Map extends Component {
   }
 
   addZoomBehavior() {
-    if (this.mapRef) {
+    if (this.mapRef.current) {
       const onZoom = () => {
-        const { k, x, y } = d3ZoomTransform(this.mapRef);
+        if (!this.mapRef.current) {
+          return;
+        }
+        const { k, x, y } = d3ZoomTransform(this.mapRef.current);
         const t = `translate(${x}px, ${y}px) scale(${k})`;
         this.setState({
           mapTransform: t,
@@ -467,17 +499,21 @@ export default class Map extends Component {
       const onZoomEnd = () => {
         this.setState({ isPanningOrZooming: false });
       };
-      this.zoomD3 = d3Zoom()
+      this.zoomD3 = d3Zoom<HTMLDivElement, unknown>()
         // Don't destructure this at the top of the file because we need d3 to
         // hook until whatever the latest version of the function is, even if it
         // has changed since this callback was registered
-        .filter(() => this.props.shouldMapPanZoom(d3Event))
+        .filter(() =>
+          this.props.shouldMapPanZoom
+            ? this.props.shouldMapPanZoom(d3Event)
+            : true
+        )
         // min/max zoom levels
         .scaleExtent([1 / 16, 14])
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom)
         .on("end.zoom", onZoomEnd);
-      this.mapSelection = d3Select(this.mapRef);
+      this.mapSelection = d3Select(this.mapRef.current);
       this.mapSelection.call(this.zoomD3);
     }
   }
@@ -485,7 +521,7 @@ export default class Map extends Component {
   zoomToDefault() {
     const mapData = this.getMapData();
     const mapSize = this.getMapRefSize();
-    if (mapData) {
+    if (mapData && this.mapSelection && this.zoomD3) {
       this.mapSelection.call(
         this.zoomD3.translateTo,
         mapData.width / 2,
@@ -501,13 +537,22 @@ export default class Map extends Component {
   }
 
   getMapRefSize() {
+    if (!this.mapRef.current) {
+      throw new Error("mapRef is not defined");
+    }
     return {
-      width: this.mapRef.clientWidth,
-      height: this.mapRef.clientHeight
+      width: this.mapRef.current.clientWidth,
+      height: this.mapRef.current.clientHeight
     };
   }
 
-  zoomToPoint = (x, y, k) => {
+  zoomToPoint = (x: number, y: number, k: number) => {
+    if (!this.mapSelection) {
+      throw new Error("mapSelection is not defined");
+    }
+    if (!this.zoomD3) {
+      throw new Error("zoomD3 is not defined");
+    }
     const { width, height } = this.getMapRefSize();
     // I'm so sorry, but it's really hard to center things, and also math
     const t = d3ZoomIdentity
@@ -519,7 +564,13 @@ export default class Map extends Component {
       .call(this.zoomD3.transform, t);
   };
 
-  zoomBy = factor => {
+  zoomBy = (factor: number) => {
+    if (!this.mapSelection) {
+      throw new Error("mapSelection is not defined");
+    }
+    if (!this.zoomD3) {
+      throw new Error("zoomD3 is not defined");
+    }
     this.mapSelection
       .transition()
       .duration(ZOOM_DURATION)
@@ -534,54 +585,56 @@ export default class Map extends Component {
     this.zoomBy(1 - ZOOM_FACTOR);
   };
 
-  onClick = event => {
+  onClick = (event: Event) => {
     const mapClicked =
-      this.mapRef.isEqualNode(event.target) ||
-      this.mapImage.isEqualNode(event.target);
+      event.target instanceof Element &&
+      (this.mapRef.current?.isEqualNode?.(event.target) ||
+        this.mapImageref.current?.isEqualNode(event.target));
     if (this.props.onMapClick && mapClicked) {
-      logWarn("onMapClick() is experimental, please do not use it");
-      setTimeout(() => {
-        this.props.onMapClick(event);
-      }, 0);
+      asyncClientCall(this.props.onMapClick);
     } else if (mapClicked) {
-      this.toggleMapMarkerOverlay({ open: false });
+      this.toggleDetailsOverlay({ open: false });
     }
   };
 
-  onMarkerClick = async data => {
+  onTagClick = async (tag: TagData) => {
     let showOverlay = true;
-    const { onTagClick, onPlacemarkClick, onMarkerClick } = this.props;
-    const callback = data.event_type ? onTagClick : onPlacemarkClick;
-    const clientCallback = async () => {
-      if (callback) {
-        try {
-          await callback(data, { preventDefault });
-        } catch (err) {
-          logError(err);
+    const { onTagClick = () => {} } = this.props;
+    try {
+      const meridianEvent = {
+        preventDefault: () => {
+          showOverlay = false;
         }
-      }
-      if (onMarkerClick) {
-        logWarn("onMarkerClick() is experimental, please do not use it");
-        try {
-          await onMarkerClick(data, { preventDefault });
-        } catch (err) {
-          logError(err);
-        }
-      }
-    };
-
-    const preventDefault = () => {
-      showOverlay = false;
-    };
-
-    await clientCallback();
+      };
+      await onTagClick(tag, meridianEvent);
+    } catch (err) {
+      logError(err);
+    }
     if (showOverlay) {
-      this.toggleMapMarkerOverlay({ open: true, selectedItem: data });
+      this.toggleDetailsOverlay({ open: true, selectedItem: tag });
+    }
+  };
+
+  onPlacemarkClick = async (placemark: PlacemarkData) => {
+    let showOverlay = true;
+    const { onPlacemarkClick = () => {} } = this.props;
+    try {
+      const meridianEvent = {
+        preventDefault: () => {
+          showOverlay = false;
+        }
+      };
+      await onPlacemarkClick(placemark, meridianEvent);
+    } catch (err) {
+      logError(err);
+    }
+    if (showOverlay) {
+      this.toggleDetailsOverlay({ open: true, selectedItem: placemark });
     }
   };
 
   shouldShowFloors() {
-    const { showFloorsControl } = this.props;
+    const { showFloorsControl = true } = this.props;
     const { floors } = this.state;
     return showFloorsControl && floors.length > 1;
   }
@@ -623,8 +676,8 @@ export default class Map extends Component {
     if (isTagListOverlayOpen && loadTags) {
       return (
         <TagListOverlay
-          onMarkerClick={this.onMarkerClick}
-          showControlTags={Boolean(tags.showControlTags)}
+          onTagClick={this.onTagClick}
+          showControlTags={Boolean(tags?.showControlTags ?? false)}
           floors={floors}
           loading={areTagsLoading}
           tags={allTagData}
@@ -640,13 +693,13 @@ export default class Map extends Component {
     return null;
   }
 
-  renderMapMarkerOverlay() {
+  renderDetailsOverlay() {
     const { isMapMarkerOverlayOpen, selectedItem } = this.state;
     if (isMapMarkerOverlayOpen && selectedItem) {
       return (
-        <MapMarkerOverlay
-          toggleMapMarkerOverlay={this.toggleMapMarkerOverlay}
-          kind={selectedItem.kind === "placemark" ? "placemark" : "tag"}
+        <DetailsOverlay
+          toggleDetailsOverlay={this.toggleDetailsOverlay}
+          kind={"mac" in selectedItem ? "tag" : "placemark"}
           item={selectedItem}
         />
       );
@@ -684,19 +737,19 @@ export default class Map extends Component {
       errors
     } = this.state;
     const {
-      showTagsControl,
+      showTagsControl = true,
       locationID,
       floorID,
       api,
       tags,
       placemarks,
-      overlays,
-      annotations,
-      width,
-      height,
+      overlays = [],
+      annotations = [],
+      width = "",
+      height = "",
       onTagsUpdate,
       onPlacemarksUpdate,
-      loadTags
+      loadTags = true
     } = this.props;
     return (
       <div
@@ -704,14 +757,14 @@ export default class Map extends Component {
         style={{ width, height }}
         data-testid="meridian--private--map-container"
         ref={ref => {
-          this.mapContainerRef = ref;
+          this.mapContainerRef.current = ref;
         }}
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
         {this.renderLoadingSpinner()}
         {this.renderErrorOverlay()}
-        {this.renderMapMarkerOverlay()}
+        {this.renderDetailsOverlay()}
         {this.renderFloorOverlay()}
         {this.renderTagListOverlay()}
         <FloorAndTagControls
@@ -719,13 +772,11 @@ export default class Map extends Component {
           showTagList={showTagsControl && loadTags}
           toggleFloorOverlay={this.toggleFloorOverlay}
           toggleTagListOverlay={this.toggleTagListOverlay}
-          toggleLoadingSpinner={this.toggleLoadingSpinner}
-          toggleErrorOverlay={this.toggleErrorOverlay}
         />
         {this.renderFloorLabel()}
         <div
           ref={el => {
-            this.mapRef = el;
+            this.mapRef.current = el;
           }}
           className={cx("meridian-map-background", cssMap)}
           onClick={this.onClick}
@@ -738,12 +789,7 @@ export default class Map extends Component {
               transformOrigin: "0 0 0"
             }}
           >
-            <img
-              src={mapImageURL}
-              ref={el => {
-                this.mapImage = el;
-              }}
-            />
+            <img src={mapImageURL} ref={this.mapImageref} />
             {errors.length === 0 && mapData ? (
               <Fragment>
                 <OverlayLayer
@@ -759,8 +805,7 @@ export default class Map extends Component {
                     floorID={floorID}
                     api={api}
                     markers={placemarks}
-                    onMarkerClick={this.onMarkerClick}
-                    toggleLoadingSpinner={this.toggleLoadingSpinner}
+                    onPlacemarkClick={this.onPlacemarkClick}
                     placemarks={this.state.placemarks}
                     onUpdate={onPlacemarksUpdate}
                   />
@@ -774,7 +819,7 @@ export default class Map extends Component {
                     floorID={floorID}
                     api={api}
                     markers={tags}
-                    onMarkerClick={this.onMarkerClick}
+                    onTagClick={this.onTagClick}
                     onUpdate={onTagsUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
                   />
@@ -791,3 +836,23 @@ export default class Map extends Component {
     );
   }
 }
+
+const cssMapContainer = css({
+  label: "map-container",
+  display: "block",
+  position: "relative",
+  borderRadius: "inherit",
+  background: "#fafafa",
+  color: "#000",
+  fontFamily: "inherit",
+  textAlign: "left"
+});
+
+const cssMap = css({
+  label: "map-outer",
+  borderRadius: "inherit",
+  display: "block",
+  overflow: "hidden"
+});
+
+export default MapComponent;

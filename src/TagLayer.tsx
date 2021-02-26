@@ -7,32 +7,30 @@
 
 import throttle from "lodash.throttle";
 import { Component, h } from "preact";
-import MapMarker from "./MapMarker";
+import { MapComponentProps } from "./MapComponent";
+import Tag from "./Tag";
 import { keyBy, objectWithoutKey } from "./util";
-import { API } from "./web-sdk";
+import { API, PlacemarkData, TagData } from "./web-sdk";
 
 export interface TagLayerProps {
-  selectedItem?: Record<string, any>;
+  selectedItem?: TagData | PlacemarkData;
   isPanningOrZooming: boolean;
   mapZoomFactor: number;
   locationID: string;
   floorID: string;
   api: API;
   markers?: {
-    filter?: (tag: Record<string, any>) => boolean;
+    filter?: (tag: TagData) => boolean;
     showControlTags?: boolean;
     disabled?: boolean;
   };
-  onMarkerClick: (tag: Record<string, any>) => void;
-  onUpdate: (data: {
-    allTags: Record<string, any>[];
-    filteredTags: Record<string, any>[];
-  }) => void;
+  onTagClick: (tag: TagData) => void;
+  onUpdate: MapComponentProps["onTagsUpdate"];
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
 }
 
 export interface TagLayerState {
-  tagsByMAC: Record<string, Record<string, any>>;
+  tagsByMAC: Record<string, TagData>;
   connectionsByFloorID: Record<string, any>;
 }
 
@@ -170,7 +168,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     );
   }
 
-  filterControlTags(tags: Record<string, any>[]) {
+  filterControlTags(tags: TagData[]) {
     const { markers } = this.props;
     return tags.filter(tag => {
       if (markers?.showControlTags !== true) {
@@ -184,17 +182,18 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     const { tagsByMAC } = this.state;
     const { onUpdate, markers = {} } = this.props;
     const { filter = () => true } = markers;
-    const tags = Object.values(tagsByMAC);
-    const allTags = this.filterControlTags(tags);
+    const allTags = this.filterControlTags(Object.values(tagsByMAC));
     const filteredTags = allTags.filter(filter);
-    onUpdate({ allTags, filteredTags });
+    if (onUpdate) {
+      onUpdate({ allTags, filteredTags });
+    }
   };
 
   render() {
     const {
       selectedItem,
       markers = {},
-      onMarkerClick,
+      onTagClick,
       mapZoomFactor
     } = this.props;
     const { tagsByMAC } = this.state;
@@ -205,13 +204,12 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
         {this.filterControlTags(tags)
           .filter(filter)
           .map(tag => (
-            <MapMarker
-              selectedItem={selectedItem}
-              mapZoomFactor={mapZoomFactor}
+            <Tag
               key={tag.mac}
-              kind="tag"
+              isSelected={selectedItem ? selectedItem.mac === tag.mac : false}
+              mapZoomFactor={mapZoomFactor}
               data={tag}
-              onClick={onMarkerClick}
+              onClick={onTagClick}
               disabled={markers.disabled}
             />
           ))}

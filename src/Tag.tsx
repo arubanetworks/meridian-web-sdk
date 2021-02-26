@@ -9,6 +9,7 @@ import { FunctionComponent, h } from "preact";
 import defaultTagImageURL from "../files/tags/generic.svg";
 import { css, cx, mixins } from "./style";
 import { getTagLabels } from "./util";
+import { TagData } from "./web-sdk";
 
 const SIZE = 48;
 const SHRINK_POINT = 0.2;
@@ -16,9 +17,9 @@ const SHRINK_FACTOR = 1.4;
 
 interface TagProps {
   isSelected: boolean;
-  data: Record<string, any>;
+  data: TagData;
   mapZoomFactor: number;
-  onClick?: (event: MouseEvent) => void;
+  onClick?: (tag: TagData) => void;
   disabled?: boolean;
 }
 
@@ -55,7 +56,7 @@ const Tag: FunctionComponent<TagProps> = ({
         if (event.target instanceof HTMLElement) {
           event.target.focus();
         }
-        onClick(event);
+        onClick(data);
       }}
       onMouseDown={event => {
         event.stopPropagation();

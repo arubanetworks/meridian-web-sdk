@@ -7,7 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import { css, cx, mixins, theme } from "./style";
-import { placemarkIconURL } from "./web-sdk";
+import { PlacemarkData, placemarkIconURL } from "./web-sdk";
 
 const SIZE = 24;
 const SHRINK_POINT = 0.2;
@@ -15,9 +15,9 @@ const SHRINK_FACTOR = 1.4;
 
 interface PlacemarkProps {
   isSelected: boolean;
-  data: Record<string, any>;
+  data: PlacemarkData;
   mapZoomFactor: number;
-  onClick?: (event: MouseEvent) => void;
+  onClick?: (placemark: PlacemarkData) => void;
   disabled?: boolean;
 }
 
@@ -80,7 +80,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
           if (event.target instanceof HTMLElement) {
             event.target.focus();
           }
-          onClick(event);
+          onClick(data);
         }}
         onMouseDown={event => {
           event.stopPropagation();

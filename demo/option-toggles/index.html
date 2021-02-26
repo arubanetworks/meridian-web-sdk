@@ -171,7 +171,9 @@
         onTagsUpdate: tags => {
           if (state.tags.filter === filterSingle) {
             const tag = tags.allTags.filter(t => t.mac === singleMAC)[0];
-            meridianMap.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
+            if (tag) {
+              meridianMap.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
+            }
           }
         }
       };

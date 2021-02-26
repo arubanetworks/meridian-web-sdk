@@ -44,13 +44,21 @@ const Tag: FunctionComponent<TagProps> = ({
           label = label.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
           return `meridian-tag-label-${label}`;
         }),
-        isSelected && ["meridian-tag-selected", cssTagSelected]
+        isSelected && ["meridian-tag-selected", cssTagSelected],
+        css({
+          // This ought to be a CSS custom property so it can be more easily
+          // overridden, but Chrome seems to have an issue where using a CSS
+          // custom property for background-image causes it to be re-downloaded
+          // every time the inline styles are updated.
+          //
+          // Brian Mock (2021-02-26)
+          backgroundImage: `url('${imageURL}')`
+        })
       )}
       style={{
         left: data.x,
         top: data.y,
-        transform: `translate(-50%, -50%) scale(${k})`,
-        "--meridian-tag-imageURL": `url('${imageURL}')`
+        transform: `translate(-50%, -50%) scale(${k})`
       }}
       onClick={event => {
         if (event.target instanceof HTMLElement) {
@@ -76,7 +84,6 @@ const cssTag = css(
     height: SIZE,
     borderRadius: "100%",
     position: "absolute",
-    backgroundImage: "var(--meridian-tag-imageURL)",
     backgroundColor: "white",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",

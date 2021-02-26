@@ -76,7 +76,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     } = this.props;
     const filteredPlacemarks = this.getFilteredPlacemarks();
     return (
-      <div>
+      <div data-testid="meridian--private--placemark-layer">
         {filteredPlacemarks.map(placemark => (
           <Placemark
             isSelected={selectedItem ? selectedItem.id === placemark.id : false}

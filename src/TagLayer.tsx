@@ -200,7 +200,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     const { filter = () => true } = markers;
     const tags = Object.values(tagsByMAC);
     return (
-      <div>
+      <div data-testid="meridian--private--tag-layer">
         {this.filterControlTags(tags)
           .filter(filter)
           .map(tag => (

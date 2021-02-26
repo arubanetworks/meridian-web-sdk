@@ -785,6 +785,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           <div
             style={{
               position: "relative",
+              width: 0,
+              height: 0,
               transform: mapTransform,
               transformOrigin: "0 0 0"
             }}

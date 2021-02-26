@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- An issue where placemarks and tags near the top left were unclickable
+
 ### Changed
 
 - Upgraded the map SVG for the examples

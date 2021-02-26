@@ -7,7 +7,6 @@
 
 import { FunctionComponent, h } from "preact";
 import AnnotationPoint from "./AnnotationPoint";
-import { css } from "./style";
 import { CustomAnnotation } from "./web-sdk";
 
 interface AnnotationLayerProps {
@@ -20,10 +19,7 @@ const AnnotationLayer: FunctionComponent<AnnotationLayerProps> = ({
   annotations
 }) => {
   return (
-    <div
-      className={cssOverlay}
-      data-testid="meridian--private--annotation-layer"
-    >
+    <div data-testid="meridian--private--annotation-layer">
       {annotations.map((obj, i) => {
         switch (obj.type) {
           case "point":
@@ -37,15 +33,5 @@ const AnnotationLayer: FunctionComponent<AnnotationLayerProps> = ({
     </div>
   );
 };
-
-const cssOverlay = css({
-  label: "overlay",
-  position: "absolute",
-  top: 0,
-  left: 0,
-  width: 0,
-  height: 0,
-  overflow: "visible"
-});
 
 export default AnnotationLayer;

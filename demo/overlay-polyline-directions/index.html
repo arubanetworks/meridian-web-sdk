@@ -72,6 +72,10 @@
           onPlacemarksUpdate: ({ filteredPlacemarks }) => {
             const lobby = filteredPlacemarks.find(p => p.name === "Lobby");
             const cafe = filteredPlacemarks.find(p => p.name === "Cafe");
+            if (!(lobby && cafe)) {
+              console.warn("Couldn't find Lobby or Cafe");
+              return;
+            }
             getDirections(lobby.id, cafe.id).then(directions => {
               meridianMap.update({
                 overlays: [

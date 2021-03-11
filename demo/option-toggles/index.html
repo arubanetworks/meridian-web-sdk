@@ -114,6 +114,45 @@
         </div>
         <div class="controls">
           <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-label-mode"
+              value="always"
+            />
+            <span>Always show placemark labels</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-label-mode"
+              value="never"
+            />
+            <span>Never show placemark labels</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-label-mode"
+              value="hover"
+            />
+            <span>Show placemark labels on hover </span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-label-mode"
+              value="zoom"
+              checked
+            />
+            <span>Show placemark labels when zoomed in</span>
+          </label>
+        </div>
+        <div class="controls">
+          <label class="controls__item">
             <input autocomplete="off" type="checkbox" id="show-control-tags" />
             <span>Show Control Tags</span>
           </label>
@@ -236,6 +275,11 @@
           default:
             throw new Error("unexpected option " + event.target.value);
         }
+        updateMap();
+      });
+
+      $("[name='placemark-label-mode']").on("change", event => {
+        state.placemarks.labelMode = event.target.value;
         updateMap();
       });
 

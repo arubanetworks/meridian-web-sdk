@@ -223,6 +223,15 @@ export interface CreateMapPlacemarksOptions {
   filter?: (placemark: PlacemarkData) => boolean;
   /** Disable clicking placemarks when true. Defaults to false. */
   disabled?: boolean;
+  /**
+   * Which mode should we use for displaying placemark labels
+   *
+   * - always: shown at all times regardless of zoom level
+   * - never: never shown
+   * - hover: only shown when the placemark is hovered
+   * - zoom: [default] only shown when a certain zoom level is reached
+   */
+  labelMode?: "always" | "never" | "hover" | "zoom";
 }
 
 /**

@@ -84,6 +84,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
             data={placemark}
             onClick={onPlacemarkClick}
             disabled={markers?.disabled}
+            labelMode={markers?.labelMode ?? "hover"}
           />
         ))}
       </div>

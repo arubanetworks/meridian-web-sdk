@@ -14,7 +14,7 @@ import {
 } from "./web-sdk";
 
 const SIZE = 24;
-const LABEL_MDOE_ZOOM_LEVEL = 0.2;
+const LABEL_MODE_ZOOM_LEVEL = 0.2;
 
 interface PlacemarkProps {
   isSelected: boolean;
@@ -97,7 +97,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
       <div
         className={cx("meridian-label", cssLabel)}
         data-meridian-placemark-label-zoom-visible={String(
-          mapZoomFactor >= LABEL_MDOE_ZOOM_LEVEL
+          mapZoomFactor >= LABEL_MODE_ZOOM_LEVEL
         )}
       >
         {data.name}

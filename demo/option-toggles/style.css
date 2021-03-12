@@ -8,29 +8,40 @@ body {
 }
 
 .map {
-  border: 1px solid #ccc;
-  float: left;
-  width: 500px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100vw - 400px);
+  height: 100vh;
 }
 
 .controls-container {
-  float: left;
-  margin-left: 20px;
-  max-width: 350px;
+  box-sizing: border-box;
+  box-shadow: -1px 0 0 0 rgba(0, 0, 0, 0.1), 0 0 4px rgba(0, 0, 0, 0.2);
+  background: hsl(210, 30%, 92%);
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 .controls {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   background: hsl(210, 50%, 98%);
   color: hsl(210, 80%, 30%);
   border: 1px solid hsl(210, 30%, 80%);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .controls__item {
   display: flex;
   padding: 16px 8px;
   user-select: none;
-  align-items: center;
+  align-items: baseline;
 }
 
 .controls__item > span {

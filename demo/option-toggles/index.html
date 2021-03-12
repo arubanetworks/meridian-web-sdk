@@ -202,14 +202,14 @@
         api,
         locationID: "5198682008846336",
         floorID: "5755685136498688",
-        height: "700px",
+        height: "100%",
         loadPlacemarks: true,
         loadTags: true,
         placemarks: {},
         tags: {},
         onTagsUpdate: tags => {
           if (state.tags.filter === filterSingle) {
-            const tag = tags.allTags.filter(t => t.mac === singleMAC)[0];
+            const tag = tags.allTags.find(t => t.mac === singleMAC);
             if (tag) {
               meridianMap.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
             }

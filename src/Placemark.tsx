@@ -14,8 +14,7 @@ import {
 } from "./web-sdk";
 
 const SIZE = 24;
-const SHRINK_POINT = 0.2;
-const SHRINK_FACTOR = 1.4;
+const LABEL_MDOE_ZOOM_LEVEL = 0.2;
 
 interface PlacemarkProps {
   isSelected: boolean;
@@ -36,8 +35,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
 }) => {
   const cssTypeName = `meridian-placemark-type-${data.type}`;
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
-  const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
-  const k = 1 / mapZoomFactor / shrinkFactor;
+  const k = 1 / mapZoomFactor;
   const color = `#${data.color}`;
   const iconURL = placemarkIconURL(data.type);
   const iconClassName = isSelected
@@ -99,7 +97,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
       <div
         className={cx("meridian-label", cssLabel)}
         data-meridian-placemark-label-zoom-visible={String(
-          mapZoomFactor >= SHRINK_POINT
+          mapZoomFactor >= LABEL_MDOE_ZOOM_LEVEL
         )}
       >
         {data.name}

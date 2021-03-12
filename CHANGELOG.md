@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Placemarks no longer shrink when zoomed out
+
+### Added
+
+- `placemarks.labelMode` setting with `always`, `never`, `hover`, and `zoom`
+  values (defaults to `zoom`)
+
 ## [0.14.0] - 2021-03-02
 
 ### Fixed

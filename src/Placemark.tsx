@@ -7,11 +7,14 @@
 
 import { FunctionComponent, h } from "preact";
 import { css, cx, mixins, theme } from "./style";
-import { PlacemarkData, placemarkIconURL } from "./web-sdk";
+import {
+  CreateMapPlacemarksOptions,
+  PlacemarkData,
+  placemarkIconURL
+} from "./web-sdk";
 
 const SIZE = 24;
-const SHRINK_POINT = 0.2;
-const SHRINK_FACTOR = 1.4;
+const LABEL_MODE_ZOOM_LEVEL = 0.2;
 
 interface PlacemarkProps {
   isSelected: boolean;
@@ -19,6 +22,7 @@ interface PlacemarkProps {
   mapZoomFactor: number;
   onClick?: (placemark: PlacemarkData) => void;
   disabled?: boolean;
+  labelMode: CreateMapPlacemarksOptions["labelMode"];
 }
 
 const Placemark: FunctionComponent<PlacemarkProps> = ({
@@ -26,12 +30,12 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
   data,
   mapZoomFactor,
   onClick = () => {},
-  disabled = false
+  disabled = false,
+  labelMode
 }) => {
   const cssTypeName = `meridian-placemark-type-${data.type}`;
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
-  const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
-  const k = 1 / mapZoomFactor / shrinkFactor;
+  const k = 1 / mapZoomFactor;
   const color = `#${data.color}`;
   const iconURL = placemarkIconURL(data.type);
   const iconClassName = isSelected
@@ -66,7 +70,11 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
     );
   }
   return (
-    <div className={cx("meridian-placemark", cssPlacemark)} style={style}>
+    <div
+      data-meridian-placemark-label-mode={labelMode}
+      className={cx("meridian-placemark", cssPlacemark)}
+      style={style}
+    >
       <button
         disabled={disabled}
         className={iconClassName}
@@ -88,7 +96,9 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
       />
       <div
         className={cx("meridian-label", cssLabel)}
-        hidden={mapZoomFactor < SHRINK_POINT}
+        data-meridian-placemark-label-zoom-visible={String(
+          mapZoomFactor >= LABEL_MODE_ZOOM_LEVEL
+        )}
       >
         {data.name}
       </div>
@@ -109,10 +119,36 @@ const cssLabel = css(mixins.textStrokeWhite, {
   userSelect: "none",
   transform: "translate(-50%, 0)",
   fontWeight: "bold",
-  visibility: "visible",
+  visibility: "hidden",
+  pointerEvents: "none",
 
-  "&[hidden]": {
+  "[data-meridian-placemark-label-mode='always'] > &": {
+    visibility: "visible"
+  },
+
+  "[data-meridian-placemark-label-mode='never'] > &": {
     visibility: "hidden"
+  },
+
+  "[data-meridian-placemark-label-mode='hover']:hover > &": {
+    visibility: "visible",
+    background: "#333",
+    color: "#eee",
+    textShadow: "none",
+    borderRadius: 4,
+    padding: 4,
+    bottom: 30,
+    maxWidth: 240,
+    width: "max-content",
+    boxShadow: "0 0 1px 1px white"
+  },
+
+  "[data-meridian-placemark-label-mode='zoom'] > &[data-meridian-placemark-label-zoom-visible='false']": {
+    visibility: "hidden"
+  },
+
+  "[data-meridian-placemark-label-mode='zoom'] > &[data-meridian-placemark-label-zoom-visible='true']": {
+    visibility: "visible"
   }
 });
 
@@ -125,7 +161,11 @@ const cssLabelOnly = css({
 
 const cssPlacemark = css({
   label: "placemark",
-  position: "absolute"
+  position: "absolute",
+
+  "&[data-meridian-placemark-label-mode='hover']:hover": {
+    zIndex: 1
+  }
 });
 
 const cssPlacemarkIcon = css(

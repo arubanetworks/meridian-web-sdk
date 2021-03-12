@@ -31,10 +31,7 @@ import Watermark from "./Watermark";
 import {
   API,
   CreateMapOptions,
-  CustomAnnotation,
-  CustomOverlay,
   FloorData,
-  MeridianEvent,
   PlacemarkData,
   TagData
 } from "./web-sdk";
@@ -43,44 +40,13 @@ import ZoomControls from "./ZoomControls";
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
 
-export interface MapComponentProps {
+export interface MapComponentProps extends CreateMapOptions {
   destroy: () => void;
   update: (options: Partial<CreateMapOptions>) => void;
-  shouldMapPanZoom: CreateMapOptions["shouldMapPanZoom"];
-  width?: string;
-  height?: string;
-  locationID: string;
-  floorID: string;
+  // This property is optional in `CreateMapOptions`, only because you can still
+  // use `MeridianSDK.init`, so we override the optional aspect here since
+  // realistically it's actually required.
   api: API;
-  showFloorsControl?: boolean;
-  showTagsControl?: boolean;
-  loadTags?: boolean;
-  tags?: {
-    showControlTags?: boolean;
-    filter?: (tag: TagData) => boolean;
-    disabled?: boolean;
-  };
-  loadPlacemarks?: boolean;
-  placemarks?: {
-    showHiddenPlacemarks?: boolean;
-    filter?: (placemark: PlacemarkData) => boolean;
-    disabled?: boolean;
-  };
-  overlays?: CustomOverlay[];
-  annotations?: CustomAnnotation[];
-  onTagClick?: (tag: TagData, event: MeridianEvent) => void;
-  onPlacemarkClick?: (placemark: PlacemarkData, event: MeridianEvent) => void;
-  onMapClick?: () => void;
-  onTagsUpdate?: (data: {
-    allTags: TagData[];
-    filteredTags: TagData[];
-  }) => void;
-  onPlacemarksUpdate?: (data: {
-    allPlacemarks: PlacemarkData[];
-    filteredPlacemarks: PlacemarkData[];
-  }) => void;
-  onFloorsUpdate?: (floors: FloorData[]) => void;
-  onFloorChange?: (floor: FloorData) => void;
 }
 
 export interface MapComponentState {

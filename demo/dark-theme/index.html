@@ -1,103 +1,104 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Props API | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <script src="../meridian-sdk.js"></script>
+    <style>
+      body {
+        background: #444;
+        color: #ddd;
+        font-family: Menlo, Consolas, monospace;
+        padding: 40px;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.5;
+        font-size: 20px;
+      }
 
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Props API | Meridian Web SDK</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
-  <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
-  <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
-  <link rel="stylesheet" href="../shared.css">
-  <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
-  <script type="module" src="../shared.js"></script>
-  <script src="../meridian-sdk.js"></script>
-  <style>
-    body {
-      background: #444;
-      color: #ddd;
-      font-family: Menlo, Consolas, monospace;
-      padding: 40px;
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.5;
-      font-size: 20px;
-    }
+      .map {
+        margin: 0;
+        border: 1px solid #222;
+      }
 
-    .map {
-      border: 1px solid #222;
-    }
+      .map .meridian-map-background {
+        background: #333;
+      }
 
-    .map .meridian-map-background {
-      background: #333;
-    }
+      .map .meridian-floor-control,
+      .map .meridian-tag-control,
+      .map .meridian-zoom-button {
+        fill: #fff;
+        background: #444;
+        border-color: #333;
+        border-radius: 10px;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+      }
 
-    .map .meridian-floor-control,
-    .map .meridian-tag-control,
-    .map .meridian-zoom-button {
-      fill: #fff;
-      background: #444;
-      border-color: #333;
-      border-radius: 10px;
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
-    }
+      .map .meridian-floor-control:focus,
+      .map .meridian-tag-control:focus,
+      .map .meridian-zoom-button:focus {
+        box-shadow: 0 0 0 3px #0f0, 0 0 3px #0f0;
+      }
 
-    .map .meridian-floor-control:focus,
-    .map .meridian-tag-control:focus,
-    .map .meridian-zoom-button:focus {
-      box-shadow: 0 0 0 3px #0f0, 0 0 3px #0f0;
-    }
+      .meridian-zoom-controls {
+        border-radius: 0;
+        box-shadow: none;
+      }
 
-    .meridian-zoom-controls {
-      border-radius: 0;
-      box-shadow: none;
-    }
+      .map .meridian-zoom-button-in {
+        margin-bottom: 10px;
+      }
 
-    .map .meridian-zoom-button-in {
-      margin-bottom: 10px;
-    }
+      .map .meridian-floor-control:hover,
+      .map .meridian-tag-control:hover,
+      .map .meridian-zoom-button:hover {
+        background: #555;
+      }
 
-    .map .meridian-floor-control:hover,
-    .map .meridian-tag-control:hover,
-    .map .meridian-zoom-button:hover {
-      background: #555;
-    }
+      .map .meridian-floor-control:active,
+      .map .meridian-tag-control:active,
+      .map .meridian-zoom-button:active {
+        background: #666;
+      }
 
-    .map .meridian-floor-control:active,
-    .map .meridian-tag-control:active,
-    .map .meridian-zoom-button:active {
-      background: #666;
-    }
+      .map .meridian-floor-label {
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+      }
+    </style>
+  </head>
 
-    .map .meridian-floor-label {
-      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
-    }
+  <body>
+    <div class="map" id="meridian-map"></div>
 
-  </style>
-</head>
+    <p>
+      This example uses a dark theme, so we customized the map background and
+      controls to match better.
+    </p>
 
-<body>
-  <div class="map" id="meridian-map"></div>
-
-  <p>
-    This website uses a dark theme, so we customized the map background and
-    controls to match better.
-  </p>
-
-  <script type="module" id="the-code">
-    MeridianSDK.createMap(document.getElementById("meridian-map"), {
-      api: new MeridianSDK.API({
-        environment: "production",
-        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-      }),
-      locationID: "5198682008846336",
-      floorID: "5755685136498688",
-      height: "500px"
-    });
-  </script>
-</body>
-
+    <script type="module" id="the-code">
+      MeridianSDK.createMap(document.getElementById("meridian-map"), {
+        api: new MeridianSDK.API({
+          environment: "production",
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        }),
+        locationID: "5198682008846336",
+        floorID: "5755685136498688",
+        height: "500px"
+      });
+    </script>
+  </body>
 </html>

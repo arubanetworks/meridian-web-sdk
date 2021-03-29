@@ -14,7 +14,6 @@ import {
 } from "./web-sdk";
 
 const SIZE = 24;
-const LABEL_MODE_ZOOM_LEVEL = 0.2;
 
 interface PlacemarkProps {
   isSelected: boolean;
@@ -23,6 +22,7 @@ interface PlacemarkProps {
   onClick?: (placemark: PlacemarkData) => void;
   disabled?: boolean;
   labelMode: CreateMapPlacemarksOptions["labelMode"];
+  labelZoomLevel: CreateMapPlacemarksOptions["labelZoomLevel"];
 }
 
 const Placemark: FunctionComponent<PlacemarkProps> = ({
@@ -31,7 +31,8 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
   mapZoomFactor,
   onClick = () => {},
   disabled = false,
-  labelMode
+  labelMode,
+  labelZoomLevel = 0.9
 }) => {
   const cssTypeName = `meridian-placemark-type-${data.type}`;
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
@@ -97,7 +98,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
       <div
         className={cx("meridian-label", cssLabel)}
         data-meridian-placemark-label-zoom-visible={String(
-          mapZoomFactor >= LABEL_MODE_ZOOM_LEVEL
+          mapZoomFactor >= labelZoomLevel
         )}
       >
         {data.name}

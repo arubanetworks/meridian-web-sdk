@@ -15,15 +15,24 @@
       rel="stylesheet"
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
-    <link rel="stylesheet" href="style.css" />
     <script type="module" src="../shared.js"></script>
     <style>
-      body {
-        font-family: sans-serif;
+      .controls {
+        max-width: 560px;
+        background: hsl(210, 50%, 98%);
+        color: hsl(210, 80%, 30%);
+        border: 1px solid hsl(210, 30%, 80%);
+        padding: 20px;
+        margin: 20px auto;
+      }
+
+      #image-code {
+        margin: 15px auto;
+        display: block;
       }
 
       .map {
-        max-width: 500px;
+        max-width: 600px;
         margin: auto;
         border: 1px solid #ccc;
       }
@@ -47,37 +56,33 @@
   </head>
 
   <body>
-    <div class="container">
       <div class="map" id="meridian-map"></div>
         <div class="controls-container">
           <div class="controls">
             <span>
-              The custom styling on the red heart placemark is achieved using the placemark ID with the
-              following code:
-              <img src="code.png" alt="code block" width="468" height="125" />
-              This can be used style placemarks as needed or to indicate "you
-              are here".
+              The custom placemark styling can be achieved using the placemark ID with the
+              following code:<br/>
+              <img src="code.png" alt="code block" id="image-code" width="468" height="125" />
             </span>
           </div>
         </div>
       </div>
-    </div>
     <script src="../meridian-sdk.js"></script>
-        <script type="module" id="the-code">
-          MeridianSDK.init({
-            api: new MeridianSDK.API({
-              environment: "production",
-              token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-            })
-          });
-          var map = MeridianSDK.createMap(
-            document.getElementById("meridian-map"),
-            {
-              locationID: "5198682008846336",
-              floorID: "5755685136498688",
-              height: "500px",
-            }
-          );
-        </script>
+    <script type="module" id="the-code">
+      MeridianSDK.init({
+        api: new MeridianSDK.API({
+          environment: "production",
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        })
+      });
+      var map = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          locationID: "5198682008846336",
+          floorID: "5755685136498688",
+          height: "400px",
+        }
+      );
+    </script>
   </body>
 </html>

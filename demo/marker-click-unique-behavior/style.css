@@ -8,6 +8,9 @@ body {
   left: 0;
   width: calc(100vw - 350px);
   height: 100vh;
+  margin: 0;
+  max-width: 100%;
+  border: 0;
 }
 
 .sidebar-container {

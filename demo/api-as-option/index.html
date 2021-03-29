@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Full Page | Meridian Web SDK</title>
+    <title>Alternate (API as an option) | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -22,38 +22,27 @@
       }
 
       .map {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        max-width: 100%;
-        border: 0;
+        max-width: 700px;
+        margin: auto;
+        border: 1px solid #ccc;
       }
     </style>
   </head>
 
   <body>
     <div class="map" id="meridian-map"></div>
+
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
-      const api = new MeridianSDK.API({
-        environment: "production",
-        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+      MeridianSDK.createMap(document.getElementById("meridian-map"), {
+        api: new MeridianSDK.API({
+          environment: "production",
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        }),
+        locationID: "5198682008846336",
+        floorID: "5755685136498688",
+        height: "500px"
       });
-
-      const meridianMap = MeridianSDK.createMap(
-        document.getElementById("meridian-map"),
-        {
-          api: api,
-          locationID: "5198682008846336",
-          floorID: "5755685136498688",
-          height: "100%"
-        }
-      );
-
-      // Open the Dev Tools to use meridianMap
-      Object.assign(window, { meridianMap });
     </script>
   </body>
 </html>

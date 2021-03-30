@@ -85,6 +85,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
             onClick={onPlacemarkClick}
             disabled={markers?.disabled}
             labelMode={markers?.labelMode ?? "zoom"}
+            labelZoomLevel={markers?.labelZoomLevel}
           />
         ))}
       </div>

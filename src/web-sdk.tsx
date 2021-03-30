@@ -232,6 +232,8 @@ export interface CreateMapPlacemarksOptions {
    * - zoom: [default] only shown when a certain zoom level is reached
    */
   labelMode?: "always" | "never" | "hover" | "zoom";
+  /** Zoom level at which placemark lables appear when label mode is "zoom" */
+  labelZoomLevel?: number;
 }
 
 /**

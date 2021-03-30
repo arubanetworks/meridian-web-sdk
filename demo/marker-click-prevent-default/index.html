@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Tag/Placemark click callback | Meridian Web SDK</title>
+    <title>Marker Click Callback (Prevent Default) | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -19,22 +19,10 @@
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
     <script type="module" src="../shared.js"></script>
-    <style>
-      body {
-        font-family: sans-serif;
-      }
-
-      .map {
-        max-width: 550px;
-        margin: auto;
-        border: 1px solid #ccc;
-      }
-    </style>
   </head>
 
   <body>
     <div class="map" id="meridian-map"></div>
-
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
       MeridianSDK.init({

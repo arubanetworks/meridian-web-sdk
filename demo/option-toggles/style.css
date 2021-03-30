@@ -13,6 +13,8 @@ body {
   left: 0;
   width: calc(100vw - 400px);
   height: 100vh;
+  border: 0;
+  max-width: 100%;
 }
 
 .controls-container {

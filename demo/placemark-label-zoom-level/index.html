@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Container styling | Meridian Web SDK</title>
+    <title>Placemark Label Zoom Level | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="../shared.css" />
     <link
       rel="stylesheet"
@@ -17,32 +18,53 @@
     />
     <script type="module" src="../shared.js"></script>
     <style>
+      body {
+        font-family: sans-serif;
+      }
       .map {
         margin: auto;
-        border-radius: 2px;
-        border: 1px solid mediumturquoise;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+        border: 1px solid #ccc;
+        min-height: 500px;
+      }
+      .container {
+        width: 700px;
+        margin: 0 auto;
       }
 
-      body .meridian-map-container {
-        background: papayawhip;
+      .description {
+        margin-bottom: 10px;
+        margin-top: 20px;
+        background: hsl(210, 50%, 98%);
+        color: hsl(210, 80%, 30%);
+        border: 1px solid hsl(210, 30%, 80%);
+        padding: 15px;
       }
     </style>
   </head>
 
   <body>
-    <div class="map" id="meridian-map"></div>
-
+    <div class="container">
+      <div class="map" id="meridian-map"></div>
+      <div class="description">
+        This example shows the result of setting the Placemark Label Zoom Level
+        to 0.1.
+      </div>
+    </div>
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
-      MeridianSDK.createMap(document.getElementById("meridian-map"), {
+      MeridianSDK.init({
         api: new MeridianSDK.API({
           environment: "production",
           token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        }),
+        })
+      });
+      var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
         locationID: "5198682008846336",
         floorID: "5755685136498688",
-        height: "500px"
+        height: "500px",
+        placemarks: {
+          labelZoomLevel: 0.1
+        }
       });
     </script>
   </body>

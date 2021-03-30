@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Tag Names | Meridian Web SDK</title>
+    <title>Tag Name | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -19,7 +19,11 @@
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
     <script type="module" src="../shared.js"></script>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      .map {
+        margin-top: 20px;
+      }
+    </style>
   </head>
 
   <body>
@@ -52,9 +56,10 @@
           this.map = MeridianSDK.createMap(element, {
             locationID: "5198682008846336",
             floorID: "5755685136498688",
-            height: "360px",
+            height: "500px",
             onTagsUpdate: this.onTagsUpdate,
             showTagsControl: false,
+            height: "500px",
             tags: {
               filter: () => true
             },
@@ -121,19 +126,17 @@
         render() {
           return (
             <div>
-              <div className="map" id="map" ref={this.initMeridianMap} />
               <div
                 className="controls-container"
                 style={{ textAlign: "center" }}
               >
                 <p>{this.state.tagNames.length} tags found</p>
-                <div>
-                  <select onChange={this.onSelectChange}>
-                    <option value="">all</option>
-                    {this.renderSelectOptions()}
-                  </select>
-                </div>
+                <select onChange={this.onSelectChange}>
+                  <option value="">all</option>
+                  {this.renderSelectOptions()}
+                </select>
               </div>
+              <div className="map" id="map" ref={this.initMeridianMap} />
             </div>
           );
         }

@@ -1,110 +1,115 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Advanced styling | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <style>
+      body {
+        background: seashell;
+        color: purple;
+        color: rebeccapurple;
+        padding-top: 20px;
+        margin: auto;
+        font-family: "Comic Sans MS", Papyrus, fantasy;
+        line-height: 1.5;
+        font-size: 20px;
+        margin: 2rem;
+      }
 
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Advanced styling | Meridian Web SDK</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
-  <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
-  <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
-  <link rel="stylesheet" href="../shared.css">
-  <link rel="stylesheet" href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css">
-  <script type="module" src="../shared.js"></script>
-  <style>
-    body {
-      background: seashell;
-      color: purple;
-      color: rebeccapurple;
-      padding-top: 20px;
-      max-width: 500px;
-      margin: auto;
-      font-family: "Comic Sans MS", Papyrus, fantasy;
-      line-height: 1.5;
-      font-size: 20px;
-    }
+      .map,
+      .copy {
+        max-width: 700px;
+        margin: 0 auto;
+        border: 0;
+      }
 
-    .map {
-      margin-bottom: 40px;
-    }
+      /**
+      * Use `body` as a parent select to gain extra specificity and beat our
+      * default rules regardless of CSS load order for a robust styling solution
+      */
 
-    /**
-     * Use `body` as a parent select to gain extra specificity and beat our
-     * default rules regardless of CSS load order for a robust styling solution
-     */
+      body .meridian-map-container {
+        border-radius: 0 30px 0 80px;
+        border: 6px solid mediumturquoise;
+        background: papayawhip;
+        box-shadow: 0 8px 10px 2px chocolate;
+      }
 
-    body .meridian-map-container {
-      border-radius: 0 30px 0 80px;
-      border: 6px solid mediumturquoise;
-      background: papayawhip;
-      box-shadow: 0 8px 10px 2px chocolate;
-    }
+      body .meridian-zoom-controls {
+        overflow: hidden;
+        border-radius: 0;
+        box-shadow: 0 0 3px 3px orange;
+        border-radius: 0 20px 0 20px;
+      }
 
-    body .meridian-zoom-controls {
-      overflow: hidden;
-      border-radius: 0;
-      box-shadow: 0 0 3px 3px orange;
-      border-radius: 0 20px 0 20px;
-    }
+      body .meridian-zoom-button {
+        fill: red;
+        background: mintcream;
+        border-radius: 0;
+        border-color: orange;
+      }
 
-    body .meridian-zoom-button {
-      fill: red;
-      background: mintcream;
-      border-radius: 0;
-      border-color: orange;
-    }
+      body .meridian-tag-control,
+      body .meridian-floor-control {
+        border-color: darkgreen;
+        border-radius: 0 10px 0 10px;
+        fill: red;
+        background: mintcream;
+        box-shadow: 0 0 3px 3px orange;
+      }
 
-    body .meridian-tag-control,
-    body .meridian-floor-control {
-      border-color: darkgreen;
-      border-radius: 0 10px 0 10px;
-      fill: red;
-      background: mintcream;
-      box-shadow: 0 0 3px 3px orange;
-    }
+      body .meridian-tag-control:hover,
+      body .meridian-floor-control:hover,
+      body .meridian-tag-control:focus,
+      body .meridian-floor-control:focus {
+        outline: none;
+        background: mediumturquoise;
+        box-shadow: 0 0 3px 3px orange;
+      }
+      body .meridian-zoom-button:hover,
+      body .meridian-zoom-button:focus {
+        background: mediumturquoise;
+        outline: none;
+        box-shadow: 0 0 3px white;
+      }
+    </style>
+  </head>
 
-    body .meridian-tag-control:hover,
-    body .meridian-floor-control:hover,
-    body .meridian-tag-control:focus,
-    body .meridian-floor-control:focus {
-      outline: none;
-      background: mediumturquoise;
-      box-shadow: 0 0 3px 3px orange;
-    }
-    body .meridian-zoom-button:hover,
-    body .meridian-zoom-button:focus {
-      background: mediumturquoise;
-      outline: none;
-      box-shadow: 0 0 3px white;
-    }
+  <body>
+    <div class="map" id="meridian-map"></div>
+    <div class="copy">
+      <p>
+        This style is intentionally a bit over the top to show you how
+        customizable these hooks are.
+      </p>
+    </div>
 
-  </style>
-</head>
-
-<body>
-
-  <div class="map" id="meridian-map"></div>
-  <p>
-    This style is intentionally a bit over the top to show you how customizable
-    these hooks are.
-  </p>
-
-  <script src="../meridian-sdk.js"></script>
-  <script type="module" id="the-code">
-    MeridianSDK.init({
-      api: new MeridianSDK.API({
-        environment: "production",
-        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-      })
-    });
-    MeridianSDK.createMap(document.getElementById("meridian-map"), {
-      locationID: "5198682008846336",
-      floorID: "5755685136498688"
-    });
-  </script>
-</body>
-
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      MeridianSDK.init({
+        api: new MeridianSDK.API({
+          environment: "production",
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        })
+      });
+      MeridianSDK.createMap(document.getElementById("meridian-map"), {
+        locationID: "5198682008846336",
+        floorID: "5755685136498688",
+        height: "500px"
+      });
+    </script>
+  </body>
 </html>

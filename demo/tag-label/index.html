@@ -19,7 +19,11 @@
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
     <script type="module" src="../shared.js"></script>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      .map {
+        margin-top: 20px;
+      }
+    </style>
   </head>
 
   <body>
@@ -52,7 +56,7 @@
           this.map = MeridianSDK.createMap(element, {
             locationID: "5198682008846336",
             floorID: "5755685136498688",
-            height: "360px",
+            height: "500px",
             onTagsUpdate: this.onTagsUpdate,
             showTagsControl: false,
             onFloorChange: floor => {
@@ -110,7 +114,6 @@
         render() {
           return (
             <div>
-              <div className="map" id="map" ref={this.initMeridianMap} />
               <div
                 className="controls-container"
                 style={{ textAlign: "center" }}
@@ -123,6 +126,7 @@
                   </select>
                 </div>
               </div>
+              <div className="map" id="map" ref={this.initMeridianMap} />
             </div>
           );
         }

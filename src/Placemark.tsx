@@ -32,7 +32,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
   onClick = () => {},
   disabled = false,
   labelMode,
-  labelZoomLevel = 0.9
+  labelZoomLevel = 0.2
 }) => {
   const cssTypeName = `meridian-placemark-type-${data.type}`;
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;

@@ -1,7 +1,7 @@
 {
   "name": "@meridian/web-sdk",
   "private": false,
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
   "main": "./dist/web-sdk.js",
   "types": "./dist/src/web-sdk.d.ts",

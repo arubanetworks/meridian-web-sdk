@@ -1,24 +1,37 @@
+# I believe this is now a default and can be safely removed
 sudo: false
 branches:
   only:
+    # Only deploy "branches" (also tags) that are "master", or look like a
+    # version tag. This way we can run tests against master, while also doing
+    # `npm publish` when there's a new tag.
     - master
     - /^v[0-9]/
 language: node_js
+# Run tests against latest node and current long term support node. Only the LTS
+# job is used for `npm publish`, since we don't want to publish the package
+# twice (that would cause an error).
 node_js:
   - "node"
   - "lts/*"
+# Cache npm downloads for faster CI jobs
 cache:
   npm: true
 before_install:
   # Decrypt Google Cloud Storage credentials
   - openssl aes-256-cbc -K $encrypted_9888058ce616_key -iv $encrypted_9888058ce616_iv -in gcs-key.json.enc -out gcs-key.json -d
+# This might be the default these days, but I left it in explicitly
 install:
   - npm ci
+# "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
+# the repo right now.
 script:
   - npm test
   - npm run build
   - npm run travis-cypress
 deploy:
+  # Copy the files in `gcs-files/` to Google Cloud Storage. This is used for
+  # static assets, namely a lot of images.
   - provider: gcs
     # Opt-in to dpl v2 so we can use key_file
     # https://docs.travis-ci.com/user/deployment-v2/providers/gcs/
@@ -32,6 +45,7 @@ deploy:
     on:
       tags: true
       node_js: "lts/*"
+  # Publish to npm
   - provider: npm
     # Don't delete `dist/` and `docs/` since we need them to deploy
     skip_cleanup: true
@@ -41,7 +55,8 @@ deploy:
     on:
       tags: true
       node_js: "lts/*"
-  - provider: pages # GitHub pages
+  # Update GitHub pages for the documentation and demos
+  - provider: pages
     # Don't delete `dist/` and `docs/` since we need them to deploy
     skip_cleanup: true
     local_dir: docs

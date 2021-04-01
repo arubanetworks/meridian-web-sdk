@@ -11,6 +11,8 @@ import { css, cx, mixins } from "./style";
 import { getTagLabels } from "./util";
 import { TagData } from "./web-sdk";
 
+// Might be worth turning these into options you can pass in to a map, the same
+// way we did with placemarks.
 const SIZE = 48;
 const SHRINK_POINT = 0.2;
 const SHRINK_FACTOR = 1.4;

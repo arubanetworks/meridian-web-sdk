@@ -126,8 +126,6 @@ export const mixins = {
   } as Interpolation
 } as const;
 
-// Feel free to uncomment these as we need more functions from Emotion,
-// especially `keyframes` if we need to start doing animations.
 export const {
   // flush,
   // hydrate,

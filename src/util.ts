@@ -5,6 +5,10 @@
 
 import { EnvOptions, TagData } from "./web-sdk";
 
+// Make some logging helpers so that we don't need to ignore ESLint when we
+// actually want to log things to the console, plus ensure that we always
+// identify our logs with our package name, so folks know where the error is
+// coming from.
 const consoleTag = "[@meridian/web-sdk]";
 // eslint-disable-next-line no-console
 export const logWarn = console.warn.bind(console, consoleTag);
@@ -18,6 +22,7 @@ export const uiText = {
   noResultsFound: "No results found."
 };
 
+/** New object with just one key missing from it. */
 export function objectWithoutKey<T>(object: T, key: keyof typeof object): T {
   const newObject = { ...object };
   delete newObject[key];

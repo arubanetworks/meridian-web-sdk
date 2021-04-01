@@ -326,6 +326,7 @@ export interface CreateMapOptions {
    * Called when a tag is clicked. Use `event.preventDefault()` to prevent the
    * default dialog from appearing.
    */
+  // TODO: This should be Promise<void> since we're await'ing
   onTagClick?: (tag: TagData, event: MeridianEvent) => void;
   /**
    * Called when a placemark is clicked. Use `event.preventDefault()` to prevent
@@ -422,15 +423,6 @@ export interface MeridianMap {
  *    height: "500px"
  *  }
  * );
- * ```
- *
- * Call this before navigating to a new page, to close network connections. This
- * is critical for usage within a single page application, or even just an
- * interactive page with JS that unmounts the map container element (e.g.
- * removing it from the DOM or setting the `innerHTML`).
- *
- * ```js
- * map.destroy();
  * ```
  */
 export function createMap(

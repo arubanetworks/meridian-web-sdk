@@ -20,8 +20,8 @@ export default {
       group_name: "Main Building",
       level: 6.0,
       level_label: "6",
-      width: 2668,
-      height: 1754,
+      width: 7213,
+      height: 4363,
       width_meters: 89.54053977585014,
       height_meters: 58.865857109010925,
       units_per_meter: 29.796559264428097,
@@ -34,14 +34,7 @@ export default {
       zoom_max: 23.0,
       zoom_scalar: 1.0,
       invalid: false,
-      asset_tracking_control_tags: false,
-      geojson_alignment_points: [
-        [37.38172662692271, -121.98087726825767],
-        [37.38172358795398, -121.98189130187737],
-        [37.38225331137904, -121.98189381617645],
-        [37.38225635034778, -121.98087978255674],
-        [37.38172662692271, -121.98087726825767]
-      ]
+      asset_tracking_control_tags: false
     },
     {
       modified: "2019-09-24T05:21:20",
@@ -61,8 +54,8 @@ export default {
       group_name: "Main Building",
       level: 1.0,
       level_label: "1",
-      width: 5736,
-      height: 2367,
+      width: 7213,
+      height: 4363,
       width_meters: 92.03562321626748,
       height_meters: 37.979135312570634,
       units_per_meter: 62.323693799751986,
@@ -75,14 +68,7 @@ export default {
       zoom_max: 23.0,
       zoom_scalar: 1.0,
       invalid: false,
-      asset_tracking_control_tags: false,
-      geojson_alignment_points: [
-        [37.38162663130253, -121.98040723800658],
-        [37.38079866990237, -121.98043305457814],
-        [37.380807135182884, -121.98086303188417],
-        [37.38163509658305, -121.9808372153126],
-        [37.38162663130253, -121.98040723800658]
-      ]
+      asset_tracking_control_tags: false
     }
   ]
 };

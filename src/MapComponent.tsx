@@ -475,7 +475,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
             : true
         )
         // min/max zoom levels
-        .scaleExtent([1 / 30, 14])
+        .scaleExtent([1 / 60, 14])
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom)
         .on("end.zoom", onZoomEnd);
@@ -494,7 +494,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       this.mapSelection.call(
         this.zoomD3.translateTo,
         mapWidth / 2,
-        mapHeight / 2
+        mapHeight / 1.8 // nudge the map up a little to accommodate floor label
       );
       this.mapSelection.call(
         this.zoomD3.scaleTo,

@@ -475,7 +475,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
             : true
         )
         // min/max zoom levels
-        .scaleExtent([1 / 16, 14])
+        .scaleExtent([1 / 30, 14])
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom)
         .on("end.zoom", onZoomEnd);
@@ -486,18 +486,22 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   zoomToDefault() {
     const mapData = this.getMapData();
-    const mapSize = this.getMapRefSize();
-    if (mapData && this.mapSelection && this.zoomD3) {
+    const mapContainerSize = this.getMapRefSize();
+    const mapWidth = mapData?.width;
+    const mapHeight = mapData?.height;
+
+    if (mapWidth && mapHeight && this.mapSelection && this.zoomD3) {
       this.mapSelection.call(
         this.zoomD3.translateTo,
-        mapData.width / 2,
-        mapData.height / 2
+        mapWidth / 2,
+        mapHeight / 2
       );
       this.mapSelection.call(
         this.zoomD3.scaleTo,
-        // TODO: Figure out the appropriate scale level to show the "whole" map.
-        // This is currently just a quick calculation that seems to work ok.
-        (0.5 * mapSize.width) / mapData.width
+        Math.min(
+          (0.7 * mapContainerSize.width) / mapWidth,
+          (0.7 * mapContainerSize.height) / mapHeight
+        )
       );
     }
   }

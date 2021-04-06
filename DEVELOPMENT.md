@@ -37,3 +37,13 @@ To run local Cypress tests, start your local development server normally. Then, 
 - `files/` Static files loaded thru Webpack (images, etc)
 - `demo/` The example implementation demos
 - `cypress/` Automated UI tests
+
+## Testing Production Data Locally
+
+- Go to the Meridian Editor
+- Select your location
+- Click Settings on the sidebar
+- Click the Web SDK tab
+- Copy the needed values from the code snippet
+- Plug those values into your local location viewer
+  (http://localhost:3011/location-viewer/)

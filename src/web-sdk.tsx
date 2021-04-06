@@ -287,7 +287,7 @@ export type CustomAnnotation = CustomAnnotationPoint;
  */
 export interface CreateMapOptions {
   /** See [[restrictedPanZoom]]. */
-  shouldMapPanZoom?: (event: TouchEvent | WheelEvent | MouseEvent) => boolean;
+  shouldMapPanZoom?: (event: any) => boolean;
   /** Width of the map (e.g. "100%" or "300px"). */
   width?: string;
   /** Height of the map (e.g. "100%" or "200px") */

@@ -5,7 +5,7 @@
  * @packageDocumentation
  */
 
-import { event as d3Event, select as d3Select, Selection } from "d3-selection";
+import { select as d3Select, Selection } from "d3-selection";
 import "d3-transition";
 import {
   zoom as d3Zoom,
@@ -469,7 +469,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         // Don't destructure this at the top of the file because we need d3 to
         // hook until whatever the latest version of the function is, even if it
         // has changed since this callback was registered
-        .filter(() =>
+        .filter(d3Event =>
           this.props.shouldMapPanZoom
             ? this.props.shouldMapPanZoom(d3Event)
             : true

@@ -167,12 +167,10 @@ export const version: string = GLOBAL_VERSION;
  * )
  * ```
  */
-export function restrictedPanZoom(
-  event: TouchEvent | WheelEvent | MouseEvent
-): boolean {
-  if (event instanceof WheelEvent) {
+export function restrictedPanZoom(event: any): boolean {
+  if (event.type === "wheel") {
     return event.shiftKey || event.altKey || event.ctrlKey || event.metaKey;
-  } else if (event instanceof TouchEvent) {
+  } else if (event.type === "touch") {
     return event.touches.length >= 2;
   }
   return true;
@@ -289,7 +287,7 @@ export type CustomAnnotation = CustomAnnotationPoint;
  */
 export interface CreateMapOptions {
   /** See [[restrictedPanZoom]]. */
-  shouldMapPanZoom?: (event: TouchEvent | WheelEvent | MouseEvent) => boolean;
+  shouldMapPanZoom?: (event: any) => boolean;
   /** Width of the map (e.g. "100%" or "300px"). */
   width?: string;
   /** Height of the map (e.g. "100%" or "200px") */

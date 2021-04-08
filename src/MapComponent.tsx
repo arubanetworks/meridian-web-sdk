@@ -450,6 +450,11 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   addZoomBehavior() {
     if (this.mapRef.current) {
+      const PADDING = 400;
+      const mapData = this.getMapData();
+      const bottomRightX = mapData?.width + PADDING;
+      const bottomRightY = mapData?.height + PADDING;
+
       const onZoom = () => {
         if (!this.mapRef.current) {
           return;
@@ -476,6 +481,10 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         )
         // min/max zoom levels
         .scaleExtent([1 / 60, 14])
+        .translateExtent([
+          [-PADDING, -PADDING],
+          [bottomRightX, bottomRightY]
+        ])
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom)
         .on("end.zoom", onZoomEnd);

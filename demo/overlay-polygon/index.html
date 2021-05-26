@@ -81,7 +81,12 @@
               points: createPolygonPoints(3200, 1500, 500, 6),
               fill: "none",
               stroke: "#cc0000",
-              strokeWidth: 1
+              strokeWidth: 1,
+              data: { name: "foo", area: "cafe" },
+              onClick: data => {
+                // arbitrary data can be passed for each polygon
+                console.info("clicked polygon, data:", data);
+              }
             },
             {
               type: "polygon",

@@ -7,6 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import { CustomOverlayPolygon } from "./web-sdk";
+import { asyncClientCall } from "./util";
 
 interface OverlayPolygonProps extends CustomOverlayPolygon {
   mapZoomFactor: number;
@@ -18,7 +19,9 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
   stroke = "hsl(207, 65%, 46%)",
   strokeWidth = 2,
   strokeLineJoin = "miter",
-  mapZoomFactor
+  mapZoomFactor,
+  onClick,
+  data = {}
 }) => {
   return (
     <polygon
@@ -31,6 +34,9 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
       // attributes, so using dashes works here.
       stroke-width={strokeWidth / mapZoomFactor}
       stroke-linejoin={strokeLineJoin}
+      onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
+      cursor={onClick ? "pointer" : undefined}
+      pointer-events={onClick ? "all" : undefined}
     />
   );
 };

@@ -88,7 +88,12 @@
               x: 3000,
               y: 2000,
               backgroundColor: "#c00",
-              title: "Red"
+              title: "Red (clickable, view console)",
+              data: { name: "foo", area: "conference" },
+              onClick: data => {
+                // arbitrary data can be passed for each annotation
+                console.info("clicked annotation, data:", data);
+              }
             },
             {
               type: "point",

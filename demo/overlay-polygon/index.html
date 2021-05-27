@@ -71,15 +71,19 @@
             {
               type: "polygon",
               points: [2000, 2000, 2500, 2500, 1500, 2500],
-              fill: "rgba(0, 0, 0, 0.3)",
+              fill: "none",
               stroke: "#fcaf3e",
               strokeWidth: 8,
-              strokeLineJoin: "round"
+              strokeLineJoin: "round",
+              data: { name: "foo", area: "cafe" },
+              onClick: data => {
+                // arbitrary data can be passed for each polygon
+                console.info("clicked polygon, data:", data);
+              }
             },
             {
               type: "polygon",
               points: createPolygonPoints(3200, 1500, 500, 6),
-              fill: "none",
               stroke: "#cc0000",
               strokeWidth: 1
             },
@@ -88,6 +92,16 @@
               points: createPolygonPoints(4000, 2000, 300, 5),
               fill: "#cc00cc",
               strokeWidth: 0
+            }
+          ],
+          annotations: [
+            {
+              type: "point",
+              x: 2800,
+              y: 2100,
+              size: 0,
+              // backgroundColor: "rgba(255, 255, 255, 0.5)",
+              title: "Triangle to the left is clickable (open console)"
             }
           ]
         }

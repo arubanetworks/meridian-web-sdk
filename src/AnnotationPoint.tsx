@@ -8,6 +8,7 @@
 import { FunctionComponent, h } from "preact";
 import { css, mixins } from "./style";
 import { CustomAnnotationPoint } from "./web-sdk";
+import { asyncClientCall } from "./util";
 
 interface AnnotationPointProps extends CustomAnnotationPoint {
   mapZoomFactor: number;
@@ -21,7 +22,9 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
   backgroundColor = "hsl(207, 65%, 46%)",
   backgroundSize = "cover",
   backgroundImage,
-  title
+  title,
+  onClick,
+  data = {}
 }) => {
   return (
     <div
@@ -35,8 +38,10 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
         "--meridian-annotationPoint-backgroundSize": backgroundSize,
         "--meridian-annotationPoint-backgroundImage": backgroundImage
           ? `url('${backgroundImage}')`
-          : "none"
+          : "none",
+        cursor: onClick ? "pointer" : "initial"
       }}
+      onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
       data-testid="meridian--private--annotation-point"
     >
       {title ? (

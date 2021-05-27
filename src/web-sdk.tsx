@@ -244,6 +244,9 @@ export interface CustomOverlayPolygon {
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
+  /** Arbitrary data for use with onClick handler */
+  data?: Record<string, any>;
+  onClick?: (data: Record<string, any>) => void;
 }
 
 /**
@@ -275,6 +278,9 @@ export interface CustomAnnotationPoint {
   backgroundSize?: string;
   backgroundImage?: string;
   title?: string;
+  /** Arbitrary data for use with onClick handler */
+  data?: Record<string, any>;
+  onClick?: (data: Record<string, any>) => void;
 }
 
 /**

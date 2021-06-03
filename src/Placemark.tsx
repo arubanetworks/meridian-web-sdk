@@ -54,8 +54,13 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
   } as const;
 
   if (labelOnly) {
+    // labelMode is static (zoom) for Label Placemarks
     return (
-      <div className={cx("meridian-placemark", cssPlacemark)} style={style}>
+      <div
+        className={cx("meridian-placemark", cssPlacemark)}
+        data-meridian-placemark-label-mode="zoom"
+        style={style}
+      >
         <div
           className={cx(
             cssLabel,
@@ -64,6 +69,9 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
             "meridian-label-only"
           )}
           data-meridian-placemark-id={data.next_id}
+          data-meridian-placemark-label-zoom-visible={String(
+            mapZoomFactor >= labelZoomLevel
+          )}
         >
           {data.name}
         </div>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Option Toggles | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="map" id="meridian-map"></div>
+
+      <div class="controls-container">
+        <div class="controls">
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-filter"
+              value="filter-none"
+              checked
+            />
+            <span>Hide all placemarks</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-filter"
+              value="filter-all"
+              checked
+            />
+            <span>Show all placemarks</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-filter"
+              value="filter-cafe"
+            />
+            <span
+              >Show placemarks of type
+              <b>cafe</b>
+            </span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-filter"
+              value="filter-water_fountain"
+            />
+            <span
+              >Show placemarks of type
+              <b>water_fountain</b>
+            </span>
+          </label>
+        </div>
+        <div class="controls">
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="tag-filter"
+              value="filter-none"
+            />
+            <span>Hide all tags</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="tag-filter"
+              value="filter-all"
+              checked
+            />
+            <span>Show all tags</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="tag-filter"
+              value="filter-Jamboard"
+            />
+            <span
+              >Show tags labeled
+              <b>Jamboard</b>
+            </span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="tag-filter"
+              value="filter-Single"
+            />
+            <span>Show tag <b>546C0E082AFB</b></span>
+          </label>
+        </div>
+        <div class="controls">
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-label-mode"
+              value="always"
+            />
+            <span>Always show placemark labels</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-label-mode"
+              value="never"
+            />
+            <span>Never show placemark labels</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-label-mode"
+              value="hover"
+            />
+            <span>Show placemark labels on hover </span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="radio"
+              name="placemark-label-mode"
+              value="zoom"
+              checked
+            />
+            <span>Show placemark labels when zoomed in</span>
+          </label>
+        </div>
+        <div class="controls">
+          <label class="controls__item">
+            <input autocomplete="off" type="checkbox" id="show-control-tags" />
+            <span>Show Control Tags</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="checkbox"
+              id="show-hidden-placemarks"
+            />
+            <span>Show Hidden Placemarks</span>
+          </label>
+          <label class="controls__item">
+            <input autocomplete="off" type="checkbox" id="disable-placemarks" />
+            <span>Disable clicking on placemarks</span>
+          </label>
+          <label class="controls__item">
+            <input autocomplete="off" type="checkbox" id="disable-tags" />
+            <span>Disable clicking on tags</span>
+          </label>
+          <label class="controls__item">
+            <input
+              autocomplete="off"
+              type="checkbox"
+              id="load-placemarks"
+              checked
+            />
+            <span>Enable loading placemarks</span>
+          </label>
+          <label class="controls__item">
+            <input autocomplete="off" type="checkbox" id="load-tags" checked />
+            <span>Enable loading tags</span>
+          </label>
+        </div>
+      </div>
+      <!-- /.controls-container -->
+    </div>
+
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      // ---vvv SDK setup vvv---
+      const api = new MeridianSDK.API({
+        environment: "production",
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+      });
+
+      const state = {
+        api,
+        locationID: "5198682008846336",
+        floorID: "5755685136498688",
+        height: "100%",
+        loadPlacemarks: true,
+        loadTags: true,
+        placemarks: {},
+        tags: {},
+        onTagsUpdate: tags => {
+          if (state.tags.filter === filterSingle) {
+            const tag = tags.allTags.find(t => t.mac === singleMAC);
+            if (tag) {
+              meridianMap.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
+            }
+          }
+        }
+      };
+
+      const meridianMap = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        state
+      );
+      // ---^^^ SDK setup ^^^---
+
+      // ---vvv UI controls vvv---
+
+      const singleMAC = "546C0E082AFB";
+
+      function filterSingle(tag) {
+        return tag.mac === singleMAC;
+      }
+
+      function updateMap() {
+        meridianMap.update(state);
+        meridianMap.zoomToDefault();
+      }
+
+      $("[name='placemark-filter']").on("change", event => {
+        switch (event.target.value) {
+          case "filter-none":
+            state.placemarks.filter = () => false;
+            break;
+          case "filter-all":
+            state.placemarks.filter = () => true;
+            break;
+          case "filter-cafe":
+            state.placemarks.filter = placemark => placemark.type === "cafe";
+            break;
+          case "filter-water_fountain":
+            state.placemarks.filter = placemark =>
+              placemark.type === "water_fountain";
+            break;
+          default:
+            throw new Error("unexpected option " + event.target.value);
+        }
+        updateMap();
+      });
+
+      $("[name='tag-filter']").on("change", event => {
+        switch (event.target.value) {
+          case "filter-none":
+            state.tags.filter = () => false;
+            break;
+          case "filter-all":
+            state.tags.filter = () => true;
+            break;
+          case "filter-Jamboard":
+            state.tags.filter = tag =>
+              tag.tags.map(x => x.name).includes("Jamboard");
+            break;
+          case "filter-Single":
+            state.tags.filter = filterSingle;
+            break;
+          default:
+            throw new Error("unexpected option " + event.target.value);
+        }
+        updateMap();
+      });
+
+      $("[name='placemark-label-mode']").on("change", event => {
+        state.placemarks.labelMode = event.target.value;
+        updateMap();
+      });
+
+      $("#show-control-tags").on("change", event => {
+        state.tags.showControlTags = event.target.checked;
+        updateMap();
+      });
+
+      $("#show-hidden-placemarks").on("change", event => {
+        state.placemarks.showHiddenPlacemarks = event.target.checked;
+        updateMap();
+      });
+
+      $("#disable-placemarks").on("change", event => {
+        state.placemarks.disabled = event.target.checked;
+        updateMap();
+      });
+
+      $("#disable-tags").on("change", event => {
+        state.tags.disabled = event.target.checked;
+        updateMap();
+      });
+
+      $("#load-placemarks").on("change", event => {
+        state.loadPlacemarks = event.target.checked;
+        updateMap();
+      });
+
+      $("#load-tags").on("change", event => {
+        state.loadTags = event.target.checked;
+        updateMap();
+      });
+      // ---^^^ UI controls ^^^---
+
+      Object.assign(window, { meridianMap });
+    </script>
+  </body>
+</html>

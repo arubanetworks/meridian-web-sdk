@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .map {
+        max-width: 800px;
+        margin: auto;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="map" id="meridian-map"></div>
+    <script src="../../meridian-sdk.js"></script>
+    <script type="module">
+      import { fakeAPI } from "../utils/fake-api.js";
+
+      const triangle = {
+        type: "polygon",
+        points: [400, 100, 800, 600, 100, 800]
+      };
+
+      const root = document.getElementById("meridian-map");
+      const meridianMap = MeridianSDK.createMap(root, {
+        api: fakeAPI,
+        locationID: "5198682008846336",
+        floorID: "5755685136498688",
+        height: "600px",
+        annotations: [
+          {
+            type: "point",
+            x: 0,
+            y: 0
+          }
+        ]
+      });
+
+      setTimeout(() => {
+        meridianMap.update({
+          annotations: [
+            {
+              type: "point",
+              x: 100,
+              y: 100,
+              size: 32,
+              backgroundColor: "red",
+              backgroundImage: MeridianSDK.placemarkIconURL("generic")
+            },
+            {
+              type: "point",
+              x: 600,
+              y: 600,
+              size: 8,
+              backgroundColor: "hsla(0, 100%, 50%, 0.8)",
+            },
+            {
+              type: "point",
+              x: 700,
+              y: 700,
+              size: 8,
+              backgroundColor: "hsla(0, 100%, 50%, 0.6)",
+            },
+            {
+              type: "point",
+              x: 800,
+              y: 800,
+              size: 8,
+              backgroundColor: "hsla(0, 100%, 50%, 0.4)",
+            },
+            {
+              type: "point",
+              x: 2000,
+              y: 1200,
+              size: 24,
+              backgroundImage: MeridianSDK.placemarkIconURL("atm"),
+              backgroundSize: "75%",
+              title: "This is a very long title that should wrap"
+            },
+            {
+              type: "point",
+              x: 4000,
+              y: 1600,
+              size: 24,
+              backgroundImage: MeridianSDK.placemarkIconURL("gaming"),
+              backgroundSize: "75%",
+              title: "Title"
+            },
+            {
+              type: "point",
+              x: 5000,
+              y: 1600,
+              size: 24,
+              backgroundColor: "green",
+              backgroundImage: "https://placehold.it/24x24",
+              backgroundSize: "50%",
+            },
+            {
+              type: "point",
+              x: 6000,
+              y: 1600,
+              size: 24,
+              backgroundColor: "yellow",
+              backgroundImage: "https://placehold.it/24x24",
+            },
+          ]
+        });
+      }, 100);
+
+      Object.assign(window, { meridianMap });
+    </script>
+  </body>
+</html>

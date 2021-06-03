@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html data-fake-api="false">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>api.openStream() | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: sans-serif;
+        font-size: 20px;
+        line-height: 1.5;
+        padding: 2rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <p>
+        This is a standalone socket example. Every callback function is used
+        here and you can see the output in your Dev Tools console.
+      </p>
+    </div>
+
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      // ---^^^ SDK setup ^^^---
+      const myApi = new MeridianSDK.API({
+        environment: "production",
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+      });
+
+      const newSocket = myApi.openStream({
+        locationID: "5468665088573440",
+        floorID: "5653104741580800",
+        onInitialTags: function(tags) {
+          console.log("onInitialTags", tags);
+        },
+        onTagUpdate: function(tags) {
+          console.log("onTagUpdate", tags);
+        },
+        onTagLeave: function(tag) {
+          console.log("onTagLeave", tag);
+        },
+        onException: function(err) {
+          console.log("onException", err);
+        },
+        onClose: function() {
+          console.log("onClose");
+        }
+      });
+    </script>
+  </body>
+</html>

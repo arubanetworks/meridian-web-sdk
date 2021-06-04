@@ -3,7 +3,6 @@ import { getMeridianMap } from "./util/getMeridianMap";
 describe("Filter by placemark types", () => {
   it("should filter placemarks based on type using placemarks.filter", () => {
     cy.visit("/cypress/basic");
-    // All 34 placemarks exist
     cy.get(".meridian-placemark-icon").should("have.length", 31);
     // Only show "cafe" placemarks
     getMeridianMap().then(meridianMap => {
@@ -25,7 +24,6 @@ describe("Filter by placemark types", () => {
         }
       });
     });
-    // All 34 placemarks exist
     cy.get(".meridian-placemark-icon").should("have.length", 31);
   });
 });

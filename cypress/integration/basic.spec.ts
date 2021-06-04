@@ -40,7 +40,7 @@ describe("Basic", () => {
 
     cy.get('[data-meridian-placemark-id="5653164804014080"]').should("exist");
     cy.get("[data-meridian-placemark-id]")
-      .should("have.length", 31)
+      .should("have.length", 34)
       .should("not.be.disabled");
 
     // second floor placemark should not be visible
@@ -127,7 +127,7 @@ describe("Basic", () => {
 
     cy.get('[data-meridian-placemark-id="5086441721823232"]').should("exist");
     cy.get("[data-meridian-placemark-id]")
-      .should("have.length", 10)
+      .should("have.length", 13)
       .should("not.be.disabled");
 
     // First floor placemark should not be visible

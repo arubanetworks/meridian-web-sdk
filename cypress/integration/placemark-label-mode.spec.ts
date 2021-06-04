@@ -14,7 +14,7 @@ describe("Placemark Label Mode", () => {
       meridianMap.update({ placemarks: { labelMode: "always" } });
     });
     cy.get(".meridian-label")
-      .should("have.length", 31)
+      .should("have.length", 34)
       .should("be.visible");
 
     // ---[ never ]---
@@ -22,7 +22,7 @@ describe("Placemark Label Mode", () => {
       meridianMap.update({ placemarks: { labelMode: "never" } });
     });
     cy.get(".meridian-label")
-      .should("have.length", 31)
+      .should("have.length", 34)
       .should("not.be.visible");
 
     // ---[ hover ]---
@@ -32,7 +32,7 @@ describe("Placemark Label Mode", () => {
     // We can't actually simulate `:hover` CSS with Cypress, so this is the best
     // test we can write.
     cy.get(".meridian-label")
-      .should("have.length", 31)
+      .should("have.length", 34)
       .should("not.be.visible");
     cy.get("[data-meridian-placemark-label-mode='hover']").should(
       "have.length",
@@ -46,7 +46,7 @@ describe("Placemark Label Mode", () => {
     });
     cy.get("[data-meridian-placemark-label-zoom-visible='true']").should(
       "have.length",
-      31
+      34
     );
   });
 });

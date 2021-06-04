@@ -39,6 +39,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
   const k = 1 / mapZoomFactor;
   const color = `#${data.color}`;
   const iconURL = placemarkIconURL(data.type);
+  const placemark_id = (data.id || "").split("_").pop();
   const iconClassName = isSelected
     ? cx(
         "meridian-placemark-icon-selected",
@@ -68,7 +69,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
             "meridian-label",
             "meridian-label-only"
           )}
-          data-meridian-placemark-id={data.next_id}
+          data-meridian-placemark-id={placemark_id}
           data-meridian-placemark-label-zoom-visible={String(
             mapZoomFactor >= labelZoomLevel
           )}
@@ -87,7 +88,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
       <button
         disabled={disabled}
         className={iconClassName}
-        data-meridian-placemark-id={data.next_id}
+        data-meridian-placemark-id={placemark_id}
         style={{
           "--meridian-placemark-iconURL": `url('${iconURL}')`,
           "--meridian-placemark-borderColor": color,

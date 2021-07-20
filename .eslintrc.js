@@ -27,16 +27,15 @@ module.exports = {
       }
     ],
     "consistent-return": "error",
-    "no-unused-vars": "error",
     "no-console": "warn",
     "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-    "no-console": "warn",
     "jest/expect-expect": "off",
     "jest/valid-expect-in-promise": "off",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/camelcase": "off",
-    "@typescript-eslint/no-empty-function": "off"
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
   }
 };

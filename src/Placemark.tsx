@@ -89,9 +89,9 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
       <button
         disabled={disabled}
         className={cx(
-          getPlacemarkCategories(data).map((label: string) => {
-            label = label.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
-            return `meridian-tag-label-${label}`;
+          getPlacemarkCategories(data).map((category: string) => {
+            category = category.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "").toLowerCase();
+            return `meridian-placemark-category-${category}`;
           }),
           iconClassName
         )}

@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import { EnvOptions, TagData } from "./web-sdk";
+import { EnvOptions, TagData, PlacemarkData } from "./web-sdk";
 
 // Make some logging helpers so that we don't need to ignore ESLint when we
 // actually want to log things to the console, plus ensure that we always
@@ -48,6 +48,12 @@ export function createSearchMatcher(query: string) {
 
 export function getTagLabels(tag: TagData) {
   return (tag.tags || []).map((tag: Record<string, any>) => tag.name);
+}
+
+export function getPlacemarkCategories(placemark: PlacemarkData) {
+  return (placemark.categories || []).map(
+    (category: Record<string, any>) => category.name
+  );
 }
 
 export function requiredParam(funcName: string, argName: string) {

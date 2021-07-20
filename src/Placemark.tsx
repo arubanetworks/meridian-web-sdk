@@ -7,6 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import { css, cx, mixins, theme } from "./style";
+import { getPlacemarkCategories } from "./util";
 import {
   CreateMapPlacemarksOptions,
   PlacemarkData,
@@ -87,7 +88,13 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
     >
       <button
         disabled={disabled}
-        className={iconClassName}
+        className={cx(
+          getPlacemarkCategories(data).map((label: string) => {
+            label = label.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "");
+            return `meridian-tag-label-${label}`;
+          }),
+          iconClassName
+        )}
         data-meridian-placemark-id={placemark_id}
         style={{
           "--meridian-placemark-iconURL": `url('${iconURL}')`,

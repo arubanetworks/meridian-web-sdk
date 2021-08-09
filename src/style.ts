@@ -3,7 +3,7 @@
  * @packageDocumentation
  */
 
-import createEmotion, { Interpolation } from "create-emotion";
+import createEmotion, { CSSInterpolation } from "@emotion/css/create-instance";
 
 export const theme = {
   fontSizeSmallest: "12px",
@@ -23,23 +23,23 @@ export const theme = {
   buttonSeparatorColor: "#f0f0f0",
   borderColor: "#ebeef2",
   borderColorDarker: "#dfe1e5",
-  borderRadius: 6
+  borderRadius: 6,
 } as const;
 
 export const mixins = {
   flexRow: {
     display: "flex",
-    flexDirection: "row"
-  } as Interpolation,
+    flexDirection: "row",
+  } as CSSInterpolation,
   flexColumn: {
     display: "flex",
-    flexDirection: "column"
-  } as Interpolation,
+    flexDirection: "column",
+  } as CSSInterpolation,
   overflowEllipses: {
     whiteSpace: "nowrap",
     overflow: "hidden",
-    textOverflow: "ellipsis"
-  } as Interpolation,
+    textOverflow: "ellipsis",
+  } as CSSInterpolation,
   textStrokeWhite: {
     WebkitFontSmoothing: "antialiased",
     textShadow: [
@@ -48,9 +48,9 @@ export const mixins = {
       "white 0 0 1px",
       "white 0 0 2px",
       "white 0 0 3px",
-      "white 0 0 4px"
-    ].join(", ")
-  } as Interpolation,
+      "white 0 0 4px",
+    ].join(", "),
+  } as CSSInterpolation,
   buttonReset: {
     padding: 0,
     margin: 0,
@@ -60,70 +60,70 @@ export const mixins = {
     background: "transparent",
     color: "inherit",
     "&::-moz-focus-inner": {
-      border: 0
-    } as Interpolation
-  } as Interpolation,
+      border: 0,
+    } as CSSInterpolation,
+  } as CSSInterpolation,
   buttonHoverActive: {
     "&:hover": {
-      background: theme.buttonHoverColor
-    } as Interpolation,
+      background: theme.buttonHoverColor,
+    } as CSSInterpolation,
     "&:active": {
-      background: theme.buttonActiveColor
-    } as Interpolation
-  } as Interpolation,
+      background: theme.buttonActiveColor,
+    } as CSSInterpolation,
+  } as CSSInterpolation,
   borderBox: {
-    boxSizing: "border-box"
-  } as Interpolation,
+    boxSizing: "border-box",
+  } as CSSInterpolation,
   focusRing: {
     "&:focus": {
       outline: 0,
-      boxShadow: `inset 0 0 0 1px ${theme.brandBrightBlue}`
-    }
-  } as Interpolation,
+      boxShadow: `inset 0 0 0 1px ${theme.brandBrightBlue}`,
+    },
+  } as CSSInterpolation,
   focusRingMenuItem: {
     "&:focus": {
       outline: 0,
       boxShadow: `
         inset 0 0 0 1px white,
         inset 0 0 0 2px ${theme.brandBrightBlue}
-      `
-    }
-  } as Interpolation,
+      `,
+    },
+  } as CSSInterpolation,
   focusOutline: {
     "&:focus": {
       outline: 0,
-      boxShadow: "0 0 0 2px currentcolor"
-    }
-  } as Interpolation,
+      boxShadow: "0 0 0 2px currentcolor",
+    },
+  } as CSSInterpolation,
   focusDarken: {
     "&:focus": {
       outline: 0,
-      boxShadow: "inset 0 0 0 9999px rgba(0, 0, 0, 0.1)"
-    } as Interpolation
-  } as Interpolation,
+      boxShadow: "inset 0 0 0 9999px rgba(0, 0, 0, 0.1)",
+    } as CSSInterpolation,
+  } as CSSInterpolation,
   focusNone: {
     "&:focus": {
-      outline: "none"
-    }
-  } as Interpolation,
+      outline: "none",
+    },
+  } as CSSInterpolation,
   shadow: {
-    boxShadow: "0 0 3px rgba(0, 0, 0, 0.25)"
-  } as Interpolation,
+    boxShadow: "0 0 3px rgba(0, 0, 0, 0.25)",
+  } as CSSInterpolation,
   rounded: {
-    borderRadius: theme.borderRadius
-  } as Interpolation,
+    borderRadius: theme.borderRadius,
+  } as CSSInterpolation,
   maxRounded: {
-    borderRadius: 99999
-  } as Interpolation,
+    borderRadius: 99999,
+  } as CSSInterpolation,
   paddingMedium: {
-    padding: "20px"
-  } as Interpolation,
+    padding: "20px",
+  } as CSSInterpolation,
   pointer: {
     cursor: "pointer",
     "&:disabled": {
-      cursor: "default"
-    } as Interpolation
-  } as Interpolation
+      cursor: "default",
+    } as CSSInterpolation,
+  } as CSSInterpolation,
 } as const;
 
 export const {
@@ -134,7 +134,7 @@ export const {
   // getRegisteredStyles,
   // injectGlobal,
   keyframes,
-  css
+  css,
   // sheet,
   // caches
 } = createEmotion({ key: "meridian--private-" });

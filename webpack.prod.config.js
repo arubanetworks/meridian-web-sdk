@@ -9,6 +9,7 @@ const common = require("./webpack.common.config");
 // node_modules, so that consumers can use us like a normal npm package
 const npmConfig = {
   ...common,
+  mode: "production",
   output: {
     filename: "web-sdk.js",
     libraryTarget: "commonjs",

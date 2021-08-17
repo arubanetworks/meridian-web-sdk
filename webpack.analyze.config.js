@@ -11,5 +11,6 @@ const definePlugin = new webpack.DefinePlugin({
 
 module.exports = {
   ...common,
+  mode: "production",
   plugins: [definePlugin, new BundleAnalyzerPlugin()],
 };

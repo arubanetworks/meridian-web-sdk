@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const Package = require("./package.json");
 const common = require("./webpack.common.config");
@@ -13,7 +12,6 @@ const npmConfig = {
   output: {
     filename: "web-sdk.js",
     libraryTarget: "commonjs",
-    path: path.resolve(__dirname, "dist"),
     publicPath: `https://files.meridianapps.com/meridian-web-sdk/${Package.version}/`,
   },
   target: "node",

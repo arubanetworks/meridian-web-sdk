@@ -13,6 +13,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
+        dependency: { not: ["url"] },
         use: [{ loader: "ts-loader" }],
         exclude: /node_modules/,
       },
@@ -23,6 +24,7 @@ module.exports = {
             options: { name: "[path][name].[ext]" },
           },
         ],
+        type: "javascript/auto",
         include: [path.resolve(__dirname, "files")],
       },
     ],
@@ -30,17 +32,19 @@ module.exports = {
   plugins: [definePlugin],
   node: {
     __dirname: true,
-    fs: "empty",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
+    fallback: {
+      fs: false, // do not include a polyfill for fs
+      path: require.resolve("path-browserify"),
+    },
   },
   entry: path.resolve(__dirname, "src/web-sdk.tsx"),
   output: {
     filename: "meridian-sdk.js",
     library: "MeridianSDK",
     libraryTarget: "var",
-    path: path.resolve(__dirname, "dist"),
     publicPath: `https://files.meridianapps.com/meridian-web-sdk/${Package.version}/`,
   },
   devServer: {

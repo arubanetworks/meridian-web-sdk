@@ -15,6 +15,9 @@
     "postversion": "git push --follow-tags",
     "test": "bash bin/test.sh"
   },
+  "browserslist": [
+    "defaults"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/arubanetworks/meridian-web-sdk.git"

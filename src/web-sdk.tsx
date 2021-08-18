@@ -61,7 +61,7 @@ import {
   asyncClientCall,
   logDeprecated,
   logError,
-  requiredParam
+  requiredParam,
 } from "./util";
 
 /** @internal */
@@ -125,7 +125,7 @@ interface APIContext {
 
 /** @internal */
 const context: APIContext = {
-  api: undefined
+  api: undefined,
 };
 
 // This is kinda irritating, but importing package.json just to get the version
@@ -483,7 +483,7 @@ export function createMap(
       placemarksFilter: Boolean(
         options.placemarks && options.placemarks.filter
       ),
-      internalUpdate
+      internalUpdate,
     });
   };
   const api = context.api || options.api;
@@ -506,12 +506,12 @@ export function createMap(
     locationID: options.locationID,
     onTagsUpdate: Boolean(options.onTagsUpdate),
     tagsFilter: Boolean(options.tags && options.tags.filter),
-    placemarksFilter: Boolean(options.placemarks && options.placemarks.filter)
+    placemarksFilter: Boolean(options.placemarks && options.placemarks.filter),
   });
   const map: MeridianMap = {
     destroy,
     isDestroyed: false,
-    update: updatedOptions => {
+    update: (updatedOptions) => {
       if (map.isDestroyed) {
         logError("can't call update on a destroyed MeridianMap");
         return;
@@ -525,7 +525,7 @@ export function createMap(
       }
       mapRef?.zoomToDefault();
     },
-    zoomToPoint: options => {
+    zoomToPoint: (options) => {
       if (map.isDestroyed) {
         logError("can't call update on a destroyed MeridianMap");
         return;
@@ -543,7 +543,7 @@ export function createMap(
         requiredParam("map.zoomToPoint", "options.scale");
       }
       mapRef?.zoomToPoint(options.x, options.y, options.scale);
-    }
+    },
   };
   return map;
 }
@@ -638,7 +638,6 @@ export class API {
 
   /**
    * Pass the result to `init()` or `createMap()`.
-   * @internal
    */
   constructor(options: APIOptions) {
     if (!options.token) {
@@ -650,14 +649,14 @@ export class API {
       baseURL: envToEditorRestURL[this.environment],
       headers: {
         Authorization: `Token ${options.token}`,
-        "Meridian-SDK": `WebSDK/${version}`
-      }
+        "Meridian-SDK": `WebSDK/${version}`,
+      },
     });
     this._axiosTagsAPI = axios.create({
       baseURL: envToTagTrackerBaseRestURL[this.environment],
       headers: {
-        Authorization: `Token ${options.token}`
-      }
+        Authorization: `Token ${options.token}`,
+      },
     });
   }
 
@@ -685,7 +684,7 @@ export class API {
     }
     const response = await this._axiosTagsAPI.post("track/assets", {
       floor_id: floorID,
-      location_id: locationID
+      location_id: locationID,
     });
     return response.data.asset_updates;
   }
@@ -698,7 +697,7 @@ export class API {
       requiredParam("fetchTagsByLocation", "locationID");
     }
     const response = await this._axiosTagsAPI.post("/track/assets", {
-      location_id: locationID
+      location_id: locationID,
     });
     return response.data.asset_updates;
   }
@@ -717,7 +716,7 @@ export class API {
     if (!floorID) {
       requiredParam("fetchPlacemarksByFloor", "floorID");
     }
-    return await fetchAllPaginatedData(async url => {
+    return await fetchAllPaginatedData(async (url) => {
       const { data } = await this._axiosEditorAPI.get(url);
       return data;
     }, `locations/${locationID}/maps/${floorID}/placemarks`);
@@ -730,7 +729,7 @@ export class API {
     if (!locationID) {
       requiredParam("fetchFloorsByLocation", "locationID");
     }
-    return await fetchAllPaginatedData(async url => {
+    return await fetchAllPaginatedData(async (url) => {
       const { data } = await this._axiosEditorAPI.get(url);
       return data;
     }, `locations/${locationID}/maps`);
@@ -752,7 +751,7 @@ export class API {
       requiredParam("fetchSVG", "svgURL");
     }
     const { data } = await this._axiosEditorAPI.get(svgURL, {
-      responseType: "blob"
+      responseType: "blob",
     });
     return URL.createObjectURL(data);
   }
@@ -791,7 +790,7 @@ export class API {
     onTagLeave = () => {},
     onTagUpdate = () => {},
     onException = () => {},
-    onClose = () => {}
+    onClose = () => {},
   }: OpenStreamOptions): Stream {
     if (!locationID) {
       requiredParam("openStream", "locationID");
@@ -802,7 +801,7 @@ export class API {
     let isClosed = false;
     const params = new URLSearchParams({
       method: "POST",
-      authorization: `Token ${this.token}`
+      authorization: `Token ${this.token}`,
     });
     const url = envToTagTrackerStreamingURL[this.environment];
     const ws = new ReconnectingWebSocket(`${url}?${params}`);
@@ -811,9 +810,9 @@ export class API {
         {
           resource_type: "FLOOR",
           location_id: locationID,
-          resource_ids: [floorID]
-        }
-      ]
+          resource_ids: [floorID],
+        },
+      ],
     };
     const close = () => {
       if (isClosed) {
@@ -838,7 +837,7 @@ export class API {
       }
       ws.send(JSON.stringify(request));
     });
-    ws.addEventListener("message", event => {
+    ws.addEventListener("message", (event) => {
       if (isClosed) {
         return;
       }
@@ -901,7 +900,7 @@ const envToTagTrackerBaseRestURL = {
   devCloud: "https://dev-tags.meridianapps.com/api/v1",
   production: "https://tags.meridianapps.com/api/v1",
   eu: "https://tags-eu.meridianapps.com/api/v1",
-  staging: "https://staging-tags.meridianapps.com/api/v1"
+  staging: "https://staging-tags.meridianapps.com/api/v1",
 } as const;
 
 /** @internal */
@@ -910,7 +909,7 @@ const envToTagTrackerStreamingURL = {
   devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
   production: "wss://tags.meridianapps.com/streams/v1/track/assets",
   eu: "wss://tags-eu.meridianapps.com/streams/v1/track/assets",
-  staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets"
+  staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets",
 } as const;
 
 /** @internal */
@@ -919,7 +918,7 @@ const envToEditorRestURL = {
   devCloud: "https://dev-edit.meridianapps.com/api",
   production: "https://edit.meridianapps.com/api",
   eu: "https://edit-eu.meridianapps.com/api",
-  staging: "https://staging-edit.meridianapps.com/api"
+  staging: "https://staging-edit.meridianapps.com/api",
 } as const;
 
 /**

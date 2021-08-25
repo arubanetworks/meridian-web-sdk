@@ -61,7 +61,7 @@ const cssAnnotationPoint = css({
   position: "absolute",
   top: "var(--meridian-annotationPoint-y)",
   left: "var(--meridian-annotationPoint-x)",
-  transform: "scale(var(--meridian-annotationPoint-scale))",
+  transform: "translate(-50%, -50%) scale(var(--meridian-annotationPoint-scale))",
   width: "var(--meridian-annotationPoint-size)",
   height: "var(--meridian-annotationPoint-size)",
   backgroundColor: "var(--meridian-annotationPoint-backgroundColor)",

@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Annotation Points: Map Annotation Points are now properly centered by their x,y.
 
-## [0.24.0] - 2021-09-08
+## [0.24.0] - 2021-08-18
 
 ### Updated
 

@@ -30,7 +30,7 @@ const Tag: FunctionComponent<TagProps> = ({
   data,
   mapZoomFactor,
   onClick = () => {},
-  disabled = false
+  disabled = false,
 }) => {
   const shrinkFactor = mapZoomFactor < SHRINK_POINT ? SHRINK_FACTOR : 1;
   const k = 1 / mapZoomFactor / shrinkFactor;
@@ -54,21 +54,21 @@ const Tag: FunctionComponent<TagProps> = ({
           // every time the inline styles are updated.
           //
           // Brian Mock (2021-02-26)
-          backgroundImage: `url('${imageURL}')`
+          backgroundImage: `url('${imageURL}')`,
         })
       )}
       style={{
         left: data.x,
         top: data.y,
-        transform: `translate(-50%, -50%) scale(${k})`
+        transform: `translate(-50%, -50%) scale(${k})`,
       }}
-      onClick={event => {
+      onClick={(event) => {
         if (event.target instanceof HTMLElement) {
           event.target.focus();
         }
         onClick(data);
       }}
-      onMouseDown={event => {
+      onMouseDown={(event) => {
         event.stopPropagation();
       }}
     />
@@ -98,7 +98,7 @@ const cssTag = css(
       top 500ms ease,
       left 500ms ease
     `,
-    zIndex: 2
+    zIndex: 2,
   }
 );
 
@@ -106,7 +106,7 @@ const cssTagSelected = css(cssTag, {
   width: SIZE * 1.25,
   height: SIZE * 1.25,
   zIndex: 3,
-  boxShadow: "0 0 0 2px white, 0 0 4px black"
+  boxShadow: "0 0 0 2px white, 0 0 4px black",
 });
 
 export default Tag;

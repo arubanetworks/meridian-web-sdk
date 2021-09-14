@@ -21,7 +21,7 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
   strokeLineJoin = "miter",
   mapZoomFactor,
   onClick,
-  data = {}
+  data = {},
 }) => {
   return (
     <polygon

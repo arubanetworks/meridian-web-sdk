@@ -37,7 +37,7 @@ export interface TagLayerState {
 export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   state: TagLayerState = {
     tagsByMAC: {},
-    connectionsByFloorID: {}
+    connectionsByFloorID: {},
   };
   tagUpdates = {};
   isMounted = false;
@@ -75,11 +75,11 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       return;
     }
     this.setState(
-      prevState => ({
+      (prevState) => ({
         tagsByMAC: {
           ...prevState.tagsByMAC,
-          ...this.tagUpdates
-        }
+          ...this.tagUpdates,
+        },
       }),
       () => {
         this.tagUpdates = {};
@@ -94,22 +94,22 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     const connection = api.openStream({
       locationID,
       floorID,
-      onInitialTags: tags => {
+      onInitialTags: (tags) => {
         if (floorID === this.props.floorID && this.isMounted) {
-          this.setState({ tagsByMAC: keyBy(tags, tag => tag.mac) }, () => {
+          this.setState({ tagsByMAC: keyBy(tags, (tag) => tag.mac) }, () => {
             this.onUpdate();
             this.props.toggleLoadingSpinner({ show: false, source: "tags" });
           });
         }
       },
-      onTagLeave: tag => {
+      onTagLeave: (tag) => {
         if (floorID === this.props.floorID && this.isMounted) {
           this.setState(({ tagsByMAC }) => {
             return objectWithoutKey(tagsByMAC, tag.mac);
           });
         }
       },
-      onTagUpdate: tag => {
+      onTagUpdate: (tag) => {
         if (floorID === this.props.floorID && this.isMounted) {
           this.tagUpdates = { ...this.tagUpdates, [tag.mac]: tag };
           if (!this.props.isPanningOrZooming) {
@@ -119,18 +119,18 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       },
       onClose: () => {
         this.props.toggleLoadingSpinner({ show: false, source: "tags" });
-      }
+      },
     });
     if (!this.isMounted) {
       return;
     }
     this.setState(
-      prevState => {
+      (prevState) => {
         return {
           connectionsByFloorID: {
             ...prevState.connectionsByFloorID,
-            [floorID]: connection
-          }
+            [floorID]: connection,
+          },
         };
       },
       () => {
@@ -149,7 +149,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       return;
     }
     this.setState(
-      prevState => {
+      (prevState) => {
         const tagsByMAC = { ...prevState.tagsByMAC };
         for (const mac of Object.keys(tagsByMAC)) {
           if (tagsByMAC[mac].map_id === floorID) {
@@ -170,7 +170,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
 
   filterControlTags(tags: TagData[]) {
     const { markers } = this.props;
-    return tags.filter(tag => {
+    return tags.filter((tag) => {
       if (markers?.showControlTags !== true) {
         return !tag.is_control_tag;
       }
@@ -194,7 +194,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       selectedItem,
       markers = {},
       onTagClick,
-      mapZoomFactor
+      mapZoomFactor,
     } = this.props;
     const { tagsByMAC } = this.state;
     const { filter = () => true } = markers;
@@ -203,7 +203,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       <div data-testid="meridian--private--tag-layer">
         {this.filterControlTags(tags)
           .filter(filter)
-          .map(tag => (
+          .map((tag) => (
             <Tag
               key={tag.mac}
               isSelected={selectedItem ? selectedItem.mac === tag.mac : false}

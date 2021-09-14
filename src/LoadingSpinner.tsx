@@ -29,7 +29,7 @@ const cssLoadingSpinner = css({
   margin: "0 auto",
   color: theme.textColor,
   textAlign: "center",
-  pointerEvents: "none"
+  pointerEvents: "none",
 });
 
 export default LoadingOverlay;

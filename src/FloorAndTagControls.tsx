@@ -20,7 +20,7 @@ const FloorAndTagControls: FunctionComponent<FloorAndTagControlsProps> = ({
   toggleFloorOverlay,
   toggleTagListOverlay,
   showFloors,
-  showTagList
+  showTagList,
 }) => {
   return (
     <div className={cssFloorAndTagControls}>
@@ -65,7 +65,7 @@ const cssFloorAndTagControls = css({
   position: "absolute",
   zIndex: 1,
   right: 15,
-  top: 15
+  top: 15,
 });
 
 const cssControl = css(
@@ -84,12 +84,12 @@ const cssControl = css(
     border: 0,
     fontSize: 20,
     fontWeight: 200,
-    fill: theme.brandBrightBlue
+    fill: theme.brandBrightBlue,
   }
 );
 
 const cssControlNotFirst = css(cssControl, {
-  marginTop: 10
+  marginTop: 10,
 });
 
 export default FloorAndTagControls;

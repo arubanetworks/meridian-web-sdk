@@ -41,7 +41,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     ) {
       asyncClientCall(onUpdate, {
         allPlacemarks: Object.values(placemarks),
-        filteredPlacemarks: this.getFilteredPlacemarks()
+        filteredPlacemarks: this.getFilteredPlacemarks(),
       });
     }
   }
@@ -50,8 +50,8 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     const { placemarks, markers } = this.props;
     const filter = markers?.filter ?? (() => true);
     const filteredMarkers = Object.keys(placemarks)
-      .map(id => placemarks[id])
-      .filter(placemark => {
+      .map((id) => placemarks[id])
+      .filter((placemark) => {
         if (placemark.type === "exclusion_area") {
           // NOTE: Consider adding a new configuration setting called
           // `placemarks.showExclusionAreas` in the future if someone actually
@@ -68,17 +68,14 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   render() {
-    const {
-      markers,
-      onPlacemarkClick,
-      mapZoomFactor,
-      selectedItem
-    } = this.props;
+    const { markers, onPlacemarkClick, mapZoomFactor, selectedItem } =
+      this.props;
     const filteredPlacemarks = this.getFilteredPlacemarks();
     return (
       <div data-testid="meridian--private--placemark-layer">
-        {filteredPlacemarks.map(placemark => (
+        {filteredPlacemarks.map((placemark) => (
           <Placemark
+            key={placemark.id}
             isSelected={selectedItem ? selectedItem.id === placemark.id : false}
             mapZoomFactor={mapZoomFactor}
             data={placemark}

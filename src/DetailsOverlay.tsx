@@ -22,7 +22,7 @@ interface DetailsOverlayProps {
 const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
   kind,
   item,
-  toggleDetailsOverlay
+  toggleDetailsOverlay,
 }) => {
   const imageStyle: Record<string, any> = (() => {
     if (kind === "placemark") {
@@ -31,18 +31,18 @@ const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
         backgroundSize: "70%",
         backgroundImage: `url('${url}')`,
         backgroundColor: `#${item.color}`,
-        height: 300
+        height: 300,
       };
     }
     if (kind === "tag" && item.image_url) {
       return {
         backgroundImage: `url('${item.image_url}')`,
-        height: 300
+        height: 300,
       };
     }
     return {
       background: theme.brandBrightBlue,
-      height: 300
+      height: 300,
     };
   })();
   return (
@@ -76,21 +76,21 @@ const cssOverlayImage = css({
   backgroundColor: "white",
   backgroundPosition: "center",
   backgroundRepeat: "no-repeat",
-  backgroundSize: "cover"
+  backgroundSize: "cover",
 });
 
 const cssOverlayName = css({
   label: "overlay-name",
-  fontSize: 24
+  fontSize: 24,
 });
 
 const cssOverlayContent = css({
   label: "overlay-content",
-  padding: "0 20px 10px 20px"
+  padding: "0 20px 10px 20px",
 });
 
 const cssTagData = css({
-  fontSize: 14
+  fontSize: 14,
 });
 
 export default DetailsOverlay;

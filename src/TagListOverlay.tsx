@@ -48,14 +48,14 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       tags,
       loading,
       onTagClick,
-      toggleTagListOverlay
+      toggleTagListOverlay,
     } = this.props;
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
-    const floorsByID = groupBy(floors, floor => floor.id);
+    const floorsByID = groupBy(floors, (floor) => floor.id);
     const processedTags = tags
       // Remove tags from unpublished floors
-      .filter(tag => {
+      .filter((tag) => {
         const floor = floorsByID[tag.map_id][0];
         if (floor) {
           return floor.published;
@@ -63,13 +63,13 @@ class TagListOverlay extends Component<TagListOverlayProps> {
         return true;
       })
       // Remove tags that don't match the local search terms
-      .filter(tag => {
+      .filter((tag) => {
         return (
           match(tag.name) || match(tag.mac) || getTagLabels(tag).some(match)
         );
       })
       // Remove control tags unless the developer wants them
-      .filter(tag => {
+      .filter((tag) => {
         if (tagOptions.showControlTags !== true) {
           return !tag.is_control_tag;
         }
@@ -90,10 +90,10 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       floorToGroup[floor.id] = [
         floor.group_name || uiText.unnamedBuilding,
         uiText.enDash,
-        floor.name
+        floor.name,
       ].join(" ");
     }
-    const organizedTags = groupBy(processedTags, tag => {
+    const organizedTags = groupBy(processedTags, (tag) => {
       return floorToGroup[tag.map_id];
     });
     const sortedGroups = Object.keys(organizedTags).sort();
@@ -113,7 +113,7 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       >
         <OverlaySearchBar
           value={searchFilter}
-          onChange={searchFilter => {
+          onChange={(searchFilter) => {
             this.setState({ searchFilter });
           }}
         />
@@ -132,10 +132,10 @@ class TagListOverlay extends Component<TagListOverlayProps> {
           }
           return (
             <div className={cssTagList}>
-              {sortedGroups.map(buildingName => (
+              {sortedGroups.map((buildingName) => (
                 <div key={buildingName}>
                   <div className={cssOverlayBuildingName}>{buildingName}</div>
-                  {organizedTags[buildingName].map(tag => (
+                  {organizedTags[buildingName].map((tag) => (
                     <button
                       key={tag.id}
                       data-testid={`meridian--private--overlay-tag-${tag.id}`}
@@ -144,7 +144,7 @@ class TagListOverlay extends Component<TagListOverlayProps> {
                         updateMap({
                           locationID: tag.location_id,
                           floorID: tag.map_id,
-                          tags: { ...tagOptions, filter: () => true }
+                          tags: { ...tagOptions, filter: () => true },
                         });
                         onTagClick(tag);
                         toggleTagListOverlay({ open: false });
@@ -181,13 +181,13 @@ const cssOverlayBuildingName = css({
   color: theme.brandBlue,
   background: theme.almostWhite,
   fontSize: theme.fontSizeSmaller,
-  padding: 10
+  padding: 10,
 });
 
 const cssTagList = css({
   label: "tags-list",
   overflowY: "auto",
-  flex: "1 1 auto"
+  flex: "1 1 auto",
 });
 
 const cssOverlayTagButton = css(
@@ -201,18 +201,18 @@ const cssOverlayTagButton = css(
     paddingLeft: 20,
     display: "block",
     width: "100%",
-    textAlign: "left"
+    textAlign: "left",
   }
 );
 
 const cssOverlayTagButtonInner = css(mixins.flexRow, {
   label: "overlay-tags-button-inner",
-  alignItems: "center"
+  alignItems: "center",
 });
 
 const cssOverlayTagButtonName = css({
   label: "overlay-tags-button-name",
-  flex: "1 1 auto"
+  flex: "1 1 auto",
 });
 
 const cssTagListEmpty = css({
@@ -220,7 +220,7 @@ const cssTagListEmpty = css({
   padding: "60px 20px",
   textAlign: "center",
   fontSize: theme.fontSizeBigger,
-  color: theme.textColorBluish
+  color: theme.textColorBluish,
 });
 
 export default TagListOverlay;

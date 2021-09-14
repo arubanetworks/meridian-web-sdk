@@ -17,7 +17,7 @@ interface ErrorOverlayProps {
 
 const ErrorOverlay: FunctionComponent<ErrorOverlayProps> = ({
   toggleErrorOverlay,
-  messages = ["Unknown"]
+  messages = ["Unknown"],
 }) => {
   return (
     <div className={cssErrorOverlay}>
@@ -55,7 +55,7 @@ const cssErrorOverlay = css(mixins.rounded, {
   paddingBottom: 15,
   paddingLeft: 25,
   background: theme.white,
-  boxShadow: "0 0 1px rgba(0, 0, 0, 0.15), inset 4px 0 0 #d82e1f"
+  boxShadow: "0 0 1px rgba(0, 0, 0, 0.15), inset 4px 0 0 #d82e1f",
 });
 
 const cssCloseButton = css(mixins.buttonReset, {
@@ -70,12 +70,12 @@ const cssCloseButton = css(mixins.buttonReset, {
 
   "&:hover": {
     fill: theme.textColorBluish,
-    cursor: "pointer"
+    cursor: "pointer",
   },
 
   "&:focus": {
-    outline: 0
-  }
+    outline: 0,
+  },
 });
 
 export default ErrorOverlay;

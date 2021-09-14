@@ -18,7 +18,7 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   strokeWidth = 2,
   strokeLineJoin = "miter",
   strokeLineCap = "butt",
-  mapZoomFactor
+  mapZoomFactor,
 }) => {
   return (
     <polyline

@@ -12,11 +12,11 @@ const IconSpinner: FunctionComponent = () => <div className={cssSpinner} />;
 
 const cssSpin = keyframes({
   from: {
-    transform: "rotate(0turn)"
+    transform: "rotate(0turn)",
   },
   to: {
-    transform: "rotate(1turn)"
-  }
+    transform: "rotate(1turn)",
+  },
 });
 
 const cssSpinner = css({
@@ -27,7 +27,7 @@ const cssSpinner = css({
   border: "2px rgba(227, 227, 227, 0.9) solid",
   borderTop: "2px #2e7cbe solid",
   borderRadius: "50%",
-  animation: `${cssSpin} 600ms infinite linear`
+  animation: `${cssSpin} 600ms infinite linear`,
 });
 
 export default IconSpinner;

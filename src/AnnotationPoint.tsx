@@ -24,7 +24,7 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
   backgroundImage,
   title,
   onClick,
-  data = {}
+  data = {},
 }) => {
   return (
     <div
@@ -39,7 +39,7 @@ const AnnotationPoint: FunctionComponent<AnnotationPointProps> = ({
         "--meridian-annotationPoint-backgroundImage": backgroundImage
           ? `url('${backgroundImage}')`
           : "none",
-        cursor: onClick ? "pointer" : "initial"
+        cursor: onClick ? "pointer" : "initial",
       }}
       onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
       data-testid="meridian--private--annotation-point"
@@ -61,7 +61,8 @@ const cssAnnotationPoint = css({
   position: "absolute",
   top: "var(--meridian-annotationPoint-y)",
   left: "var(--meridian-annotationPoint-x)",
-  transform: "translate(-50%, -50%) scale(var(--meridian-annotationPoint-scale))",
+  transform:
+    "translate(-50%, -50%) scale(var(--meridian-annotationPoint-scale))",
   width: "var(--meridian-annotationPoint-size)",
   height: "var(--meridian-annotationPoint-size)",
   backgroundColor: "var(--meridian-annotationPoint-backgroundColor)",
@@ -70,7 +71,7 @@ const cssAnnotationPoint = css({
   backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
   borderRadius: 9999,
-  userSelect: "none"
+  userSelect: "none",
 });
 
 const cssAnnotationPointLabel = css(mixins.textStrokeWhite, {
@@ -86,7 +87,7 @@ const cssAnnotationPointLabel = css(mixins.textStrokeWhite, {
   color: "#222",
   userSelect: "none",
   transform: "translate(-50%, 0)",
-  fontWeight: "bold"
+  fontWeight: "bold",
 });
 
 AnnotationPoint.displayName = "AnnotationPoint";

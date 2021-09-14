@@ -28,7 +28,7 @@ const cssWatermark = css({
   opacity: 0.4,
   zIndex: 1,
   left: "50%",
-  top: 0
+  top: 0,
 });
 
 const cssLogo = css({
@@ -36,7 +36,7 @@ const cssLogo = css({
   display: "block",
   fill: "black",
   width: 70,
-  height: 30
+  height: 30,
 });
 
 export default Watermark;

@@ -16,7 +16,7 @@ interface AnnotationLayerProps {
 
 const AnnotationLayer: FunctionComponent<AnnotationLayerProps> = ({
   mapZoomFactor,
-  annotations
+  annotations,
 }) => {
   return (
     <div data-testid="meridian--private--annotation-layer">

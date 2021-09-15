@@ -826,7 +826,7 @@ export class API {
       try {
         const tags = await this.fetchTagsByFloor(locationID, floorID);
         asyncClientCall(onInitialTags, tags);
-      } catch (err) {
+      } catch (err: any) {
         asyncClientCall(onException, err);
         close();
       }

@@ -41,12 +41,12 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
           type="text"
           placeholder="Search"
           className={cssSearchInput}
-          onInput={event => {
+          onInput={(event) => {
             if (event.target instanceof HTMLInputElement) {
               onChange(event.target.value);
             }
           }}
-          ref={element => {
+          ref={(element) => {
             this.input = element;
           }}
         />
@@ -71,8 +71,8 @@ const cssSearchInput = css(
     border: 0,
 
     "&::placeholder": {
-      color: theme.textColorBluish
-    }
+      color: theme.textColorBluish,
+    },
   }
 );
 
@@ -84,7 +84,7 @@ const cssSearchIcon = css({
   width: 16,
   height: 16,
   top: 18,
-  left: 18
+  left: 18,
 });
 
 const cssSearchBar = css({
@@ -95,7 +95,7 @@ const cssSearchBar = css({
   display: "flex",
   flexDirection: "column",
   padding: 10,
-  height: 32
+  height: 32,
 });
 
 export default OverlaySearchBar;

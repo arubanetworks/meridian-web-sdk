@@ -33,7 +33,7 @@ export async function sendAnalyticsCodeEvent(
     onTagsUpdate = false,
     tagsFilter = false,
     placemarksFilter = false,
-    internalUpdate = false
+    internalUpdate = false,
   } = options;
   const params = {
     v: "1", // GA version
@@ -55,9 +55,7 @@ export async function sendAnalyticsCodeEvent(
     sr: screenRes, // Screen Resolution
     aip: 1, // Anonymize IP
     ua: window.navigator.userAgent, // User Agent
-    z: Math.random()
-      .toString(36)
-      .substring(7) // Cache Buster (per google)
+    z: Math.random().toString(36).substring(7), // Cache Buster (per google)
   };
   axios.get("https://www.google-analytics.com/collect", { params });
 }

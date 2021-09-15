@@ -11,7 +11,7 @@ import {
   zoom as d3Zoom,
   ZoomBehavior,
   zoomIdentity as d3ZoomIdentity,
-  zoomTransform as d3ZoomTransform
+  zoomTransform as d3ZoomTransform,
 } from "d3-zoom";
 import { Component, createRef, Fragment, h } from "preact";
 import AnnotationLayer from "./AnnotationLayer";
@@ -33,7 +33,7 @@ import {
   CreateMapOptions,
   FloorData,
   PlacemarkData,
-  TagData
+  TagData,
 } from "./web-sdk";
 import ZoomControls from "./ZoomControls";
 
@@ -85,7 +85,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     annotations: [],
     onTagsUpdate: () => {},
     onFloorChange: () => {},
-    onFloorsUpdate: () => {}
+    onFloorsUpdate: () => {},
   };
 
   state: MapComponentState = {
@@ -106,7 +106,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     tagsStatus: "Connecting",
     selectedItem: undefined,
     areTagsLoading: this.props.loadTags ?? true,
-    allTagData: []
+    allTagData: [],
   };
   isMounted = false;
   tagsTimeout: any;
@@ -124,12 +124,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     if (!isEnvOptions(api.environment)) {
       this.toggleErrorOverlay({
         open: true,
-        message: `API error: "${api.environment}" is not a valid environment`
+        message: `API error: "${api.environment}" is not a valid environment`,
       });
     } else if (!locationID) {
       this.toggleErrorOverlay({
         open: true,
-        message: `createMap error: "options.locationID" is required`
+        message: `createMap error: "options.locationID" is required`,
       });
     } else {
       this.loadData();
@@ -240,7 +240,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     if (!floorID) {
       this.toggleErrorOverlay({
         open: true,
-        message: `createMap error: "options.floorID" is required`
+        message: `createMap error: "options.floorID" is required`,
       });
     }
   }
@@ -299,7 +299,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   toggleErrorOverlay = ({
     open,
-    message = "Unknown"
+    message = "Unknown",
   }: {
     open: boolean;
     message?: string;
@@ -308,9 +308,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       return;
     }
     if (open) {
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         errors: [...prevState.errors, message],
-        isErrorOverlayOpen: true
+        isErrorOverlayOpen: true,
       }));
     } else {
       this.setState({ isErrorOverlayOpen: false, errors: [] });
@@ -319,7 +319,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   toggleLoadingSpinner = ({
     show,
-    source = "unknown"
+    source = "unknown",
   }: {
     show: boolean;
     source?: string;
@@ -327,24 +327,24 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     if (!this.isMounted) {
       return;
     }
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       loadingSources: {
         ...prevState.loadingSources,
-        [source]: show
-      }
+        [source]: show,
+      },
     }));
   };
 
   showLoadingSpinner() {
     const { loadingSources } = this.state;
-    return Object.keys(loadingSources).some(item => {
+    return Object.keys(loadingSources).some((item) => {
       return loadingSources[item] === true;
     });
   }
 
   toggleDetailsOverlay = ({
     open,
-    selectedItem
+    selectedItem,
   }: {
     open: boolean;
     selectedItem?: MapComponentState["selectedItem"];
@@ -355,7 +355,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   selectFloorByID = (floorID: string) => {
     this.updateMap({ floorID, annotations: [], overlays: [] });
     if (this.props.onFloorChange) {
-      const floor = this.state.floors.find(f => f.id === floorID);
+      const floor = this.state.floors.find((f) => f.id === floorID);
       if (floor) {
         asyncClientCall(this.props.onFloorChange, floor);
       }
@@ -364,8 +364,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   groupPlacemarksByID = (placemarks: PlacemarkData[]) => {
     return keyBy(
-      placemarks.map(placemark => this.normalizePlacemark(placemark)),
-      placemark => placemark.id
+      placemarks.map((placemark) => this.normalizePlacemark(placemark)),
+      (placemark) => placemark.id
     );
   };
 
@@ -403,18 +403,18 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       if (!this.isMounted) {
         return [];
       }
-    } catch (err) {
+    } catch (err: any) {
       if (err.response && err.response.data && err.response.data.detail) {
         this.toggleErrorOverlay({
           open: true,
-          message: err.response.data.detail
+          message: err.response.data.detail,
         });
       }
     }
     if (!results || !results.length) {
       this.toggleErrorOverlay({
         open: true,
-        message: "Floor data could not be found."
+        message: "Floor data could not be found.",
       });
     }
     return results;
@@ -423,7 +423,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   getMapData() {
     const { floorID } = this.props;
     const { floors } = this.state;
-    return floors.find(f => f.id === floorID);
+    return floors.find((f) => f.id === floorID);
   }
 
   async initializeFloors() {
@@ -464,7 +464,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         this.setState({
           mapTransform: t,
           mapZoomFactor: k,
-          isPanningOrZooming: true
+          isPanningOrZooming: true,
         });
       };
       const onZoomEnd = () => {
@@ -474,7 +474,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         // Don't destructure this at the top of the file because we need d3 to
         // hook until whatever the latest version of the function is, even if it
         // has changed since this callback was registered
-        .filter(d3Event =>
+        .filter((d3Event) =>
           this.props.shouldMapPanZoom
             ? this.props.shouldMapPanZoom(d3Event)
             : true
@@ -483,7 +483,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         .scaleExtent([1 / 60, 14])
         .translateExtent([
           [-PADDING, -PADDING],
-          [bottomRightX, bottomRightY]
+          [bottomRightX, bottomRightY],
         ])
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom)
@@ -521,7 +521,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
     return {
       width: this.mapRef.current.clientWidth,
-      height: this.mapRef.current.clientHeight
+      height: this.mapRef.current.clientHeight,
     };
   }
 
@@ -583,7 +583,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       const meridianEvent = {
         preventDefault: () => {
           showOverlay = false;
-        }
+        },
       };
       await onTagClick(tag, meridianEvent);
     } catch (err) {
@@ -601,7 +601,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       const meridianEvent = {
         preventDefault: () => {
           showOverlay = false;
-        }
+        },
       };
       await onPlacemarkClick(placemark, meridianEvent);
     } catch (err) {
@@ -646,12 +646,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   renderTagListOverlay() {
     const { locationID, floorID, api, tags, loadTags } = this.props;
-    const {
-      isTagListOverlayOpen,
-      floors,
-      allTagData,
-      areTagsLoading
-    } = this.state;
+    const { isTagListOverlayOpen, floors, allTagData, areTagsLoading } =
+      this.state;
     if (isTagListOverlayOpen && loadTags) {
       return (
         <TagListOverlay
@@ -713,7 +709,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       mapTransform,
       mapZoomFactor,
       isPanningOrZooming,
-      errors
+      errors,
     } = this.state;
     const {
       showTagsControl = true,
@@ -728,14 +724,14 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       height = "",
       onTagsUpdate,
       onPlacemarksUpdate,
-      loadTags = true
+      loadTags = true,
     } = this.props;
     return (
       <div
         className={cx("meridian-map-container", cssMapContainer)}
         style={{ width, height }}
         data-testid="meridian--private--map-container"
-        ref={ref => {
+        ref={(ref) => {
           this.mapContainerRef.current = ref;
         }}
       >
@@ -754,7 +750,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         />
         {this.renderFloorLabel()}
         <div
-          ref={el => {
+          ref={(el) => {
             this.mapRef.current = el;
           }}
           className={cx("meridian-map-background", cssMap)}
@@ -767,7 +763,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
               width: 0,
               height: 0,
               transform: mapTransform,
-              transformOrigin: "0 0 0"
+              transformOrigin: "0 0 0",
             }}
           >
             <img src={mapImageURL} ref={this.mapImageref} />
@@ -826,14 +822,14 @@ const cssMapContainer = css({
   background: "#fafafa",
   color: "#000",
   fontFamily: "inherit",
-  textAlign: "left"
+  textAlign: "left",
 });
 
 const cssMap = css({
   label: "map-outer",
   borderRadius: "inherit",
   display: "block",
-  overflow: "hidden"
+  overflow: "hidden",
 });
 
 export default MapComponent;

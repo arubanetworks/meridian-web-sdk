@@ -48,11 +48,9 @@ module.exports = {
     publicPath: `https://files.meridianapps.com/meridian-web-sdk/${Package.version}/`,
   },
   devServer: {
-    filename: "meridian-sdk.js",
-    clientLogLevel: "error",
-    contentBase: path.resolve(__dirname, "demo"),
-    overlay: true,
     port: 3011,
-    stats: "errors-only",
+    devMiddleware: { stats: "errors-only" },
+    client: { logging: "error", overlay: true },
+    static: { directory: path.resolve(__dirname, "demo"), watch: true },
   },
 };

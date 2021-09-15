@@ -13,7 +13,8 @@
     "build": "bash bin/build.sh",
     "analyze": "webpack --mode production --env analyze --config webpack.analyze.config.js",
     "postversion": "git push --follow-tags",
-    "test": "bash bin/test.sh"
+    "test": "bash bin/test.sh",
+    "upgrade": "npx npm-check -u"
   },
   "browserslist": [
     "defaults"
@@ -37,7 +38,7 @@
     "@types/d3-transition": "^3.0.1",
     "@types/lodash.groupby": "^4.6.6",
     "@types/lodash.throttle": "^4.1.6",
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",
     "d3-zoom": "^3.0.0",
@@ -51,27 +52,27 @@
   "devDependencies": {
     "@types/d3-zoom": "^3.0.1",
     "@types/webpack-env": "^1.16.2",
-    "@typescript-eslint/eslint-plugin": "^4.29.1",
-    "@typescript-eslint/parser": "^4.29.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
     "acorn": "^7.1.0",
-    "cypress": "^8.2.0",
+    "cypress": "^8.4.0",
     "declaration-bundler-webpack-plugin": "^1.0.3",
     "eslint": "^7.32.0",
     "eslint-config-preact": "^1.1.4",
-    "eslint-plugin-cypress": "^2.11.3",
+    "eslint-plugin-cypress": "^2.12.1",
     "file-loader": "^6.2.0",
     "fsevents": "^2.3.2",
     "gh-pages": "^2.1.1",
     "path-browserify": "^1.0.1",
-    "prettier": "^2.3.2",
+    "prettier": "^2.4.0",
     "ts-loader": "^9.2.5",
-    "typedoc": "^0.21.5",
-    "typescript": "^4.3.5",
+    "typedoc": "^0.22.3",
+    "typescript": "^4.4.3",
     "wait-on": "^5.3.0",
-    "webpack": "^5.50.0",
+    "webpack": "^5.52.1",
     "webpack-bundle-analyzer": "^4.4.2",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^3.11.2",
+    "webpack-dev-server": "^4.2.1",
     "webpack-node-externals": "^3.0.0"
   }
 }

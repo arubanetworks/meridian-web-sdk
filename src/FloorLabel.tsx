@@ -16,7 +16,7 @@ interface FloorLabelProps {
 
 const FloorLabel: FunctionComponent<FloorLabelProps> = ({
   buildingName,
-  floorName
+  floorName,
 }) => (
   <div
     className={cx("meridian-floor-label", cssFloorLabel)}
@@ -44,7 +44,7 @@ const cssFloorLabel = css(
     maxWidth: 300,
     padding: "8px 16px",
     border: 0,
-    fontSize: 16
+    fontSize: 16,
   }
 );
 

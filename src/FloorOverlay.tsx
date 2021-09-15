@@ -31,15 +31,11 @@ class FloorOverlay extends Component<FloorOverlayProps> {
   }
 
   render() {
-    const {
-      currentFloorID,
-      toggleFloorOverlay,
-      selectFloorByID,
-      floors
-    } = this.props;
+    const { currentFloorID, toggleFloorOverlay, selectFloorByID, floors } =
+      this.props;
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
-    const processedFloors = floors.filter(floor => {
+    const processedFloors = floors.filter((floor) => {
       return (
         floor.published &&
         (match(floor.name || "") ||
@@ -64,7 +60,7 @@ class FloorOverlay extends Component<FloorOverlayProps> {
       >
         <OverlaySearchBar
           value={searchFilter}
-          onChange={searchFilter => {
+          onChange={(searchFilter) => {
             this.setState({ searchFilter });
           }}
         />
@@ -75,12 +71,12 @@ class FloorOverlay extends Component<FloorOverlayProps> {
             className={cssFloorsList}
             data-testid="meridian--private--floors-list"
           >
-            {buildingNames.map(buildingName => (
+            {buildingNames.map((buildingName) => (
               <div key={buildingName}>
                 <div className={cssOverlayBuildingName}>
                   {buildingName || uiText.unnamedBuilding}
                 </div>
-                {groupedFloors[buildingName].map(floor => (
+                {groupedFloors[buildingName].map((floor) => (
                   <button
                     key={floor.name}
                     onClick={() => {
@@ -125,12 +121,12 @@ const cssOverlayBuildingName = css({
   color: theme.brandBlue,
   background: theme.almostWhite,
   fontSize: theme.fontSizeSmaller,
-  padding: 10
+  padding: 10,
 });
 
 const cssFloorsList = css({
   label: "floors-list",
-  overflowY: "auto"
+  overflowY: "auto",
 });
 
 const cssOverlayFloorButton = css(
@@ -143,7 +139,7 @@ const cssOverlayFloorButton = css(
     paddingLeft: 20,
     display: "block",
     width: "100%",
-    textAlign: "left"
+    textAlign: "left",
   }
 );
 
@@ -152,13 +148,13 @@ const cssFloorsListEmpty = css({
   padding: "60px 20px",
   textAlign: "center",
   fontSize: theme.fontSizeBigger,
-  color: theme.textColorBluish
+  color: theme.textColorBluish,
 });
 
 const cssOverlayCurrentFloor = css({
   label: "overlay-floor-button-curent-floor",
   color: theme.brandBrightBlue,
-  fill: "currentcolor"
+  fill: "currentcolor",
 });
 
 const cssFloorCheckmark = css({
@@ -166,7 +162,7 @@ const cssFloorCheckmark = css({
   verticalAlign: "middle",
   marginLeft: "0.5em",
   width: "0.8em",
-  height: "0.8em"
+  height: "0.8em",
 });
 
 export default FloorOverlay;

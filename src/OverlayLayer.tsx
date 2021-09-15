@@ -18,7 +18,7 @@ interface OverlayLayerProps {
 
 const OverlayLayer: FunctionComponent<OverlayLayerProps> = ({
   mapZoomFactor,
-  overlays
+  overlays,
 }) => {
   return (
     <svg className={cssOverlay} data-testid="meridian--private--overlay-layer">
@@ -47,7 +47,7 @@ const cssOverlay = css({
   top: 0,
   left: 0,
   right: 0,
-  bottom: 0
+  bottom: 0,
 });
 
 export default OverlayLayer;

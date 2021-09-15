@@ -11,7 +11,7 @@ import { getPlacemarkCategories } from "./util";
 import {
   CreateMapPlacemarksOptions,
   PlacemarkData,
-  placemarkIconURL
+  placemarkIconURL,
 } from "./web-sdk";
 
 const SIZE = 24;
@@ -33,7 +33,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
   onClick = () => {},
   disabled = false,
   labelMode,
-  labelZoomLevel = 0.2
+  labelZoomLevel = 0.2,
 }) => {
   const cssTypeName = `meridian-placemark-type-${data.type}`;
   const labelOnly = !data.type || data.type.indexOf("label_") === 0;
@@ -52,7 +52,7 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
   const style = {
     left: data.x,
     top: data.y,
-    transform: `translate(-50%, -50%) scale(${k})`
+    transform: `translate(-50%, -50%) scale(${k})`,
   } as const;
 
   if (labelOnly) {
@@ -90,7 +90,10 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
         disabled={disabled}
         className={cx(
           getPlacemarkCategories(data).map((category: string) => {
-            category = category.replace(/ /g, "-").replace(/[^a-z0-9_-]/i, "").toLowerCase();
+            category = category
+              .replace(/ /g, "-")
+              .replace(/[^a-z0-9_-]/i, "")
+              .toLowerCase();
             return `meridian-placemark-category-${category}`;
           }),
           iconClassName
@@ -99,15 +102,15 @@ const Placemark: FunctionComponent<PlacemarkProps> = ({
         style={{
           "--meridian-placemark-iconURL": `url('${iconURL}')`,
           "--meridian-placemark-borderColor": color,
-          "--meridian-placemark-backgroundColor": color
+          "--meridian-placemark-backgroundColor": color,
         }}
-        onClick={event => {
+        onClick={(event) => {
           if (event.target instanceof HTMLElement) {
             event.target.focus();
           }
           onClick(data);
         }}
-        onMouseDown={event => {
+        onMouseDown={(event) => {
           event.stopPropagation();
         }}
       />
@@ -140,11 +143,11 @@ const cssLabel = css(mixins.textStrokeWhite, {
   pointerEvents: "none",
 
   "[data-meridian-placemark-label-mode='always'] > &": {
-    visibility: "visible"
+    visibility: "visible",
   },
 
   "[data-meridian-placemark-label-mode='never'] > &": {
-    visibility: "hidden"
+    visibility: "hidden",
   },
 
   "[data-meridian-placemark-label-mode='hover']:hover > &": {
@@ -157,23 +160,25 @@ const cssLabel = css(mixins.textStrokeWhite, {
     bottom: 30,
     maxWidth: 240,
     width: "max-content",
-    boxShadow: "0 0 1px 1px white"
+    boxShadow: "0 0 1px 1px white",
   },
 
-  "[data-meridian-placemark-label-mode='zoom'] > &[data-meridian-placemark-label-zoom-visible='false']": {
-    visibility: "hidden"
-  },
+  "[data-meridian-placemark-label-mode='zoom'] > &[data-meridian-placemark-label-zoom-visible='false']":
+    {
+      visibility: "hidden",
+    },
 
-  "[data-meridian-placemark-label-mode='zoom'] > &[data-meridian-placemark-label-zoom-visible='true']": {
-    visibility: "visible"
-  }
+  "[data-meridian-placemark-label-mode='zoom'] > &[data-meridian-placemark-label-zoom-visible='true']":
+    {
+      visibility: "visible",
+    },
 });
 
 const cssLabelOnly = css({
   label: "placemark-labelOnly",
   textTransform: "uppercase",
   color: "#666",
-  fontSize: 16
+  fontSize: 16,
 });
 
 const cssPlacemark = css({
@@ -181,8 +186,8 @@ const cssPlacemark = css({
   position: "absolute",
 
   "&[data-meridian-placemark-label-mode='hover']:hover": {
-    zIndex: 1
-  }
+    zIndex: 1,
+  },
 });
 
 const cssPlacemarkIcon = css(
@@ -204,7 +209,7 @@ const cssPlacemarkIcon = css(
     backgroundSize: "cover",
     border: "2px solid transparent",
     overflow: "hidden",
-    zIndex: 1
+    zIndex: 1,
   }
 );
 
@@ -212,7 +217,7 @@ const cssPlacemarkIconSelected = css(cssPlacemarkIcon, {
   zIndex: 3,
   width: SIZE * 1.25,
   height: SIZE * 1.25,
-  boxShadow: "0 0 4px black"
+  boxShadow: "0 0 4px black",
 });
 
 export default Placemark;

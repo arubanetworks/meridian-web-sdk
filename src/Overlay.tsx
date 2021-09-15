@@ -17,7 +17,7 @@ interface OverlayProps {
 const Overlay: FunctionComponent<OverlayProps> = ({
   position,
   onCloseClicked,
-  children
+  children,
 }) => (
   <div
     className={position === "left" ? cssOverlayLeft : cssOverlayRight}
@@ -50,15 +50,15 @@ const cssOverlay = css(mixins.shadow, mixins.rounded, {
   // TODO: maxHeight should really be based on the Map height minus 30px or so
   maxHeight: 500,
   zIndex: 2,
-  maxWidth: 400
+  maxWidth: 400,
 });
 
 const cssOverlayLeft = css(cssOverlay, {
-  marginRight: "auto"
+  marginRight: "auto",
 });
 
 const cssOverlayRight = css(cssOverlay, {
-  marginLeft: "auto"
+  marginLeft: "auto",
 });
 
 const cssClose = css(
@@ -81,7 +81,7 @@ const cssClose = css(
     color: theme.textColor,
     borderRadius: "100%",
     fontWeight: "bold",
-    boxShadow: "0 0 2px rgba(0, 0, 0, 0.4)"
+    boxShadow: "0 0 2px rgba(0, 0, 0, 0.4)",
   }
 );
 

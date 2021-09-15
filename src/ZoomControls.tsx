@@ -15,7 +15,7 @@ interface ZoomControlsProps {
 
 const ZoomControls: FunctionComponent<ZoomControlsProps> = ({
   onZoomIn,
-  onZoomOut
+  onZoomOut,
 }) => (
   <div className={cx("meridian-zoom-controls", cssZoomControls)}>
     <ZoomButton onClick={onZoomIn} dir="in" />
@@ -69,7 +69,7 @@ const cssZoomControls = css(mixins.shadow, mixins.rounded, {
   flexDirection: "column",
   zIndex: 1,
   right: 15,
-  bottom: 15
+  bottom: 15,
 });
 
 const cssZoomButton = css(
@@ -86,19 +86,19 @@ const cssZoomButton = css(
     fontSize: 20,
     fontWeight: 200,
     fill: theme.brandBrightBlue,
-    background: "white"
+    background: "white",
   }
 );
 
 const cssZoomButtonIn = css(cssZoomButton, {
   borderBottomLeftRadius: 0,
   borderBottomRightRadius: 0,
-  borderBottom: `1px solid ${theme.buttonSeparatorColor}`
+  borderBottom: `1px solid ${theme.buttonSeparatorColor}`,
 });
 
 const cssZoomButtonOut = css(cssZoomButton, {
   borderTopLeftRadius: 0,
-  borderTopRightRadius: 0
+  borderTopRightRadius: 0,
 });
 
 export default ZoomControls;

@@ -61,7 +61,6 @@
     "eslint-config-preact": "^1.2.0",
     "eslint-plugin-cypress": "^2.12.1",
     "file-loader": "^6.2.0",
-    "fsevents": "^2.3.2",
     "gh-pages": "^2.1.1",
     "path-browserify": "^1.0.1",
     "prettier": "^2.4.1",

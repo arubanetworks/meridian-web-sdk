@@ -10,7 +10,7 @@
     "nonlocal": "npm run start -- --host 0.0.0.0",
     "travis-cypress": "bash bin/travis-cypress.sh",
     "docs": "bash bin/docs.sh",
-    "build": "bash bin/build.sh",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider; bash bin/build.sh",
     "analyze": "webpack --mode production --env analyze --config webpack.analyze.config.js",
     "postversion": "git push --follow-tags",
     "test": "bash bin/test.sh",

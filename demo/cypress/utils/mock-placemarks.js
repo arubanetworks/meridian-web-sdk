@@ -572,7 +572,7 @@ export default {
       deep_link: null,
       is_disabled: false,
       category_ids: [],
-      categories: [{id: "6286567746830336", name: "Available"}, {id: "6286567746830337", name: "Conference Room"}]
+      categories: [{id: "6286567746830336", name: "Dolby/Widescreen"}, {id: "6286567746830337", name: "Conference Room"}]
     },
     {
       id: "5755685136498688_5718998062727168",

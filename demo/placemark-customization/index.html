@@ -46,7 +46,7 @@
         animation: pulsing 5s infinite;
       }
 
-      body .meridian-placemark-category-available {
+      body .meridian-placemark-category-dolbywidescreen {
         border-color: green;
         background-color: green;
         width: 50px;
@@ -59,6 +59,20 @@
           height: 24px;
         }
       }
+
+      .code-container {
+        max-width: 540px;
+        padding: 20px;
+        margin: 20px auto;
+        color: black;
+        background-color: white;
+        font-size: 90%;
+      }
+
+      .indent {
+        margin-left: 20px;
+        display: block;
+      }
     </style>
   </head>
 
@@ -68,15 +82,39 @@
           <div class="controls">
             <span>
               Styling by ID:<br/>
-              <img src="code.png" alt="code block" id="image-code" width="468" />
+              <p class="code-container">
+                <code>
+                  .meridian-placemark-icon[data-meridian-placemark-id="5750085036015616"] {
+                  <code class="indent">
+                    width: 50px;<br/>
+                    height: 50px;<br/>
+                    border-color: red;<br/>
+                    background-color: red;<br/>
+                    background-image: url("./heart.png");<br/>
+                    animation: pulsing 5s infinite;<br/>
+                  </code>
+                  }
+                </code>
+              </p>
             </span>
             <span>
               Styling by Category:<br/>
-              <img src="code2.png" alt="code block" id="image-code" width="468" />
+              <p class="code-container">
+                <code>
+                  body .meridian-placemark-category-dolbywidescreen
+                  <code class="indent">
+                    border-color: green;<br/>
+                    background-color: green;<br/>
+                    width: 50px;<br/>
+                    height: 50px;<br/>
+                  </code>
+                  }
+                </code>
+              </p>
             </span>
             <span>
-              <p> Note: Labels with special characters need to be targeted accordingly. Spaces and most special characters (with the exception of underscores and dashes) are removed.</p>
-              <p>Example: For the label “Audio/Visual”, target "meridian-tag-label-AudioVisual". </p>
+              <p> Note: Categories with special characters need to be targeted accordingly. Spaces and most special characters (with the exception of underscores and dashes) are removed.</p>
+              <p>Example: For the placemark category “Dolby/Widescreen”, target "meridian-placemark-category-dolbywidescreen". </p>
             </span>
           </div>
         </div>

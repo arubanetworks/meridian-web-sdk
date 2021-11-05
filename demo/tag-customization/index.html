@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Tag Customization | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <style>
+      .controls {
+        max-width: 560px;
+        background: hsl(210, 50%, 98%);
+        color: hsl(210, 80%, 30%);
+        border: 1px solid hsl(210, 30%, 80%);
+        padding: 20px;
+        margin: 20px auto;
+      }
+
+      #image-code {
+        margin: 15px auto;
+        display: block;
+      }
+
+      .map {
+        max-width: 600px;
+        margin: auto;
+        border: 1px solid #ccc;
+      }
+      
+      .meridian-tag[data-meridian-tag-id="546C0E014866"] {
+        width: 50px;
+        height: 50px;
+        border-color: cyan;
+        background-color: cyan;
+        animation: pulsing 5s infinite;
+      }
+
+      body .meridian-tag-label-JamboardWhiteboard {
+        border-color: yellow;
+        width: 50px;
+        height: 50px;
+        animation: pulsing 5s infinite;
+      }
+
+      @keyframes pulsing {
+        50% {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .code-container {
+        max-width: 540px;
+        padding: 20px;
+        margin: 20px auto;
+        color: black;
+        background-color: white;
+        font-size: 90%;
+      }
+
+      .indent {
+        margin-left: 20px;
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+      <div class="map" id="meridian-map"></div>
+        <div class="controls-container">
+          <div class="controls">
+            <span>
+              Styling by ID:<br/>
+              <div class="code-container">
+                <code>
+                  .meridian-tag[data-meridian-tag-id="546C0E014866"] {
+                  <code class="indent">
+                    width: 50px;<br/>
+                    height: 50px;<br/>
+                    border-color: cyan;<br/>
+                    background-color: cyan;<br/>
+                    animation: pulsing 5s infinite;<br/>
+                  </code>
+                  }
+                </code>
+              </div>
+            </span>
+            <span>
+              Styling by Label:<br/>
+              <div class="code-container">
+                <code>
+                  body .meridian-tag-label-JamboardWhiteboard {
+                  <code class="indent">
+                    border-color: yellow;<br/>
+                    width: 50px;<br/>
+                    height: 50px;<br/>
+                    animation: pulsing 5s infinite;<br/>
+                  </code>
+                  }
+                </code>
+              </div>
+            </span>
+            <span>
+              <p> Note: Labels with special characters need to be targeted accordingly. Spaces and most special characters (with the exception of underscores and dashes) are removed.</p>
+              <p>Example: For the tag label “Jamboard/Whiteboard”, target "meridian-tag-label-JamboardWhiteboard". </p>
+            </span>
+          </div>
+        </div>
+      </div>
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      MeridianSDK.init({
+        api: new MeridianSDK.API({
+          environment: "production",
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        })
+      });
+      var map = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          locationID: "5198682008846336",
+          floorID: "5755685136498688",
+          height: "400px",
+        }
+      );
+    </script>
+  </body>
+</html>

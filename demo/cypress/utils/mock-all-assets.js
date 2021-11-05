@@ -52,7 +52,7 @@ export default {
       tags: [
         {
           id: "4726953227845632",
-          name: "Jamboard"
+          name: "Jamboard/Whiteboard"
         }
       ],
       tag_ids: ["4726953227845632"],
@@ -170,7 +170,7 @@ export default {
       tags: [
         {
           id: "4726953227845632",
-          name: "Jamboard"
+          name: "Jamboard/Whiteboard"
         }
       ],
       tag_ids: ["4726953227845632"],

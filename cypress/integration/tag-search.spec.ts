@@ -53,7 +53,7 @@ describe("Tag Search", () => {
     // Assert data in the information popup for "Chad"
     cy.get("[data-testid=meridian--private--map-overlay")
       .should("contain", "Chad")
-      .should("contain", "CT-Human")
+      .should("contain", "CT-Human/Personnel")
       .should("contain", "546C0E014866");
     // Close overlay
     cy.get("[data-testid=meridian--private--close-overlay]").click();

@@ -3,13 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Placemark Customization | Meridian Web SDK</title>
+    <title>Tag Customization | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
     <link rel="stylesheet" href="../shared.css" />
     <link
       rel="stylesheet"
@@ -37,20 +40,19 @@
         border: 1px solid #ccc;
       }
       
-      .meridian-placemark-icon[data-meridian-placemark-id="5750085036015616"] {
+      .meridian-tag[data-meridian-tag-id="546C0E032A87"] {
         width: 50px;
         height: 50px;
-        border-color: red;
-        background-color: red;
-        background-image: url("./heart.png");
+        border-color: cyan;
+        background-color: cyan;
         animation: pulsing 5s infinite;
       }
 
-      body .meridian-placemark-category-dolbywidescreen {
-        border-color: green;
-        background-color: green;
+      body .meridian-tag-label-CT-HumanPersonnel {
+        border-color: yellow;
         width: 50px;
         height: 50px;
+        animation: pulsing 5s infinite;
       }
 
       @keyframes pulsing {
@@ -82,39 +84,38 @@
           <div class="controls">
             <span>
               Styling by ID:<br/>
-              <p class="code-container">
+              <div class="code-container">
                 <code>
-                  .meridian-placemark-icon[data-meridian-placemark-id="5750085036015616"] {
+                  .meridian-tag[data-meridian-tag-id="546C0E032A87"] {
                   <code class="indent">
                     width: 50px;<br/>
                     height: 50px;<br/>
-                    border-color: red;<br/>
-                    background-color: red;<br/>
-                    background-image: url("./heart.png");<br/>
+                    border-color: cyan;<br/>
+                    background-color: cyan;<br/>
                     animation: pulsing 5s infinite;<br/>
                   </code>
                   }
                 </code>
-              </p>
+              </div>
             </span>
             <span>
-              Styling by Category:<br/>
-              <p class="code-container">
+              Styling by Label:<br/>
+              <div class="code-container">
                 <code>
-                  body .meridian-placemark-category-dolbywidescreen
+                  body .meridian-tag-label-CT-HumanPersonnel {
                   <code class="indent">
-                    border-color: green;<br/>
-                    background-color: green;<br/>
+                    border-color: yellow;<br/>
                     width: 50px;<br/>
                     height: 50px;<br/>
+                    animation: pulsing 5s infinite;<br/>
                   </code>
                   }
                 </code>
-              </p>
+              </div>
             </span>
             <span>
-              <p> Note: Categories with special characters need to be targeted accordingly. Spaces and most special characters (with the exception of underscores and dashes) are removed. Capitalized letters are also turned lower case.</p>
-              <p>Example: For the placemark category “Dolby/Widescreen”, target "meridian-placemark-category-dolbywidescreen". </p>
+              <p> Note: Labels with special characters need to be targeted accordingly. Spaces and most special characters (with the exception of underscores and dashes) are removed.</p>
+              <p>Example: For the tag label “CT-Human/Personnel”, target "meridian-tag-label-CT-HumanPersonnel". </p>
             </span>
           </div>
         </div>

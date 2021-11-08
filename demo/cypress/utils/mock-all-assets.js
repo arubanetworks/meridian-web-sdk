@@ -22,7 +22,7 @@ export default {
       tags: [
         {
           id: "5876089909673984",
-          name: "CT-Human"
+          name: "CT-Human/Personnel"
         }
       ],
       tag_ids: ["5876089909673984"],
@@ -140,7 +140,7 @@ export default {
       tags: [
         {
           id: "5876089909673984",
-          name: "CT-Human"
+          name: "CT-Human/Personnel"
         }
       ],
       tag_ids: ["5876089909673984"],

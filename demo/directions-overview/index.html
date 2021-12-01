@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html data-fake-api="false">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Overlay Polyline Directions | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .demo-instructions {
+        width: 700px;
+        margin: 20px auto;
+        visibility: hidden;
+      }
+    </style>
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      const ENV = "devCloud";
+      const TOKEN =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjM3Nzg1NDE4LCJ2YWx1ZSI6IjJjZTI5MTBlN2IzNWRkOWFmZWViZTRkZjIwZDgzNzgyYjI0ZDM0ODMifQ.jsKeedH_Kynkp6S3p9BYl5yw7TBdLxOZYaa7su2ATy4";
+      const LOCATION_ID = "6563100022800384";
+      const FLOOR_ID = "4710139059503104";
+      const DIRECTIONS_FROM = "4710139059503104_5901399745101824";
+      const DIRECTIONS_TO = "4710139059503104_5401775125037056";
+      const api = new MeridianSDK.API({
+        environment: "devCloud",
+        token: TOKEN,
+      });
+
+      const meridianMap = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          api,
+          locationID: LOCATION_ID,
+          floorID: FLOOR_ID,
+          height: "500px",
+          width: "700px",
+          overlays: [],
+          onPlacemarksUpdate: async ({ filteredPlacemarks }) => {
+            $(".demo-instructions").css("visibility", "visible");
+          },
+        }
+      );
+
+      // async function displayNextRoute(
+      //   token = TOKEN,
+      //   locationID = LOCATION_ID,
+      //   floorID = FLOOR_ID,
+      //   startID = DIRECTIONS_FROM,
+      //   endID = DIRECTIONS_TO
+      // ) {
+      //   // foo
+      // }
+
+      async function displayRoute(
+        token = TOKEN,
+        locationID = LOCATION_ID,
+        floorID = FLOOR_ID,
+        startID = DIRECTIONS_FROM,
+        endID = DIRECTIONS_TO
+      ) {
+        const origin = "https://dev-edit.meridianapps.com";
+        const path = `/api/locations/${locationID}/directions`;
+        const params = new URLSearchParams({
+          from_map_id: floorID,
+          from_point: "1484,205",
+          // from_placemark_id: startID,
+          to_placemark_ids: endID,
+        });
+        const url = `${origin}${path}?${params}`;
+        const headers = {
+          Authorization: `Token ${TOKEN}`,
+        };
+        const response = await fetch(url, { headers });
+        const directions = await response.json();
+        const route = directions.routes[0];
+        const points = route.steps.flatMap((step) => {
+          return step.points.split(",").map(Number);
+        });
+        meridianMap.update({
+          overlays: [
+            {
+              type: "polyline",
+              points,
+              stroke: "orange",
+              strokeWidth: 8,
+              strokeLineJoin: "round",
+              strokeLineCap: "round",
+            },
+          ],
+          annotations: [
+            {
+              type: "point",
+              x: 1484,
+              y: 205,
+              backgroundColor: "#c00",
+              title: "You are here",
+              data: { name: "foo", area: "conference" },
+              onClick: (data) => {
+                // arbitrary data can be passed for each annotation
+                console.info("window.meridianMap:", window.meridianMap);
+              },
+            },
+          ],
+        });
+      }
+
+      Object.assign(window, { meridianMap, displayRoute });
+    </script>
+  </head>
+
+  <body>
+    <div class="demo-instructions">
+      <button class="display-route" onclick="displayRoute()">
+        Display Route
+      </button>
+    </div>
+    <div class="map" id="meridian-map"></div>
+  </body>
+</html>

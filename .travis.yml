@@ -1,5 +1,3 @@
-# I believe this is now a default and can be safely removed
-sudo: false
 branches:
   only:
     # Only deploy "branches" (also tags) that are "master", or look like a
@@ -21,7 +19,6 @@ cache:
 before_install:
   # Decrypt Google Cloud Storage credentials
   - openssl aes-256-cbc -K $encrypted_9888058ce616_key -iv $encrypted_9888058ce616_iv -in gcs-key.json.enc -out gcs-key.json -d
-# This might be the default these days, but I left it in explicitly
 install:
   - npm ci
 # "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
@@ -39,7 +36,6 @@ deploy:
     edge: true
     key_file: gcs-key.json
     bucket: files.meridianapps.com
-    skip_cleanup: true
     acl: public-read
     local_dir: gcs-files
     upload_dir: meridian-web-sdk
@@ -48,8 +44,6 @@ deploy:
       node_js: "lts/*"
   # Publish to npm
   - provider: npm
-    # Don't delete `dist/` and `docs/` since we need them to deploy
-    skip_cleanup: true
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
     tag: latest
@@ -58,8 +52,6 @@ deploy:
       node_js: "lts/*"
   # Update GitHub pages for the documentation and demos
   - provider: pages
-    # Don't delete `dist/` and `docs/` since we need them to deploy
-    skip_cleanup: true
     local_dir: docs
     # This is a Personal Access Token with the permission `repo_public`
     # (https://github.com/settings/tokens) for a user with read+write permission

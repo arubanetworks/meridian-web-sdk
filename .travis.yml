@@ -44,30 +44,4 @@ deploy:
     local_dir: gcs-files
     upload_dir: meridian-web-sdk
     on:
-      tags: true
       node_js: "lts/*"
-  # Publish to npm
-  - provider: npm
-    # Don't delete `dist/` and `docs/` since we need them to deploy
-    skip_cleanup: true
-    email: $NPM_EMAIL
-    api_key: $NPM_TOKEN
-    tag: latest
-    on:
-      tags: true
-      node_js: "lts/*"
-  # Update GitHub pages for the documentation and demos
-  - provider: pages
-    # Don't delete `dist/` and `docs/` since we need them to deploy
-    skip_cleanup: true
-    local_dir: docs
-    # This is a Personal Access Token with the permission `repo_public`
-    # (https://github.com/settings/tokens) for a user with read+write permission
-    # to the repo (https://github.com/arubanetworks/meridian-web-sdk)
-    github_token: $GITHUB_TOKEN
-    on:
-      tags: true
-      node_js: "lts/*"
-notifications:
-  slack:
-    secure: E8VqlMqPUVjSjCG04iDZM2DdNN+CcWXabiPHT1/rJ07IkoVZeG9IvnYHjkLr9JcRY7gOrZ6kDxjeJEQwQG0FBd4Aq/J9ro/PurAXgjuxJqtJxN+1T9xMwE2NGtm2fGpxPNeFF0QkYvq9NbGtoqQzwfN4PlOzavg1WIwgx1SWgQQzrMU41ilCWTS57u48vev8sTDQ0NXg657HwT+6/AGBiR0eLy3z6IquoU7DT1EAmjX4zbE3/hdH7zRjBgsI2qqXDMRz5u1ak8DXgG5/zT4+jyITrD7Giy+xktOZ3av3dUWEw1q848DlTX6jvc2UeQEAoLQ+C/y8mTcaO2cyZTMRddhXSJsFN7FTAL/1ypJzbk0cDx7Oelcy+kh41851vg7rw43zu/7AZN7MsaHD4pMMSWadyW+9in8cwgw4/LODlDyoak4QaB0ReEekH1gtSR8cGr3+7zMGe6LtzIxVsp5w2LP5LzzfVr6avYfr2cnU02WEmsvKvLPYPZ7RnhKMRPVRAVhQSi1ECyK1lhO2QFOVeRmtsgpUHaW9RdoDOFoGLayguOmVdm0gRkESpmPPCflLSQz/dd/tZmjsgp/5pPC9X5gUZQ5U9U6QSWfTMxUtGsJ5myhz+53bqL1d90O5NJ4nw2fE2DquoIPRl2z0Yft0ZrwoyO2musHvLa5e3uYISxw=

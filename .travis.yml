@@ -31,12 +31,13 @@ deploy:
   # Copy the files in `gcs-files/` to Google Cloud Storage. This is used for
   # static assets, namely a lot of images.
   - provider: gcs
+    cleanup: false
+    skip_cleanup: true
     # Opt-in to dpl v2 so we can use key_file
     # https://docs.travis-ci.com/user/deployment-v2/providers/gcs/
     edge: true
     key_file: gcs-key.json
     bucket: files.meridianapps.com
-    cleanup: false
     acl: public-read
     local_dir: gcs-files
     upload_dir: meridian-web-sdk
@@ -46,6 +47,7 @@ deploy:
   # Publish to npm
   - provider: npm
     cleanup: false
+    skip_cleanup: true
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
     tag: latest
@@ -55,6 +57,7 @@ deploy:
   # Update GitHub pages for the documentation and demos
   - provider: pages
     cleanup: false
+    skip_cleanup: true
     local_dir: docs
     # This is a Personal Access Token with the permission `repo_public`
     # (https://github.com/settings/tokens) for a user with read+write permission

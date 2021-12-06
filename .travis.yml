@@ -36,6 +36,7 @@ deploy:
     edge: true
     key_file: gcs-key.json
     bucket: files.meridianapps.com
+    skip_cleanup: true
     acl: public-read
     local_dir: gcs-files
     upload_dir: meridian-web-sdk
@@ -44,6 +45,7 @@ deploy:
       node_js: "lts/*"
   # Publish to npm
   - provider: npm
+    skip_cleanup: true
     email: $NPM_EMAIL
     api_key: $NPM_TOKEN
     tag: latest
@@ -52,6 +54,7 @@ deploy:
       node_js: "lts/*"
   # Update GitHub pages for the documentation and demos
   - provider: pages
+    skip_cleanup: true
     local_dir: docs
     # This is a Personal Access Token with the permission `repo_public`
     # (https://github.com/settings/tokens) for a user with read+write permission

@@ -17,7 +17,7 @@ import { Component, createRef, Fragment, h } from "preact";
 import AnnotationLayer from "./AnnotationLayer";
 import DetailsOverlay from "./DetailsOverlay";
 import ErrorOverlay from "./ErrorOverlay";
-import FloorAndTagControls from "./FloorAndTagControls";
+import FloorAndSearchControls from "./FloorAndSearchControls";
 import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
 import LoadingSpinner from "./LoadingSpinner";
@@ -742,7 +742,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         {this.renderDetailsOverlay()}
         {this.renderFloorOverlay()}
         {this.renderTagListOverlay()}
-        <FloorAndTagControls
+        <FloorAndSearchControls
           showFloors={this.shouldShowFloors()}
           showTagList={showTagsControl && loadTags}
           toggleFloorOverlay={this.toggleFloorOverlay}

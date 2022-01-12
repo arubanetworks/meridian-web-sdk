@@ -8,9 +8,14 @@
 import { Component, h } from "preact";
 import { css, mixins, theme } from "./style";
 
+export type FilterType = "TAGS" | "PLACEMARKS";
+
 interface OverlayLayerSearchBarProps {
   value: string;
   onChange: (value: string) => void;
+  radioValue?: FilterType;
+  onRadioChange?: (value: FilterType) => void;
+  radioOption?: boolean;
 }
 
 class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
@@ -23,7 +28,13 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
   }
 
   render() {
-    const { value, onChange = () => {} } = this.props;
+    const {
+      value,
+      onChange,
+      onRadioChange,
+      radioValue = "TAGS",
+      radioOption = false,
+    } = this.props;
     return (
       <div className={cssSearchBar}>
         <svg viewBox="0 0 15 15" className={cssSearchIcon}>
@@ -50,6 +61,38 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
             this.input = element;
           }}
         />
+        {radioOption && onRadioChange && (
+          <div className={cssRadioContainer}>
+            <input
+              type="radio"
+              id="tags"
+              className={cssRadioButton}
+              checked={radioValue === "TAGS"}
+              onChange={(event: any) => {
+                if (event.target.checked) {
+                  onRadioChange("TAGS");
+                }
+              }}
+            />
+            <label for="tags" className={cssRadioButtonLabel}>
+              Tags
+            </label>
+            <input
+              type="radio"
+              id="placemarks"
+              className={cssRadioButton}
+              checked={radioValue === "PLACEMARKS"}
+              onChange={(event: any) => {
+                if (event.target.checked) {
+                  onRadioChange("PLACEMARKS");
+                }
+              }}
+            />
+            <label for="placemarks" className={cssRadioButtonLabel}>
+              Placemarks
+            </label>
+          </div>
+        )}
       </div>
     );
   }
@@ -69,6 +112,7 @@ const cssSearchInput = css(
     background: theme.borderColor,
     color: theme.black,
     border: 0,
+    height: 24,
 
     "&::placeholder": {
       color: theme.textColorBluish,
@@ -95,7 +139,66 @@ const cssSearchBar = css({
   display: "flex",
   flexDirection: "column",
   padding: 10,
-  height: 32,
+  backgroundColor: "rgb(105, 146, 176)",
+});
+
+const cssRadioButtonLabel = css({
+  label: "overlay-radio-label",
+  color: "white",
+  padding: "2px 10px 0px 4px",
+});
+
+const cssRadioButton = css({
+  label: "overlay-radio-button",
+
+  WebkitAppearance: "none",
+
+  position: "relative",
+  boxSizing: "border-box",
+  border: `1px solid rgb(224,224,225)`,
+  width: 16,
+  height: 16,
+  background: "white",
+  borderRadius: 9999,
+  cursor: "pointer",
+  boxShadow: `inset 0 2px 2px rgba(0, 0, 0, 0.1)`,
+
+  "&:focus": {
+    outline: "none",
+    borderColor: theme.searchBarColor,
+    borderWidth: 2,
+  },
+
+  "&:checked": {
+    "--circle-color": theme.searchBarColor,
+    "--circle-gap": "4px",
+  },
+
+  "&:checked::after": {
+    content: '" "',
+    position: "absolute",
+    width: "calc(100% - var(--circle-gap))",
+    height: "calc(100% - var(--circle-gap))",
+    left: "calc(var(--circle-gap) / 2)",
+    top: "calc(var(--circle-gap) / 2)",
+    background: "var(--circle-color)",
+    borderRadius: 9999,
+  },
+
+  "&:checked:focus": {
+    "--circle-gap": "4px",
+    "--circle-color": theme.searchBarColor,
+    borderColor: theme.searchBarColor,
+    borderWidth: 2,
+  },
+});
+
+const cssRadioContainer = css({
+  label: "overlay-radio-container",
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "baseline",
+  paddingTop: 10,
 });
 
 export default OverlaySearchBar;

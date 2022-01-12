@@ -10,7 +10,7 @@ import { Component, createRef, h } from "preact";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
-import OverlaySearchBar from "./OverlaySearchBar";
+import OverlaySearchBar, { FilterType } from "./OverlaySearchBar";
 import { css, mixins, theme } from "./style";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { API, CreateMapOptions, FloorData, TagData } from "./web-sdk";
@@ -30,8 +30,15 @@ export interface TagListOverlayProps {
 }
 
 class TagListOverlay extends Component<TagListOverlayProps> {
-  state = { searchFilter: "" };
+  state: { searchFilter: string; radioFilter: FilterType } = {
+    searchFilter: "",
+    radioFilter: "TAGS",
+  };
   searchInputRef = createRef<HTMLInputElement>();
+
+  setRadioFilter = (filter: FilterType) => {
+    this.setState({ radioFilter: filter });
+  };
 
   componentDidMount() {
     if (this.searchInputRef.current) {
@@ -113,6 +120,9 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       >
         <OverlaySearchBar
           value={searchFilter}
+          radioOption={true}
+          radioValue={this.state.radioFilter}
+          onRadioChange={this.setRadioFilter}
           onChange={(searchFilter) => {
             this.setState({ searchFilter });
           }}

@@ -151,11 +151,11 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
 
   render() {
     const {
-      currentFloorID,
+      // currentFloorID,
       floors,
       // updateMap,
-      tagOptions = {},
-      tags,
+      // tagOptions = {},
+      // tags,
       loading,
       // onTagClick,
       toggleAssetListOverlay,
@@ -173,56 +173,6 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
         floor.name,
       ].join(" ");
     }
-
-    // Tag specific code to move into own component
-    const processedTags = tags
-      // Remove tags from unpublished floors
-      .filter((tag) => {
-        const floor = floorsByID[tag.map_id][0];
-        if (floor) {
-          return floor.published;
-        }
-        return true;
-      })
-      // Remove tags that don't match the local search terms
-      .filter((tag) => {
-        return (
-          match(tag.name) || match(tag.mac) || getTagLabels(tag).some(match)
-        );
-      })
-      // Remove control tags unless the developer wants them
-      .filter((tag) => {
-        if (tagOptions.showControlTags !== true) {
-          return !tag.is_control_tag;
-        }
-        return true;
-      })
-      // Sort by name
-      .sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
-
-    const organizedTags = groupBy(processedTags, (tag) => {
-      return floorToGroup[tag.map_id];
-    });
-
-    const sortedGroups = Object.keys(organizedTags).sort();
-
-    sortedGroups.forEach((group, index) => {
-      const floors = organizedTags[group];
-      if (floors[0].map_id === currentFloorID) {
-        const [currentGroup] = sortedGroups.splice(index, 1);
-        sortedGroups.unshift(currentGroup);
-      }
-    });
-
-    // ==============================
 
     return (
       <Overlay

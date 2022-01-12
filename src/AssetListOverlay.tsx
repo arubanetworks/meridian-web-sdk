@@ -16,6 +16,7 @@ import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { API, CreateMapOptions, FloorData, TagData } from "./web-sdk";
 
 type FilterType = "TAGS" | "PLACEMARKS";
+// type Dict = Record<string, any>;
 
 export interface AssetListOverlayProps {
   onTagClick: (tag: TagData) => void;
@@ -29,6 +30,106 @@ export interface AssetListOverlayProps {
   locationID: string;
   currentFloorID: string;
   toggleAssetListOverlay: (options: { open: boolean }) => void;
+}
+
+function TagResults(props: any) {
+  const {
+    currentFloorID,
+    // floors,
+    updateMap,
+    tagOptions = {},
+    tags,
+    // loading,
+    onTagClick,
+    toggleAssetListOverlay,
+    match,
+    floorsByID,
+    floorToGroup,
+  } = props;
+
+  const processedTags = tags
+    // Remove tags from unpublished floors
+    .filter((tag: TagData) => {
+      const floor = floorsByID[tag.map_id][0];
+      if (floor) {
+        return floor.published;
+      }
+      return true;
+    })
+    // Remove tags that don't match the local search terms
+    .filter((tag: TagData) => {
+      return match(tag.name) || match(tag.mac) || getTagLabels(tag).some(match);
+    })
+    // Remove control tags unless the developer wants them
+    .filter((tag: TagData) => {
+      if (tagOptions.showControlTags !== true) {
+        return !tag.is_control_tag;
+      }
+      return true;
+    })
+    // Sort by name
+    .sort((a: TagData, b: TagData) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+
+  const organizedTags = groupBy(processedTags, (tag) => {
+    return floorToGroup[tag.map_id];
+  });
+
+  const sortedGroups = Object.keys(organizedTags).sort();
+
+  sortedGroups.forEach((group, index) => {
+    const floors = organizedTags[group];
+    if (floors[0].map_id === currentFloorID) {
+      const [currentGroup] = sortedGroups.splice(index, 1);
+      sortedGroups.unshift(currentGroup);
+    }
+  });
+
+  if (processedTags.length === 0) {
+    return <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>;
+  }
+
+  return (
+    <div className={cssTagList}>
+      {sortedGroups.map((buildingName) => (
+        <div key={buildingName}>
+          <div className={cssOverlayBuildingName}>{buildingName}</div>
+          {organizedTags[buildingName].map((tag) => (
+            <button
+              key={tag.id}
+              data-testid={`meridian--private--overlay-tag-${tag.id}`}
+              className={cssOverlayTagButton}
+              onClick={() => {
+                updateMap({
+                  locationID: tag.location_id,
+                  floorID: tag.map_id,
+                  tags: { ...tagOptions, filter: () => true },
+                });
+                onTagClick(tag);
+                toggleAssetListOverlay({ open: false });
+              }}
+            >
+              <div className={cssOverlayTagButtonInner}>
+                <div className={cssOverlayTagButtonName}>{tag.name}</div>
+                <LabelList
+                  align="right"
+                  labels={getTagLabels(tag)}
+                  fontSize={theme.fontSizeSmallest}
+                />
+              </div>
+            </button>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 class AssetListOverlay extends Component<AssetListOverlayProps> {
@@ -52,17 +153,17 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
     const {
       currentFloorID,
       floors,
-      updateMap,
+      // updateMap,
       tagOptions = {},
       tags,
       loading,
-      onTagClick,
+      // onTagClick,
       toggleAssetListOverlay,
     } = this.props;
+
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
     const floorsByID = groupBy(floors, (floor) => floor.id);
-
     const floorToGroup: Record<string, string> = {};
 
     for (const floor of floors) {
@@ -74,7 +175,6 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
     }
 
     // Tag specific code to move into own component
-
     const processedTags = tags
       // Remove tags from unpublished floors
       .filter((tag) => {
@@ -122,6 +222,8 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       }
     });
 
+    // ==============================
+
     return (
       <Overlay
         position="right"
@@ -168,8 +270,6 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
           </label>
         </div>
 
-        {/* reference tag or placemark component here */}
-
         {(() => {
           if (loading) {
             return (
@@ -179,46 +279,13 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             );
           }
 
-          if (processedTags.length === 0) {
-            return (
-              <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>
-            );
-          }
           return (
-            <div className={cssTagList}>
-              {sortedGroups.map((buildingName) => (
-                <div key={buildingName}>
-                  <div className={cssOverlayBuildingName}>{buildingName}</div>
-                  {organizedTags[buildingName].map((tag) => (
-                    <button
-                      key={tag.id}
-                      data-testid={`meridian--private--overlay-tag-${tag.id}`}
-                      className={cssOverlayTagButton}
-                      onClick={() => {
-                        updateMap({
-                          locationID: tag.location_id,
-                          floorID: tag.map_id,
-                          tags: { ...tagOptions, filter: () => true },
-                        });
-                        onTagClick(tag);
-                        toggleAssetListOverlay({ open: false });
-                      }}
-                    >
-                      <div className={cssOverlayTagButtonInner}>
-                        <div className={cssOverlayTagButtonName}>
-                          {tag.name}
-                        </div>
-                        <LabelList
-                          align="right"
-                          labels={getTagLabels(tag)}
-                          fontSize={theme.fontSizeSmallest}
-                        />
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
+            <TagResults
+              {...this.props}
+              floorToGroup={floorToGroup}
+              floorsByID={floorsByID}
+              match={match}
+            />
           );
         })()}
       </Overlay>

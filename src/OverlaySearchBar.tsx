@@ -27,7 +27,7 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
   }
 
   render() {
-    const { value, onChange, radioValue = "TAGS" } = this.props;
+    const { value, onChange, radioValue } = this.props;
     return (
       <div className={cssSearchBar}>
         <svg viewBox="0 0 15 15" className={cssSearchIcon}>

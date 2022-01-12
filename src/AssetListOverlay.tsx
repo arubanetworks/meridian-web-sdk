@@ -15,7 +15,7 @@ import { css, mixins, theme } from "./style";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { API, CreateMapOptions, FloorData, TagData } from "./web-sdk";
 
-export interface TagListOverlayProps {
+export interface AssetListOverlayProps {
   onTagClick: (tag: TagData) => void;
   loading: boolean;
   tags: TagData[];
@@ -26,10 +26,10 @@ export interface TagListOverlayProps {
   api: API;
   locationID: string;
   currentFloorID: string;
-  toggleTagListOverlay: (options: { open: boolean }) => void;
+  toggleAssetListOverlay: (options: { open: boolean }) => void;
 }
 
-class TagListOverlay extends Component<TagListOverlayProps> {
+class AssetListOverlay extends Component<AssetListOverlayProps> {
   state: { searchFilter: string; radioFilter: FilterType } = {
     searchFilter: "",
     radioFilter: "TAGS",
@@ -55,7 +55,7 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       tags,
       loading,
       onTagClick,
-      toggleTagListOverlay,
+      toggleAssetListOverlay,
     } = this.props;
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
@@ -115,7 +115,7 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       <Overlay
         position="right"
         onCloseClicked={() => {
-          toggleTagListOverlay({ open: false });
+          toggleAssetListOverlay({ open: false });
         }}
       >
         <OverlaySearchBar
@@ -186,7 +186,7 @@ class TagListOverlay extends Component<TagListOverlayProps> {
                           tags: { ...tagOptions, filter: () => true },
                         });
                         onTagClick(tag);
-                        toggleTagListOverlay({ open: false });
+                        toggleAssetListOverlay({ open: false });
                       }}
                     >
                       <div className={cssOverlayTagButtonInner}>
@@ -323,4 +323,4 @@ const cssRadioContainer = css({
   backgroundColor: "rgb(105, 146, 176)",
 });
 
-export default TagListOverlay;
+export default AssetListOverlay;

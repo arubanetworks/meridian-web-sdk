@@ -25,7 +25,7 @@ import OverlayLayer from "./OverlayLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import { css, cx } from "./style";
 import TagLayer from "./TagLayer";
-import TagListOverlay from "./TagListOverlay";
+import AssetListOverlay from "./AssetListOverlay";
 import { asyncClientCall, isEnvOptions, keyBy, logError } from "./util";
 import Watermark from "./Watermark";
 import {
@@ -52,7 +52,7 @@ export interface MapComponentProps extends CreateMapOptions {
 export interface MapComponentState {
   mapImageURL?: string;
   isFloorOverlayOpen: boolean;
-  isTagListOverlayOpen: boolean;
+  isAssetListOverlayOpen: boolean;
   isMapMarkerOverlayOpen: boolean;
   isErrorOverlayOpen: boolean;
   isPanningOrZooming: boolean;
@@ -91,7 +91,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   state: MapComponentState = {
     mapImageURL: undefined,
     isFloorOverlayOpen: false,
-    isTagListOverlayOpen: false,
+    isAssetListOverlayOpen: false,
     isMapMarkerOverlayOpen: false,
     isErrorOverlayOpen: false,
     isPanningOrZooming: false,
@@ -166,7 +166,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   componentDidUpdate(prevProps: MapComponentProps) {
     if (this.props.locationID !== prevProps.locationID) {
-      this.toggleTagListOverlay({ open: false });
+      this.toggleAssetListOverlay({ open: false });
       this.toggleErrorOverlay({ open: false });
       this.toggleDetailsOverlay({ open: false });
       this.toggleFloorOverlay({ open: false });
@@ -283,11 +283,11 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     // function to complete to avoid race conditions
   }
 
-  toggleTagListOverlay = ({ open }: { open: boolean }) => {
+  toggleAssetListOverlay = ({ open }: { open: boolean }) => {
     if (!this.isMounted) {
       return;
     }
-    this.setState({ isTagListOverlayOpen: open });
+    this.setState({ isAssetListOverlayOpen: open });
   };
 
   toggleFloorOverlay = ({ open }: { open: boolean }) => {
@@ -644,13 +644,13 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     return null;
   }
 
-  renderTagListOverlay() {
+  renderAssetListOverlay() {
     const { locationID, floorID, api, tags, loadTags } = this.props;
-    const { isTagListOverlayOpen, floors, allTagData, areTagsLoading } =
+    const { isAssetListOverlayOpen, floors, allTagData, areTagsLoading } =
       this.state;
-    if (isTagListOverlayOpen && loadTags) {
+    if (isAssetListOverlayOpen && loadTags) {
       return (
-        <TagListOverlay
+        <AssetListOverlay
           onTagClick={this.onTagClick}
           showControlTags={Boolean(tags?.showControlTags ?? false)}
           floors={floors}
@@ -661,7 +661,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           api={api}
           locationID={locationID}
           currentFloorID={floorID}
-          toggleTagListOverlay={this.toggleTagListOverlay}
+          toggleAssetListOverlay={this.toggleAssetListOverlay}
         />
       );
     }
@@ -741,12 +741,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         {this.renderErrorOverlay()}
         {this.renderDetailsOverlay()}
         {this.renderFloorOverlay()}
-        {this.renderTagListOverlay()}
+        {this.renderAssetListOverlay()}
         <FloorAndSearchControls
           showFloors={this.shouldShowFloors()}
           showTagList={showTagsControl && loadTags}
           toggleFloorOverlay={this.toggleFloorOverlay}
-          toggleTagListOverlay={this.toggleTagListOverlay}
+          toggleAssetListOverlay={this.toggleAssetListOverlay}
         />
         {this.renderFloorLabel()}
         <div

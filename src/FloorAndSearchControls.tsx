@@ -13,12 +13,12 @@ interface FloorAndTagControlsProps {
   showFloors: boolean;
   showTagList: boolean;
   toggleFloorOverlay: MapComponent["toggleFloorOverlay"];
-  toggleTagListOverlay: MapComponent["toggleTagListOverlay"];
+  toggleAssetListOverlay: MapComponent["toggleAssetListOverlay"];
 }
 
 const FloorAndTagControls: FunctionComponent<FloorAndTagControlsProps> = ({
   toggleFloorOverlay,
-  toggleTagListOverlay,
+  toggleAssetListOverlay,
   showFloors,
   showTagList,
 }) => {
@@ -29,7 +29,7 @@ const FloorAndTagControls: FunctionComponent<FloorAndTagControlsProps> = ({
           className={cx("meridian-tag-control", cssControl)}
           data-testid="meridian--private--tag-control"
           onClick={() => {
-            toggleTagListOverlay({ open: true });
+            toggleAssetListOverlay({ open: true });
           }}
         >
           {/* TODO: Can we get this SVG fixed up? */}

@@ -10,10 +10,12 @@ import { Component, createRef, h } from "preact";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
-import OverlaySearchBar, { FilterType } from "./OverlaySearchBar";
+import OverlaySearchBar from "./OverlaySearchBar";
 import { css, mixins, theme } from "./style";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { API, CreateMapOptions, FloorData, TagData } from "./web-sdk";
+
+type FilterType = "TAGS" | "PLACEMARKS";
 
 export interface AssetListOverlayProps {
   onTagClick: (tag: TagData) => void;
@@ -30,9 +32,9 @@ export interface AssetListOverlayProps {
 }
 
 class AssetListOverlay extends Component<AssetListOverlayProps> {
-  state: { searchFilter: string; radioFilter: FilterType } = {
+  state: { searchFilter: string; radioValue: FilterType } = {
     searchFilter: "",
-    radioFilter: "TAGS",
+    radioValue: "TAGS",
   };
   searchInputRef = createRef<HTMLInputElement>();
 
@@ -60,6 +62,9 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
     const floorsByID = groupBy(floors, (floor) => floor.id);
+
+    // if tags else ...
+
     const processedTags = tags
       // Remove tags from unpublished floors
       .filter((tag) => {
@@ -92,7 +97,9 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
         }
         return 0;
       });
+
     const floorToGroup: Record<string, string> = {};
+
     for (const floor of floors) {
       floorToGroup[floor.id] = [
         floor.group_name || uiText.unnamedBuilding,
@@ -130,7 +137,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             name="searchType"
             id="tags"
             className={cssRadioButton}
-            // checked={radioValue === "TAGS"}
+            checked={this.state.radioValue === "TAGS"}
             onChange={(event: any) => {
               if (event.target.checked) {
                 console.info("TAGS");
@@ -145,7 +152,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             name="searchType"
             id="placemarks"
             className={cssRadioButton}
-            // checked={radioValue === "PLACEMARKS"}
+            checked={this.state.radioValue === "PLACEMARKS"}
             onChange={(event: any) => {
               if (event.target.checked) {
                 console.info("PLACEMARKS");

@@ -8,8 +8,6 @@
 import { Component, h } from "preact";
 import { css, mixins, theme } from "./style";
 
-export type FilterType = "TAGS" | "PLACEMARKS";
-
 interface OverlayLayerSearchBarProps {
   value: string;
   onChange: (value: string) => void;

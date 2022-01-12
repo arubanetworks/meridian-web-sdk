@@ -63,7 +63,17 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
     const match = createSearchMatcher(searchFilter);
     const floorsByID = groupBy(floors, (floor) => floor.id);
 
-    // if tags else ...
+    const floorToGroup: Record<string, string> = {};
+
+    for (const floor of floors) {
+      floorToGroup[floor.id] = [
+        floor.group_name || uiText.unnamedBuilding,
+        uiText.enDash,
+        floor.name,
+      ].join(" ");
+    }
+
+    // Tag specific code to move into own component
 
     const processedTags = tags
       // Remove tags from unpublished floors
@@ -98,19 +108,12 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
         return 0;
       });
 
-    const floorToGroup: Record<string, string> = {};
-
-    for (const floor of floors) {
-      floorToGroup[floor.id] = [
-        floor.group_name || uiText.unnamedBuilding,
-        uiText.enDash,
-        floor.name,
-      ].join(" ");
-    }
     const organizedTags = groupBy(processedTags, (tag) => {
       return floorToGroup[tag.map_id];
     });
+
     const sortedGroups = Object.keys(organizedTags).sort();
+
     sortedGroups.forEach((group, index) => {
       const floors = organizedTags[group];
       if (floors[0].map_id === currentFloorID) {
@@ -118,6 +121,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
         sortedGroups.unshift(currentGroup);
       }
     });
+
     return (
       <Overlay
         position="right"
@@ -163,6 +167,9 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             Placemarks
           </label>
         </div>
+
+        {/* reference tag or placemark component here */}
+
         {(() => {
           if (loading) {
             return (
@@ -171,6 +178,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
               </div>
             );
           }
+
           if (processedTags.length === 0) {
             return (
               <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>

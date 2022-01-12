@@ -15,7 +15,6 @@ interface OverlayLayerSearchBarProps {
   onChange: (value: string) => void;
   radioValue?: FilterType;
   onRadioChange?: (value: FilterType) => void;
-  radioOption?: boolean;
 }
 
 class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
@@ -28,13 +27,7 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
   }
 
   render() {
-    const {
-      value,
-      onChange,
-      onRadioChange,
-      radioValue = "TAGS",
-      radioOption = false,
-    } = this.props;
+    const { value, onChange, radioValue = "TAGS" } = this.props;
     return (
       <div className={cssSearchBar}>
         <svg viewBox="0 0 15 15" className={cssSearchIcon}>
@@ -61,16 +54,17 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
             this.input = element;
           }}
         />
-        {radioOption && onRadioChange && (
+        {radioValue && (
           <div className={cssRadioContainer}>
             <input
               type="radio"
+              name="searchType"
               id="tags"
               className={cssRadioButton}
               checked={radioValue === "TAGS"}
               onChange={(event: any) => {
                 if (event.target.checked) {
-                  onRadioChange("TAGS");
+                  console.info("TAGS");
                 }
               }}
             />
@@ -79,12 +73,13 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
             </label>
             <input
               type="radio"
+              name="searchType"
               id="placemarks"
               className={cssRadioButton}
               checked={radioValue === "PLACEMARKS"}
               onChange={(event: any) => {
                 if (event.target.checked) {
-                  onRadioChange("PLACEMARKS");
+                  console.info("PLACEMARKS");
                 }
               }}
             />

@@ -120,9 +120,7 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       >
         <OverlaySearchBar
           value={searchFilter}
-          radioOption={true}
-          radioValue={this.state.radioFilter}
-          onRadioChange={this.setRadioFilter}
+          radioValue="TAGS"
           onChange={(searchFilter) => {
             this.setState({ searchFilter });
           }}

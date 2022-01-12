@@ -120,11 +120,42 @@ class TagListOverlay extends Component<TagListOverlayProps> {
       >
         <OverlaySearchBar
           value={searchFilter}
-          radioValue="TAGS"
           onChange={(searchFilter) => {
             this.setState({ searchFilter });
           }}
         />
+        <div className={cssRadioContainer}>
+          <input
+            type="radio"
+            name="searchType"
+            id="tags"
+            className={cssRadioButton}
+            // checked={radioValue === "TAGS"}
+            onChange={(event: any) => {
+              if (event.target.checked) {
+                console.info("TAGS");
+              }
+            }}
+          />
+          <label for="tags" className={cssRadioButtonLabel}>
+            Tags
+          </label>
+          <input
+            type="radio"
+            name="searchType"
+            id="placemarks"
+            className={cssRadioButton}
+            // checked={radioValue === "PLACEMARKS"}
+            onChange={(event: any) => {
+              if (event.target.checked) {
+                console.info("PLACEMARKS");
+              }
+            }}
+          />
+          <label for="placemarks" className={cssRadioButtonLabel}>
+            Placemarks
+          </label>
+        </div>
         {(() => {
           if (loading) {
             return (
@@ -229,6 +260,67 @@ const cssTagListEmpty = css({
   textAlign: "center",
   fontSize: theme.fontSizeBigger,
   color: theme.textColorBluish,
+});
+
+const cssRadioButtonLabel = css({
+  label: "overlay-radio-label",
+  color: "white",
+  padding: "2px 10px 0px 4px",
+});
+
+const cssRadioButton = css({
+  label: "overlay-radio-button",
+
+  WebkitAppearance: "none",
+
+  position: "relative",
+  boxSizing: "border-box",
+  border: `1px solid rgb(224,224,225)`,
+  width: 16,
+  height: 16,
+  background: "white",
+  borderRadius: 9999,
+  cursor: "pointer",
+  boxShadow: `inset 0 2px 2px rgba(0, 0, 0, 0.1)`,
+
+  "&:focus": {
+    outline: "none",
+    borderColor: theme.searchBarColor,
+    borderWidth: 2,
+  },
+
+  "&:checked": {
+    "--circle-color": theme.searchBarColor,
+    "--circle-gap": "4px",
+  },
+
+  "&:checked::after": {
+    content: '" "',
+    position: "absolute",
+    width: "calc(100% - var(--circle-gap))",
+    height: "calc(100% - var(--circle-gap))",
+    left: "calc(var(--circle-gap) / 2)",
+    top: "calc(var(--circle-gap) / 2)",
+    background: "var(--circle-color)",
+    borderRadius: 9999,
+  },
+
+  "&:checked:focus": {
+    "--circle-gap": "4px",
+    "--circle-color": theme.searchBarColor,
+    borderColor: theme.searchBarColor,
+    borderWidth: 2,
+  },
+});
+
+const cssRadioContainer = css({
+  label: "overlay-radio-container",
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "baseline",
+  paddingLeft: 10,
+  paddingBottom: 10,
+  backgroundColor: "rgb(105, 146, 176)",
 });
 
 export default TagListOverlay;

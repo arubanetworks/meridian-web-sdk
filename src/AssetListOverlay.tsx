@@ -219,7 +219,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
 class AssetListOverlay extends Component<AssetListOverlayProps> {
   state: { searchFilter: string; radioValue: FilterType } = {
     searchFilter: "",
-    radioValue: "TAGS",
+    radioValue: this.props.showTags ? "TAGS" : "PLACEMARKS",
   };
   searchInputRef = createRef<HTMLInputElement>();
 

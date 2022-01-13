@@ -715,7 +715,7 @@ export class API {
     //   requiredParam("fetchPlacemarksByFloor", "floorID");
     // }
     const res = await this._axiosEditorAPI.get(
-      `locations/${locationID}/search?q=((name:${searchStr})+OR+(name_suggestions:${searchStr})+OR+(type:${searchStr})+OR+(type_name:${searchStr})+OR+(type_name_suggestions:${searchStr}))+(kind:placemark)&page_size=10&sort=-modified`
+      `locations/${locationID}/search?q=(name:${searchStr})+(kind:placemark)&page_size=10&sort=-modified`
     );
     return res;
   }

@@ -7,19 +7,26 @@
 
 import groupBy from "lodash.groupby";
 import { Component, createRef, h } from "preact";
+import { useState, useEffect } from "preact/hooks";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, mixins, theme } from "./style";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
-import { API, CreateMapOptions, FloorData, TagData } from "./web-sdk";
+import {
+  API,
+  CreateMapOptions,
+  FloorData,
+  PlacemarkData,
+  TagData,
+} from "./web-sdk";
 
 type FilterType = "TAGS" | "PLACEMARKS";
-// type Dict = Record<string, any>;
 
 export interface AssetListOverlayProps {
   onTagClick: (tag: TagData) => void;
+  onPlacemarkClick: (placemark: PlacemarkData) => void;
   loading: boolean;
   tags: TagData[];
   showControlTags: boolean;
@@ -30,6 +37,7 @@ export interface AssetListOverlayProps {
   locationID: string;
   currentFloorID: string;
   toggleAssetListOverlay: (options: { open: boolean }) => void;
+  showTags: boolean;
 }
 
 function TagResults(props: any) {
@@ -132,61 +140,34 @@ function TagResults(props: any) {
   );
 }
 
-function PlacemarkResults(props: any) {
+export interface PlacemarkResultsProps extends AssetListOverlayProps {
+  searchStr: string;
+  floorToGroup: any; // what again is this?
+  floorsByID: any; // what again is this?
+}
+
+function PlacemarkResults(props: PlacemarkResultsProps) {
   const {
     currentFloorID,
-    // floors,
     updateMap,
     tagOptions = {},
-    // tags,
-    // loading,
-    onTagClick,
     toggleAssetListOverlay,
-    floorsByID,
     floorToGroup,
     searchStr,
     api,
+    onPlacemarkClick,
   } = props;
 
-  const processedPlacemarks = [
-    {
-      doc_id: "en/placemark/5125579611308032_6503439479603200",
-      kind: "placemark",
-      name: "fdsfsdfdsf",
-      name_suggestions:
-        "f fd fds fdsf fdsfs fdsfsd fdsfsdf fdsfsdfd fdsfsdfds fdsfsdfdsf",
-      created: "2021-10-04T22:23:48.530000",
-      modified: "2021-12-22T22:35:58.392000",
-      entity:
-        "aghkZXZ-Tm9uZXImCxIDTWFwGICAgICAto0JDAsSCVBsYWNlbWFyaxiAgICAgNvGCwyiARI1OTEwOTc0NTEwOTIzNzc2XzE",
-      id: "5125579611308032_6503439479603200",
-      type_name: "Kiosk",
-      type_name_suggestions: "K Ki Kio Kios Kiosk",
-      x: 138.163438679,
-      y: 1851.92173287,
-      map_id: "5715161717407744",
-      is_facility: true,
-      color: "f2af1d",
-      group_id: "5688529564729344",
-      is_map_published: true,
-      is_disabled: false,
-      custom_1: null,
-      custom_2: null,
-      custom_3: null,
-      custom_4: null,
-      description: null,
-      category_ids: null,
-      keywords: null,
-      keywords_suggestions: null,
-      type: "kiosk",
-      language: "en",
-      label: "fdsfsdfdsf",
-    },
-  ]; // search API response
-  console.log(searchStr);
-  console.log("API: ", api);
-  // const serverResponse = await api;
-  const organizedPlacemarks = groupBy(processedPlacemarks, (placemark) => {
+  const [searchResults, setSearchResults] = useState<any>([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await api.searchPlacemarks("5198682008846336", searchStr);
+      setSearchResults(res.data.results);
+    })();
+  }, [searchStr, api]);
+
+  const organizedPlacemarks = groupBy(searchResults, (placemark) => {
     return floorToGroup[placemark.map_id];
   });
 
@@ -200,7 +181,7 @@ function PlacemarkResults(props: any) {
     }
   });
 
-  if (processedPlacemarks.length === 0) {
+  if (searchResults.length === 0) {
     return <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>;
   }
 
@@ -217,11 +198,12 @@ function PlacemarkResults(props: any) {
               onClick={() => {
                 updateMap({
                   // TODO HARDCODED --------------
-                  locationID: 5198682008846336,
+                  locationID: "5198682008846336",
                   floorID: placemark.map_id,
                   tags: { ...tagOptions, filter: () => true },
                 });
-                onTagClick(placemark);
+                // TODO ANY ANY ANY ANY and Tag specific
+                onPlacemarkClick(placemark as any);
                 toggleAssetListOverlay({ open: false });
               }}
             >
@@ -252,16 +234,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
   }
 
   render() {
-    const {
-      // currentFloorID,
-      floors,
-      // updateMap,
-      // tagOptions = {},
-      // tags,
-      loading,
-      // onTagClick,
-      toggleAssetListOverlay,
-    } = this.props;
+    const { floors, loading, toggleAssetListOverlay, showTags } = this.props;
 
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
@@ -289,38 +262,40 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             this.setState({ searchFilter });
           }}
         />
-        <div className={cssRadioContainer}>
-          <input
-            type="radio"
-            name="searchType"
-            id="tags"
-            className={cssRadioButton}
-            checked={this.state.radioValue === "TAGS"}
-            onChange={(event: any) => {
-              if (event.target.checked) {
-                this.setRadioFilter("TAGS");
-              }
-            }}
-          />
-          <label for="tags" className={cssRadioButtonLabel}>
-            Tags
-          </label>
-          <input
-            type="radio"
-            name="searchType"
-            id="placemarks"
-            className={cssRadioButton}
-            checked={this.state.radioValue === "PLACEMARKS"}
-            onChange={(event: any) => {
-              if (event.target.checked) {
-                this.setRadioFilter("PLACEMARKS");
-              }
-            }}
-          />
-          <label for="placemarks" className={cssRadioButtonLabel}>
-            Placemarks
-          </label>
-        </div>
+        {showTags ? (
+          <div className={cssRadioContainer}>
+            <input
+              type="radio"
+              name="searchType"
+              id="tags"
+              className={cssRadioButton}
+              checked={this.state.radioValue === "TAGS"}
+              onChange={(event: any) => {
+                if (event.target.checked) {
+                  this.setRadioFilter("TAGS");
+                }
+              }}
+            />
+            <label for="tags" className={cssRadioButtonLabel}>
+              Tags
+            </label>
+            <input
+              type="radio"
+              name="searchType"
+              id="placemarks"
+              className={cssRadioButton}
+              checked={this.state.radioValue === "PLACEMARKS"}
+              onChange={(event: any) => {
+                if (event.target.checked) {
+                  this.setRadioFilter("PLACEMARKS");
+                }
+              }}
+            />
+            <label for="placemarks" className={cssRadioButtonLabel}>
+              Placemarks
+            </label>
+          </div>
+        ) : null}
 
         {(() => {
           if (loading) {

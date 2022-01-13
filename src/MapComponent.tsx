@@ -648,10 +648,11 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     const { locationID, floorID, api, tags, loadTags } = this.props;
     const { isAssetListOverlayOpen, floors, allTagData, areTagsLoading } =
       this.state;
-    if (isAssetListOverlayOpen && loadTags) {
+    if (isAssetListOverlayOpen) {
       return (
         <AssetListOverlay
           onTagClick={this.onTagClick}
+          onPlacemarkClick={this.onPlacemarkClick}
           showControlTags={Boolean(tags?.showControlTags ?? false)}
           floors={floors}
           loading={areTagsLoading}
@@ -662,6 +663,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           locationID={locationID}
           currentFloorID={floorID}
           toggleAssetListOverlay={this.toggleAssetListOverlay}
+          showTags={Boolean(loadTags)}
         />
       );
     }
@@ -712,7 +714,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       errors,
     } = this.state;
     const {
-      showTagsControl = true,
       locationID,
       floorID,
       api,
@@ -724,7 +725,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       height = "",
       onTagsUpdate,
       onPlacemarksUpdate,
-      loadTags = true,
     } = this.props;
     return (
       <div
@@ -744,7 +744,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         {this.renderAssetListOverlay()}
         <FloorAndSearchControls
           showFloors={this.shouldShowFloors()}
-          showTagList={showTagsControl && loadTags}
           toggleFloorOverlay={this.toggleFloorOverlay}
           toggleAssetListOverlay={this.toggleAssetListOverlay}
         />

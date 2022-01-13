@@ -132,6 +132,105 @@ function TagResults(props: any) {
   );
 }
 
+function PlacemarkResults(props: any) {
+  const {
+    currentFloorID,
+    // floors,
+    updateMap,
+    tagOptions = {},
+    // tags,
+    // loading,
+    onTagClick,
+    toggleAssetListOverlay,
+    match,
+    floorsByID,
+    floorToGroup,
+  } = props;
+
+  const processedPlacemarks = [
+    {
+      doc_id: "en/placemark/5125579611308032_6503439479603200",
+      kind: "placemark",
+      name: "fdsfsdfdsf",
+      name_suggestions:
+        "f fd fds fdsf fdsfs fdsfsd fdsfsdf fdsfsdfd fdsfsdfds fdsfsdfdsf",
+      created: "2021-10-04T22:23:48.530000",
+      modified: "2021-12-22T22:35:58.392000",
+      entity:
+        "aghkZXZ-Tm9uZXImCxIDTWFwGICAgICAto0JDAsSCVBsYWNlbWFyaxiAgICAgNvGCwyiARI1OTEwOTc0NTEwOTIzNzc2XzE",
+      id: "5125579611308032_6503439479603200",
+      type_name: "Kiosk",
+      type_name_suggestions: "K Ki Kio Kios Kiosk",
+      x: 138.163438679,
+      y: 1851.92173287,
+      map_id: "5715161717407744",
+      is_facility: true,
+      color: "f2af1d",
+      group_id: "5688529564729344",
+      is_map_published: true,
+      is_disabled: false,
+      custom_1: null,
+      custom_2: null,
+      custom_3: null,
+      custom_4: null,
+      description: null,
+      category_ids: null,
+      keywords: null,
+      keywords_suggestions: null,
+      type: "kiosk",
+      language: "en",
+      label: "fdsfsdfdsf",
+    },
+  ]; // search API response
+
+  const organizedPlacemarks = groupBy(processedPlacemarks, (placemark) => {
+    return floorToGroup[placemark.map_id];
+  });
+
+  const sortedGroups = Object.keys(organizedPlacemarks).sort();
+
+  sortedGroups.forEach((group, index) => {
+    const floors = organizedPlacemarks[group];
+    if (floors[0].map_id === currentFloorID) {
+      const [currentGroup] = sortedGroups.splice(index, 1);
+      sortedGroups.unshift(currentGroup);
+    }
+  });
+
+  if (processedPlacemarks.length === 0) {
+    return <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>;
+  }
+
+  return (
+    <div className={cssTagList}>
+      {sortedGroups.map((buildingName) => (
+        <div key={buildingName}>
+          <div className={cssOverlayBuildingName}>{buildingName}</div>
+          {organizedPlacemarks[buildingName].map((placemark) => (
+            <button
+              key={placemark.id}
+              data-testid={`meridian--private--overlay-tag-${placemark.id}`}
+              className={cssOverlayTagButton}
+              onClick={() => {
+                updateMap({
+                  // TODO HARDCODED --------------
+                  locationID: 5198682008846336,
+                  floorID: placemark.map_id,
+                  tags: { ...tagOptions, filter: () => true },
+                });
+                onTagClick(placemark);
+                toggleAssetListOverlay({ open: false });
+              }}
+            >
+              <div className={cssOverlayTagButtonName}>{placemark.name}</div>
+            </button>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 class AssetListOverlay extends Component<AssetListOverlayProps> {
   state: { searchFilter: string; radioValue: FilterType } = {
     searchFilter: "",
@@ -140,7 +239,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
   searchInputRef = createRef<HTMLInputElement>();
 
   setRadioFilter = (filter: FilterType) => {
-    this.setState({ radioFilter: filter });
+    this.setState({ radioValue: filter });
   };
 
   componentDidMount() {
@@ -196,7 +295,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             checked={this.state.radioValue === "TAGS"}
             onChange={(event: any) => {
               if (event.target.checked) {
-                console.info("TAGS");
+                this.setRadioFilter("TAGS");
               }
             }}
           />
@@ -211,7 +310,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             checked={this.state.radioValue === "PLACEMARKS"}
             onChange={(event: any) => {
               if (event.target.checked) {
-                console.info("PLACEMARKS");
+                this.setRadioFilter("PLACEMARKS");
               }
             }}
           />
@@ -229,8 +328,18 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             );
           }
 
+          if (this.state.radioValue === "TAGS") {
+            return (
+              <TagResults
+                {...this.props}
+                floorToGroup={floorToGroup}
+                floorsByID={floorsByID}
+                match={match}
+              />
+            );
+          }
           return (
-            <TagResults
+            <PlacemarkResults
               {...this.props}
               floorToGroup={floorToGroup}
               floorsByID={floorsByID}

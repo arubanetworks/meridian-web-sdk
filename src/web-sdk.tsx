@@ -702,6 +702,24 @@ export class API {
     return response.data.asset_updates;
   }
 
+  // adasdfasdfasdfasdfadsf
+  /**
+   * [async] Returns an array of all placemarks that match the
+   * search string
+   */
+  async searchPlacemarks(locationID: string, searchStr: string): Promise<any> {
+    if (!locationID) {
+      requiredParam("fetchPlacemarksByFloor", "locationID");
+    }
+    // if (!searchStr) {
+    //   requiredParam("fetchPlacemarksByFloor", "floorID");
+    // }
+    const res = await this._axiosEditorAPI.get(
+      `locations/${locationID}/search?q=((name:${searchStr})+OR+(name_suggestions:${searchStr})+OR+(type:${searchStr})+OR+(type_name:${searchStr})+OR+(type_name_suggestions:${searchStr}))+(kind:placemark)&page_size=10&sort=-modified`
+    );
+    return res;
+  }
+
   /**
    * [async] Returns an array of all placemarks on the specified location and
    * floor

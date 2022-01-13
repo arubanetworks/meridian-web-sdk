@@ -142,9 +142,10 @@ function PlacemarkResults(props: any) {
     // loading,
     onTagClick,
     toggleAssetListOverlay,
-    match,
     floorsByID,
     floorToGroup,
+    searchStr,
+    api,
   } = props;
 
   const processedPlacemarks = [
@@ -182,7 +183,9 @@ function PlacemarkResults(props: any) {
       label: "fdsfsdfdsf",
     },
   ]; // search API response
-
+  console.log(searchStr);
+  console.log("API: ", api);
+  // const serverResponse = await api;
   const organizedPlacemarks = groupBy(processedPlacemarks, (placemark) => {
     return floorToGroup[placemark.map_id];
   });
@@ -343,7 +346,8 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
               {...this.props}
               floorToGroup={floorToGroup}
               floorsByID={floorsByID}
-              match={match}
+              searchStr={this.state.searchFilter}
+              api={this.props.api}
             />
           );
         })()}

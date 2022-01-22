@@ -21,10 +21,22 @@ export interface PlacemarkLayerProps {
   markers: CreateMapOptions["placemarks"];
   onPlacemarkClick: (placemark: PlacemarkData) => void;
   onUpdate: MapComponentProps["onPlacemarksUpdate"];
-  placemarks: Record<string, PlacemarkData>;
+  toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
+  groupPlacemarksByID: any;
 }
 
 export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
+  state: any = {
+    fetchedPlacemarks: [],
+  };
+
+  isMounted = false;
+
+  componentDidMount() {
+    this.fetchPlacemarks();
+    this.isMounted = true;
+  }
+
   shouldComponentUpdate(nextProps: PlacemarkLayerProps) {
     // Don't re-render when panning only (no zoom change)
     return !(
@@ -33,29 +45,64 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     );
   }
 
-  componentDidUpdate(prevProps: PlacemarkLayerProps) {
-    const { markers, placemarks, onUpdate } = this.props;
-    if (
-      onUpdate &&
-      (placemarks !== prevProps.placemarks || markers !== prevProps.markers)
-    ) {
+  async componentDidUpdate(prevProps: PlacemarkLayerProps) {
+    const { markers, onUpdate } = this.props;
+    const floorChanged = prevProps.floorID !== this.props.floorID;
+
+    if (floorChanged) {
+      await this.fetchPlacemarks();
+    }
+
+    if (onUpdate && markers !== prevProps.markers) {
+      const fetchedPlacemarks = this.state.fetchedPlacemarks;
       asyncClientCall(onUpdate, {
-        allPlacemarks: Object.values(placemarks),
-        filteredPlacemarks: this.getFilteredPlacemarks(),
+        allPlacemarks: Object.values(fetchedPlacemarks) as PlacemarkData[],
+        filteredPlacemarks: this.getFilteredPlacemarks(fetchedPlacemarks),
       });
     }
   }
 
-  getFilteredPlacemarks() {
-    const { placemarks, markers } = this.props;
+  componentWillUnmount() {
+    this.isMounted = false;
+  }
+
+  async fetchPlacemarks() {
+    console.info("** fetching placemarks");
+    const {
+      locationID,
+      floorID,
+      api,
+      toggleLoadingSpinner,
+      groupPlacemarksByID,
+    } = this.props;
+    const results: PlacemarkData[] = await api.fetchPlacemarksByFloor(
+      locationID,
+      floorID
+    );
+    toggleLoadingSpinner({ show: true, source: "placemarks" });
+    if (!this.isMounted) {
+      return;
+    }
+    const fetchedPlacemarks = groupPlacemarksByID(results);
+    this.setState({ fetchedPlacemarks }, () => {
+      toggleLoadingSpinner({ show: false, source: "placemarks" });
+    });
+  }
+
+  getFilteredPlacemarks(placemarks: any) {
+    const { markers, floorID } = this.props;
     const filter = markers?.filter ?? (() => true);
     const filteredMarkers = Object.keys(placemarks)
       .map((id) => placemarks[id])
       .filter((placemark) => {
+        // TODO: duplicate code, let's do this only once
         if (placemark.type === "exclusion_area") {
           // NOTE: Consider adding a new configuration setting called
           // `placemarks.showExclusionAreas` in the future if someone actually
           // wants to show exclusion areas for some reason.
+          return false;
+        }
+        if (placemark.map !== floorID) {
           return false;
         }
         if (markers?.showHiddenPlacemarks !== true) {
@@ -68,21 +115,23 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   render() {
-    const { markers, onPlacemarkClick, mapZoomFactor, selectedItem } =
-      this.props;
-    const filteredPlacemarks = this.getFilteredPlacemarks();
+    const placemarks = this.getFilteredPlacemarks(this.state.fetchedPlacemarks);
     return (
       <div data-testid="meridian--private--placemark-layer">
-        {filteredPlacemarks.map((placemark) => (
+        {placemarks.map((placemark) => (
           <Placemark
             key={placemark.id}
-            isSelected={selectedItem ? selectedItem.id === placemark.id : false}
-            mapZoomFactor={mapZoomFactor}
+            isSelected={
+              this.props.selectedItem
+                ? this.props.selectedItem.id === placemark.id
+                : false
+            }
+            mapZoomFactor={this.props.mapZoomFactor}
             data={placemark}
-            onClick={onPlacemarkClick}
-            disabled={markers?.disabled}
-            labelMode={markers?.labelMode ?? "zoom"}
-            labelZoomLevel={markers?.labelZoomLevel}
+            onClick={this.props.onPlacemarkClick}
+            disabled={this.props.markers?.disabled}
+            labelMode={this.props.markers?.labelMode ?? "zoom"}
+            labelZoomLevel={this.props.markers?.labelZoomLevel}
           />
         ))}
       </div>

@@ -7,7 +7,7 @@
 
 import groupBy from "lodash.groupby";
 import { Component, createRef, h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+// import { useState, useEffect } from "preact/hooks";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
@@ -29,9 +29,11 @@ export interface AssetListOverlayProps {
   onPlacemarkClick: (placemark: PlacemarkData) => void;
   loading: boolean;
   tags: TagData[];
+  placemarks: PlacemarkData[];
   showControlTags: boolean;
   floors: FloorData[];
   tagOptions: CreateMapOptions["tags"];
+  placemarkOptions: CreateMapOptions["placemarks"];
   updateMap: (options: CreateMapOptions) => void;
   api: API;
   locationID: string;
@@ -144,31 +146,65 @@ export interface PlacemarkResultsProps extends AssetListOverlayProps {
   searchStr: string;
   floorToGroup: any; // what again is this?
   floorsByID: any; // what again is this?
+  match: any;
+  placemarks: any;
 }
 
 function PlacemarkResults(props: PlacemarkResultsProps) {
   const {
     currentFloorID,
     updateMap,
-    tagOptions = {},
+    placemarkOptions = {},
     toggleAssetListOverlay,
     floorToGroup,
-    searchStr,
-    api,
+    // searchStr,
+    // api,
+    match,
+    placemarks,
     onPlacemarkClick,
+    floorsByID,
   } = props;
 
-  const [searchResults, setSearchResults] = useState<any>([]);
+  const processedPlacemarks = placemarks
+    // Remove placemarks from unpublished floors
+    .filter((placemark: PlacemarkData) => {
+      const floor = floorsByID[placemark.map][0];
+      if (floor) {
+        return floor.published;
+      }
+      return true;
+    })
+    // Remove placemarks that don't match the local search terms
+    .filter((placemark: PlacemarkData) => {
+      // return match(placemark.name) || getTagLabels(placemark).some(match);
+      return match(placemark.name);
+    })
+    .filter((placemark: PlacemarkData) => {
+      // TODO: duplicate code (exclusion_area), see PlacemarkLayer
+      if (placemark.type === "exclusion_area") {
+        // NOTE: Consider adding a new configuration setting called
+        // `placemarks.showExclusionAreas` in the future if someone actually
+        // wants to show exclusion areas for some reason.
+        return false;
+      }
+      if (placemarkOptions.showHiddenPlacemarks !== true) {
+        return !placemark.hide_on_map;
+      }
+      return true;
+    })
+    // Sort by name
+    .sort((a: PlacemarkData, b: PlacemarkData) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
 
-  useEffect(() => {
-    (async () => {
-      const res = await api.searchPlacemarks("5198682008846336", searchStr);
-      setSearchResults(res.data.results);
-    })();
-  }, [searchStr, api]);
-
-  const organizedPlacemarks = groupBy(searchResults, (placemark) => {
-    return floorToGroup[placemark.map_id];
+  const organizedPlacemarks = groupBy(processedPlacemarks, (placemark) => {
+    return floorToGroup[placemark.map];
   });
 
   const sortedGroups = Object.keys(organizedPlacemarks).sort();
@@ -181,7 +217,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     }
   });
 
-  if (searchResults.length === 0) {
+  if (processedPlacemarks.length === 0) {
     return <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>;
   }
 
@@ -190,17 +226,16 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       {sortedGroups.map((buildingName) => (
         <div key={buildingName}>
           <div className={cssOverlayBuildingName}>{buildingName}</div>
-          {organizedPlacemarks[buildingName].map((placemark) => (
+          {organizedPlacemarks[buildingName].map((placemark: PlacemarkData) => (
             <button
               key={placemark.id}
               data-testid={`meridian--private--overlay-tag-${placemark.id}`}
               className={cssOverlayTagButton}
               onClick={() => {
                 updateMap({
-                  // TODO HARDCODED --------------
-                  locationID: "5198682008846336",
-                  floorID: placemark.map_id,
-                  tags: { ...tagOptions, filter: () => true },
+                  locationID: placemark.location_id,
+                  floorID: placemark.map,
+                  placemarks: { ...placemarkOptions, filter: () => true },
                 });
                 // TODO ANY ANY ANY ANY and Tag specific
                 onPlacemarkClick(placemark as any);
@@ -323,6 +358,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
               floorsByID={floorsByID}
               searchStr={this.state.searchFilter}
               api={this.props.api}
+              match={match}
             />
           );
         })()}

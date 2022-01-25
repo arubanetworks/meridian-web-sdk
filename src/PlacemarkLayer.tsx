@@ -90,11 +90,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     const filter = placemarkOptions?.filter ?? (() => true);
     const filteredMarkers = placemarks
       .filter((placemark: PlacemarkData) => {
-        // TODO: duplicate code, let's do this only once
         if (placemark.type === "exclusion_area") {
-          // NOTE: Consider adding a new configuration setting called
-          // `placemarks.showExclusionAreas` in the future if someone actually
-          // wants to show exclusion areas for some reason.
           return false;
         }
         if (placemark.map !== floorID) {

@@ -28,8 +28,7 @@ interface AssetListOverlayProps {
   floors: FloorData[];
   tagOptions: CreateMapOptions["tags"];
   placemarkOptions: CreateMapOptions["placemarks"];
-  updateMap: (options: CreateMapOptions) => void;
-  locationID: string;
+  updateMap: (options: Partial<CreateMapOptions>) => void;
   currentFloorID: string;
   toggleAssetListOverlay: (options: { open: boolean }) => void;
   showTags: boolean;
@@ -248,7 +247,6 @@ function TagResults(props: TagResultsProps) {
               className={cssOverlayAssetButton}
               onClick={() => {
                 updateMap({
-                  locationID: tag.location_id,
                   floorID: tag.map_id,
                   tags: { ...tagOptions, filter: () => true },
                 });
@@ -369,12 +367,10 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
               className={cssOverlayAssetButton}
               onClick={() => {
                 updateMap({
-                  locationID: placemark.location_id,
                   floorID: placemark.map,
                   placemarks: { ...placemarkOptions, filter: () => true },
                 });
-                // TODO ANY ANY ANY ANY and Tag specific
-                onPlacemarkClick(placemark as any);
+                onPlacemarkClick(placemark);
                 toggleAssetListOverlay({ open: false });
               }}
             >

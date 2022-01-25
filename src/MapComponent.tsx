@@ -26,7 +26,7 @@ import PlacemarkLayer from "./PlacemarkLayer";
 import { css, cx } from "./style";
 import TagLayer from "./TagLayer";
 import AssetListOverlay from "./AssetListOverlay";
-import { asyncClientCall, isEnvOptions, keyBy, logError } from "./util";
+import { asyncClientCall, isEnvOptions, logError } from "./util";
 import Watermark from "./Watermark";
 import {
   API,
@@ -61,7 +61,7 @@ export interface MapComponentState {
   mapTransform: string;
   mapZoomFactor: number;
   floors: FloorData[];
-  allPlacemarkData: Record<string, PlacemarkData>;
+  allPlacemarkData: PlacemarkData[];
   svgURL?: string;
   tagsConnection: any;
   tagsStatus: string;
@@ -101,7 +101,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     mapTransform: "",
     mapZoomFactor: 0.5,
     floors: [],
-    allPlacemarkData: {},
+    allPlacemarkData: [],
     svgURL: undefined,
     tagsConnection: undefined,
     tagsStatus: "Connecting",
@@ -175,7 +175,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       this.zoomToDefault();
       this.freeMapImageURL();
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ mapImageURL: undefined, allPlacemarkData: {} });
+      this.setState({ mapImageURL: undefined, allPlacemarkData: [] });
       this.loadData();
       return;
     } else if (this.props.loadTags && !prevProps.loadTags) {
@@ -361,22 +361,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   };
 
-  // TODO, group and normalize all?
-  groupPlacemarksByID = (placemarks: PlacemarkData[]) => {
-    return keyBy(
-      placemarks.map((placemark) => this.normalizePlacemark(placemark)),
-      (placemark) => placemark.id
-    );
-  };
-
-  normalizePlacemark(placemark: PlacemarkData): PlacemarkData {
-    return {
-      kind: "placemark",
-      location_id: this.props.locationID,
-      ...placemark,
-    };
-  }
-
   async updatePlacemarkData() {
     const { locationID, api } = this.props;
     let results: PlacemarkData[] = [];
@@ -387,9 +371,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     if (!this.isMounted) {
       return;
     }
-
-    const placemarks = this.groupPlacemarksByID(results);
-    this.setState({ allPlacemarkData: placemarks }, () => {
+    this.setState({ allPlacemarkData: results }, () => {
       this.setState({ arePlacemarksLoading: false });
     });
   }
@@ -645,7 +627,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   renderAssetListOverlay() {
     const {
-      locationID,
       floorID,
       loadTags,
       loadPlacemarks,
@@ -675,12 +656,11 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           tagOptions={tagOptions}
           placemarkOptions={placemarkOptions}
           updateMap={this.updateMap}
-          locationID={locationID}
           currentFloorID={floorID}
           toggleAssetListOverlay={this.toggleAssetListOverlay}
           showTags={Boolean(loadTags)}
           showPlacemarks={Boolean(loadPlacemarks)}
-          placemarks={Object.values(allPlacemarkData)}
+          placemarks={allPlacemarkData}
         />
       );
     }

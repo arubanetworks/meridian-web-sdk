@@ -6,7 +6,7 @@
  */
 
 import groupBy from "lodash.groupby";
-import { Component, createRef, h } from "preact";
+import { Component, createRef, h, Fragment } from "preact";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
@@ -17,7 +17,7 @@ import { CreateMapOptions, FloorData, PlacemarkData, TagData } from "./web-sdk";
 
 type FilterType = "TAGS" | "PLACEMARKS";
 
-export interface AssetListOverlayProps {
+interface AssetListOverlayProps {
   onTagClick: (tag: TagData) => void;
   onPlacemarkClick: (placemark: PlacemarkData) => void;
   tagsLoading: boolean;
@@ -33,6 +33,7 @@ export interface AssetListOverlayProps {
   currentFloorID: string;
   toggleAssetListOverlay: (options: { open: boolean }) => void;
   showTags: boolean;
+  showPlacemarks: boolean;
 }
 
 interface TagResultsProps extends AssetListOverlayProps {
@@ -288,6 +289,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       placemarksLoading,
       toggleAssetListOverlay,
       showTags,
+      showPlacemarks,
     } = this.props;
 
     const { searchFilter } = this.state;
@@ -316,40 +318,48 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
             this.setState({ searchFilter });
           }}
         />
-        {showTags ? (
-          <div className={cssRadioContainer}>
-            <input
-              type="radio"
-              name="searchType"
-              id="tags"
-              className={cssRadioButton}
-              checked={this.state.radioValue === "TAGS"}
-              onChange={(event: any) => {
-                if (event.target.checked) {
-                  this.setRadioFilter("TAGS");
-                }
-              }}
-            />
-            <label for="tags" className={cssRadioButtonLabel}>
-              Tags
-            </label>
-            <input
-              type="radio"
-              name="searchType"
-              id="placemarks"
-              className={cssRadioButton}
-              checked={this.state.radioValue === "PLACEMARKS"}
-              onChange={(event: any) => {
-                if (event.target.checked) {
-                  this.setRadioFilter("PLACEMARKS");
-                }
-              }}
-            />
-            <label for="placemarks" className={cssRadioButtonLabel}>
-              Placemarks
-            </label>
-          </div>
-        ) : null}
+
+        <div className={cssRadioContainer}>
+          {showTags ? (
+            <Fragment>
+              <input
+                type="radio"
+                name="searchType"
+                id="tags"
+                className={cssRadioButton}
+                checked={this.state.radioValue === "TAGS"}
+                onChange={(event: any) => {
+                  if (event.target.checked) {
+                    this.setRadioFilter("TAGS");
+                  }
+                }}
+              />
+              <label for="tags" className={cssRadioButtonLabel}>
+                Tags
+              </label>
+            </Fragment>
+          ) : null}
+
+          {showPlacemarks ? (
+            <Fragment>
+              <input
+                type="radio"
+                name="searchType"
+                id="placemarks"
+                className={cssRadioButton}
+                checked={this.state.radioValue === "PLACEMARKS"}
+                onChange={(event: any) => {
+                  if (event.target.checked) {
+                    this.setRadioFilter("PLACEMARKS");
+                  }
+                }}
+              />
+              <label for="placemarks" className={cssRadioButtonLabel}>
+                Placemarks
+              </label>
+            </Fragment>
+          ) : null}
+        </div>
 
         {(() => {
           if (this.state.radioValue === "TAGS") {

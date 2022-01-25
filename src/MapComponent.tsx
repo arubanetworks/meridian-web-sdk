@@ -648,6 +648,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       locationID,
       floorID,
       loadTags,
+      loadPlacemarks,
       tags: tagOptions,
       placemarks: placemarkOptions,
     } = this.props;
@@ -661,7 +662,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       allPlacemarkData,
     } = this.state;
 
-    if (isAssetListOverlayOpen) {
+    if (isAssetListOverlayOpen && Boolean(loadPlacemarks || loadTags)) {
       return (
         <AssetListOverlay
           onTagClick={this.onTagClick}
@@ -678,6 +679,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           currentFloorID={floorID}
           toggleAssetListOverlay={this.toggleAssetListOverlay}
           showTags={Boolean(loadTags)}
+          showPlacemarks={Boolean(loadPlacemarks)}
           placemarks={Object.values(allPlacemarkData)}
         />
       );
@@ -740,6 +742,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       height = "",
       onTagsUpdate,
       onPlacemarksUpdate,
+      showSearchControl,
+      loadPlacemarks,
+      loadTags,
     } = this.props;
     return (
       <div
@@ -759,7 +764,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         {this.renderAssetListOverlay()}
         <FloorAndSearchControls
           showFloors={this.shouldShowFloors()}
-          showSearch={!!this.props.showSearchControl}
+          showSearch={Boolean(
+            showSearchControl && (loadPlacemarks || loadTags)
+          )}
           toggleFloorOverlay={this.toggleFloorOverlay}
           toggleAssetListOverlay={this.toggleAssetListOverlay}
         />
@@ -800,7 +807,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
                     onPlacemarkClick={this.onPlacemarkClick}
                     onUpdate={onPlacemarksUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
-                    groupPlacemarksByID={this.groupPlacemarksByID}
                   />
                 ) : null}
                 {this.props.loadTags ? (

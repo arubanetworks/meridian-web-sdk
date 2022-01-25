@@ -22,19 +22,22 @@ export interface PlacemarkLayerProps {
   onPlacemarkClick: (placemark: PlacemarkData) => void;
   onUpdate: MapComponentProps["onPlacemarksUpdate"];
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
-  groupPlacemarksByID: any;
+}
+
+export interface PlacemarkLayerState {
+  fetchedPlacemarks: PlacemarkData[];
 }
 
 export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
-  state: any = {
+  state: PlacemarkLayerState = {
     fetchedPlacemarks: [],
   };
 
   isMounted = false;
 
   componentDidMount() {
-    this.fetchPlacemarks();
     this.isMounted = true;
+    this.fetchPlacemarks();
   }
 
   shouldComponentUpdate(nextProps: PlacemarkLayerProps) {
@@ -56,7 +59,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     if (onUpdate && placemarkOptions !== prevProps.placemarkOptions) {
       const fetchedPlacemarks = this.state.fetchedPlacemarks;
       asyncClientCall(onUpdate, {
-        allPlacemarks: Object.values(fetchedPlacemarks) as PlacemarkData[],
+        allPlacemarks: fetchedPlacemarks as PlacemarkData[],
         filteredPlacemarks: this.getFilteredPlacemarks(fetchedPlacemarks),
       });
     }
@@ -67,22 +70,16 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   async fetchPlacemarks() {
-    const {
-      locationID,
-      floorID,
-      api,
-      toggleLoadingSpinner,
-      groupPlacemarksByID,
-    } = this.props;
+    if (!this.isMounted) {
+      return;
+    }
+    const { locationID, floorID, api, toggleLoadingSpinner } = this.props;
+    toggleLoadingSpinner({ show: true, source: "placemarks" });
     const results: PlacemarkData[] = await api.fetchPlacemarksByFloor(
       locationID,
       floorID
     );
-    toggleLoadingSpinner({ show: true, source: "placemarks" });
-    if (!this.isMounted) {
-      return;
-    }
-    const fetchedPlacemarks = groupPlacemarksByID(results);
+    const fetchedPlacemarks = results;
     this.setState({ fetchedPlacemarks }, () => {
       toggleLoadingSpinner({ show: false, source: "placemarks" });
     });
@@ -91,9 +88,8 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   getFilteredPlacemarks(placemarks: any) {
     const { placemarkOptions, floorID } = this.props;
     const filter = placemarkOptions?.filter ?? (() => true);
-    const filteredMarkers = Object.keys(placemarks)
-      .map((id) => placemarks[id])
-      .filter((placemark) => {
+    const filteredMarkers = placemarks
+      .filter((placemark: PlacemarkData) => {
         // TODO: duplicate code, let's do this only once
         if (placemark.type === "exclusion_area") {
           // NOTE: Consider adding a new configuration setting called
@@ -117,7 +113,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     const placemarks = this.getFilteredPlacemarks(this.state.fetchedPlacemarks);
     return (
       <div data-testid="meridian--private--placemark-layer">
-        {placemarks.map((placemark) => (
+        {placemarks.map((placemark: PlacemarkData) => (
           <Placemark
             key={placemark.id}
             isSelected={

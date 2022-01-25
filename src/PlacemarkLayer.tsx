@@ -18,7 +18,7 @@ export interface PlacemarkLayerProps {
   locationID: string;
   floorID: string;
   api: API;
-  markers: CreateMapOptions["placemarks"];
+  placemarkOptions: CreateMapOptions["placemarks"];
   onPlacemarkClick: (placemark: PlacemarkData) => void;
   onUpdate: MapComponentProps["onPlacemarksUpdate"];
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
@@ -46,14 +46,14 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   async componentDidUpdate(prevProps: PlacemarkLayerProps) {
-    const { markers, onUpdate } = this.props;
+    const { placemarkOptions, onUpdate } = this.props;
     const floorChanged = prevProps.floorID !== this.props.floorID;
 
     if (floorChanged) {
       await this.fetchPlacemarks();
     }
 
-    if (onUpdate && markers !== prevProps.markers) {
+    if (onUpdate && placemarkOptions !== prevProps.placemarkOptions) {
       const fetchedPlacemarks = this.state.fetchedPlacemarks;
       asyncClientCall(onUpdate, {
         allPlacemarks: Object.values(fetchedPlacemarks) as PlacemarkData[],
@@ -67,7 +67,6 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   async fetchPlacemarks() {
-    console.info("** fetching placemarks");
     const {
       locationID,
       floorID,
@@ -90,8 +89,8 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   getFilteredPlacemarks(placemarks: any) {
-    const { markers, floorID } = this.props;
-    const filter = markers?.filter ?? (() => true);
+    const { placemarkOptions, floorID } = this.props;
+    const filter = placemarkOptions?.filter ?? (() => true);
     const filteredMarkers = Object.keys(placemarks)
       .map((id) => placemarks[id])
       .filter((placemark) => {
@@ -105,7 +104,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
         if (placemark.map !== floorID) {
           return false;
         }
-        if (markers?.showHiddenPlacemarks !== true) {
+        if (placemarkOptions?.showHiddenPlacemarks !== true) {
           return !placemark.hide_on_map;
         }
         return true;
@@ -129,9 +128,9 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
             mapZoomFactor={this.props.mapZoomFactor}
             data={placemark}
             onClick={this.props.onPlacemarkClick}
-            disabled={this.props.markers?.disabled}
-            labelMode={this.props.markers?.labelMode ?? "zoom"}
-            labelZoomLevel={this.props.markers?.labelZoomLevel}
+            disabled={this.props.placemarkOptions?.disabled}
+            labelMode={this.props.placemarkOptions?.labelMode ?? "zoom"}
+            labelZoomLevel={this.props.placemarkOptions?.labelZoomLevel}
           />
         ))}
       </div>

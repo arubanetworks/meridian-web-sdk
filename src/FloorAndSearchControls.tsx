@@ -11,6 +11,7 @@ import { css, theme, mixins, cx } from "./style";
 
 interface FloorAndTagControlsProps {
   showFloors: boolean;
+  showSearch: boolean;
   toggleFloorOverlay: MapComponent["toggleFloorOverlay"];
   toggleAssetListOverlay: MapComponent["toggleAssetListOverlay"];
 }
@@ -19,24 +20,31 @@ const FloorAndTagControls: FunctionComponent<FloorAndTagControlsProps> = ({
   toggleFloorOverlay,
   toggleAssetListOverlay,
   showFloors,
+  showSearch,
 }) => {
   return (
     <div className={cssFloorAndTagControls}>
-      <button
-        className={cx("meridian-tag-control", cssControl)}
-        data-testid="meridian--private--tag-control"
-        onClick={() => {
-          toggleAssetListOverlay({ open: true });
-        }}
-      >
-        {/* TODO: Can we get this SVG fixed up? */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-          <path d="M26.19 25l-4.12-4.12a7.29 7.29 0 001.44-4.35 7.11 7.11 0 00-7-7.2 7.11 7.11 0 00-7 7.2 7.11 7.11 0 007 7.2 6.83 6.83 0 004.16-1.42l4.1 4.1A1 1 0 0026.19 25zm-14.68-8.49a5.11 5.11 0 015-5.2 5.11 5.11 0 015 5.2 5.11 5.11 0 01-5 5.2 5.11 5.11 0 01-5-5.2z" />
-        </svg>
-      </button>
+      {showSearch ? (
+        <button
+          className={cx("meridian-tag-control", cssControl)}
+          data-testid="meridian--private--tag-control"
+          onClick={() => {
+            toggleAssetListOverlay({ open: true });
+          }}
+        >
+          {/* TODO: Can we get this SVG fixed up? */}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+            <path d="M26.19 25l-4.12-4.12a7.29 7.29 0 001.44-4.35 7.11 7.11 0 00-7-7.2 7.11 7.11 0 00-7 7.2 7.11 7.11 0 007 7.2 6.83 6.83 0 004.16-1.42l4.1 4.1A1 1 0 0026.19 25zm-14.68-8.49a5.11 5.11 0 015-5.2 5.11 5.11 0 015 5.2 5.11 5.11 0 01-5 5.2 5.11 5.11 0 01-5-5.2z" />
+          </svg>
+        </button>
+      ) : null}
+
       {showFloors ? (
         <button
-          className={cx("meridian-floor-control", cssControlNotFirst)}
+          className={cx(
+            "meridian-floor-control",
+            showFloors && showSearch ? cssControlNotFirst : cssControl
+          )}
           data-testid="meridian--private--floor-control"
           onClick={() => {
             toggleFloorOverlay({ open: true });

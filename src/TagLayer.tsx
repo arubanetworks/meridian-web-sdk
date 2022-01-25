@@ -19,7 +19,7 @@ export interface TagLayerProps {
   locationID: string;
   floorID: string;
   api: API;
-  markers?: {
+  tagOptions?: {
     filter?: (tag: TagData) => boolean;
     showControlTags?: boolean;
     disabled?: boolean;
@@ -44,8 +44,8 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
 
   componentDidMount() {
     this.isMounted = true;
-    const { markers, floorID } = this.props;
-    if (markers) {
+    const { tagOptions, floorID } = this.props;
+    if (tagOptions) {
       this.connect(floorID);
     }
   }
@@ -169,9 +169,9 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   }
 
   filterControlTags(tags: TagData[]) {
-    const { markers } = this.props;
+    const { tagOptions } = this.props;
     return tags.filter((tag) => {
-      if (markers?.showControlTags !== true) {
+      if (tagOptions?.showControlTags !== true) {
         return !tag.is_control_tag;
       }
       return true;
@@ -180,8 +180,8 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
 
   onUpdate = () => {
     const { tagsByMAC } = this.state;
-    const { onUpdate, markers = {} } = this.props;
-    const { filter = () => true } = markers;
+    const { onUpdate, tagOptions = {} } = this.props;
+    const { filter = () => true } = tagOptions;
     const allTags = this.filterControlTags(Object.values(tagsByMAC));
     const filteredTags = allTags.filter(filter);
     if (onUpdate) {
@@ -192,12 +192,12 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   render() {
     const {
       selectedItem,
-      markers = {},
+      tagOptions = {},
       onTagClick,
       mapZoomFactor,
     } = this.props;
     const { tagsByMAC } = this.state;
-    const { filter = () => true } = markers;
+    const { filter = () => true } = tagOptions;
     const tags = Object.values(tagsByMAC);
     return (
       <div data-testid="meridian--private--tag-layer">
@@ -210,7 +210,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
               mapZoomFactor={mapZoomFactor}
               data={tag}
               onClick={onTagClick}
-              disabled={markers.disabled}
+              disabled={tagOptions.disabled}
             />
           ))}
       </div>

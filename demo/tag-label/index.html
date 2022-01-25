@@ -37,8 +37,8 @@
       MeridianSDK.init({
         api: new MeridianSDK.API({
           environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        })
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
+        }),
       });
       // ---^^^ SDK setup ^^^---
 
@@ -48,20 +48,19 @@
           super(props);
           this.state = {
             tagLabels: [],
-            selectedLabel: null
+            selectedLabel: null,
           };
         }
 
-        initMeridianMap = element => {
+        initMeridianMap = (element) => {
           this.map = MeridianSDK.createMap(element, {
             locationID: "5198682008846336",
             floorID: "5755685136498688",
             height: "500px",
             onTagsUpdate: this.onTagsUpdate,
-            showTagsControl: false,
-            onFloorChange: floor => {
+            onFloorChange: (floor) => {
               this.setState({ selectedLabel: null });
-            }
+            },
           });
         };
 
@@ -70,30 +69,31 @@
           if (selectedLabel) {
             this.map.update({
               tags: {
-                filter: tag => tag.tags.some(tag => tag.name === selectedLabel)
-              }
+                filter: (tag) =>
+                  tag.tags.some((tag) => tag.name === selectedLabel),
+              },
             });
           } else {
             this.map.update({
               tags: {
-                filter: () => true
-              }
+                filter: () => true,
+              },
             });
           }
         }
 
-        onTagsUpdate = tags => {
+        onTagsUpdate = (tags) => {
           const labels = {};
-          tags.allTags.forEach(tag => {
+          tags.allTags.forEach((tag) => {
             // Labels are called tags on the backend :)
-            tag.tags.forEach(t => {
+            tag.tags.forEach((t) => {
               labels[t.name] = true;
             });
           });
           this.setState({ tagLabels: Object.keys(labels) });
         };
 
-        onSelectChange = event => {
+        onSelectChange = (event) => {
           this.setState({ selectedLabel: event.target.value });
         };
 

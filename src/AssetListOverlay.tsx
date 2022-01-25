@@ -7,27 +7,21 @@
 
 import groupBy from "lodash.groupby";
 import { Component, createRef, h } from "preact";
-// import { useState, useEffect } from "preact/hooks";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, mixins, theme } from "./style";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
-import {
-  API,
-  CreateMapOptions,
-  FloorData,
-  PlacemarkData,
-  TagData,
-} from "./web-sdk";
+import { CreateMapOptions, FloorData, PlacemarkData, TagData } from "./web-sdk";
 
 type FilterType = "TAGS" | "PLACEMARKS";
 
 export interface AssetListOverlayProps {
   onTagClick: (tag: TagData) => void;
   onPlacemarkClick: (placemark: PlacemarkData) => void;
-  loading: boolean;
+  tagsLoading: boolean;
+  placemarksLoading: boolean;
   tags: TagData[];
   placemarks: PlacemarkData[];
   showControlTags: boolean;
@@ -35,21 +29,26 @@ export interface AssetListOverlayProps {
   tagOptions: CreateMapOptions["tags"];
   placemarkOptions: CreateMapOptions["placemarks"];
   updateMap: (options: CreateMapOptions) => void;
-  api: API;
   locationID: string;
   currentFloorID: string;
   toggleAssetListOverlay: (options: { open: boolean }) => void;
   showTags: boolean;
 }
 
-function TagResults(props: any) {
+interface TagResultsProps extends AssetListOverlayProps {
+  floorToGroup: Record<string, string>;
+  floorsByID: Record<string, any>;
+  match: (target: string) => boolean;
+  loading: boolean;
+}
+
+function TagResults(props: TagResultsProps) {
   const {
     currentFloorID,
-    // floors,
     updateMap,
     tagOptions = {},
     tags,
-    // loading,
+    loading,
     onTagClick,
     toggleAssetListOverlay,
     match,
@@ -102,12 +101,20 @@ function TagResults(props: any) {
     }
   });
 
+  if (loading) {
+    return (
+      <div className={cssAssetListEmpty}>
+        <IconSpinner />
+      </div>
+    );
+  }
+
   if (processedTags.length === 0) {
-    return <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>;
+    return <div className={cssAssetListEmpty}>{uiText.noResultsFound}</div>;
   }
 
   return (
-    <div className={cssTagList}>
+    <div className={cssAssetList}>
       {sortedGroups.map((buildingName) => (
         <div key={buildingName}>
           <div className={cssOverlayBuildingName}>{buildingName}</div>
@@ -115,7 +122,7 @@ function TagResults(props: any) {
             <button
               key={tag.id}
               data-testid={`meridian--private--overlay-tag-${tag.id}`}
-              className={cssOverlayTagButton}
+              className={cssOverlayAssetButton}
               onClick={() => {
                 updateMap({
                   locationID: tag.location_id,
@@ -126,8 +133,8 @@ function TagResults(props: any) {
                 toggleAssetListOverlay({ open: false });
               }}
             >
-              <div className={cssOverlayTagButtonInner}>
-                <div className={cssOverlayTagButtonName}>{tag.name}</div>
+              <div className={cssOverlayAssetButtonInner}>
+                <div className={cssOverlayAssetButtonName}>{tag.name}</div>
                 <LabelList
                   align="right"
                   labels={getTagLabels(tag)}
@@ -142,12 +149,11 @@ function TagResults(props: any) {
   );
 }
 
-export interface PlacemarkResultsProps extends AssetListOverlayProps {
-  searchStr: string;
-  floorToGroup: any; // what again is this?
-  floorsByID: any; // what again is this?
-  match: any;
-  placemarks: any;
+interface PlacemarkResultsProps extends AssetListOverlayProps {
+  floorToGroup: Record<string, string>;
+  floorsByID: Record<string, any>;
+  match: (target: string) => boolean;
+  loading: boolean;
 }
 
 function PlacemarkResults(props: PlacemarkResultsProps) {
@@ -157,12 +163,11 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     placemarkOptions = {},
     toggleAssetListOverlay,
     floorToGroup,
-    // searchStr,
-    // api,
     match,
     placemarks,
     onPlacemarkClick,
     floorsByID,
+    loading,
   } = props;
 
   const processedPlacemarks = placemarks
@@ -217,12 +222,20 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     }
   });
 
+  if (loading) {
+    return (
+      <div className={cssAssetListEmpty}>
+        <IconSpinner />
+      </div>
+    );
+  }
+
   if (processedPlacemarks.length === 0) {
-    return <div className={cssTagListEmpty}>{uiText.noResultsFound}</div>;
+    return <div className={cssAssetListEmpty}>{uiText.noResultsFound}</div>;
   }
 
   return (
-    <div className={cssTagList}>
+    <div className={cssAssetList}>
       {sortedGroups.map((buildingName) => (
         <div key={buildingName}>
           <div className={cssOverlayBuildingName}>{buildingName}</div>
@@ -230,7 +243,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
             <button
               key={placemark.id}
               data-testid={`meridian--private--overlay-tag-${placemark.id}`}
-              className={cssOverlayTagButton}
+              className={cssOverlayAssetButton}
               onClick={() => {
                 updateMap({
                   locationID: placemark.location_id,
@@ -242,7 +255,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
                 toggleAssetListOverlay({ open: false });
               }}
             >
-              <div className={cssOverlayTagButtonName}>{placemark.name}</div>
+              <div className={cssOverlayAssetButtonName}>{placemark.name}</div>
             </button>
           ))}
         </div>
@@ -269,7 +282,13 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
   }
 
   render() {
-    const { floors, loading, toggleAssetListOverlay, showTags } = this.props;
+    const {
+      floors,
+      tagsLoading,
+      placemarksLoading,
+      toggleAssetListOverlay,
+      showTags,
+    } = this.props;
 
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
@@ -333,14 +352,6 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
         ) : null}
 
         {(() => {
-          if (loading) {
-            return (
-              <div className={cssTagListEmpty}>
-                <IconSpinner />
-              </div>
-            );
-          }
-
           if (this.state.radioValue === "TAGS") {
             return (
               <TagResults
@@ -348,6 +359,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
                 floorToGroup={floorToGroup}
                 floorsByID={floorsByID}
                 match={match}
+                loading={tagsLoading}
               />
             );
           }
@@ -356,9 +368,8 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
               {...this.props}
               floorToGroup={floorToGroup}
               floorsByID={floorsByID}
-              searchStr={this.state.searchFilter}
-              api={this.props.api}
               match={match}
+              loading={placemarksLoading}
             />
           );
         })()}
@@ -379,18 +390,18 @@ const cssOverlayBuildingName = css({
   padding: 10,
 });
 
-const cssTagList = css({
-  label: "tags-list",
+const cssAssetList = css({
+  label: "asset-list",
   overflowY: "auto",
   flex: "1 1 auto",
 });
 
-const cssOverlayTagButton = css(
+const cssOverlayAssetButton = css(
   mixins.buttonReset,
   mixins.focusRingMenuItem,
   mixins.buttonHoverActive,
   {
-    label: "overlay-tags-button",
+    label: "overlay-asset-button",
     minHeight: 56,
     padding: 10,
     paddingLeft: 20,
@@ -400,18 +411,18 @@ const cssOverlayTagButton = css(
   }
 );
 
-const cssOverlayTagButtonInner = css(mixins.flexRow, {
-  label: "overlay-tags-button-inner",
+const cssOverlayAssetButtonInner = css(mixins.flexRow, {
+  label: "overlay-asset-button-inner",
   alignItems: "center",
 });
 
-const cssOverlayTagButtonName = css({
-  label: "overlay-tags-button-name",
+const cssOverlayAssetButtonName = css({
+  label: "overlay-asset-button-name",
   flex: "1 1 auto",
 });
 
-const cssTagListEmpty = css({
-  label: "overlay-tags-list-empty",
+const cssAssetListEmpty = css({
+  label: "overlay-asset-list-empty",
   padding: "60px 20px",
   textAlign: "center",
   fontSize: theme.fontSizeBigger,
@@ -426,9 +437,7 @@ const cssRadioButtonLabel = css({
 
 const cssRadioButton = css({
   label: "overlay-radio-button",
-
   WebkitAppearance: "none",
-
   position: "relative",
   boxSizing: "border-box",
   border: `1px solid rgb(224,224,225)`,

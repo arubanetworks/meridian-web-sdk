@@ -33,8 +33,8 @@
       MeridianSDK.init({
         api: new MeridianSDK.API({
           environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        })
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
+        }),
       });
       // ---^^^ SDK setup ^^^---
 
@@ -44,26 +44,25 @@
           super(props);
           this.state = {
             tagLabels: [],
-            showTagsWithLabel: {}
+            showTagsWithLabel: {},
           };
         }
 
-        initMeridianMap = element => {
+        initMeridianMap = (element) => {
           this.map = MeridianSDK.createMap(element, {
             locationID: "5198682008846336",
             floorID: "5755685136498688",
             height: "500px",
             onTagsUpdate: this.onTagsUpdate,
-            showTagsControl: false,
             tags: {
-              filter: () => false
+              filter: () => false,
             },
-            onFloorChange: floor => {
+            onFloorChange: (floor) => {
               this.setState({
                 tagLabels: [],
-                showTagsWithLabel: {}
+                showTagsWithLabel: {},
               });
-            }
+            },
           });
         };
 
@@ -71,21 +70,23 @@
           const labels = this.getVisibleLabels();
           this.map.update({
             tags: {
-              filter: tag =>
-                tag.tags.map(x => x.name).some(label => labels.includes(label))
-            }
+              filter: (tag) =>
+                tag.tags
+                  .map((x) => x.name)
+                  .some((label) => labels.includes(label)),
+            },
           });
         }
 
-        onTagsUpdate = tags => {
+        onTagsUpdate = (tags) => {
           this.setState({ tagLabels: this.getLabels(tags.allTags) });
         };
 
         getLabels(tags) {
           const labels = {};
-          tags.forEach(tag => {
+          tags.forEach((tag) => {
             // Labels used to be called tags
-            tag.tags.forEach(t => {
+            tag.tags.forEach((t) => {
               labels[t.name] = true;
             });
           });
@@ -95,11 +96,11 @@
         toggleLabel(label) {
           // Toggle the visibility of the label then update the Meridian Map
           this.setState(
-            prevState => ({
+            (prevState) => ({
               showTagsWithLabel: {
                 ...prevState.showTagsWithLabel,
-                [label]: !prevState.showTagsWithLabel[label]
-              }
+                [label]: !prevState.showTagsWithLabel[label],
+              },
             }),
             this.updateMap
           );
@@ -107,7 +108,7 @@
 
         getVisibleLabels() {
           const { tagLabels, showTagsWithLabel } = this.state;
-          return tagLabels.filter(label => showTagsWithLabel[label]);
+          return tagLabels.filter((label) => showTagsWithLabel[label]);
         }
 
         render() {
@@ -122,7 +123,7 @@
                   className="controls"
                   style={{ minHeight: 100, minWidth: 260 }}
                 >
-                  {this.state.tagLabels.map(label => (
+                  {this.state.tagLabels.map((label) => (
                     <label key={label} className="controls__item">
                       <input
                         type="checkbox"

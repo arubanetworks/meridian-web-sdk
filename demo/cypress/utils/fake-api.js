@@ -19,12 +19,12 @@ function missingPropertyProxy(name, target) {
         console.warn(`[${name}] missing property "${property}"`);
       }
       return undefined;
-    }
+    },
   });
 }
 
 async function sleep(time) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, time);
   });
 }
@@ -44,7 +44,7 @@ class FakeAPI {
 
   async fetchTagsByFloor(_locationID, floorID) {
     await this._sleep();
-    return mockFloorAssets.filter(item => item.map_id === floorID);
+    return mockFloorAssets.filter((item) => item.map_id === floorID);
   }
 
   async fetchTagsByLocation() {
@@ -52,9 +52,14 @@ class FakeAPI {
     return mockAllAssets.asset_updates;
   }
 
+  async fetchPlacemarksByLocation() {
+    await this._sleep();
+    return mockPlacemarks.results;
+  }
+
   async fetchPlacemarksByFloor(_locationID, floorID) {
     await this._sleep();
-    return mockPlacemarks.results.filter(item => item.map === floorID);
+    return mockPlacemarks.results.filter((item) => item.map === floorID);
   }
 
   async fetchFloorsByLocation() {
@@ -73,7 +78,7 @@ class FakeAPI {
     floorID,
     onInitialTags,
     // onTagLeave,
-    onTagUpdate
+    onTagUpdate,
     // onException,
     // onClose
   }) {
@@ -102,7 +107,7 @@ class FakeAPI {
     return {
       close() {
         clearInterval(interval);
-      }
+      },
     };
   }
 }

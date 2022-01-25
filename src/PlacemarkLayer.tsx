@@ -85,7 +85,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     });
   }
 
-  getFilteredPlacemarks(placemarks: any) {
+  getFilteredPlacemarks(placemarks: PlacemarkData[]) {
     const { placemarkOptions, floorID } = this.props;
     const filter = placemarkOptions?.filter ?? (() => true);
     const filteredMarkers = placemarks

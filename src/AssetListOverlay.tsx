@@ -36,6 +36,128 @@ interface AssetListOverlayProps {
   showPlacemarks: boolean;
 }
 
+class AssetListOverlay extends Component<AssetListOverlayProps> {
+  state: { searchFilter: string; radioValue: FilterType } = {
+    searchFilter: "",
+    radioValue: this.props.showTags ? "TAGS" : "PLACEMARKS",
+  };
+  searchInputRef = createRef<HTMLInputElement>();
+
+  setRadioFilter = (filter: FilterType) => {
+    this.setState({ radioValue: filter });
+  };
+
+  componentDidMount() {
+    if (this.searchInputRef.current) {
+      this.searchInputRef.current.focus();
+    }
+  }
+
+  render() {
+    const {
+      floors,
+      tagsLoading,
+      placemarksLoading,
+      toggleAssetListOverlay,
+      showTags,
+      showPlacemarks,
+    } = this.props;
+
+    const { searchFilter } = this.state;
+    const match = createSearchMatcher(searchFilter);
+    const floorsByID = groupBy(floors, (floor) => floor.id);
+    const floorToGroup: Record<string, string> = {};
+
+    for (const floor of floors) {
+      floorToGroup[floor.id] = [
+        floor.group_name || uiText.unnamedBuilding,
+        uiText.enDash,
+        floor.name,
+      ].join(" ");
+    }
+
+    return (
+      <Overlay
+        position="right"
+        onCloseClicked={() => {
+          toggleAssetListOverlay({ open: false });
+        }}
+      >
+        <OverlaySearchBar
+          value={searchFilter}
+          onChange={(searchFilter) => {
+            this.setState({ searchFilter });
+          }}
+        />
+
+        <div className={cssRadioContainer}>
+          {showTags ? (
+            <Fragment>
+              <input
+                type="radio"
+                name="searchType"
+                id="tags"
+                className={cssRadioButton}
+                checked={this.state.radioValue === "TAGS"}
+                onChange={(event: any) => {
+                  if (event.target.checked) {
+                    this.setRadioFilter("TAGS");
+                  }
+                }}
+              />
+              <label for="tags" className={cssRadioButtonLabel}>
+                Tags
+              </label>
+            </Fragment>
+          ) : null}
+          {showPlacemarks ? (
+            <Fragment>
+              <input
+                type="radio"
+                name="searchType"
+                id="placemarks"
+                className={cssRadioButton}
+                checked={this.state.radioValue === "PLACEMARKS"}
+                onChange={(event: any) => {
+                  if (event.target.checked) {
+                    this.setRadioFilter("PLACEMARKS");
+                  }
+                }}
+              />
+              <label for="placemarks" className={cssRadioButtonLabel}>
+                Placemarks
+              </label>
+            </Fragment>
+          ) : null}
+        </div>
+
+        {(() => {
+          if (this.state.radioValue === "TAGS") {
+            return (
+              <TagResults
+                {...this.props}
+                floorToGroup={floorToGroup}
+                floorsByID={floorsByID}
+                match={match}
+                loading={tagsLoading}
+              />
+            );
+          }
+          return (
+            <PlacemarkResults
+              {...this.props}
+              floorToGroup={floorToGroup}
+              floorsByID={floorsByID}
+              match={match}
+              loading={placemarksLoading}
+            />
+          );
+        })()}
+      </Overlay>
+    );
+  }
+}
+
 interface TagResultsProps extends AssetListOverlayProps {
   floorToGroup: Record<string, string>;
   floorsByID: Record<string, any>;
@@ -263,129 +385,6 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       ))}
     </div>
   );
-}
-
-class AssetListOverlay extends Component<AssetListOverlayProps> {
-  state: { searchFilter: string; radioValue: FilterType } = {
-    searchFilter: "",
-    radioValue: this.props.showTags ? "TAGS" : "PLACEMARKS",
-  };
-  searchInputRef = createRef<HTMLInputElement>();
-
-  setRadioFilter = (filter: FilterType) => {
-    this.setState({ radioValue: filter });
-  };
-
-  componentDidMount() {
-    if (this.searchInputRef.current) {
-      this.searchInputRef.current.focus();
-    }
-  }
-
-  render() {
-    const {
-      floors,
-      tagsLoading,
-      placemarksLoading,
-      toggleAssetListOverlay,
-      showTags,
-      showPlacemarks,
-    } = this.props;
-
-    const { searchFilter } = this.state;
-    const match = createSearchMatcher(searchFilter);
-    const floorsByID = groupBy(floors, (floor) => floor.id);
-    const floorToGroup: Record<string, string> = {};
-
-    for (const floor of floors) {
-      floorToGroup[floor.id] = [
-        floor.group_name || uiText.unnamedBuilding,
-        uiText.enDash,
-        floor.name,
-      ].join(" ");
-    }
-
-    return (
-      <Overlay
-        position="right"
-        onCloseClicked={() => {
-          toggleAssetListOverlay({ open: false });
-        }}
-      >
-        <OverlaySearchBar
-          value={searchFilter}
-          onChange={(searchFilter) => {
-            this.setState({ searchFilter });
-          }}
-        />
-
-        <div className={cssRadioContainer}>
-          {showTags ? (
-            <Fragment>
-              <input
-                type="radio"
-                name="searchType"
-                id="tags"
-                className={cssRadioButton}
-                checked={this.state.radioValue === "TAGS"}
-                onChange={(event: any) => {
-                  if (event.target.checked) {
-                    this.setRadioFilter("TAGS");
-                  }
-                }}
-              />
-              <label for="tags" className={cssRadioButtonLabel}>
-                Tags
-              </label>
-            </Fragment>
-          ) : null}
-
-          {showPlacemarks ? (
-            <Fragment>
-              <input
-                type="radio"
-                name="searchType"
-                id="placemarks"
-                className={cssRadioButton}
-                checked={this.state.radioValue === "PLACEMARKS"}
-                onChange={(event: any) => {
-                  if (event.target.checked) {
-                    this.setRadioFilter("PLACEMARKS");
-                  }
-                }}
-              />
-              <label for="placemarks" className={cssRadioButtonLabel}>
-                Placemarks
-              </label>
-            </Fragment>
-          ) : null}
-        </div>
-
-        {(() => {
-          if (this.state.radioValue === "TAGS") {
-            return (
-              <TagResults
-                {...this.props}
-                floorToGroup={floorToGroup}
-                floorsByID={floorsByID}
-                match={match}
-                loading={tagsLoading}
-              />
-            );
-          }
-          return (
-            <PlacemarkResults
-              {...this.props}
-              floorToGroup={floorToGroup}
-              floorsByID={floorsByID}
-              match={match}
-              loading={placemarksLoading}
-            />
-          );
-        })()}
-      </Overlay>
-    );
-  }
 }
 
 const cssOverlayBuildingName = css({

@@ -17,7 +17,7 @@ import { Component, createRef, Fragment, h } from "preact";
 import AnnotationLayer from "./AnnotationLayer";
 import DetailsOverlay from "./DetailsOverlay";
 import ErrorOverlay from "./ErrorOverlay";
-import FloorAndTagControls from "./FloorAndTagControls";
+import FloorAndSearchControls from "./FloorAndSearchControls";
 import FloorLabel from "./FloorLabel";
 import FloorOverlay from "./FloorOverlay";
 import LoadingSpinner from "./LoadingSpinner";
@@ -25,8 +25,8 @@ import OverlayLayer from "./OverlayLayer";
 import PlacemarkLayer from "./PlacemarkLayer";
 import { css, cx } from "./style";
 import TagLayer from "./TagLayer";
-import TagListOverlay from "./TagListOverlay";
-import { asyncClientCall, isEnvOptions, keyBy, logError } from "./util";
+import AssetListOverlay from "./AssetListOverlay";
+import { asyncClientCall, isEnvOptions, logError } from "./util";
 import Watermark from "./Watermark";
 import {
   API,
@@ -52,7 +52,7 @@ export interface MapComponentProps extends CreateMapOptions {
 export interface MapComponentState {
   mapImageURL?: string;
   isFloorOverlayOpen: boolean;
-  isTagListOverlayOpen: boolean;
+  isAssetListOverlayOpen: boolean;
   isMapMarkerOverlayOpen: boolean;
   isErrorOverlayOpen: boolean;
   isPanningOrZooming: boolean;
@@ -61,12 +61,13 @@ export interface MapComponentState {
   mapTransform: string;
   mapZoomFactor: number;
   floors: FloorData[];
-  placemarks: Record<string, PlacemarkData>;
+  allPlacemarkData: PlacemarkData[];
   svgURL?: string;
   tagsConnection: any;
   tagsStatus: string;
   selectedItem?: PlacemarkData | TagData;
   areTagsLoading: boolean;
+  arePlacemarksLoading: boolean;
   allTagData: TagData[];
 }
 
@@ -74,7 +75,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   static defaultProps = {
     loadTags: true,
     loadPlacemarks: true,
-    showTagsControl: true,
+    showSearchControl: true,
     showFloorsControl: true,
     shouldMapPanZoom: () => true,
     width: "100%",
@@ -91,7 +92,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   state: MapComponentState = {
     mapImageURL: undefined,
     isFloorOverlayOpen: false,
-    isTagListOverlayOpen: false,
+    isAssetListOverlayOpen: false,
     isMapMarkerOverlayOpen: false,
     isErrorOverlayOpen: false,
     isPanningOrZooming: false,
@@ -100,12 +101,13 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     mapTransform: "",
     mapZoomFactor: 0.5,
     floors: [],
-    placemarks: {},
+    allPlacemarkData: [],
     svgURL: undefined,
     tagsConnection: undefined,
     tagsStatus: "Connecting",
     selectedItem: undefined,
     areTagsLoading: this.props.loadTags ?? true,
+    arePlacemarksLoading: true,
     allTagData: [],
   };
   isMounted = false;
@@ -159,21 +161,21 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   async loadData() {
     await this.initializeFloors();
-    this.updatePlacemarks();
+    this.updatePlacemarkData();
     this.initializeTags();
     this.fetchMapImageURL();
   }
 
   componentDidUpdate(prevProps: MapComponentProps) {
     if (this.props.locationID !== prevProps.locationID) {
-      this.toggleTagListOverlay({ open: false });
+      this.toggleAssetListOverlay({ open: false });
       this.toggleErrorOverlay({ open: false });
       this.toggleDetailsOverlay({ open: false });
       this.toggleFloorOverlay({ open: false });
       this.zoomToDefault();
       this.freeMapImageURL();
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ mapImageURL: undefined, placemarks: {} });
+      this.setState({ mapImageURL: undefined, allPlacemarkData: [] });
       this.loadData();
       return;
     } else if (this.props.loadTags && !prevProps.loadTags) {
@@ -182,15 +184,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
       this.validateFloorID();
-    }
-    if (prevProps.floorID !== this.props.floorID) {
       this.freeMapImageURL();
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({ mapImageURL: undefined, placemarks: {} });
+      this.setState({ mapImageURL: undefined });
       this.fetchMapImageURL();
-      this.updatePlacemarks();
     } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
-      this.updatePlacemarks();
+      this.updatePlacemarkData();
     }
   }
 
@@ -283,11 +282,11 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     // function to complete to avoid race conditions
   }
 
-  toggleTagListOverlay = ({ open }: { open: boolean }) => {
+  toggleAssetListOverlay = ({ open }: { open: boolean }) => {
     if (!this.isMounted) {
       return;
     }
-    this.setState({ isTagListOverlayOpen: open });
+    this.setState({ isAssetListOverlayOpen: open });
   };
 
   toggleFloorOverlay = ({ open }: { open: boolean }) => {
@@ -362,37 +361,19 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   };
 
-  groupPlacemarksByID = (placemarks: PlacemarkData[]) => {
-    return keyBy(
-      placemarks.map((placemark) => this.normalizePlacemark(placemark)),
-      (placemark) => placemark.id
-    );
-  };
-
-  normalizePlacemark(placemark: PlacemarkData): PlacemarkData {
-    return { kind: "placemark", ...placemark };
-  }
-
-  async updatePlacemarks() {
-    const { locationID, floorID, api } = this.props;
+  async updatePlacemarkData() {
+    const { locationID, api } = this.props;
     let results: PlacemarkData[] = [];
-    this.toggleLoadingSpinner({ show: true, source: "placemarks" });
+    this.setState({ arePlacemarksLoading: true });
     if (this.props.loadPlacemarks) {
-      results = await api.fetchPlacemarksByFloor(locationID, floorID);
+      results = await api.fetchPlacemarksByLocation(locationID);
     }
     if (!this.isMounted) {
       return;
     }
-    // If the user switches floors, we want to get rid of the value
-    if (
-      floorID === this.props.floorID &&
-      locationID === this.props.locationID
-    ) {
-      const placemarks = this.groupPlacemarksByID(results);
-      this.setState({ placemarks }, () => {
-        this.toggleLoadingSpinner({ show: false, source: "placemarks" });
-      });
-    }
+    this.setState({ allPlacemarkData: results }, () => {
+      this.setState({ arePlacemarksLoading: false });
+    });
   }
 
   async getFloors() {
@@ -644,24 +625,42 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     return null;
   }
 
-  renderTagListOverlay() {
-    const { locationID, floorID, api, tags, loadTags } = this.props;
-    const { isTagListOverlayOpen, floors, allTagData, areTagsLoading } =
-      this.state;
-    if (isTagListOverlayOpen && loadTags) {
+  renderAssetListOverlay() {
+    const {
+      floorID,
+      loadTags,
+      loadPlacemarks,
+      tags: tagOptions,
+      placemarks: placemarkOptions,
+    } = this.props;
+
+    const {
+      isAssetListOverlayOpen,
+      floors,
+      allTagData,
+      areTagsLoading,
+      arePlacemarksLoading,
+      allPlacemarkData,
+    } = this.state;
+
+    if (isAssetListOverlayOpen && Boolean(loadPlacemarks || loadTags)) {
       return (
-        <TagListOverlay
+        <AssetListOverlay
           onTagClick={this.onTagClick}
-          showControlTags={Boolean(tags?.showControlTags ?? false)}
+          onPlacemarkClick={this.onPlacemarkClick}
+          showControlTags={Boolean(tagOptions?.showControlTags ?? false)}
           floors={floors}
-          loading={areTagsLoading}
+          tagsLoading={areTagsLoading}
+          placemarksLoading={arePlacemarksLoading}
           tags={allTagData}
-          tagOptions={tags}
+          tagOptions={tagOptions}
+          placemarkOptions={placemarkOptions}
           updateMap={this.updateMap}
-          api={api}
-          locationID={locationID}
           currentFloorID={floorID}
-          toggleTagListOverlay={this.toggleTagListOverlay}
+          toggleAssetListOverlay={this.toggleAssetListOverlay}
+          showTags={Boolean(loadTags)}
+          showPlacemarks={Boolean(loadPlacemarks)}
+          placemarks={allPlacemarkData}
         />
       );
     }
@@ -712,7 +711,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       errors,
     } = this.state;
     const {
-      showTagsControl = true,
       locationID,
       floorID,
       api,
@@ -724,7 +722,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       height = "",
       onTagsUpdate,
       onPlacemarksUpdate,
-      loadTags = true,
+      showSearchControl,
+      loadPlacemarks,
+      loadTags,
     } = this.props;
     return (
       <div
@@ -741,12 +741,14 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         {this.renderErrorOverlay()}
         {this.renderDetailsOverlay()}
         {this.renderFloorOverlay()}
-        {this.renderTagListOverlay()}
-        <FloorAndTagControls
+        {this.renderAssetListOverlay()}
+        <FloorAndSearchControls
           showFloors={this.shouldShowFloors()}
-          showTagList={showTagsControl && loadTags}
+          showSearch={Boolean(
+            showSearchControl && (loadPlacemarks || loadTags)
+          )}
           toggleFloorOverlay={this.toggleFloorOverlay}
-          toggleTagListOverlay={this.toggleTagListOverlay}
+          toggleAssetListOverlay={this.toggleAssetListOverlay}
         />
         {this.renderFloorLabel()}
         <div
@@ -781,10 +783,10 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
                     locationID={locationID}
                     floorID={floorID}
                     api={api}
-                    markers={placemarks}
+                    placemarkOptions={placemarks}
                     onPlacemarkClick={this.onPlacemarkClick}
-                    placemarks={this.state.placemarks}
                     onUpdate={onPlacemarksUpdate}
+                    toggleLoadingSpinner={this.toggleLoadingSpinner}
                   />
                 ) : null}
                 {this.props.loadTags ? (
@@ -795,7 +797,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
                     locationID={locationID}
                     floorID={floorID}
                     api={api}
-                    markers={tags}
+                    tagOptions={tags}
                     onTagClick={this.onTagClick}
                     onUpdate={onTagsUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}

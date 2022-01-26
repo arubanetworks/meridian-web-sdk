@@ -306,8 +306,8 @@ export interface CreateMapOptions {
   api?: API;
   /** Should we show the floor switcher UI control? Defaults to true. */
   showFloorsControl?: boolean;
-  /** Should we show the tag switcher UI control? Defaults to true. */
-  showTagsControl?: boolean;
+  /** Should we show the Search UI control? Defaults to true. */
+  showSearchControl?: boolean;
   /** Set to false to disable loading tags (default: true) */
   loadTags?: boolean;
   /** Options related to tags. */
@@ -700,6 +700,20 @@ export class API {
       location_id: locationID,
     });
     return response.data.asset_updates;
+  }
+
+  /**
+   * [async] Returns an array of all placemarks at the specified location
+   */
+  async fetchPlacemarksByLocation(locationID: string): Promise<FloorData[]> {
+    if (!locationID) {
+      requiredParam("fetchPlacemarksByFloor", "locationID");
+    }
+
+    return await fetchAllPaginatedData(async (url) => {
+      const { data } = await this._axiosEditorAPI.get(url);
+      return data;
+    }, `locations/${locationID}/placemarks`);
   }
 
   /**

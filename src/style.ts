@@ -24,6 +24,7 @@ export const theme = {
   borderColor: "#ebeef2",
   borderColorDarker: "#dfe1e5",
   borderRadius: 6,
+  searchBarColor: "#297BC0",
 } as const;
 
 export const mixins = {

@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.29.0] - Unreleased
+
+### Removed
+
+- **(BREAKING)** `showTagsControl`. This was used to hide the button that opened
+  the Tags List Overlay. See `showSearchControl` below
+
+- The Tag List Overlay is now part of a new Asset List Overlay. See below.
+
+### Added
+
+- `api.fetchPlacemarksByLocation()`
+
+- Asset List (search) Overlay. This replaces the Tag List Overlay and provides the
+  ability to also search for Placemarks.
+
+- `showSearchControl`. This can be used to hide the search icon that opens the
+  Asset List overlay
+
+- Demo showing how to hide the Floor menu icon that opens the Floor Switcher
+
+- Demo showing how to hide the Search menu icon that opens the new Asset List (search) Overlay
+
+## [0.28.2] - 2021-12-06
+
+### Updated
+
+- Dependency updates
+
 ## [0.27.0] - 2021-11-08
 
 ### Added
@@ -348,7 +377,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `onTagUpdate` was not called from `createAPI`
 
-- If `showTagsControl` was false, all control tags would be
+- Bug: If `showTagsControl` was false, all control tags would be
   hidden on the map
 
 - The map background image would fail to load unless the user

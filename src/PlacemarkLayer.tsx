@@ -18,13 +18,28 @@ export interface PlacemarkLayerProps {
   locationID: string;
   floorID: string;
   api: API;
-  markers: CreateMapOptions["placemarks"];
+  placemarkOptions: CreateMapOptions["placemarks"];
   onPlacemarkClick: (placemark: PlacemarkData) => void;
   onUpdate: MapComponentProps["onPlacemarksUpdate"];
-  placemarks: Record<string, PlacemarkData>;
+  toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
+}
+
+export interface PlacemarkLayerState {
+  fetchedPlacemarks: PlacemarkData[];
 }
 
 export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
+  state: PlacemarkLayerState = {
+    fetchedPlacemarks: [],
+  };
+
+  isMounted = false;
+
+  componentDidMount() {
+    this.isMounted = true;
+    this.fetchPlacemarks();
+  }
+
   shouldComponentUpdate(nextProps: PlacemarkLayerProps) {
     // Don't re-render when panning only (no zoom change)
     return !(
@@ -33,32 +48,60 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     );
   }
 
-  componentDidUpdate(prevProps: PlacemarkLayerProps) {
-    const { markers, placemarks, onUpdate } = this.props;
+  async componentDidUpdate(
+    prevProps: PlacemarkLayerProps,
+    prevState: PlacemarkLayerState
+  ) {
+    const { placemarkOptions, onUpdate } = this.props;
+    const floorChanged = prevProps.floorID !== this.props.floorID;
+    if (floorChanged) {
+      await this.fetchPlacemarks();
+    }
     if (
       onUpdate &&
-      (placemarks !== prevProps.placemarks || markers !== prevProps.markers)
+      (prevState.fetchedPlacemarks !== this.state.fetchedPlacemarks ||
+        placemarkOptions !== prevProps.placemarkOptions)
     ) {
+      const fetchedPlacemarks = this.state.fetchedPlacemarks;
       asyncClientCall(onUpdate, {
-        allPlacemarks: Object.values(placemarks),
-        filteredPlacemarks: this.getFilteredPlacemarks(),
+        allPlacemarks: fetchedPlacemarks,
+        filteredPlacemarks: this.getFilteredPlacemarks(fetchedPlacemarks),
       });
     }
   }
 
-  getFilteredPlacemarks() {
-    const { placemarks, markers } = this.props;
-    const filter = markers?.filter ?? (() => true);
-    const filteredMarkers = Object.keys(placemarks)
-      .map((id) => placemarks[id])
-      .filter((placemark) => {
+  componentWillUnmount() {
+    this.isMounted = false;
+  }
+
+  async fetchPlacemarks() {
+    if (!this.isMounted) {
+      return;
+    }
+    const { locationID, floorID, api, toggleLoadingSpinner } = this.props;
+    toggleLoadingSpinner({ show: true, source: "placemarks" });
+    const results: PlacemarkData[] = await api.fetchPlacemarksByFloor(
+      locationID,
+      floorID
+    );
+    const fetchedPlacemarks = results;
+    this.setState({ fetchedPlacemarks }, () => {
+      toggleLoadingSpinner({ show: false, source: "placemarks" });
+    });
+  }
+
+  getFilteredPlacemarks(placemarks: PlacemarkData[]) {
+    const { placemarkOptions, floorID } = this.props;
+    const filter = placemarkOptions?.filter ?? (() => true);
+    const filteredMarkers = placemarks
+      .filter((placemark: PlacemarkData) => {
         if (placemark.type === "exclusion_area") {
-          // NOTE: Consider adding a new configuration setting called
-          // `placemarks.showExclusionAreas` in the future if someone actually
-          // wants to show exclusion areas for some reason.
           return false;
         }
-        if (markers?.showHiddenPlacemarks !== true) {
+        if (placemark.map !== floorID) {
+          return false;
+        }
+        if (placemarkOptions?.showHiddenPlacemarks !== true) {
           return !placemark.hide_on_map;
         }
         return true;
@@ -68,21 +111,23 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
   }
 
   render() {
-    const { markers, onPlacemarkClick, mapZoomFactor, selectedItem } =
-      this.props;
-    const filteredPlacemarks = this.getFilteredPlacemarks();
+    const placemarks = this.getFilteredPlacemarks(this.state.fetchedPlacemarks);
     return (
       <div data-testid="meridian--private--placemark-layer">
-        {filteredPlacemarks.map((placemark) => (
+        {placemarks.map((placemark: PlacemarkData) => (
           <Placemark
             key={placemark.id}
-            isSelected={selectedItem ? selectedItem.id === placemark.id : false}
-            mapZoomFactor={mapZoomFactor}
+            isSelected={
+              this.props.selectedItem
+                ? this.props.selectedItem.id === placemark.id
+                : false
+            }
+            mapZoomFactor={this.props.mapZoomFactor}
             data={placemark}
-            onClick={onPlacemarkClick}
-            disabled={markers?.disabled}
-            labelMode={markers?.labelMode ?? "zoom"}
-            labelZoomLevel={markers?.labelZoomLevel}
+            onClick={this.props.onPlacemarkClick}
+            disabled={this.props.placemarkOptions?.disabled}
+            labelMode={this.props.placemarkOptions?.labelMode ?? "zoom"}
+            labelZoomLevel={this.props.placemarkOptions?.labelZoomLevel}
           />
         ))}
       </div>

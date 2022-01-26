@@ -11,38 +11,39 @@ import { css, theme, mixins, cx } from "./style";
 
 interface FloorAndTagControlsProps {
   showFloors: boolean;
-  showTagList: boolean;
+  showSearch: boolean;
   toggleFloorOverlay: MapComponent["toggleFloorOverlay"];
-  toggleTagListOverlay: MapComponent["toggleTagListOverlay"];
+  toggleAssetListOverlay: MapComponent["toggleAssetListOverlay"];
 }
 
 const FloorAndTagControls: FunctionComponent<FloorAndTagControlsProps> = ({
   toggleFloorOverlay,
-  toggleTagListOverlay,
+  toggleAssetListOverlay,
   showFloors,
-  showTagList,
+  showSearch,
 }) => {
   return (
     <div className={cssFloorAndTagControls}>
-      {showTagList ? (
+      {showSearch ? (
         <button
           className={cx("meridian-tag-control", cssControl)}
           data-testid="meridian--private--tag-control"
           onClick={() => {
-            toggleTagListOverlay({ open: true });
+            toggleAssetListOverlay({ open: true });
           }}
         >
           {/* TODO: Can we get this SVG fixed up? */}
-          <svg viewBox="-8 -10 36 36">
-            <path d="M2 4C0.9 4 0 3.1 0 2C0 0.9 0.9 0 2 0C3.1 0 4 0.9 4 2C4 3.1 3.1 4 2 4ZM4 8C4 6.9 3.1 6 2 6C0.9 6 0 6.9 0 8C0 9.1 0.9 10 2 10C3.1 10 4 9.1 4 8ZM4 14C4 12.9 3.1 12 2 12C0.9 12 0 12.9 0 14C0 15.1 0.9 16 2 16C3.1 16 4 15.1 4 14ZM20 2C20 1.4 19.6 1 19 1H8C7.4 1 7 1.4 7 2C7 2.6 7.4 3 8 3H19C19.6 3 20 2.6 20 2ZM20 8C20 7.4 19.6 7 19 7H8C7.4 7 7 7.4 7 8C7 8.6 7.4 9 8 9H19C19.6 9 20 8.6 20 8ZM20 14C20 13.4 19.6 13 19 13H8C7.4 13 7 13.4 7 14C7 14.6 7.4 15 8 15H19C19.6 15 20 14.6 20 14Z" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+            <path d="M26.19 25l-4.12-4.12a7.29 7.29 0 001.44-4.35 7.11 7.11 0 00-7-7.2 7.11 7.11 0 00-7 7.2 7.11 7.11 0 007 7.2 6.83 6.83 0 004.16-1.42l4.1 4.1A1 1 0 0026.19 25zm-14.68-8.49a5.11 5.11 0 015-5.2 5.11 5.11 0 015 5.2 5.11 5.11 0 01-5 5.2 5.11 5.11 0 01-5-5.2z" />
           </svg>
         </button>
       ) : null}
+
       {showFloors ? (
         <button
           className={cx(
             "meridian-floor-control",
-            showFloors && showTagList ? cssControlNotFirst : cssControl
+            showFloors && showSearch ? cssControlNotFirst : cssControl
           )}
           data-testid="meridian--private--floor-control"
           onClick={() => {

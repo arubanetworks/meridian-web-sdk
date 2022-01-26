@@ -23,7 +23,7 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
   }
 
   render() {
-    const { value, onChange = () => {} } = this.props;
+    const { value, onChange } = this.props;
     return (
       <div className={cssSearchBar}>
         <svg viewBox="0 0 15 15" className={cssSearchIcon}>
@@ -69,6 +69,7 @@ const cssSearchInput = css(
     background: theme.borderColor,
     color: theme.black,
     border: 0,
+    height: 24,
 
     "&::placeholder": {
       color: theme.textColorBluish,
@@ -95,7 +96,7 @@ const cssSearchBar = css({
   display: "flex",
   flexDirection: "column",
   padding: 10,
-  height: 32,
+  backgroundColor: "rgb(105, 146, 176)",
 });
 
 export default OverlaySearchBar;

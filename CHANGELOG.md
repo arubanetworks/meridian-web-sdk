@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- `showTagsControl`. This was used to hide the button that opened the Tags List
-  Overlay
+- **(BREAKING)** `showTagsControl`. This was used to hide the button that opened
+  the Tags List Overlay. See `showSearchControl` below
 
 - The Tag List Overlay is now part of a new Asset List Overlay. See below.
 

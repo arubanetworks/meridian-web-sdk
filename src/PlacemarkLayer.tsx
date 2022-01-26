@@ -48,18 +48,23 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     );
   }
 
-  async componentDidUpdate(prevProps: PlacemarkLayerProps) {
+  async componentDidUpdate(
+    prevProps: PlacemarkLayerProps,
+    prevState: PlacemarkLayerState
+  ) {
     const { placemarkOptions, onUpdate } = this.props;
     const floorChanged = prevProps.floorID !== this.props.floorID;
-
     if (floorChanged) {
       await this.fetchPlacemarks();
     }
-
-    if (onUpdate && placemarkOptions !== prevProps.placemarkOptions) {
+    if (
+      onUpdate &&
+      (prevState.fetchedPlacemarks !== this.state.fetchedPlacemarks ||
+        placemarkOptions !== prevProps.placemarkOptions)
+    ) {
       const fetchedPlacemarks = this.state.fetchedPlacemarks;
       asyncClientCall(onUpdate, {
-        allPlacemarks: fetchedPlacemarks as PlacemarkData[],
+        allPlacemarks: fetchedPlacemarks,
         filteredPlacemarks: this.getFilteredPlacemarks(fetchedPlacemarks),
       });
     }

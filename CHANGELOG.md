@@ -18,11 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `api.fetchPlacemarksByLocation()`
 
-- Asset List Overlay. This replaces the Tag List Overlay and provides the
+- Asset List (search) Overlay. This replaces the Tag List Overlay and provides the
   ability to also search for Placemarks.
 
 - `showSearchControl`. This can be used to hide the search icon that opens the
   Asset List overlay
+
+- Demo showing how to hide the Floor menu icon that opens the Floor Switcher
+
+- Demo showing how to hide the Search menu icon that opens the new Asset List (search) Overlay
 
 ## [0.28.2] - 2021-12-06
 

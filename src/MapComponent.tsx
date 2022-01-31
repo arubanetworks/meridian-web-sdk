@@ -111,7 +111,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     allTagData: [],
   };
   isMounted = false;
-  tagsTimeout: any;
+  fetchAllTagsTimeout: any;
+  getPlacemarksTimeout: any;
   mapRef = createRef<HTMLDivElement>();
   mapContainerRef = createRef<HTMLDivElement>();
   mapImageref = createRef<HTMLImageElement>();
@@ -161,8 +162,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   async loadData() {
     await this.initializeFloors();
-    this.updatePlacemarkData();
-    this.initializeTags();
+    this.fetchAllPlacemarks();
+    this.fetchAllTags();
     this.fetchMapImageURL();
   }
 
@@ -179,7 +180,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       this.loadData();
       return;
     } else if (this.props.loadTags && !prevProps.loadTags) {
-      this.initializeTags();
+      this.fetchAllTags();
     }
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
@@ -189,14 +190,17 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       this.setState({ mapImageURL: undefined });
       this.fetchMapImageURL();
     } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
-      this.updatePlacemarkData();
+      this.fetchAllPlacemarks();
     }
   }
 
   componentWillUnmount() {
     this.isMounted = false;
-    if (this.tagsTimeout) {
-      clearTimeout(this.tagsTimeout);
+    if (this.fetchAllTagsTimeout) {
+      clearTimeout(this.fetchAllTagsTimeout);
+    }
+    if (this.getPlacemarksTimeout) {
+      clearTimeout(this.getPlacemarksTimeout);
     }
     this.freeMapImageURL();
     clearInterval(this.intervalAutoDestroy);
@@ -244,12 +248,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   }
 
-  initializeTags() {
+  fetchAllTags() {
     const loop = async () => {
       try {
         // Clear any existing timers so we don't have two running at once
-        if (this.tagsTimeout) {
-          clearTimeout(this.tagsTimeout);
+        if (this.fetchAllTagsTimeout) {
+          clearTimeout(this.fetchAllTagsTimeout);
         }
         const { api, locationID } = this.props;
         this.setState({ areTagsLoading: true });
@@ -270,7 +274,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           return;
         }
         this.setState({ allTagData });
-        this.tagsTimeout = setTimeout(loop, 5 * 60 * 1000);
+        this.fetchAllTagsTimeout = setTimeout(loop, 5 * 60 * 1000);
       } finally {
         this.setState({ areTagsLoading: false });
       }
@@ -361,19 +365,36 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   };
 
-  async updatePlacemarkData() {
-    const { locationID, api } = this.props;
-    let results: PlacemarkData[] = [];
-    this.setState({ arePlacemarksLoading: true });
+  fetchAllPlacemarks() {
+    const loop = async () => {
+      try {
+        // Clear any existing timers so we don't have two running at once
+        if (this.getPlacemarksTimeout) {
+          clearTimeout(this.getPlacemarksTimeout);
+        }
+        const { locationID, api } = this.props;
+        let results: PlacemarkData[] = [];
+        this.setState({ arePlacemarksLoading: true });
+        try {
+          if (this.props.loadPlacemarks) {
+            results = await api.fetchPlacemarksByLocation(locationID);
+          }
+          if (!this.isMounted) {
+            return;
+          }
+          this.setState({ allPlacemarkData: results });
+        } catch (error) {
+          logError("Failed to load placemark data");
+          return;
+        }
+        this.getPlacemarksTimeout = setTimeout(loop, 8 * 60 * 1000);
+      } finally {
+        this.setState({ arePlacemarksLoading: false });
+      }
+    };
     if (this.props.loadPlacemarks) {
-      results = await api.fetchPlacemarksByLocation(locationID);
+      loop();
     }
-    if (!this.isMounted) {
-      return;
-    }
-    this.setState({ allPlacemarkData: results }, () => {
-      this.setState({ arePlacemarksLoading: false });
-    });
   }
 
   async getFloors() {

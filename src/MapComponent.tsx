@@ -112,7 +112,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   };
   isMounted = false;
   fetchAllTagsTimeout: any;
-  getPlacemarksTimeout: any;
+  fetchAllPlacemarksTimeout: any;
   mapRef = createRef<HTMLDivElement>();
   mapContainerRef = createRef<HTMLDivElement>();
   mapImageref = createRef<HTMLImageElement>();
@@ -199,8 +199,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     if (this.fetchAllTagsTimeout) {
       clearTimeout(this.fetchAllTagsTimeout);
     }
-    if (this.getPlacemarksTimeout) {
-      clearTimeout(this.getPlacemarksTimeout);
+    if (this.fetchAllPlacemarksTimeout) {
+      clearTimeout(this.fetchAllPlacemarksTimeout);
     }
     this.freeMapImageURL();
     clearInterval(this.intervalAutoDestroy);
@@ -369,8 +369,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     const loop = async () => {
       try {
         // Clear any existing timers so we don't have two running at once
-        if (this.getPlacemarksTimeout) {
-          clearTimeout(this.getPlacemarksTimeout);
+        if (this.fetchAllPlacemarksTimeout) {
+          clearTimeout(this.fetchAllPlacemarksTimeout);
         }
         const { locationID, api } = this.props;
         let results: PlacemarkData[] = [];
@@ -387,7 +387,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           logError("Failed to load placemark data");
           return;
         }
-        this.getPlacemarksTimeout = setTimeout(loop, 8 * 60 * 1000);
+        this.fetchAllPlacemarksTimeout = setTimeout(loop, 8 * 60 * 1000);
       } finally {
         this.setState({ arePlacemarksLoading: false });
       }

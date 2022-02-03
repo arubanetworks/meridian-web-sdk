@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html data-fake-api="false">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Directions Overview | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <main class="map" id="meridian-map"></main>
+
+    <aside class="sidebar-container">
+      <div class="top">
+        <h3>Directions Request</h3>
+        <p>
+          <strong>From:</strong>
+          <em>Second Floor Stairs</em>
+        </p>
+
+        <p>
+          <strong>To:</strong>
+          <em>Customer Service Center</em>
+        </p>
+      </div>
+      <div class="bottom">
+        <h3>Directions API Response</h3>
+        <pre class="code-snippet"><code id="api-response"></code></pre>
+      </div>
+    </aside>
+
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      const ORIGIN = "https://dev-edit.meridianapps.com";
+      const ENV = "devCloud";
+      const TOKEN =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA";
+      const LOCATION_ID = "5402771045744640";
+      const FLOOR_ID = "5928450816475136";
+      const DIRECTIONS_FROM = "5928450816475136_5440134417481728";
+      const DIRECTIONS_TO = "5928450816475136_5368476738519040";
+      const api = new MeridianSDK.API({
+        environment: "devCloud",
+        token: TOKEN,
+      });
+
+      const meridianMap = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          api,
+          locationID: LOCATION_ID,
+          floorID: FLOOR_ID,
+          height: "100%",
+          onPlacemarksUpdate: async () => {
+            const directions = await api.getDirections({
+              locationID: LOCATION_ID,
+              startFloorID: FLOOR_ID,
+              startPlacemarkID: DIRECTIONS_FROM,
+              endPlacemarkID: DIRECTIONS_TO,
+            });
+            // display route on map
+            displayRoute(meridianMap, directions);
+            // Show response data in sidebar
+            const response_code = document.getElementById("api-response");
+            const html = hljs.highlight(
+              "javascript",
+              JSON.stringify(directions.routes[0], null, " ")
+            );
+            response_code.innerHTML = html.value;
+          },
+        }
+      );
+
+      function displayRoute(map, directions) {
+        const route = directions.routes[0];
+        const points = route.steps.flatMap((step) => {
+          return step.points.split(",").map(Number);
+        });
+
+        meridianMap.update({
+          overlays: [
+            {
+              type: "polyline",
+              points,
+              stroke: "orange",
+              strokeWidth: 8,
+              strokeLineJoin: "round",
+              strokeLineCap: "round",
+            },
+          ],
+        });
+      }
+    </script>
+  </body>
+</html>

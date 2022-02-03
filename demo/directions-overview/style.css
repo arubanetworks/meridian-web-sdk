@@ -71,18 +71,3 @@ h3 {
 #api-response {
   font-size: 12px;
 }
-
-.marker-img {
-  width: 100%;
-  border-radius: 4px;
-}
-
-.meridian-placemark-icon:focus {
-  height: 30px;
-  width: 30px;
-}
-
-.meridian-tag:focus {
-  height: 60px;
-  width: 60px;
-}

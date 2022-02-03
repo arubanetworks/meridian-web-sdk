@@ -587,8 +587,6 @@ export interface OpenStreamOptions {
  * Options passed to [[getDirections]].
  */
 export interface getDirectionsOptions {
-  /** Meridian API Token (Read Only) */
-  token: string;
   /** Meridian Location ID */
   locationID: string;
   /** Meridian start Floor ID */

@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Demo showing how to hide the Search menu icon that opens the new Asset List (search) Overlay
 
+- Demo showing how to use the Directions API to display a route
+
 ## [0.28.2] - 2021-12-06
 
 ### Updated

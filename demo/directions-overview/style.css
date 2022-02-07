@@ -1,0 +1,73 @@
+body {
+  font-family: sans-serif;
+}
+
+.map {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100vw - 510px);
+  height: 100vh;
+  margin: 0;
+  max-width: 100%;
+  border: 0;
+}
+
+.code-snippet {
+  margin: 0;
+  font-family: Input, Menlo, Consolas, monospace;
+  padding: 5px;
+}
+
+.sidebar-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 510px;
+  height: 100vh;
+  box-sizing: border-box;
+  background: rgb(36, 39, 51);
+  color: hsl(210, 31%, 60%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-container p {
+  padding-left: 10px;
+}
+
+.sidebar-container strong {
+  color: #98c379;
+}
+
+.sidebar-container em {
+  color: #d19a66;
+}
+
+.sidebar-container .top {
+  position: absolute;
+  padding: 20px;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 140px;
+  overflow: auto;
+}
+.sidebar-container .bottom {
+  position: absolute;
+  padding: 0 20px 20px;
+  top: 141px;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+h3 {
+  margin-top: 0px;
+}
+
+#api-response {
+  font-size: 12px;
+}

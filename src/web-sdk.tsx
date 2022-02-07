@@ -584,6 +584,20 @@ export interface OpenStreamOptions {
 }
 
 /**
+ * Options passed to [[getDirections]].
+ */
+export interface getDirectionsOptions {
+  /** Meridian Location ID */
+  locationID: string;
+  /** Meridian start Floor ID */
+  startFloorID: string;
+  /** Meridian start Placemark ID */
+  startPlacemarkID: string;
+  /** Meridian end Placemark ID */
+  endPlacemarkID: string;
+}
+
+/**
  * Holds an API token and environment. Can be used to access an `axios` instance
  * for REST API calls, or `openStream()` for opening a tag stream. You can
  * create multiple API instances in case you want to use multiple tokens (e.g.
@@ -670,6 +684,34 @@ export class API {
   }
 
   /**
+   * [async] Returns an Object with routes to the destination (endPlacemarkID)
+   */
+  async getDirections(
+    options: getDirectionsOptions
+  ): Promise<Record<string, any>> {
+    if (!options.locationID) {
+      requiredParam("getDirections", "locationID");
+    }
+    if (!options.startFloorID) {
+      requiredParam("getDirections", "startFloorID");
+    }
+    if (!options.startPlacemarkID) {
+      requiredParam("getDirections", "startPlacemarkID");
+    }
+    if (!options.endPlacemarkID) {
+      requiredParam("getDirections", "endPlacemarkID");
+    }
+    const params = new URLSearchParams({
+      from_map_id: options.startFloorID,
+      from_placemark_id: options.startPlacemarkID,
+      to_placemark_ids: options.endPlacemarkID,
+    });
+    const url = `/locations/${options.locationID}/directions?${params}`;
+    const response = await this._axiosEditorAPI.get(url);
+    return response.data;
+  }
+
+  /**
    * [async] Returns an array of all tags on the specified location and floor
    */
   async fetchTagsByFloor(
@@ -707,7 +749,7 @@ export class API {
    */
   async fetchPlacemarksByLocation(locationID: string): Promise<FloorData[]> {
     if (!locationID) {
-      requiredParam("fetchPlacemarksByFloor", "locationID");
+      requiredParam("fetchPlacemarksByLocation", "locationID");
     }
 
     return await fetchAllPaginatedData(async (url) => {

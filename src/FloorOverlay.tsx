@@ -59,6 +59,7 @@ class FloorOverlay extends Component<FloorOverlayProps> {
         }}
       >
         <OverlaySearchBar
+          placeholder="Search Floors"
           value={searchFilter}
           onChange={(searchFilter) => {
             this.setState({ searchFilter });

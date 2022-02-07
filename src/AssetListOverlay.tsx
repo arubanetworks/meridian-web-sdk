@@ -15,7 +15,7 @@ import { css, mixins, theme } from "./style";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { CreateMapOptions, FloorData, PlacemarkData, TagData } from "./web-sdk";
 
-type FilterType = "TAGS" | "PLACEMARKS";
+type SearchType = "tags" | "placemarks";
 
 interface AssetListOverlayProps {
   onTagClick: (tag: TagData) => void;
@@ -36,14 +36,14 @@ interface AssetListOverlayProps {
 }
 
 class AssetListOverlay extends Component<AssetListOverlayProps> {
-  state: { searchFilter: string; radioValue: FilterType } = {
+  state: { searchFilter: string; searchType: SearchType } = {
     searchFilter: "",
-    radioValue: this.props.showTags ? "TAGS" : "PLACEMARKS",
+    searchType: this.props.showTags ? "tags" : "placemarks",
   };
   searchInputRef = createRef<HTMLInputElement>();
 
-  setRadioFilter = (filter: FilterType) => {
-    this.setState({ radioValue: filter });
+  setRadioFilter = (filter: SearchType) => {
+    this.setState({ searchType: filter });
   };
 
   componentDidMount() {
@@ -83,13 +83,18 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
         }}
       >
         <OverlaySearchBar
+          placeholder={
+            this.state.searchType === "tags"
+              ? "Search Tags"
+              : "Search Placemarks"
+          }
           value={searchFilter}
           onChange={(searchFilter) => {
             this.setState({ searchFilter });
           }}
         />
 
-        <div className={cssRadioContainer}>
+        <div className={cssRadioContainer(Boolean(showTags && showPlacemarks))}>
           {showTags ? (
             <Fragment>
               <input
@@ -97,10 +102,10 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
                 name="searchType"
                 id="tags"
                 className={cssRadioButton}
-                checked={this.state.radioValue === "TAGS"}
+                checked={this.state.searchType === "tags"}
                 onChange={(event: any) => {
                   if (event.target.checked) {
-                    this.setRadioFilter("TAGS");
+                    this.setRadioFilter("tags");
                   }
                 }}
               />
@@ -116,10 +121,10 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
                 name="searchType"
                 id="placemarks"
                 className={cssRadioButton}
-                checked={this.state.radioValue === "PLACEMARKS"}
+                checked={this.state.searchType === "placemarks"}
                 onChange={(event: any) => {
                   if (event.target.checked) {
-                    this.setRadioFilter("PLACEMARKS");
+                    this.setRadioFilter("placemarks");
                   }
                 }}
               />
@@ -131,7 +136,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
         </div>
 
         {(() => {
-          if (this.state.radioValue === "TAGS") {
+          if (this.state.searchType === "tags") {
             return (
               <TagResults
                 {...this.props}
@@ -178,7 +183,7 @@ function TagResults(props: TagResultsProps) {
     floorToGroup,
   } = props;
 
-  const processedTags = tags
+  const filteredTags = tags
     // Remove tags from unpublished floors
     .filter((tag: TagData) => {
       const floor = floorsByID[tag.map_id][0];
@@ -209,7 +214,7 @@ function TagResults(props: TagResultsProps) {
       return 0;
     });
 
-  const organizedTags = groupBy(processedTags, (tag) => {
+  const organizedTags = groupBy(filteredTags, (tag) => {
     return floorToGroup[tag.map_id];
   });
 
@@ -231,7 +236,7 @@ function TagResults(props: TagResultsProps) {
     );
   }
 
-  if (processedTags.length === 0) {
+  if (filteredTags.length === 0) {
     return <div className={cssAssetListEmpty}>{uiText.noResultsFound}</div>;
   }
 
@@ -291,7 +296,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     loading,
   } = props;
 
-  const processedPlacemarks = placemarks
+  const filteredPlacemarks = placemarks
     // Remove placemarks from unpublished floors
     .filter((placemark: PlacemarkData) => {
       const floor = floorsByID[placemark.map][0];
@@ -302,8 +307,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     })
     // Remove placemarks that don't match the local search terms
     .filter((placemark: PlacemarkData) => {
-      // return match(placemark.name) || getTagLabels(placemark).some(match);
-      return match(placemark.name);
+      return match(placemark.name) || match(placemark.type_name);
     })
     .filter((placemark: PlacemarkData) => {
       if (placemark.type === "exclusion_area") {
@@ -325,7 +329,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       return 0;
     });
 
-  const organizedPlacemarks = groupBy(processedPlacemarks, (placemark) => {
+  const organizedPlacemarks = groupBy(filteredPlacemarks, (placemark) => {
     return floorToGroup[placemark.map];
   });
 
@@ -347,7 +351,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     );
   }
 
-  if (processedPlacemarks.length === 0) {
+  if (filteredPlacemarks.length === 0) {
     return <div className={cssAssetListEmpty}>{uiText.noResultsFound}</div>;
   }
 
@@ -479,14 +483,16 @@ const cssRadioButton = css({
   },
 });
 
-const cssRadioContainer = css({
-  label: "overlay-radio-container",
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "baseline",
-  paddingLeft: 10,
-  paddingBottom: 10,
-  backgroundColor: "rgb(105, 146, 176)",
-});
+const cssRadioContainer = (show: boolean) => {
+  return css({
+    label: "overlay-radio-container",
+    display: show ? "flex" : "none",
+    flexDirection: "row",
+    justifyContent: "baseline",
+    paddingLeft: 10,
+    paddingBottom: 10,
+    backgroundColor: "rgb(105, 146, 176)",
+  });
+};
 
 export default AssetListOverlay;

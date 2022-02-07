@@ -9,6 +9,7 @@ import { Component, h } from "preact";
 import { css, mixins, theme } from "./style";
 
 interface OverlayLayerSearchBarProps {
+  placeholder: string;
   value: string;
   onChange: (value: string) => void;
 }
@@ -23,7 +24,7 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
   }
 
   render() {
-    const { value, onChange } = this.props;
+    const { value, onChange, placeholder } = this.props;
     return (
       <div className={cssSearchBar}>
         <svg viewBox="0 0 15 15" className={cssSearchIcon}>
@@ -39,7 +40,7 @@ class OverlaySearchBar extends Component<OverlayLayerSearchBarProps> {
           data-testid="meridian--private--overlay-search"
           value={value}
           type="text"
-          placeholder="Search"
+          placeholder={placeholder}
           className={cssSearchInput}
           onInput={(event) => {
             if (event.target instanceof HTMLInputElement) {
@@ -72,7 +73,7 @@ const cssSearchInput = css(
     height: 24,
 
     "&::placeholder": {
-      color: theme.textColorBluish,
+      color: theme.textColorBluishLightGrey,
     },
   }
 );

@@ -387,7 +387,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           logError("Failed to load placemark data");
           return;
         }
-        this.fetchAllPlacemarksTimeout = setTimeout(loop, 8 * 60 * 1000);
+        this.fetchAllPlacemarksTimeout = setTimeout(loop, 10 * 60 * 1000);
       } finally {
         this.setState({ arePlacemarksLoading: false });
       }

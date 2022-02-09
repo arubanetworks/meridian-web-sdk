@@ -595,6 +595,8 @@ export interface getDirectionsOptions {
   startPlacemarkID: string;
   /** Meridian end Placemark ID */
   endPlacemarkID: string;
+  /** Transport Type ("accessible" or undefined). Default is undefined */
+  transportType?: string;
 }
 
 /**
@@ -705,6 +707,7 @@ export class API {
       from_map_id: options.startFloorID,
       from_placemark_id: options.startPlacemarkID,
       to_placemark_ids: options.endPlacemarkID,
+      transport_type: options.transportType || "normal",
     });
     const url = `/locations/${options.locationID}/directions?${params}`;
     const response = await this._axiosEditorAPI.get(url);

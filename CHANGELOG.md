@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- **(BREAKING)** `showTagsControl`. This was used to hide the button that opened
-  the Tags List Overlay. See `showSearchControl` below
+- **(BREAKING)** The `showTagsControl` option was removed. This was used to
+  hide the button that opened the Tags List Overlay. See `showSearchControl`
+  below for an alternate option.
 
 - The Tag List Overlay is now part of a new Asset List Overlay. See below.
 
@@ -30,7 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Demo showing how to hide the Search menu icon that opens the new Asset List (search) Overlay
 
-- Demo showing how to use the Directions API to display a route
+- `api.getDirections()` (see Directions Overview demo below)
+
+- Directions Overview demo showing how to use the Directions API to display a route
 
 ## [0.28.2] - 2021-12-06
 

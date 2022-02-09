@@ -595,7 +595,7 @@ export interface getDirectionsOptions {
   startPlacemarkID: string;
   /** Meridian end Placemark ID */
   endPlacemarkID: string;
-  /** Transport Type ("accessible" or undefined) default is undefined */
+  /** Transport Type ("accessible" or undefined). Default is undefined */
   transportType?: string;
 }
 

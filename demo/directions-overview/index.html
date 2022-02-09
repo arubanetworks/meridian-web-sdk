@@ -77,7 +77,7 @@
             const response_code = document.getElementById("api-response");
             const html = hljs.highlight(
               "javascript",
-              JSON.stringify(directions.routes[0], null, " ")
+              JSON.stringify(directions.routes, null, " ")
             );
             response_code.innerHTML = html.value;
           },
@@ -99,6 +99,8 @@
               strokeWidth: 8,
               strokeLineJoin: "round",
               strokeLineCap: "round",
+              strokeDasharray: 10,
+              strokeDashOffset: 100,
             },
           ],
         });

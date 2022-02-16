@@ -307,7 +307,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     })
     // Remove placemarks that don't match the local search terms
     .filter((placemark: PlacemarkData) => {
-      return match(placemark.name) || match(placemark.type_name);
+      return match(placemark.name || "") || match(placemark.type_name || "");
     })
     .filter((placemark: PlacemarkData) => {
       if (placemark.type === "exclusion_area") {
@@ -374,7 +374,9 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
                 toggleAssetListOverlay({ open: false });
               }}
             >
-              <div className={cssOverlayAssetButtonName}>{placemark.name}</div>
+              <div className={cssOverlayAssetButtonName}>
+                {placemark.name || placemark.type_name}
+              </div>
             </button>
           ))}
         </div>

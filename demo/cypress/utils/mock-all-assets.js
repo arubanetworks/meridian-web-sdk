@@ -22,12 +22,12 @@ export default {
       tags: [
         {
           id: "5876089909673984",
-          name: "CT-Human/Personnel"
-        }
+          name: "CT-Human/Personnel",
+        },
       ],
       tag_ids: ["5876089909673984"],
       zone_events: [],
-      map_events: []
+      map_events: [],
     },
     {
       mac: "546C0E032A87",
@@ -52,18 +52,17 @@ export default {
       tags: [
         {
           id: "4726953227845632",
-          name: "Jamboard"
-        }
+          name: "Jamboard",
+        },
       ],
       tag_ids: ["4726953227845632"],
       zone_events: [],
-      map_events: []
+      map_events: [],
     },
-
     {
       mac: "546C0E082AFB",
       id: "546C0E082AFB",
-      name: "HW-Fluke-115-Multimeter-18620399",
+      name: null,
       location_id: "5198682008846336",
       map_id: "5755685136498688",
       x: 1144.0538972336537,
@@ -83,16 +82,16 @@ export default {
       tags: [
         {
           id: "5659797845442560",
-          name: "Multimeter"
+          name: "Multimeter",
         },
         {
           id: "5454888638349312",
-          name: "Fluke"
-        }
+          name: "Fluke",
+        },
       ],
       tag_ids: ["5659797845442560", "5454888638349312"],
       zone_events: [],
-      map_events: []
+      map_events: [],
     },
     {
       mac: "546C0E014517",
@@ -116,7 +115,7 @@ export default {
       tags: [],
       tag_ids: [],
       zone_events: [],
-      map_events: []
+      map_events: [],
     },
     {
       mac: "546C0E014877",
@@ -140,12 +139,12 @@ export default {
       tags: [
         {
           id: "5876089909673984",
-          name: "CT-Human/Personnel"
-        }
+          name: "CT-Human/Personnel",
+        },
       ],
       tag_ids: ["5876089909673984"],
       zone_events: [],
-      map_events: []
+      map_events: [],
     },
     {
       mac: "546C0E032A98",
@@ -170,12 +169,12 @@ export default {
       tags: [
         {
           id: "4726953227845632",
-          name: "Jamboard"
-        }
+          name: "Jamboard",
+        },
       ],
       tag_ids: ["4726953227845632"],
       zone_events: [],
-      map_events: []
+      map_events: [],
     },
     {
       mac: "546C0E014528",
@@ -199,7 +198,7 @@ export default {
       tags: [],
       tag_ids: [],
       zone_events: [],
-      map_events: []
-    }
-  ]
+      map_events: [],
+    },
+  ],
 };

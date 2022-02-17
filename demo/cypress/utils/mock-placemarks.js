@@ -49,7 +49,7 @@ export default {
       map: "5755685136498688",
       x: 5399.18408203125,
       y: 2021.6123046875,
-      name: "The Techshopppp",
+      name: null,
       type: "generic",
       type_category: "Markers",
       type_name: "Placemark",

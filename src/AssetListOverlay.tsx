@@ -194,7 +194,9 @@ function TagResults(props: TagResultsProps) {
     })
     // Remove tags that don't match the local search terms
     .filter((tag: TagData) => {
-      return match(tag.name) || match(tag.mac) || getTagLabels(tag).some(match);
+      return (
+        match(tag.name || "") || match(tag.mac) || getTagLabels(tag).some(match)
+      );
     })
     // Remove control tags unless the developer wants them
     .filter((tag: TagData) => {
@@ -260,7 +262,9 @@ function TagResults(props: TagResultsProps) {
               }}
             >
               <div className={cssOverlayAssetButtonInner}>
-                <div className={cssOverlayAssetButtonName}>{tag.name}</div>
+                <div className={cssOverlayAssetButtonName}>
+                  {tag.name || tag.mac}
+                </div>
                 <LabelList
                   align="right"
                   labels={getTagLabels(tag)}

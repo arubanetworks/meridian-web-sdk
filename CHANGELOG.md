@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - New resource options (`resourceIDs`, `resourceType`) added to `api.openStream()`
-  for tracking zone updates. See "api.openStream(), Tag Zone" demo.
+  for tracking Zone updates. See "api.openStream(), Tag Zone" demo.
 
 ## [1.0.2] - 2021-02-17
 

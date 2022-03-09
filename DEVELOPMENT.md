@@ -2,7 +2,7 @@
 
 1. Make sure CHANGELOG.md is up to date.
 
-2. `git checkout master`
+2. `git checkout main`
 
 3. `git pull`
 

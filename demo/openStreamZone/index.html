@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>api.openStream() | Meridian Web SDK</title>
+    <title>api.openStream(), Tag Zone example | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -29,8 +29,8 @@
   <body>
     <div class="container">
       <p>
-        This is a standalone socket example. Every callback function is used
-        here and you can see the output in your Dev Tools console.
+        This is a standalone socket example. You can see the output in your Dev
+        Tools console.
       </p>
     </div>
 
@@ -45,8 +45,10 @@
       const newSocket = myApi.openStream({
         locationID: "5468665088573440",
         floorID: "5653104741580800",
+        resourceIDs: ["1218"],
+        resourceType: "ZONE",
         onInitialTags: function (tags) {
-          console.log("onInitialTags", tags);
+          console.log("onInitialTags (ALL tags on the current floor)", tags);
         },
         onTagUpdate: function (tags) {
           console.log("onTagUpdate", tags);

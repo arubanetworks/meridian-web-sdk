@@ -571,6 +571,10 @@ export interface OpenStreamOptions {
   locationID: string;
   /** Meridian floor ID */
   floorID: string;
+  /** Default: [locationID], Valid values: [locationID | tagID | floorID | tagLabel | zoneID] */
+  resourceIDs?: string[];
+  /** Default: "LOCATION", Valid values: "LOCATION" | "TAG" | "FLOOR" | "LABEL" | "ZONE"  */
+  resourceType?: string;
   /** Called with ALL tags on first load */
   onInitialTags?: (tags: TagData[]) => void;
   /** Called when a tag exits the floor */
@@ -817,8 +821,11 @@ export class API {
 
   /**
    * Opens a tag stream for a given location and floor. `onInitialTags` is
-   * called with the full list of tags for that floor, then `onTagUpdate` is
-   * called every time a tag moves on the floor.
+   * called with the full list of tags for that floor.
+   *
+   * Note: When resourceType is set to "ZONE", `onTagUpdate` is called when
+   * a tag/resource exits or enters the zone. Otherwise, `onTagUpdate` is
+   * called every time a tag/resource is updated.
    *
    * @example
    * ```ts
@@ -838,6 +845,21 @@ export class API {
    *   }
    * });
    *
+   * // Tag Zones
+   *
+   * const stream = api.openStream({
+   *   locationID: locationID,
+   *   floorID: floorID,
+   *   resourceIDs: ["1218"],
+   *   resourceType: "ZONE",
+   *   onInitialTags: (tags) => {
+   *     console.log("tags", tags);
+   *   },
+   *   onTagUpdate: (tag) => {
+   *     console.log("update", tag);
+   *   }
+   * });
+   *
    * // call `stream.close()` when switching pages to avoid leaving the stream
    * // open and wasting bandwidth in the background
    * ```
@@ -845,6 +867,8 @@ export class API {
   openStream({
     locationID,
     floorID,
+    resourceIDs = [floorID],
+    resourceType = "LOCATION",
     onInitialTags = () => {},
     onTagLeave = () => {},
     onTagUpdate = () => {},
@@ -867,9 +891,9 @@ export class API {
     const request = {
       asset_requests: [
         {
-          resource_type: "FLOOR",
+          resource_type: resourceType,
           location_id: locationID,
-          resource_ids: [floorID],
+          resource_ids: resourceIDs,
         },
       ],
     };

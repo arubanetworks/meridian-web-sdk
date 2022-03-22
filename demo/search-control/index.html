@@ -21,11 +21,28 @@
         max-width: 700px;
         margin: auto;
       }
+      .container {
+        width: 700px;
+        margin: 0 auto;
+      }
+      .description {
+        margin-bottom: 10px;
+        margin-top: 20px;
+        background: hsl(210, 50%, 98%);
+        color: hsl(210, 80%, 30%);
+        border: 1px solid hsl(210, 30%, 80%);
+        padding: 15px;
+      }
     </style>
   </head>
 
   <body>
-    <div class="map" id="meridian-map"></div>
+    <div class="container">
+      <div class="map" id="meridian-map"></div>
+      <div class="description">
+        Pass "showSearchControl: false" to the createMap function to hide the search control.
+      </div>
+    </div>
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
       let meridianMap;

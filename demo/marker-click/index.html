@@ -19,10 +19,30 @@
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
     <script type="module" src="../shared.js"></script>
+    <style>
+      .container {
+        width: 700px;
+        margin: 0 auto;
+      }
+
+      .description {
+        margin-bottom: 10px;
+        margin-top: 20px;
+        background: hsl(210, 50%, 98%);
+        color: hsl(210, 80%, 30%);
+        border: 1px solid hsl(210, 30%, 80%);
+        padding: 15px;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="map" id="meridian-map"></div>
+    <div class="container">
+      <div class="map" id="meridian-map"></div>
+      <div class="description">
+        Click on any tag/marker in the map or select one in the search control.
+      </div>
+    </div>
 
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">

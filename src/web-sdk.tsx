@@ -664,7 +664,7 @@ export class API {
       requiredParam("API", "token");
     }
     this.token = options.token;
-    this.environment = options.environment || "production";
+    this.environment = checkDevEnvCase(options.environment) || "production";
     this._axiosEditorAPI = axios.create({
       baseURL: envToEditorRestURL[this.environment],
       headers: {
@@ -678,6 +678,13 @@ export class API {
         Authorization: `Token ${options.token}`,
       },
     });
+
+    function checkDevEnvCase(env: any) {
+      if (env === "devcloud") {
+        return "devCloud";
+      }
+      return env;
+    }
   }
 
   /**

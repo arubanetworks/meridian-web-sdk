@@ -15,6 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - New demo for adding an annotation point identifying where a user/viewer is, such as at a kiosk
 
+- SVG styling and presentation attributes for Overlay Polygons and Polylines.
+  Usage examples can be found in the Overlay Polygon and Polyline demos
+
+  - strokeDasharray (stroke-dasharray)
+  - strokeDashoffset (stroke-dashoffset)
+  - strokeOpacity (stroke-opacity)
+  - fill
+  - fillOpacity (fill-opacity)
+  - animation
+  - style
+  - id
+  - className (class)
+
 ## [1.1.1] - 2021-03-17
 
 - Change `master` branch name and all references to `main`

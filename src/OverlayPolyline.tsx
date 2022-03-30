@@ -14,25 +14,44 @@ interface OverlayPolygonProps extends CustomOverlayPolyline {
 
 const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   points,
+  fill = "none",
+  fillOpacity,
   stroke = "hsl(207, 65%, 46%)",
   strokeWidth = 2,
   strokeLineJoin = "miter",
   strokeLineCap = "butt",
+  strokeDasharray,
+  strokeDashoffset,
+  strokeOpacity,
+  id,
+  className,
+  style,
   mapZoomFactor,
+  animate = {},
 }) => {
+  let animateElement: any = null;
+  if (Object.keys(animate).length) {
+    animateElement = <animate {...animate} />;
+  }
+
   return (
     <polyline
+      id={id}
+      className={className}
+      style={style}
       points={points.join(" ")}
-      fill="none"
+      fill={fill}
+      fill-opacity={fillOpacity}
       stroke={stroke}
-      // Preact's TS types specify `strokeWidth` and `strokeLinejoin`,
-      // but those don't actually seem to work correctly at all.
-      // Luckily, Preact passes thru unknowns props as string
-      // attributes, so using dashes works here.
       stroke-width={strokeWidth / mapZoomFactor}
       stroke-linejoin={strokeLineJoin}
       stroke-linecap={strokeLineCap}
-    />
+      stroke-dasharray={strokeDasharray}
+      stroke-dashoffset={strokeDashoffset}
+      stroke-opacity={strokeOpacity}
+    >
+      {animateElement}
+    </polyline>
   );
 };
 

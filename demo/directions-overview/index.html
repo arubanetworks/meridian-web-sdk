@@ -99,8 +99,15 @@
               strokeWidth: 8,
               strokeLineJoin: "round",
               strokeLineCap: "round",
-              strokeDasharray: 10,
-              strokeDashOffset: 100,
+              strokeDasharray: "50",
+              strokeDashoffset: "250",
+              animate: {
+                attributeName: "stroke-dashoffset",
+                from: "250",
+                to: "50",
+                dur: "2s",
+                repeatCount: "indefinite",
+              },
             },
           ],
         });

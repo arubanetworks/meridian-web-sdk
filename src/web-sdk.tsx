@@ -241,9 +241,17 @@ export interface CustomOverlayPolygon {
   type: "polygon";
   points: number[];
   fill?: string;
+  fillOpacity?: number | string;
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
+  style?: h.JSX.CSSProperties;
+  id?: string;
+  className?: string;
   /** Arbitrary data for use with onClick handler */
   data?: Record<string, any>;
   onClick?: (data: Record<string, any>) => void;
@@ -255,10 +263,19 @@ export interface CustomOverlayPolygon {
 export interface CustomOverlayPolyline {
   type: "polyline";
   points: number[];
+  fill?: string;
+  fillOpacity?: number | string;
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
   strokeLineCap?: "butt" | "round" | "square";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
+  style?: h.JSX.CSSProperties;
+  id?: string;
+  className?: string;
 }
 
 /**

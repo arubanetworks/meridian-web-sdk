@@ -5,16 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.1] - 2021-XX-XX
+## Unreleased
 
 ### Updated
 
-- Change `master` branch name and references to `main`
 - Clean up demos to provide more up to date information
 
 ### Added
 
 - New demo for adding an annotation point identifying where a user/viewer is, such as at a kiosk
+
+- SVG styling and presentation attributes for Overlay Polygons and Polylines.
+  Usage examples can be found in the Overlay Polygon and Polyline demos.
+
+  - strokeDasharray (stroke-dasharray)
+  - strokeDashoffset (stroke-dashoffset)
+  - strokeOpacity (stroke-opacity)
+  - fill
+  - fillOpacity (fill-opacity)
+  - animation
+  - style
+  - id
+  - className (class)
+
+## [1.1.1] - 2021-03-17
+
+- Change `master` branch name and all references to `main`
 
 ## [1.1.0] - 2021-03-09
 

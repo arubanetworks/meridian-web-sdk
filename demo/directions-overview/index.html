@@ -19,6 +19,145 @@
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
     <script type="module" src="../shared.js"></script>
+    <script>
+      function formatDirections(route) {
+        let floor;
+        let floor_index = 0;
+        const points = [...route.steps].reduce((accumulator, current) => {
+          let map_id = current.map_id;
+          let points = current.points;
+
+          if (floor !== map_id) {
+            floor_index++;
+            accumulator[floor_index] = { [map_id]: [] };
+          }
+          accumulator[floor_index][map_id].push(points);
+          floor = map_id;
+          return accumulator;
+        }, {});
+        return points;
+      }
+
+      function stepsToPoints(steps) {
+        return steps.flatMap((points) => {
+          return points.split(",").map(Number);
+        });
+      }
+
+      function updateRoute(meridianMap, directions, routeIndex) {
+        const floorID = Object.keys(directions[routeIndex])[0];
+        const points = stepsToPoints(directions[routeIndex][floorID]);
+        const nextRouteIndex = routeIndex + 1;
+
+        let annotations = [];
+        meridianMap.update({ overlays: [], annotations });
+
+        if (directions[nextRouteIndex]) {
+          console.info("OMG, another floor");
+          annotations = [
+            {
+              type: "point",
+              // x: 754.781,
+              // y: 662.304,
+              x: points[points.length - 1],
+              y: points[points.length - 2],
+              backgroundColor: "#c00",
+              title: "Continue to next floor",
+              onClick: (data) => {
+                // arbitrary data can be passed for each annotation
+                updateRoute(meridianMap, directions, nextRouteIndex);
+              },
+            },
+          ];
+        }
+
+        meridianMap.update({
+          floorID: floorID,
+          onPlacemarksUpdate: async () => {
+            meridianMap.update({
+              overlays: [
+                {
+                  type: "polyline",
+                  points,
+                  stroke: "orange",
+                  strokeWidth: 8,
+                  strokeLineJoin: "round",
+                  strokeLineCap: "round",
+                  strokeDasharray: "50",
+                  strokeDashoffset: "250",
+                  animate: {
+                    attributeName: "stroke-dashoffset",
+                    from: "250",
+                    to: "50",
+                    dur: "2s",
+                    repeatCount: "indefinite",
+                  },
+                },
+              ],
+              annotations,
+            });
+          },
+        });
+      }
+
+      function displayRoute(meridianMap, apiResponse) {
+        const route = apiResponse.routes[0];
+        const directions = formatDirections(route);
+        const floorID = Object.keys(directions[1])[0];
+        const points = stepsToPoints(directions[1][floorID]);
+        const nextRouteIndex = 2;
+        let annotations = [];
+
+        console.info("=== displayRoute() ===");
+        // console.info("directions", directions);
+        // console.info("floorID", floorID);
+        console.info("points", points);
+        console.info(directions);
+
+        if (directions[nextRouteIndex]) {
+          console.info("==== MULTI FLOOR! ====");
+
+          annotations = [
+            {
+              type: "point",
+              // x: 754.781,
+              // y: 662.304,
+              x: points[points.length - 1],
+              y: points[points.length - 2],
+              backgroundColor: "#c00",
+              title: "Continue to next floor",
+              onClick: (data) => {
+                // arbitrary data can be passed for each annotation
+                updateRoute(meridianMap, directions, nextRouteIndex);
+              },
+            },
+          ];
+        }
+
+        meridianMap.update({
+          overlays: [
+            {
+              type: "polyline",
+              points,
+              stroke: "orange",
+              strokeWidth: 8,
+              strokeLineJoin: "round",
+              strokeLineCap: "round",
+              strokeDasharray: "50",
+              strokeDashoffset: "250",
+              animate: {
+                attributeName: "stroke-dashoffset",
+                from: "250",
+                to: "50",
+                dur: "2s",
+                repeatCount: "indefinite",
+              },
+            },
+          ],
+          annotations,
+        });
+      }
+    </script>
     <link rel="stylesheet" href="style.css" />
   </head>
 
@@ -46,9 +185,14 @@
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
       const locationID = "5402771045744640";
-      const floorID = "5928450816475136";
-      const startPlacemarkID = "5928450816475136_5440134417481728";
-      const endPlacemarkID = "5928450816475136_5368476738519040";
+      // const floorID = "5928450816475136";
+      // const startPlacemarkID = "5928450816475136_5440134417481728";
+      // const endPlacemarkID = "5928450816475136_5368476738519040";
+
+      const floorID = "5933249679065088";
+      const startPlacemarkID = "5933249679065088_5480121796132864";
+      // const endPlacemarkID = "5928450816475136_5368476738519040"; // second floor
+      const endPlacemarkID = "5927589843304448_6383031899914240"; // thrid floor
 
       const api = new MeridianSDK.API({
         environment: "devCloud",
@@ -64,54 +208,26 @@
           floorID: floorID,
           height: "100%",
           onPlacemarksUpdate: async () => {
-            const directions = await api.getDirections({
+            const apiResponse = await api.getDirections({
               locationID: locationID,
               startFloorID: floorID,
               startPlacemarkID: startPlacemarkID,
               endPlacemarkID: endPlacemarkID,
             });
 
-            displayRoute(meridianMap, directions);
+            console.info("gjkldsjfksjfsdjfkl");
+            displayRoute(meridianMap, apiResponse);
 
             // Show response data in sidebar
             const response_code = document.getElementById("api-response");
             const html = hljs.highlight(
               "javascript",
-              JSON.stringify(directions.routes, null, " ")
+              JSON.stringify(apiResponse.routes, null, " ")
             );
             response_code.innerHTML = html.value;
           },
         }
       );
-
-      function displayRoute(map, directions) {
-        const route = directions.routes[0];
-        const points = route.steps.flatMap((step) => {
-          return step.points.split(",").map(Number);
-        });
-
-        meridianMap.update({
-          overlays: [
-            {
-              type: "polyline",
-              points,
-              stroke: "orange",
-              strokeWidth: 8,
-              strokeLineJoin: "round",
-              strokeLineCap: "round",
-              strokeDasharray: "50",
-              strokeDashoffset: "250",
-              animate: {
-                attributeName: "stroke-dashoffset",
-                from: "250",
-                to: "50",
-                dur: "2s",
-                repeatCount: "indefinite",
-              },
-            },
-          ],
-        });
-      }
     </script>
   </body>
 </html>

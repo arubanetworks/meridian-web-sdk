@@ -23,19 +23,22 @@
       function formatDirections(route) {
         let floor;
         let floor_index = 0;
-        const points = [...route.steps].reduce((accumulator, current) => {
-          let map_id = current.map_id;
-          let points = current.points;
+        const formattedDirections = [...route.steps].reduce(
+          (accumulator, current) => {
+            let map_id = current.map_id;
+            let points = current.points;
 
-          if (floor !== map_id) {
-            floor_index++;
-            accumulator[floor_index] = { [map_id]: [] };
-          }
-          accumulator[floor_index][map_id].push(points);
-          floor = map_id;
-          return accumulator;
-        }, {});
-        return points;
+            if (floor !== map_id) {
+              floor_index++;
+              accumulator[floor_index] = { [map_id]: [] };
+            }
+            accumulator[floor_index][map_id].push(points);
+            floor = map_id;
+            return accumulator;
+          },
+          {}
+        );
+        return formattedDirections;
       }
 
       function stepsToPoints(steps) {

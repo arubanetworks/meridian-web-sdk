@@ -45,15 +45,15 @@
       }
 
       function stepsToPoints(steps) {
-        console.info(steps);
         return steps.flatMap((step) => {
           return step.points.split(",").map(Number);
         });
       }
 
       function updateRoute(meridianMap, directions, routeIndex) {
-        const floorID = directions[routeIndex].floorID;
-        const points = stepsToPoints(directions[routeIndex].steps);
+        const directions_currentFloor = directions[routeIndex];
+        const floorID = directions_currentFloor.floorID;
+        const points = stepsToPoints(directions_currentFloor.steps);
         const nextRouteIndex = routeIndex + 1;
 
         let annotations = [];
@@ -64,12 +64,13 @@
           annotations = [
             {
               type: "point",
-              // x: 754.781,
-              // y: 662.304,
               x: points[points.length - 1],
               y: points[points.length - 2],
               backgroundColor: "#c00",
-              title: "Continue to next floor",
+              title:
+                directions_currentFloor.steps[
+                  directions_currentFloor.steps.length - 1
+                ].text,
               onClick: (data) => {
                 // arbitrary data can be passed for each annotation
                 updateRoute(meridianMap, directions, nextRouteIndex);
@@ -110,16 +111,15 @@
       function displayRoute(meridianMap, apiResponse) {
         const route = apiResponse.routes[0];
         const directions = formatDirections(route);
-        const floorID = directions[1].floorID;
-        const points = stepsToPoints(directions[1].steps);
+        const directions_currentFloor = directions[1];
+        const floorID = directions_currentFloor.floorID;
+        const points = stepsToPoints(directions_currentFloor.steps);
         const nextRouteIndex = 2;
         let annotations = [];
 
         console.info("=== displayRoute() ===");
-        // console.info("directions", directions);
-        // console.info("floorID", floorID);
         console.info("points", points);
-        console.info(directions);
+        console.info("directions_currentFloor", directions_currentFloor);
 
         if (directions[nextRouteIndex]) {
           console.info("==== MULTI FLOOR! ====");
@@ -127,12 +127,13 @@
           annotations = [
             {
               type: "point",
-              // x: 754.781,
-              // y: 662.304,
               x: points[points.length - 1],
               y: points[points.length - 2],
               backgroundColor: "#c00",
-              title: "Continue to next floor",
+              title:
+                directions_currentFloor.steps[
+                  directions_currentFloor.steps.length - 1
+                ].text,
               onClick: (data) => {
                 // arbitrary data can be passed for each annotation
                 updateRoute(meridianMap, directions, nextRouteIndex);

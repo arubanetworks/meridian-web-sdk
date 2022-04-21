@@ -64,13 +64,14 @@
           annotations = [
             {
               type: "point",
+              size: 0,
               x: points[points.length - 1],
               y: points[points.length - 2],
-              backgroundColor: "#c00",
+              backgroundColor: "#596c7c",
               title:
                 directions_currentFloor.steps[
                   directions_currentFloor.steps.length - 1
-                ].text,
+                ].text + " (click to continue)",
               onClick: (data) => {
                 // arbitrary data can be passed for each annotation
                 updateRoute(meridianMap, directions, nextRouteIndex);
@@ -127,13 +128,14 @@
           annotations = [
             {
               type: "point",
+              size: 0,
               x: points[points.length - 1],
               y: points[points.length - 2],
-              backgroundColor: "#c00",
+              backgroundColor: "#596c7c",
               title:
                 directions_currentFloor.steps[
                   directions_currentFloor.steps.length - 1
-                ].text,
+                ].text + " (click to continue)",
               onClick: (data) => {
                 // arbitrary data can be passed for each annotation
                 updateRoute(meridianMap, directions, nextRouteIndex);

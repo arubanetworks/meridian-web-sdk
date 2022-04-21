@@ -35,7 +35,7 @@
                 steps: [],
               };
             }
-            accumulator[floor_index].steps.push(points);
+            accumulator[floor_index].steps.push(current);
             floor = map_id;
             return accumulator;
           },
@@ -45,8 +45,9 @@
       }
 
       function stepsToPoints(steps) {
-        return steps.flatMap((points) => {
-          return points.split(",").map(Number);
+        console.info(steps);
+        return steps.flatMap((step) => {
+          return step.points.split(",").map(Number);
         });
       }
 

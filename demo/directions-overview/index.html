@@ -30,9 +30,12 @@
 
             if (floor !== map_id) {
               floor_index++;
-              accumulator[floor_index] = { [map_id]: [] };
+              accumulator[floor_index] = {
+                floorID: map_id,
+                steps: [],
+              };
             }
-            accumulator[floor_index][map_id].push(points);
+            accumulator[floor_index].steps.push(points);
             floor = map_id;
             return accumulator;
           },
@@ -48,8 +51,8 @@
       }
 
       function updateRoute(meridianMap, directions, routeIndex) {
-        const floorID = Object.keys(directions[routeIndex])[0];
-        const points = stepsToPoints(directions[routeIndex][floorID]);
+        const floorID = directions[routeIndex].floorID;
+        const points = stepsToPoints(directions[routeIndex].steps);
         const nextRouteIndex = routeIndex + 1;
 
         let annotations = [];
@@ -106,8 +109,8 @@
       function displayRoute(meridianMap, apiResponse) {
         const route = apiResponse.routes[0];
         const directions = formatDirections(route);
-        const floorID = Object.keys(directions[1])[0];
-        const points = stepsToPoints(directions[1][floorID]);
+        const floorID = directions[1].floorID;
+        const points = stepsToPoints(directions[1].steps);
         const nextRouteIndex = 2;
         let annotations = [];
 

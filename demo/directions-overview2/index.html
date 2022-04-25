@@ -24,6 +24,15 @@
         return document.getElementById(`route-${action}`);
       }
 
+      function setRouteDirectionsText(text) {
+        document.getElementById("directions-text").innerText =
+          "Follow Route: " + text;
+      }
+      function setRouteDestinationText() {
+        document.getElementById("directions-text").innerText =
+          "Follow Route to Your Destination";
+      }
+
       function formatDirections(route) {
         let floor;
         let floor_index = 0;
@@ -55,7 +64,6 @@
       }
 
       function updateRoute(meridianMap, directions, routeIndex) {
-        // console.info(...arguments);
         const directions_currentFloor = directions[routeIndex];
         const floorID = directions_currentFloor.floorID;
         const points = stepsToPoints(directions_currentFloor.steps);
@@ -84,27 +92,34 @@
           getRouteNavButton("back").hidden = false;
           getRouteNavButton("continue").disabled = false;
 
+          setRouteDirectionsText(
+            directions_currentFloor.steps[
+              directions_currentFloor.steps.length - 1
+            ].text
+          );
+
           if (routeIndex === 1) {
             getRouteNavButton("back").disabled = true;
           } else {
             getRouteNavButton("back").disabled = false;
           }
 
-          annotations = [
-            {
-              type: "point",
-              size: 0,
-              x: points[points.length - 1],
-              y: points[points.length - 2],
-              backgroundColor: "#596c7c",
-              title:
-                directions_currentFloor.steps[
-                  directions_currentFloor.steps.length - 1
-                ].text,
-            },
-          ];
+          // annotations = [
+          //   {
+          //     type: "point",
+          //     size: 0,
+          //     x: points[points.length - 1],
+          //     y: points[points.length - 2],
+          //     backgroundColor: "#596c7c",
+          //     title:
+          //       directions_currentFloor.steps[
+          //         directions_currentFloor.steps.length - 1
+          //       ].text,
+          //   },
+          // ];
         } else {
           getRouteNavButton("continue").disabled = true;
+          setRouteDestinationText();
         }
 
         meridianMap.update({
@@ -147,6 +162,12 @@
 
         if (directions[nextRouteIndex]) {
           getRouteNavButton("continue").hidden = false;
+          setRouteDirectionsText(
+            directions_currentFloor.steps[
+              directions_currentFloor.steps.length - 1
+            ].text
+          );
+
           Object.assign(window, {
             continueRoute: updateRoute.bind(
               null,
@@ -156,19 +177,22 @@
             ),
           });
 
-          annotations = [
-            {
-              type: "point",
-              size: 0,
-              x: points[points.length - 1],
-              y: points[points.length - 2],
-              backgroundColor: "#596c7c",
-              title:
-                directions_currentFloor.steps[
-                  directions_currentFloor.steps.length - 1
-                ].text,
-            },
-          ];
+          // annotations = [
+          //   {
+          //     type: "point",
+          //     size: 0,
+          //     x: points[points.length - 1],
+          //     y: points[points.length - 2],
+          //     backgroundColor: "#596c7c",
+          //     title:
+          //       directions_currentFloor.steps[
+          //         directions_currentFloor.steps.length - 1
+          //       ].text,
+          //   },
+          // ];
+        } else {
+          // getRouteNavButton("continue").disabled = true;
+          setRouteDestinationText();
         }
 
         meridianMap.update({
@@ -201,14 +225,13 @@
   <body>
     <div class="directions-overlay">
       <h3>Directions Request</h3>
-      <p>
+      <p class="directions-request">
         <strong class="from">From:</strong>
-        <em>Second Floor Stairs</em>
-      </p>
-      <p>
+        <em>Second Floor Stairs</em><br />
         <strong class="to">To:</strong>
         <em>Customer Service Center</em>
       </p>
+      <p><em id="directions-text"></em></p>
       <div class="route-actions">
         <button id="route-start" onclick="window.startRoute()">start</button>
         <button id="route-back" onclick="window.reverseRoute()" hidden>

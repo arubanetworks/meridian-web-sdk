@@ -20,6 +20,19 @@
     />
     <script type="module" src="../shared.js"></script>
     <script>
+      function getRouteNavButton(action) {
+        return document.getElementById(`route-${action}`);
+      }
+
+      function setRouteDirectionsText(text) {
+        document.getElementById("directions-text").innerText =
+          "Follow Route: " + text;
+      }
+      function setRouteDestinationText() {
+        document.getElementById("directions-text").innerText =
+          "Follow Route to Your Destination";
+      }
+
       function formatDirections(route) {
         let floor;
         let floor_index = 0;
@@ -50,38 +63,57 @@
         });
       }
 
-      function updateRoute(meridianMap, directions, routeIndex) {
-        const directions_currentFloor = directions[routeIndex];
-        const floorID = directions_currentFloor.floorID;
-        const points = stepsToPoints(directions_currentFloor.steps);
+      function displayRoute(meridianMap, routes, routeIndex, currentFloorID) {
+        const directions = routes[routeIndex];
+        const floorID = directions.floorID;
+        const points = stepsToPoints(directions.steps);
         const nextRouteIndex = routeIndex + 1;
 
-        let annotations = [];
-        meridianMap.update({ overlays: [], annotations });
-
-        if (directions[nextRouteIndex]) {
-          annotations = [
-            {
-              type: "point",
-              size: 0,
-              x: points[points.length - 1],
-              y: points[points.length - 2],
-              backgroundColor: "#596c7c",
-              title:
-                directions_currentFloor.steps[
-                  directions_currentFloor.steps.length - 1
-                ].text + " (click to continue)",
-              onClick: (data) => {
-                updateRoute(meridianMap, directions, nextRouteIndex);
-              },
-            },
-          ];
+        if (floorID !== currentFloorID) {
+          meridianMap.update({ overlays: [] });
         }
 
-        meridianMap.update({
-          floorID: floorID,
-          onPlacemarksUpdate: async () => {
-            meridianMap.update({
+        Object.assign(window, {
+          continueRoute: displayRoute.bind(
+            null,
+            meridianMap,
+            routes,
+            nextRouteIndex,
+            floorID
+          ),
+          reverseRoute: displayRoute.bind(
+            null,
+            meridianMap,
+            routes,
+            routeIndex - 1,
+            floorID
+          ),
+        });
+
+        getRouteNavButton("start").hidden = true;
+
+        if (routes[nextRouteIndex]) {
+          getRouteNavButton("continue").hidden = false;
+          getRouteNavButton("back").hidden = false;
+          getRouteNavButton("continue").disabled = false;
+
+          setRouteDirectionsText(
+            directions.steps[directions.steps.length - 1].text
+          );
+
+          if (routeIndex === 1) {
+            getRouteNavButton("back").disabled = true;
+          } else {
+            getRouteNavButton("back").disabled = false;
+          }
+        } else {
+          getRouteNavButton("continue").disabled = true;
+          setRouteDestinationText();
+        }
+
+        const updateOptions = ((currentFloorID) => {
+          if (floorID === currentFloorID) {
+            return {
               overlays: [
                 {
                   type: "polyline",
@@ -101,67 +133,39 @@
                   },
                 },
               ],
-              annotations,
-            });
-          },
-        });
-      }
-
-      function displayRoute(meridianMap, apiResponse) {
-        const route = apiResponse.routes[0];
-        const directions = formatDirections(route);
-        const directions_currentFloor = directions[1];
-        const floorID = directions_currentFloor.floorID;
-        const points = stepsToPoints(directions_currentFloor.steps);
-        const nextRouteIndex = 2;
-        let annotations = [];
-
-        console.info("=== displayRoute() ===");
-        console.info("points", points);
-        console.info("directions_currentFloor", directions_currentFloor);
-
-        if (directions[nextRouteIndex]) {
-          console.info("==== MULTI FLOOR! ====");
-
-          annotations = [
-            {
-              type: "point",
-              size: 0,
-              x: points[points.length - 1],
-              y: points[points.length - 2],
-              backgroundColor: "#596c7c",
-              title:
-                directions_currentFloor.steps[
-                  directions_currentFloor.steps.length - 1
-                ].text + " (click to continue)",
-              onClick: (data) => {
-                updateRoute(meridianMap, directions, nextRouteIndex);
+            };
+          } else {
+            return {
+              floorID: floorID,
+              onPlacemarksUpdate: () => {
+                meridianMap.update({
+                  overlays: [
+                    {
+                      type: "polyline",
+                      points,
+                      stroke: "orange",
+                      strokeWidth: 8,
+                      strokeLineJoin: "round",
+                      strokeLineCap: "round",
+                      strokeDasharray: "50",
+                      strokeDashoffset: "250",
+                      animate: {
+                        attributeName: "stroke-dashoffset",
+                        from: "250",
+                        to: "50",
+                        dur: "2s",
+                        repeatCount: "indefinite",
+                      },
+                    },
+                  ],
+                });
               },
-            },
-          ];
-        }
+            };
+          }
+        })(currentFloorID);
 
         meridianMap.update({
-          overlays: [
-            {
-              type: "polyline",
-              points,
-              stroke: "orange",
-              strokeWidth: 8,
-              strokeLineJoin: "round",
-              strokeLineCap: "round",
-              strokeDasharray: "50",
-              strokeDashoffset: "250",
-              animate: {
-                attributeName: "stroke-dashoffset",
-                from: "250",
-                to: "50",
-                dur: "2s",
-                repeatCount: "indefinite",
-              },
-            },
-          ],
-          annotations,
+          ...updateOptions,
         });
       }
     </script>
@@ -169,37 +173,33 @@
   </head>
 
   <body>
+    <div class="directions-overlay">
+      <h3>Directions Request</h3>
+      <p class="directions-request">
+        <strong class="from">From:</strong>
+        <em>Customer Service Center (First Floor)</em><br />
+        <strong class="to">To:</strong>
+        <em>Lost & Found (First Floor)</em>
+      </p>
+      <p><em id="directions-text"></em></p>
+      <div class="route-actions">
+        <button id="route-start" onclick="window.startRoute()">start</button>
+        <button id="route-back" onclick="window.reverseRoute()" hidden>
+          back
+        </button>
+        <button id="route-continue" onclick="window.continueRoute()" hidden>
+          continue
+        </button>
+      </div>
+    </div>
     <main class="map" id="meridian-map"></main>
-
-    <aside class="sidebar-container">
-      <div class="top">
-        <h3>Directions Request</h3>
-        <p>
-          <strong>From:</strong>
-          <em>Second Floor Stairs</em>
-        </p>
-        <p>
-          <strong>To:</strong>
-          <em>Customer Service Center</em>
-        </p>
-      </div>
-      <div class="bottom">
-        <h3>Directions API Response</h3>
-        <pre class="code-snippet"><code id="api-response"></code></pre>
-      </div>
-    </aside>
 
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
       const locationID = "5402771045744640";
-      // const floorID = "5928450816475136";
-      // const startPlacemarkID = "5928450816475136_5440134417481728";
-      // const endPlacemarkID = "5928450816475136_5368476738519040";
-
-      const floorID = "5933249679065088";
-      const startPlacemarkID = "5933249679065088_5480121796132864";
-      // const endPlacemarkID = "5928450816475136_5368476738519040"; // second floor
-      const endPlacemarkID = "5927589843304448_6383031899914240"; // thrid floor
+      const floorID = "5928450816475136";
+      const startPlacemarkID = "5928450816475136_5368476738519040";
+      const endPlacemarkID = "5928450816475136_5969855240732672";
 
       const api = new MeridianSDK.API({
         environment: "devCloud",
@@ -214,24 +214,22 @@
           locationID: locationID,
           floorID: floorID,
           height: "100%",
-          onPlacemarksUpdate: async () => {
-            const apiResponse = await api.getDirections({
-              locationID: locationID,
-              startFloorID: floorID,
-              startPlacemarkID: startPlacemarkID,
-              endPlacemarkID: endPlacemarkID,
+          onPlacemarksUpdate: () => {
+            const startRoute = async function () {
+              const apiResponse = await api.getDirections({
+                locationID: locationID,
+                startFloorID: floorID,
+                startPlacemarkID: startPlacemarkID,
+                endPlacemarkID: endPlacemarkID,
+              });
+              const route = apiResponse.routes[0];
+              const directions = formatDirections(route);
+              displayRoute(meridianMap, directions, 1, floorID);
+            };
+            Object.assign(window, {
+              meridianMap,
+              startRoute,
             });
-
-            console.info("gjkldsjfksjfsdjfkl");
-            displayRoute(meridianMap, apiResponse);
-
-            // Show response data in sidebar
-            const response_code = document.getElementById("api-response");
-            const html = hljs.highlight(
-              "javascript",
-              JSON.stringify(apiResponse.routes, null, " ")
-            );
-            response_code.innerHTML = html.value;
           },
         }
       );

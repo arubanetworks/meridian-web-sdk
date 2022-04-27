@@ -3,7 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>[BETA] Directions Overview (single floor) | Meridian Web SDK</title>
+    <title>
+      [BETA] Directions Overview (Multiple Floors) | Meridian Web SDK
+    </title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -19,7 +21,38 @@
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
     <script type="module" src="../shared.js"></script>
-    <script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="directions-overlay">
+      <h3>Directions Request</h3>
+      <p class="directions-request">
+        <strong class="from">From:</strong>
+        <em>Information Desk (First Floor)</em><br />
+        <strong class="to">To:</strong>
+        <em>Zoom Conference Room (Third Floor)</em>
+      </p>
+      <p><em id="directions-text"></em></p>
+      <div class="route-actions">
+        <button id="route-start" onclick="window.startRoute()">start</button>
+        <button id="route-back" onclick="window.reverseRoute()" hidden>
+          back
+        </button>
+        <button id="route-continue" onclick="window.continueRoute()" hidden>
+          continue
+        </button>
+      </div>
+    </div>
+    <main class="map" id="meridian-map"></main>
+
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      const locationID = "5402771045744640";
+      const floorID = "5933249679065088";
+      const startPlacemarkID = "5933249679065088_5480121796132864";
+      const endPlacemarkID = "5927589843304448_6383031899914240";
+
       function getRouteNavButton(action) {
         return document.getElementById(`route-${action}`);
       }
@@ -168,42 +201,6 @@
           ...updateOptions,
         });
       }
-    </script>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-
-  <body>
-    <div class="directions-overlay">
-      <h3>Directions Request</h3>
-      <p class="directions-request">
-        <strong class="from">From:</strong>
-        <em>Information Desk (First Floor)</em><br />
-        <strong class="to">To:</strong>
-        <em>Zoom Conference Room (Third Floor)</em>
-      </p>
-      <p><em id="directions-text"></em></p>
-      <div class="route-actions">
-        <button id="route-start" onclick="window.startRoute()">start</button>
-        <button id="route-back" onclick="window.reverseRoute()" hidden>
-          back
-        </button>
-        <button id="route-continue" onclick="window.continueRoute()" hidden>
-          continue
-        </button>
-      </div>
-    </div>
-    <main class="map" id="meridian-map"></main>
-
-    <script src="../meridian-sdk.js"></script>
-    <script type="module" id="the-code">
-      const locationID = "5402771045744640";
-      // const floorID = "5928450816475136";
-      // const startPlacemarkID = "5928450816475136_5440134417481728";
-      // const endPlacemarkID = "5928450816475136_5368476738519040";
-
-      const floorID = "5933249679065088";
-      const startPlacemarkID = "5933249679065088_5480121796132864";
-      const endPlacemarkID = "5927589843304448_6383031899914240";
 
       const api = new MeridianSDK.API({
         environment: "devCloud",

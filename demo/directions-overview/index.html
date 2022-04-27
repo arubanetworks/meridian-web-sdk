@@ -20,19 +20,6 @@
     />
     <script type="module" src="../shared.js"></script>
     <script>
-      function getRouteNavButton(action) {
-        return document.getElementById(`route-${action}`);
-      }
-
-      function setRouteDirectionsText(text) {
-        document.getElementById("directions-text").innerText =
-          "Follow Route: " + text;
-      }
-      function setRouteDestinationText() {
-        document.getElementById("directions-text").innerText =
-          "Follow Route to Your Destination";
-      }
-
       function formatDirections(route) {
         let floor;
         let floor_index = 0;
@@ -63,109 +50,34 @@
         });
       }
 
-      function displayRoute(meridianMap, routes, routeIndex, currentFloorID) {
+      function displayRoute(meridianMap, routes, routeIndex) {
         const directions = routes[routeIndex];
-        const floorID = directions.floorID;
         const points = stepsToPoints(directions.steps);
-        const nextRouteIndex = routeIndex + 1;
 
-        if (floorID !== currentFloorID) {
-          meridianMap.update({ overlays: [] });
-        }
-
-        Object.assign(window, {
-          continueRoute: displayRoute.bind(
-            null,
-            meridianMap,
-            routes,
-            nextRouteIndex,
-            floorID
-          ),
-          reverseRoute: displayRoute.bind(
-            null,
-            meridianMap,
-            routes,
-            routeIndex - 1,
-            floorID
-          ),
-        });
-
-        getRouteNavButton("start").hidden = true;
-
-        if (routes[nextRouteIndex]) {
-          getRouteNavButton("continue").hidden = false;
-          getRouteNavButton("back").hidden = false;
-          getRouteNavButton("continue").disabled = false;
-
-          setRouteDirectionsText(
-            directions.steps[directions.steps.length - 1].text
-          );
-
-          if (routeIndex === 1) {
-            getRouteNavButton("back").disabled = true;
-          } else {
-            getRouteNavButton("back").disabled = false;
-          }
-        } else {
-          getRouteNavButton("continue").disabled = true;
-          setRouteDestinationText();
-        }
-
-        const updateOptions = ((currentFloorID) => {
-          if (floorID === currentFloorID) {
-            return {
-              overlays: [
-                {
-                  type: "polyline",
-                  points,
-                  stroke: "orange",
-                  strokeWidth: 8,
-                  strokeLineJoin: "round",
-                  strokeLineCap: "round",
-                  strokeDasharray: "50",
-                  strokeDashoffset: "250",
-                  animate: {
-                    attributeName: "stroke-dashoffset",
-                    from: "250",
-                    to: "50",
-                    dur: "2s",
-                    repeatCount: "indefinite",
-                  },
-                },
-              ],
-            };
-          } else {
-            return {
-              floorID: floorID,
-              onPlacemarksUpdate: () => {
-                meridianMap.update({
-                  overlays: [
-                    {
-                      type: "polyline",
-                      points,
-                      stroke: "orange",
-                      strokeWidth: 8,
-                      strokeLineJoin: "round",
-                      strokeLineCap: "round",
-                      strokeDasharray: "50",
-                      strokeDashoffset: "250",
-                      animate: {
-                        attributeName: "stroke-dashoffset",
-                        from: "250",
-                        to: "50",
-                        dur: "2s",
-                        repeatCount: "indefinite",
-                      },
-                    },
-                  ],
-                });
-              },
-            };
-          }
-        })(currentFloorID);
+        document.getElementById("route-start").hidden = true;
+        document.getElementById("directions-text").innerText =
+          "Follow Route to Your Destination";
 
         meridianMap.update({
-          ...updateOptions,
+          overlays: [
+            {
+              type: "polyline",
+              points,
+              stroke: "orange",
+              strokeWidth: 8,
+              strokeLineJoin: "round",
+              strokeLineCap: "round",
+              strokeDasharray: "50",
+              strokeDashoffset: "250",
+              animate: {
+                attributeName: "stroke-dashoffset",
+                from: "250",
+                to: "50",
+                dur: "2s",
+                repeatCount: "indefinite",
+              },
+            },
+          ],
         });
       }
     </script>
@@ -184,12 +96,6 @@
       <p><em id="directions-text"></em></p>
       <div class="route-actions">
         <button id="route-start" onclick="window.startRoute()">start</button>
-        <button id="route-back" onclick="window.reverseRoute()" hidden>
-          back
-        </button>
-        <button id="route-continue" onclick="window.continueRoute()" hidden>
-          continue
-        </button>
       </div>
     </div>
     <main class="map" id="meridian-map"></main>
@@ -224,7 +130,7 @@
               });
               const route = apiResponse.routes[0];
               const directions = formatDirections(route);
-              displayRoute(meridianMap, directions, 1, floorID);
+              displayRoute(meridianMap, directions, 1);
             };
             Object.assign(window, {
               meridianMap,

@@ -32,9 +32,6 @@ body {
 .directions-overlay strong {
   color: #98c379;
 }
-/* .directions-overlay p {
-  margin: 10px 0;
-} */
 
 .directions-request {
   line-height: 1.5em;
@@ -42,7 +39,6 @@ body {
 
 .directions-request em {
   color: #d19a66;
-  /* margin-top: 10px; */
 }
 
 .route-actions {

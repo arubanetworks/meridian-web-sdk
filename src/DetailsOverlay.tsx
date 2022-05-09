@@ -10,7 +10,7 @@ import LabelList from "./LabelList";
 import MapComponent from "./MapComponent";
 import Overlay from "./Overlay";
 import { css, theme } from "./style";
-import { getTagLabels, uiText } from "./util";
+import { getTagLabels } from "./util";
 import { PlacemarkData, placemarkIconURL, TagData } from "./web-sdk";
 
 interface DetailsOverlayProps {
@@ -54,7 +54,7 @@ const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
     >
       <div className={cssOverlayImage} style={imageStyle} />
       <div className={cssOverlayContent}>
-        <p className={cssOverlayName}>{item.name || uiText.enDash}</p>
+        <p className={cssOverlayName}>{item.name || item.type_name}</p>
         {kind === "tag" ? (
           <div className={cssTagData}>
             <LabelList

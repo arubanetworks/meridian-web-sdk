@@ -498,6 +498,7 @@ const cssRadioContainer = (show: boolean) => {
     paddingLeft: 10,
     paddingBottom: 10,
     backgroundColor: "rgb(105, 146, 176)",
+    alignItems: "center",
   });
 };
 

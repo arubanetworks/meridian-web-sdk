@@ -43,19 +43,6 @@
         token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
       });
 
-      // Generate a polygon centered at (x, y), with "radius" r, and `n` sides
-      // function createPolygonPoints(x, y, r, n) {
-      //   const points = [];
-      //   const turn = Math.PI * 2;
-      //   const step = turn / n;
-      //   for (let theta = 0; theta < turn; theta += step) {
-      //     const dx = Math.sin(theta) * r;
-      //     const dy = Math.cos(theta) * r;
-      //     points.push(x + dx, y + dy);
-      //   }
-      //   return points;
-      // }
-
       const locationID = "5198682008846336";
       const floorID = "5755685136498688";
       const meridianMap = MeridianSDK.createMap(
@@ -66,45 +53,6 @@
           floorID: floorID,
           height: "100%",
           overlays: [
-          //   {
-          //     type: "polygon",
-          //     points: [1000, 1000, 1500, 1500, 500, 1500, 250, 1000],
-          //     fillOpacity: "15%",
-          //   },
-          //   {
-          //     type: "polygon",
-          //     points: [2000, 2000, 2500, 2500, 1500, 2500],
-          //     fill: "none",
-          //     stroke: "#fcaf3e",
-          //     strokeWidth: 8,
-          //     strokeLineJoin: "round",
-          //     data: { name: "foo", area: "cafe" },
-          //     onClick: (data) => {
-          //       // arbitrary data can be passed for each polygon
-          //       console.info("clicked polygon, data:", data);
-          //     },
-          //   },
-          //   {
-          //     type: "polygon",
-          //     points: createPolygonPoints(3200, 1500, 500, 6),
-          //     stroke: "#cc0000",
-          //     strokeWidth: 1,
-          //     strokeDashoffset: "250",
-          //     strokeDasharray: "50",
-          //     animate: {
-          //       attributeName: "stroke-dashoffset",
-          //       from: "250",
-          //       to: "50",
-          //       dur: "2s",
-          //       repeatCount: "indefinite",
-          //     },
-          //   },
-          //   {
-          //     type: "polygon",
-          //     points: createPolygonPoints(4000, 2000, 300, 5),
-          //     fill: "#cc00cc",
-          //     strokeWidth: 0,
-          //   },
           ],
           annotations: [
           {
@@ -117,9 +65,20 @@
       );
       
       const mapAnchorPoints = await api.fetchMapAnchorPoints(locationID, floorID);
-      // x: 5282.958984375 y: 3853.0380859375 pioneer placemark
       const pointLocation = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat: 37.38215607501162, lng: -121.98159912048112});
-      console.log("pointLocation", pointLocation);
+
+      const polygonArray = [];
+      let coordPoint = 1;
+      function coordinateObjectToArray({lat, lng}) {
+        const coordObject = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat, lng})
+        console.log(coordPoint, coordObject);
+        return [coordObject.x, coordObject.y];
+      }
+
+      polygonArray.push(coordinateObjectToArray({lat: 37.38217476738073, lng: -121.98124592380535}));
+      polygonArray.push(coordinateObjectToArray({lat: 37.38215630276508, lng: -121.98099902518736}));
+      polygonArray.push(coordinateObjectToArray({lat: 37.382049361776645, lng: -121.98100870748611}));
+      polygonArray.push(coordinateObjectToArray({lat: 37.382145531737166, lng: -121.98124592380535}));
 
       meridianMap.update({
           annotations: [
@@ -130,6 +89,13 @@
               size: 32,
               backgroundColor: "red",
               backgroundImage: MeridianSDK.placemarkIconURL("generic")
+            },
+          ],
+          overlays: [
+            {
+              type: "polygon",
+              points: polygonArray,
+              fillOpacity: "15%",
             },
           ]
         });

@@ -49,7 +49,7 @@ export default {
       is_default: true,
       published: true,
       group: "5433630015619072",
-      group_name: "Aruba HQ",
+      group_name: "Main Building",
       level: 1,
       level_label: "1",
       width: 7213,

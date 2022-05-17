@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Details Overlay, update no name placemark output
+- New Demo and associated functionality for converting real-world latitude and longitude to Meridian map x/y points for adding annotations or polygons
 
 ## [1.3.0] - 2021-04-29
 

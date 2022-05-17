@@ -2,7 +2,7 @@
 
 /*!
  * @license
- * Copyright 2020 Hewlett Packard Enterprise Development LP
+ * Copyright 2022 Hewlett Packard Enterprise Development LP
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -174,6 +174,105 @@ export function restrictedPanZoom(event: any): boolean {
     return event.touches.length >= 2;
   }
   return true;
+}
+
+/**
+ * Object with a Latitude & Longitude
+ */
+
+type LatLng = { lat: number; lng: number };
+
+/**
+ * Object with a lat, lng, x, y, globalX, globalY for conversion of lat/lng positioning to x/y positioning
+ */
+
+type refPoint = {
+  lat: number;
+  lng: number;
+  x: number;
+  y: number;
+  globalCoordinateX?: number;
+  globalCoordinateY?: number;
+};
+
+/**
+ * Convert from latitude and longitude to a point on a referenced map
+ * This is really complex, and I relied on the meridian-editor backend code and this
+ * article for reference:
+ * https://stackoverflow.com/questions/16266809/convert-from-latitude-longitude-to-x-y
+ * This was invaluable at helping understand
+ * equirectangular projection (https://en.wikipedia.org/wiki/Equirectangular_projection)
+ * and the basic formula to achieve this conversion (see wikipedia article)
+ * x = radius(longitude - central meridian of map) * cos(standard parallels with scale)
+ * y = radius(latitude - central parallel of map)
+ */
+
+export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
+  const latToConvert = lat;
+  const lngToConvert = lng;
+
+  const anchorPointsArray: number[] = [];
+
+  gpsRefPoints.split(",").forEach((item) => {
+    anchorPointsArray.push(Number(item));
+  });
+
+  /** Break up a map's gps_ref_points into two objects we can then
+   * use to calculate map points
+   */
+  const refPoint1: refPoint = {
+    lat: anchorPointsArray[0],
+    lng: anchorPointsArray[1],
+    x: anchorPointsArray[4],
+    y: anchorPointsArray[5],
+  };
+  const refPoint2: refPoint = {
+    lat: anchorPointsArray[2],
+    lng: anchorPointsArray[3],
+    x: anchorPointsArray[6],
+    y: anchorPointsArray[7],
+  };
+
+  const earthRadius = 6371;
+
+  /** Convert the Anchor Point lat/lng points to a coordinate x/y for each gps_ref_point
+   * cos(lat) is how we can construct a 2D image from a 3D, real-world measurement.
+   * below we take the average of the cos(lat) of both gps_ref_points because these
+   * formulas are not exact
+   */
+  refPoint1.globalCoordinateX =
+    earthRadius * refPoint1.lng * Math.cos((refPoint1.lat + refPoint2.lat) / 2);
+  refPoint1.globalCoordinateY = earthRadius * refPoint1.lat;
+
+  refPoint2.globalCoordinateX =
+    earthRadius * refPoint2.lng * Math.cos((refPoint1.lat + refPoint2.lat) / 2);
+  refPoint2.globalCoordinateY = earthRadius * refPoint2.lat;
+
+  // Calculate the x/y on a global scale for the lat/lng points we wish to convert
+  const globalPointX =
+    earthRadius * lngToConvert * Math.cos((refPoint1.lat + refPoint2.lat) / 2);
+  const globalPointY = earthRadius * latToConvert;
+
+  /** Now we calculate the percentage of Global x/y position vs global width/height
+   * The visual representation of this is as follows (calculating for xPercentage):
+   * |+++++++++++++++++++ [refPoint2.X - refPoint1.X] +++++++++++++++++++|
+   * |++ [globalPointX - refPoint1.X] ++| |++ refPoint2.X globalPointX ++|
+   * */
+  const xPercentage =
+    (globalPointX - refPoint1.globalCoordinateX) /
+    (refPoint2.globalCoordinateX - refPoint1.globalCoordinateX);
+  const yPercentage =
+    (globalPointY - refPoint1.globalCoordinateY) /
+    (refPoint2.globalCoordinateY - refPoint1.globalCoordinateY);
+
+  /** Similar visual representation as above - figuring out the map placement based
+   * on reference point screen position
+   */
+
+  const mapPointX = refPoint1.x + (refPoint2.x - refPoint1.x) * xPercentage;
+  const mapPointY = refPoint1.y + (refPoint2.y - refPoint1.y) * yPercentage;
+
+  return { x: mapPointX, y: mapPointY };
 }
 
 /**
@@ -820,6 +919,25 @@ export class API {
       const { data } = await this._axiosEditorAPI.get(url);
       return data;
     }, `locations/${locationID}/maps`);
+  }
+
+  /**
+   * [async] Returns the gps_ref_points data of specified floor
+   */
+  async fetchMapAnchorPoints(
+    locationID: string,
+    floorID: string
+  ): Promise<FloorData[]> {
+    if (!locationID) {
+      requiredParam("fetchMapAnchorPoints", "locationID");
+    }
+    if (!floorID) {
+      requiredParam("fetchMapAnchorPoints", "floorID");
+    }
+    return await fetchAllPaginatedData(async (url) => {
+      const { data } = await this._axiosEditorAPI.get(url);
+      return data.gps_ref_points || null;
+    }, `locations/${locationID}/maps/${floorID}`);
   }
 
   /**

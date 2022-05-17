@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/arubanetworks/meridian-web-sdk#readme",
   "dependencies": {
-    "@emotion/css": "^11.7.1",
+    "@emotion/css": "^11.9.0",
     "@types/d3-transition": "^3.0.1",
     "@types/lodash.groupby": "^4.6.7",
     "@types/lodash.throttle": "^4.1.7",

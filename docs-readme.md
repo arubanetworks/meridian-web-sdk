@@ -1,9 +1,5 @@
 The Meridian Web SDK officially supports evergreen versions of Firefox, Google Chrome, Microsoft Edge, and Safari browsers.
 
-## API Reference
-
-Visit [["web-sdk"]] to see the full API documentation.
-
 ## Overview
 
 The Meridian Web SDK is a JavaScript library you can use to add dynamically updating and interactive Meridian maps to your site.
@@ -129,9 +125,9 @@ module.exports = {
   //...
   resolve: {
     alias: {
-      "d3-selection": require.resolve("d3-selection")
-    }
-  }
+      "d3-selection": require.resolve("d3-selection"),
+    },
+  },
 };
 ```
 

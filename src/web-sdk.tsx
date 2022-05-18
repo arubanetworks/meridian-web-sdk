@@ -196,15 +196,14 @@ type refPoint = {
 };
 
 /**
- * Convert from latitude and longitude to a point on a referenced map
- * This is really complex, and I relied on the meridian-editor backend code and this
- * article for reference:
- * https://stackoverflow.com/questions/16266809/convert-from-latitude-longitude-to-x-y
- * This was invaluable at helping understand
- * equirectangular projection (https://en.wikipedia.org/wiki/Equirectangular_projection)
- * and the basic formula to achieve this conversion (see wikipedia article)
+ * Convert from latitude and longitude to a point on a referenced map. Uses equirectangular projection.
+ *
+ * The basic formula to achieve this is as follows:
+ *
  * x = radius(longitude - central meridian of map) * cos(standard parallels with scale)
+ *
  * y = radius(latitude - central parallel of map)
+ *
  */
 
 export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {

@@ -35,23 +35,21 @@
           api: fakeAPI,
           locationID: locationID,
           floorID: floorID,
-          overlays: [
-          ],
+          overlays: [],
           annotations: [
-          {
-            type: "point",
-            x: 0,
-            y: 0
-          }
-        ]
+            {
+              type: "point",
+              x: 0,
+              y: 0,
+            },
+          ],
         }
       );
-
       const mapAnchorPoints = await api.fetchMapAnchorPoints(
         locationID,
         floorID
       );
-      const pointLocation = api.latLngToMapPoint(mapAnchorPoints, {
+      const pointLocation = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {
         lat: 37.38215607501162,
         lng: -121.98159912048112,
       });
@@ -59,26 +57,40 @@
       const polygonArray = [];
 
       function coordinateObjectToArray({ lat, lng }) {
-        const coordObject = api.latLngToMapPoint(mapAnchorPoints, { lat, lng });
+        const coordObject = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {
+          lat,
+          lng,
+        });
 
         return [coordObject.x, coordObject.y];
       }
 
       polygonArray.push(
-        coordinateObjectToArray({ lat: 37.38217476738073, lng: -121.98124592380535 })
+        coordinateObjectToArray({
+          lat: 37.38217476738073,
+          lng: -121.98124592380535,
+        })
       );
       polygonArray.push(
-        coordinateObjectToArray({ lat: 37.38215630276508, lng: -121.98099902518736 })
+        coordinateObjectToArray({
+          lat: 37.38215630276508,
+          lng: -121.98099902518736,
+        })
       );
       polygonArray.push(
-        coordinateObjectToArray({ lat: 37.382049361776645, lng: -121.98100870748611 })
+        coordinateObjectToArray({
+          lat: 37.382049361776645,
+          lng: -121.98100870748611,
+        })
       );
       polygonArray.push(
-        coordinateObjectToArray({ lat: 37.382145531737166, lng: -121.98124592380535 })
+        coordinateObjectToArray({
+          lat: 37.382145531737166,
+          lng: -121.98124592380535,
+        })
       );
-      console.log("PolygonArray", polygonArray);
       setTimeout(() => {
-          meridianMap.update({
+        meridianMap.update({
           annotations: [
             {
               type: "point",
@@ -99,7 +111,7 @@
           ],
         });
       }, 100);
-      
+
       Object.assign(window, { meridianMap });
     </script>
   </body>

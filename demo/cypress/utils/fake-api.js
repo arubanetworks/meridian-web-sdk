@@ -82,6 +82,62 @@ class FakeAPI {
     return floorData.gps_ref_points;
   }
 
+  latLngToMapPoint(gpsRefPoints, { lat, lng }) {
+    const latToConvert = lat;
+    const lngToConvert = lng;
+
+    const anchorPointsArray = [];
+
+    gpsRefPoints.split(",").forEach((item) => {
+      anchorPointsArray.push(Number(item));
+    });
+
+    const refPoint1 = {
+      lat: anchorPointsArray[0],
+      lng: anchorPointsArray[1],
+      x: anchorPointsArray[4],
+      y: anchorPointsArray[5],
+    };
+    const refPoint2 = {
+      lat: anchorPointsArray[2],
+      lng: anchorPointsArray[3],
+      x: anchorPointsArray[6],
+      y: anchorPointsArray[7],
+    };
+
+    const earthRadius = 6371;
+
+    refPoint1.globalCoordinateX =
+      earthRadius *
+      refPoint1.lng *
+      Math.cos((refPoint1.lat + refPoint2.lat) / 2);
+    refPoint1.globalCoordinateY = earthRadius * refPoint1.lat;
+
+    refPoint2.globalCoordinateX =
+      earthRadius *
+      refPoint2.lng *
+      Math.cos((refPoint1.lat + refPoint2.lat) / 2);
+    refPoint2.globalCoordinateY = earthRadius * refPoint2.lat;
+
+    const globalPointX =
+      earthRadius *
+      lngToConvert *
+      Math.cos((refPoint1.lat + refPoint2.lat) / 2);
+    const globalPointY = earthRadius * latToConvert;
+
+    const xPercentage =
+      (globalPointX - refPoint1.globalCoordinateX) /
+      (refPoint2.globalCoordinateX - refPoint1.globalCoordinateX);
+    const yPercentage =
+      (globalPointY - refPoint1.globalCoordinateY) /
+      (refPoint2.globalCoordinateY - refPoint1.globalCoordinateY);
+
+    const mapPointX = refPoint1.x + (refPoint2.x - refPoint1.x) * xPercentage;
+    const mapPointY = refPoint1.y + (refPoint2.y - refPoint1.y) * yPercentage;
+
+    return { x: mapPointX, y: mapPointY };
+  }
+
   openStream({
     locationID,
     floorID,

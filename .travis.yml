@@ -22,7 +22,7 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_9888058ce616_key -iv $encrypted_9888058ce616_iv -in gcs-key.json.enc -out gcs-key.json -d
 install:
   - npm ci
-  - npm run cy:verify
+  - npx run cy:verify
 # "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
 # the repo right now.
 script:

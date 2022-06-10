@@ -26,8 +26,8 @@ install:
 # "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
 # the repo right now.
 script:
-  - npm test
   - npm run build
+  - npm test
   - npm run travis-cypress
 deploy:
   # Copy the files in `gcs-files/` to Google Cloud Storage. This is used for

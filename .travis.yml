@@ -5,8 +5,6 @@ branches:
     # `npm publish` when there's a new tag.
     - main
     - /^v[0-9]/
-addons:
-  chrome: stable
 language: node_js
 # Run tests against latest node and current long term support node. Only the LTS
 # job is used for `npm publish`, since we don't want to publish the package
@@ -18,12 +16,13 @@ node_js:
 # Cache npm downloads for faster CI jobs
 cache:
   npm: true
+
 before_install:
   # Decrypt Google Cloud Storage credentials
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
   - openssl aes-256-cbc -K $encrypted_9888058ce616_key -iv $encrypted_9888058ce616_iv -in gcs-key.json.enc -out gcs-key.json -d
 install:
   - npm ci
+  - npm run cy:verify
 # "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
 # the repo right now.
 script:

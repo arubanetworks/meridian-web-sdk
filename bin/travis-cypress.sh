@@ -12,7 +12,7 @@ set -eu
 
 # Run Cypress
 # npx cypress run --quiet --headless --browser chrome
-npx start-server-and-test start http://localhost:3030 cy:run
+npx start-server-and-test start http://localhost:3030 npm run cy:run
 
 # Kill webpack-dev-server
 # kill "$pid"

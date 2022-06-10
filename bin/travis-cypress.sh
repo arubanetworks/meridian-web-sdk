@@ -8,11 +8,10 @@ npm start >/dev/null 2>&1 &
 pid="$!"
 
 # Wait for it to start
-# wait-on "http://localhost:3011"
+wait-on "http://localhost"
 
 # Run Cypress
-# npx cypress run --quiet --headless --browser chrome
-npm run cy:run
+npx cypress run --quiet --headless --browser chrome
 
 # Kill webpack-dev-server
 kill "$pid"

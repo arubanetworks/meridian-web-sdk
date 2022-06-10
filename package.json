@@ -8,7 +8,7 @@
   "scripts": {
     "start": "webpack serve --env development --config webpack.dev.config.js",
     "nonlocal": "npm run start -- --host 0.0.0.0",
-    "travis-cypress": "bash bin/travis-cypress.sh",
+    "travis-cypress": "start-server-and-test start http://localhost:3030 cy:run",
     "docs": "bash bin/docs.sh",
     "build": "bash bin/build.sh",
     "analyze": "webpack --mode production --env analyze --config webpack.analyze.config.js",

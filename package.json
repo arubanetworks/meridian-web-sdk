@@ -14,7 +14,8 @@
     "analyze": "webpack --mode production --env analyze --config webpack.analyze.config.js",
     "postversion": "git push --follow-tags",
     "test": "bash bin/test.sh",
-    "upgrade": "npx npm-check -u"
+    "upgrade": "npx npm-check -u",
+    "cy:run": "cypress run --quiet --headless --browser chrome"
   },
   "browserslist": [
     "defaults"
@@ -64,6 +65,7 @@
     "jest": "^28.1.1",
     "path-browserify": "^1.0.1",
     "prettier": "^2.6.2",
+    "start-server-and-test": "^1.14.0",
     "ts-loader": "^9.3.0",
     "typedoc": "^0.22.17",
     "typescript": "^4.7.3",

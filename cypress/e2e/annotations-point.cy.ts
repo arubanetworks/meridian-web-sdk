@@ -46,9 +46,7 @@ describe("Annotations: Point", () => {
     cy.get(nthAnnotation(6))
       .should("have.css", "left", "4000px")
       .should("have.css", "top", "1600px");
-    cy.get(nthAnnotationTitle(6))
-      .contains("Title")
-      .should("exist");
+    cy.get(nthAnnotationTitle(6)).contains("Title").should("exist");
     cy.get(nthAnnotation(7))
       .should("have.css", "left", "5000px")
       .should("have.css", "top", "1600px");

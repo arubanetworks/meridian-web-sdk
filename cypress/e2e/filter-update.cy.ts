@@ -9,14 +9,14 @@ describe("Filter update", () => {
     cy.get("[data-meridian-placemark-id='5717271485874176']").should("exist");
     cy.get("[data-meridian-placemark-id]").should("have.length", 34);
 
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({
         tags: {
-          filter: tag => tag.name === "Jamboard - Blue"
+          filter: (tag) => tag.name === "Jamboard - Blue",
         },
         placemarks: {
-          filter: placemark => placemark.name === "Coffee Bar"
-        }
+          filter: (placemark) => placemark.name === "Coffee Bar",
+        },
       });
     });
 
@@ -25,10 +25,10 @@ describe("Filter update", () => {
     cy.get("[data-meridian-placemark-id='5717271485874176']").should("exist");
     cy.get("[data-meridian-placemark-id]").should("have.length", 1);
 
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({
         tags: {},
-        placemarks: {}
+        placemarks: {},
       });
     });
 

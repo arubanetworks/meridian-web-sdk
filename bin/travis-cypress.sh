@@ -10,6 +10,9 @@ set -eu
 # Wait for it to start
 # wait-on "http://localhost"
 
+
+#;lsdf
+
 # Run Cypress
 # npx cypress run --quiet --headless --browser chrome
 npx start-server-and-test start http://localhost:3030 npm run cy:run

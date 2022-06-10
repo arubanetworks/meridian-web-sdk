@@ -12,7 +12,7 @@ pid="$!"
 
 # Run Cypress
 # npx cypress run --quiet --headless --browser chrome
-npx start-server-and-test start http://localhost:3030 cy:run
+npm run cy:run
 
 # Kill webpack-dev-server
 kill "$pid"

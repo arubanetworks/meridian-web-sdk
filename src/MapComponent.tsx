@@ -483,10 +483,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         )
         // min/max zoom levels
         .scaleExtent([1 / 60, 14])
-        .translateExtent([
-          [-PADDING, -PADDING],
-          [bottomRightX, bottomRightY],
-        ])
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom)
         .on("end.zoom", onZoomEnd);

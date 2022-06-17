@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 - Cypress test for Demo of lat/lng to Meridian Map points
+- Remove pan limiting (translateExtent) related code
+- Dependency updates and security audit
 
 ## [1.4.0] - 2021-05-17
 

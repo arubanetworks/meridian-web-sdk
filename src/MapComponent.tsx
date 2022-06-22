@@ -452,11 +452,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   addZoomBehavior() {
     if (this.mapRef.current) {
-      const PADDING = 400;
-      const mapData = this.getMapData();
-      const bottomRightX = mapData?.width + PADDING;
-      const bottomRightY = mapData?.height + PADDING;
-
       const onZoom = () => {
         if (!this.mapRef.current) {
           return;

@@ -307,6 +307,8 @@ export interface CreateMapTagsOptions {
   filter?: (tag: TagData) => boolean;
   /** Disable clicking tags when true. Defaults to false. */
   disabled?: boolean;
+  /** Update interval in milliseconds, defaults to 5000 */
+  updateInterval?: number;
 }
 
 export interface CreateMapPlacemarksOptions {
@@ -686,9 +688,9 @@ export interface OpenStreamOptions {
   locationID: string;
   /** Meridian floor ID */
   floorID: string;
-  /** Default: [locationID], Valid values: [locationID | tagID | floorID | tagLabel | zoneID] */
+  /** Default: [floorID], Valid values: [locationID | tagID | floorID | tagLabel | zoneID] */
   resourceIDs?: string[];
-  /** Default: "LOCATION", Valid values: "LOCATION" | "TAG" | "FLOOR" | "LABEL" | "ZONE"  */
+  /** Default: "FLOOR", Valid values: "LOCATION" | "TAG" | "FLOOR" | "LABEL" | "ZONE"  */
   resourceType?: string;
   /** Called with ALL tags on first load */
   onInitialTags?: (tags: TagData[]) => void;
@@ -1009,7 +1011,7 @@ export class API {
     locationID,
     floorID,
     resourceIDs = [floorID],
-    resourceType = "LOCATION",
+    resourceType = "FLOOR",
     onInitialTags = () => {},
     onTagLeave = () => {},
     onTagUpdate = () => {},

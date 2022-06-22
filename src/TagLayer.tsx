@@ -72,7 +72,6 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   }
 
   commitTagUpdates = throttle(() => {
-    console.info("boom");
     if (!this.isMounted) {
       return;
     }
@@ -91,14 +90,12 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   }, this.props.tagOptions?.updateInterval || 5000);
 
   connect(floorID: string) {
-    console.info("connect");
     const { locationID, api, toggleLoadingSpinner } = this.props;
     toggleLoadingSpinner({ show: true, source: "tags" });
     const connection = api.openStream({
       locationID,
       floorID,
       onInitialTags: (tags) => {
-        console.info("onInitialTags was called");
         if (floorID === this.props.floorID && this.isMounted) {
           this.setState({ tagsByMAC: keyBy(tags, (tag) => tag.mac) }, () => {
             this.onUpdate();

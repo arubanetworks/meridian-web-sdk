@@ -5,9 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.5.1] -
+
+### Changed
+
+- Update interval for showing Tag location updates is now 5000ms
+
+### Added
+
+- Option to change the interval for Tag location updates. Default is 5000 (ms)
+
+### Fixed
+
+- Bug where Tags could appear on the wrong floor
+
+## [1.5.0] - 2021-06-17
 
 - Cypress test for Demo of lat/lng to Meridian Map points
+- Remove pan limiting (translateExtent) related code
+- Dependency updates and security audit
 
 ## [1.4.0] - 2021-05-17
 

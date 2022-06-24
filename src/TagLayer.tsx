@@ -23,6 +23,7 @@ export interface TagLayerProps {
     filter?: (tag: TagData) => boolean;
     showControlTags?: boolean;
     disabled?: boolean;
+    updateInterval?: number;
   };
   onTagClick: (tag: TagData) => void;
   onUpdate: MapComponentProps["onTagsUpdate"];
@@ -86,7 +87,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
         this.onUpdate();
       }
     );
-  }, 1000);
+  }, this.props.tagOptions?.updateInterval || 5000);
 
   connect(floorID: string) {
     const { locationID, api, toggleLoadingSpinner } = this.props;

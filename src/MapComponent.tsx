@@ -400,6 +400,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       return;
     }
     const loop = async () => {
+      this.fetchAllPlacemarksInitialized = true;
       try {
         // Clear any existing timers so we don't have two running at once
         if (this.fetchAllPlacemarksTimeout) {

@@ -22,6 +22,7 @@ export interface PlacemarkLayerProps {
   onPlacemarkClick: (placemark: PlacemarkData) => void;
   onUpdate: MapComponentProps["onPlacemarksUpdate"];
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
+  onInit: () => void;
 }
 
 export interface PlacemarkLayerState {
@@ -78,7 +79,8 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     if (!this.isMounted) {
       return;
     }
-    const { locationID, floorID, api, toggleLoadingSpinner } = this.props;
+    const { locationID, floorID, api, toggleLoadingSpinner, onInit } =
+      this.props;
     toggleLoadingSpinner({ show: true, source: "placemarks" });
     const results: PlacemarkData[] = await api.fetchPlacemarksByFloor(
       locationID,
@@ -88,6 +90,7 @@ export default class PlacemarkLayer extends Component<PlacemarkLayerProps> {
     this.setState({ fetchedPlacemarks }, () => {
       toggleLoadingSpinner({ show: false, source: "placemarks" });
     });
+    onInit();
   }
 
   getFilteredPlacemarks(placemarks: PlacemarkData[]) {

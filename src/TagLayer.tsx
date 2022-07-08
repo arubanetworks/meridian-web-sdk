@@ -28,6 +28,7 @@ export interface TagLayerProps {
   onTagClick: (tag: TagData) => void;
   onUpdate: MapComponentProps["onTagsUpdate"];
   toggleLoadingSpinner: (options: { show: boolean; source: string }) => void;
+  onInit: () => void;
 }
 
 export interface TagLayerState {
@@ -45,8 +46,8 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
 
   componentDidMount() {
     this.isMounted = true;
-    const { tagOptions, floorID } = this.props;
-    if (tagOptions) {
+    const { floorID } = this.props;
+    if (floorID) {
       this.connect(floorID);
     }
   }
@@ -90,7 +91,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   }, this.props.tagOptions?.updateInterval || 5000);
 
   connect(floorID: string) {
-    const { locationID, api, toggleLoadingSpinner } = this.props;
+    const { locationID, api, toggleLoadingSpinner, onInit } = this.props;
     toggleLoadingSpinner({ show: true, source: "tags" });
     const connection = api.openStream({
       locationID,
@@ -101,6 +102,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
             this.onUpdate();
             this.props.toggleLoadingSpinner({ show: false, source: "tags" });
           });
+          onInit();
         }
       },
       onTagLeave: (tag) => {

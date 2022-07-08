@@ -20,7 +20,7 @@ const LoadingOverlay: FunctionComponent = () => {
 const cssLoadingSpinner = css({
   label: "loading",
   position: "absolute",
-  zIndex: 3,
+  zIndex: 1,
   width: 30,
   left: 0,
   top: "45%",

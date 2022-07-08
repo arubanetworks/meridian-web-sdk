@@ -106,13 +106,20 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     tagsConnection: undefined,
     tagsStatus: "Connecting",
     selectedItem: undefined,
-    areTagsLoading: this.props.loadTags ?? true,
-    arePlacemarksLoading: true,
+    areTagsLoading: Boolean(
+      this.props.showSearchControl && this.props.loadTags
+    ),
+    arePlacemarksLoading: Boolean(
+      this.props.showSearchControl && this.props.loadPlacemarks
+    ),
     allTagData: [],
   };
+
   isMounted = false;
   fetchAllTagsTimeout: any;
+  fetchAllTagsInitialized = false;
   fetchAllPlacemarksTimeout: any;
+  fetchAllPlacemarksInitialized = false;
   mapRef = createRef<HTMLDivElement>();
   mapContainerRef = createRef<HTMLDivElement>();
   mapImageref = createRef<HTMLImageElement>();
@@ -162,8 +169,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   async loadData() {
     await this.initializeFloors();
-    this.fetchAllPlacemarks();
-    this.fetchAllTags();
     this.fetchMapImageURL();
   }
 
@@ -179,8 +184,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       this.setState({ mapImageURL: undefined, allPlacemarkData: [] });
       this.loadData();
       return;
-    } else if (this.props.loadTags && !prevProps.loadTags) {
-      this.fetchAllTags();
+    } else if (
+      this.props.loadTags &&
+      this.props.showSearchControl &&
+      !prevProps.showSearchControl
+    ) {
+      this.fetchAllTags({ forceUpdate: true });
     }
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
@@ -189,8 +198,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ mapImageURL: undefined });
       this.fetchMapImageURL();
-    } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
-      this.fetchAllPlacemarks();
+    } else if (
+      this.props.loadPlacemarks &&
+      this.props.showSearchControl &&
+      !prevProps.showSearchControl
+    ) {
+      this.fetchAllPlacemarks({ forceUpdate: true });
     }
   }
 
@@ -232,6 +245,18 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   }
 
+  onTagsInit = () => {
+    if (this.props.showSearchControl && this.props.loadTags) {
+      this.fetchAllTags();
+    }
+  };
+
+  onPlacemarksInit = () => {
+    if (this.props.showSearchControl && this.props.loadPlacemarks) {
+      this.fetchAllPlacemarks();
+    }
+  };
+
   updateMap = (newOptions: Partial<CreateMapOptions>) => {
     const { update } = this.props;
     update(newOptions);
@@ -248,8 +273,13 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   }
 
-  fetchAllTags() {
+  fetchAllTags(options = { forceUpdate: false }) {
+    if (this.fetchAllTagsInitialized && !options.forceUpdate) {
+      return;
+    }
+
     const loop = async () => {
+      this.fetchAllTagsInitialized = true;
       try {
         // Clear any existing timers so we don't have two running at once
         if (this.fetchAllTagsTimeout) {
@@ -365,7 +395,10 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   };
 
-  fetchAllPlacemarks() {
+  fetchAllPlacemarks(options = { forceUpdate: false }) {
+    if (this.fetchAllPlacemarksInitialized && !options.forceUpdate) {
+      return;
+    }
     const loop = async () => {
       try {
         // Clear any existing timers so we don't have two running at once
@@ -749,11 +782,11 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
-        {this.renderLoadingSpinner()}
         {this.renderErrorOverlay()}
         {this.renderDetailsOverlay()}
         {this.renderFloorOverlay()}
         {this.renderAssetListOverlay()}
+        {this.renderLoadingSpinner()}
         <FloorAndSearchControls
           showFloors={this.shouldShowFloors()}
           showSearch={Boolean(
@@ -799,6 +832,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
                     onPlacemarkClick={this.onPlacemarkClick}
                     onUpdate={onPlacemarksUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
+                    onInit={() => {
+                      this.onPlacemarksInit();
+                    }}
                   />
                 ) : null}
                 {this.props.loadTags ? (
@@ -813,6 +849,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
                     onTagClick={this.onTagClick}
                     onUpdate={onTagsUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
+                    onInit={() => {
+                      this.onTagsInit();
+                    }}
                   />
                 ) : null}
                 <AnnotationLayer

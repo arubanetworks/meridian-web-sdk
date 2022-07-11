@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fetch assets for SearchOverlay after floor specific assets have loaded
 
+### Added
+
+- Re-center map when the container size changes
+
 ## [1.5.1] - 2021-06-23
 
 ### Changed

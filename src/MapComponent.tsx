@@ -36,9 +36,15 @@ import {
   TagData,
 } from "./web-sdk";
 import ZoomControls from "./ZoomControls";
+import debounce from "lodash.debounce";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
+
+interface Box {
+  width: number;
+  height: number;
+}
 
 export interface MapComponentProps extends CreateMapOptions {
   destroy: () => void;
@@ -106,19 +112,28 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     tagsConnection: undefined,
     tagsStatus: "Connecting",
     selectedItem: undefined,
-    areTagsLoading: this.props.loadTags ?? true,
-    arePlacemarksLoading: true,
+    areTagsLoading: Boolean(
+      this.props.showSearchControl && this.props.loadTags
+    ),
+    arePlacemarksLoading: Boolean(
+      this.props.showSearchControl && this.props.loadPlacemarks
+    ),
     allTagData: [],
   };
+
   isMounted = false;
   fetchAllTagsTimeout: any;
+  fetchAllTagsInitialized = false;
   fetchAllPlacemarksTimeout: any;
+  fetchAllPlacemarksInitialized = false;
   mapRef = createRef<HTMLDivElement>();
   mapContainerRef = createRef<HTMLDivElement>();
   mapImageref = createRef<HTMLImageElement>();
   intervalAutoDestroy: any;
   zoomD3?: ZoomBehavior<HTMLDivElement, unknown>;
   mapSelection?: Selection<HTMLDivElement, unknown, null, undefined>;
+  mapContainerSize: Box | undefined;
+  debouncedResizeFn = debounce(this.handleResize.bind(this), 250);
 
   componentDidMount() {
     this.validateFloorID();
@@ -158,12 +173,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         this.props.destroy();
       }
     }, 1000);
+
+    window.addEventListener("resize", this.debouncedResizeFn);
   }
 
   async loadData() {
     await this.initializeFloors();
-    this.fetchAllPlacemarks();
-    this.fetchAllTags();
     this.fetchMapImageURL();
   }
 
@@ -179,8 +194,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       this.setState({ mapImageURL: undefined, allPlacemarkData: [] });
       this.loadData();
       return;
-    } else if (this.props.loadTags && !prevProps.loadTags) {
-      this.fetchAllTags();
+    } else if (
+      this.props.loadTags &&
+      this.props.showSearchControl &&
+      !prevProps.showSearchControl
+    ) {
+      this.fetchAllTags({ forceUpdate: true });
     }
     if (prevProps.floorID !== this.props.floorID) {
       this.zoomToDefault();
@@ -189,8 +208,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ mapImageURL: undefined });
       this.fetchMapImageURL();
-    } else if (this.props.loadPlacemarks !== prevProps.loadPlacemarks) {
-      this.fetchAllPlacemarks();
+    } else if (
+      this.props.loadPlacemarks &&
+      this.props.showSearchControl &&
+      !prevProps.showSearchControl
+    ) {
+      this.fetchAllPlacemarks({ forceUpdate: true });
     }
   }
 
@@ -204,6 +227,19 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
     this.freeMapImageURL();
     clearInterval(this.intervalAutoDestroy);
+    window.removeEventListener("resize", this.debouncedResizeFn);
+  }
+
+  handleResize() {
+    const previousSize = this.mapContainerSize;
+    const currentSize = this.getMapRefSize();
+    const { width: pWidth, height: pHeight } = previousSize || {};
+    const { width: cWidth, height: cHeight } = currentSize;
+
+    if (pWidth !== cWidth || pHeight !== cHeight) {
+      this.mapContainerSize = currentSize;
+      this.zoomToDefault();
+    }
   }
 
   freeMapImageURL() {
@@ -232,6 +268,18 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   }
 
+  onTagsInit = () => {
+    if (this.props.showSearchControl && this.props.loadTags) {
+      this.fetchAllTags();
+    }
+  };
+
+  onPlacemarksInit = () => {
+    if (this.props.showSearchControl && this.props.loadPlacemarks) {
+      this.fetchAllPlacemarks();
+    }
+  };
+
   updateMap = (newOptions: Partial<CreateMapOptions>) => {
     const { update } = this.props;
     update(newOptions);
@@ -248,8 +296,13 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   }
 
-  fetchAllTags() {
+  fetchAllTags(options = { forceUpdate: false }) {
+    if (this.fetchAllTagsInitialized && !options.forceUpdate) {
+      return;
+    }
+
     const loop = async () => {
+      this.fetchAllTagsInitialized = true;
       try {
         // Clear any existing timers so we don't have two running at once
         if (this.fetchAllTagsTimeout) {
@@ -365,8 +418,12 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   };
 
-  fetchAllPlacemarks() {
+  fetchAllPlacemarks(options = { forceUpdate: false }) {
+    if (this.fetchAllPlacemarksInitialized && !options.forceUpdate) {
+      return;
+    }
     const loop = async () => {
+      this.fetchAllPlacemarksInitialized = true;
       try {
         // Clear any existing timers so we don't have two running at once
         if (this.fetchAllPlacemarksTimeout) {
@@ -491,6 +548,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     const mapContainerSize = this.getMapRefSize();
     const mapWidth = mapData?.width;
     const mapHeight = mapData?.height;
+    this.mapContainerSize = mapContainerSize;
 
     if (mapWidth && mapHeight && this.mapSelection && this.zoomD3) {
       this.mapSelection.call(
@@ -749,11 +807,11 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       >
         <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
-        {this.renderLoadingSpinner()}
         {this.renderErrorOverlay()}
         {this.renderDetailsOverlay()}
         {this.renderFloorOverlay()}
         {this.renderAssetListOverlay()}
+        {this.renderLoadingSpinner()}
         <FloorAndSearchControls
           showFloors={this.shouldShowFloors()}
           showSearch={Boolean(
@@ -799,6 +857,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
                     onPlacemarkClick={this.onPlacemarkClick}
                     onUpdate={onPlacemarksUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
+                    onInit={() => {
+                      this.onPlacemarksInit();
+                    }}
                   />
                 ) : null}
                 {this.props.loadTags ? (
@@ -813,6 +874,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
                     onTagClick={this.onTagClick}
                     onUpdate={onTagsUpdate}
                     toggleLoadingSpinner={this.toggleLoadingSpinner}
+                    onInit={() => {
+                      this.onTagsInit();
+                    }}
                   />
                 ) : null}
                 <AnnotationLayer

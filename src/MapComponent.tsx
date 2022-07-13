@@ -36,9 +36,15 @@ import {
   TagData,
 } from "./web-sdk";
 import ZoomControls from "./ZoomControls";
+import debounce from "lodash.debounce";
 
 const ZOOM_FACTOR = 0.5;
 const ZOOM_DURATION = 250;
+
+interface Box {
+  width: number;
+  height: number;
+}
 
 export interface MapComponentProps extends CreateMapOptions {
   destroy: () => void;
@@ -126,6 +132,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   intervalAutoDestroy: any;
   zoomD3?: ZoomBehavior<HTMLDivElement, unknown>;
   mapSelection?: Selection<HTMLDivElement, unknown, null, undefined>;
+  mapContainerSize: Box | undefined;
+  debouncedResizeFn = debounce(this.handleResize.bind(this), 250);
 
   componentDidMount() {
     this.validateFloorID();
@@ -165,6 +173,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         this.props.destroy();
       }
     }, 1000);
+
+    window.addEventListener("resize", this.debouncedResizeFn);
   }
 
   async loadData() {
@@ -217,6 +227,19 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
     this.freeMapImageURL();
     clearInterval(this.intervalAutoDestroy);
+    window.removeEventListener("resize", this.debouncedResizeFn);
+  }
+
+  handleResize() {
+    const previousSize = this.mapContainerSize;
+    const currentSize = this.getMapRefSize();
+    const { width: pWidth, height: pHeight } = previousSize || {};
+    const { width: cWidth, height: cHeight } = currentSize;
+
+    if (pWidth !== cWidth || pHeight !== cHeight) {
+      this.mapContainerSize = currentSize;
+      this.zoomToDefault();
+    }
   }
 
   freeMapImageURL() {
@@ -525,6 +548,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     const mapContainerSize = this.getMapRefSize();
     const mapWidth = mapData?.width;
     const mapHeight = mapData?.height;
+    this.mapContainerSize = mapContainerSize;
 
     if (mapWidth && mapHeight && this.mapSelection && this.zoomD3) {
       this.mapSelection.call(

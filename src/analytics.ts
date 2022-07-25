@@ -63,7 +63,7 @@
     body: JSON.stringify({
       client_id: locationID,
       events: [{
-        name: "page_test",
+        name: "page_event",
         params: {
           ...params,
           session_id: locationID,

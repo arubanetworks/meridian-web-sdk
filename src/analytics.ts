@@ -4,11 +4,11 @@
  */
 
 import { version } from "./web-sdk";
- 
+
 const pixelRatio = window.devicePixelRatio || 1;
 const screen = window.screen;
 const screenRes = `${screen.width * pixelRatio}x${screen.height * pixelRatio}`;
- 
+
 interface SendAnalyticsCodeEventOptions {
   action: string;
   locationID: string;
@@ -17,7 +17,7 @@ interface SendAnalyticsCodeEventOptions {
   placemarksFilter?: boolean;
   internalUpdate?: boolean;
 }
- 
+
 export async function sendAnalyticsCodeEvent(
   options: SendAnalyticsCodeEventOptions
 ) {

@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.6.0] - 2021-07-13
+## [1.6.0] - 2022-07-13
 
 ### Changed
 
@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Re-center map when the container size changes
 
-## [1.5.1] - 2021-06-23
+## [1.5.1] - 2022-06-23
 
 ### Changed
 
@@ -29,13 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bug where Tags could appear on the wrong floor
 
-## [1.5.0] - 2021-06-17
+## [1.5.0] - 2022-06-17
 
 - Cypress test for Demo of lat/lng to Meridian Map points
 - Remove pan limiting (translateExtent) related code
 - Dependency updates and security audit
 
-## [1.4.0] - 2021-05-17
+## [1.4.0] - 2022-05-17
 
 ### Changed
 
@@ -46,19 +46,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Annotation Demo and associated functionality for converting real-world coordinates
   (lat/lng) to Meridian Map x/y points
 
-## [1.3.0] - 2021-04-29
+## [1.3.0] - 2022-04-29
 
 ### Added
 
 - Directions Overview demo showing how to use the Directions API
   to display a route that navigates across multiple floors
 
-## [1.2.1] - 2021-04-25
+## [1.2.1] - 2022-04-25
 
 - SearchOverlay, align radio buttons with labels
 - async package patch
 
-## [1.2.0] - 2021-04-06
+## [1.2.0] - 2022-04-06
 
 ### Added
 
@@ -77,30 +77,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - id
   - className (class)
 
-## [1.1.1] - 2021-03-17
+## [1.1.1] - 2022-03-17
 
 - Change `master` branch name and all references to `main`
 
-## [1.1.0] - 2021-03-09
+## [1.1.0] - 2022-03-09
 
 ### Added
 
 - New resource options (`resourceIDs`, `resourceType`) added to `api.openStream()`
   for tracking Zone updates. See "api.openStream(), Tag Zone" demo.
 
-## [1.0.2] - 2021-02-17
+## [1.0.2] - 2022-02-17
 
 ### Fixed
 
 - Issue where unnamed Tags could cause an empty list in the Asset List Overlay.
 
-## [1.0.1] - 2021-02-16
+## [1.0.1] - 2022-02-16
 
 ### Fixed
 
 - Issue where unnamed Placemarks could cause an empty list in the Asset List Overlay.
 
-## [1.0.0] - 2021-02-09
+## [1.0.0] - 2022-02-09
 
 ### Removed
 

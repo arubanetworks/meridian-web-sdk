@@ -36,7 +36,6 @@ export async function sendAnalyticsCodeEvent(
   } = options;
   const params = {
     session_id: locationID, // Needed to show in realtime reports
-    engagement_time_msec: "1",
     v: "1", // GA version
     app_name: "MeridianSDK", // Application Name
     data_src: "app", // Data Source

@@ -4,6 +4,7 @@
  */
 
 import { version } from "./web-sdk";
+import GA4_KEY from "../ga4-key.js";
 
 const pixelRatio = window.devicePixelRatio || 1;
 const screen = window.screen;
@@ -34,12 +35,14 @@ export async function sendAnalyticsCodeEvent(
     internalUpdate = false,
   } = options;
   const params = {
+    session_id: locationID, // Needed to show in realtime reports
+    engagement_time_msec: "1",
     v: "1", // GA version
     app_name: "MeridianSDK", // Application Name
     data_src: "app", // Data Source
     app_version: version, // Application Version
-    user_id: locationID, // User ID
-    client_id: locationID, // Client ID
+    uid: locationID, // User ID
+    cid: locationID, // Client ID
     hit_type: "event", // Hit Type
     event_category: "code", // Event Category
     event_action: action, // Event Action
@@ -56,9 +59,8 @@ export async function sendAnalyticsCodeEvent(
   };
  
   const measurement_id = `G-GCT86YZLFE`;
-  const api_secret = `1v79k_rPSLyvvcHpzSDqFQ`;
   
-  fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${measurement_id}&api_secret=${api_secret}`, {
+  fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${measurement_id}&api_secret=${GA4_KEY}`, {
     method: "POST",
     body: JSON.stringify({
       client_id: locationID,
@@ -66,7 +68,6 @@ export async function sendAnalyticsCodeEvent(
         name: "page_event",
         params: {
           ...params,
-          session_id: locationID,
         }
       }]
     })

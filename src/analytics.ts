@@ -3,8 +3,6 @@
  * @packageDocumentation
  */
 
-import axios from "axios";
-
 import { version } from "./web-sdk";
 
 const pixelRatio = window.devicePixelRatio || 1;
@@ -36,26 +34,42 @@ export async function sendAnalyticsCodeEvent(
     internalUpdate = false,
   } = options;
   const params = {
+    session_id: locationID, // Needed to show in realtime reports
     v: "1", // GA version
-    tid: "UA-56747301-5", // Tracking ID
-    an: "MeridianSDK", // Application Name
-    ds: "app", // Data Source
-    av: version, // Application Version
+    app_name: "MeridianSDK", // Application Name
+    data_src: "app", // Data Source
+    app_version: version, // Application Version
     uid: locationID, // User ID
     cid: locationID, // Client ID
-    t: "event", // Hit Type
-    ec: "code", // Event Category
-    ea: action, // Event Action
-    ev: 1, // Event Value
-    el: internalUpdate ? "internal" : "external", // Event Label
-    cm1: onTagsUpdate ? 1 : 0, // Custom Metric
-    cm2: tagsFilter ? 1 : 0, // Custom Metric
-    cm3: placemarksFilter ? 1 : 0, // Custom Metric
-    ul: navigator.language, // User Language
-    sr: screenRes, // Screen Resolution
-    aip: 1, // Anonymize IP
-    ua: window.navigator.userAgent, // User Agent
+    hit_type: "event", // Hit Type
+    event_category: "code", // Event Category
+    event_action: action, // Event Action
+    event_value: 1, // Event Value
+    event_label: internalUpdate ? "internal" : "external", // Event Label
+    tag_update: onTagsUpdate ? 1 : 0, // Custom Metric
+    tags_filter: tagsFilter ? 1 : 0, // Custom Metric
+    placemarks_filter: placemarksFilter ? 1 : 0, // Custom Metric
+    language: navigator.language, // User Language
+    screen_res: screenRes, // Screen Resolution
+    anonymize_ip: 1, // Anonymize IP
+    user_agent: window.navigator.userAgent, // User Agent
     z: Math.random().toString(36).substring(7), // Cache Buster (per google)
   };
-  axios.get("https://www.google-analytics.com/collect", { params });
+ 
+  const measurement_id = `G-GCT86YZLFE`;
+  const api_secret = `1v79k_rPSLyvvcHpzSDqFQ`;
+  
+  fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${measurement_id}&api_secret=${api_secret}`, {
+    method: "POST",
+    body: JSON.stringify({
+      client_id: locationID,
+      events: [{
+        name: "page_event",
+        params: {
+          ...params,
+        }
+      }]
+    })
+  });
 }
+

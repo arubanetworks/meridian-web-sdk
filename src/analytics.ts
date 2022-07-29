@@ -4,7 +4,6 @@
  */
 
 import { version } from "./web-sdk";
-import GA4_KEY from "../ga4-key.js";
 
 const pixelRatio = window.devicePixelRatio || 1;
 const screen = window.screen;
@@ -58,8 +57,9 @@ export async function sendAnalyticsCodeEvent(
   };
  
   const measurement_id = `G-GCT86YZLFE`;
+  const api_secret = `1v79k_rPSLyvvcHpzSDqFQ`;
   
-  fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${measurement_id}&api_secret=${GA4_KEY}`, {
+  fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${measurement_id}&api_secret=${api_secret}`, {
     method: "POST",
     body: JSON.stringify({
       client_id: locationID,

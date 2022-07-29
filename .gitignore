@@ -32,5 +32,3 @@ cypress.env.json
 
 gcs-files/
 gcs-key.json
-
-ga4-key.js

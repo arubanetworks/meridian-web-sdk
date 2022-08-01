@@ -179,7 +179,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   async loadData() {
     await this.initializeFloors();
-    this.fetchMapImageURL();
   }
 
   componentDidUpdate(prevProps: MapComponentProps) {
@@ -502,6 +501,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         }
         this.zoomToDefault();
         asyncClientCall(onFloorsUpdate, floors);
+        this.fetchMapImageURL();
       });
     }
     this.toggleLoadingSpinner({ show: false, source: "map" });

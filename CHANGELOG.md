@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Dependency updates and security audit
+
 ### Changed
 
 - Init modification to prevent race conditions

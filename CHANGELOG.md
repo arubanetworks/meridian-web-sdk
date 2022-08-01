@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Migrate analytics to GA4
+### Changed
+
+- Init modification to prevent race conditions
 
 ## [1.6.0] - 2022-07-13
 

@@ -105,16 +105,14 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
           onInit();
         }
       },
-      onTagLeave: (tag) => {
-        if (floorID === this.props.floorID && this.isMounted) {
-          this.setState(({ tagsByMAC }) => {
-            return objectWithoutKey(tagsByMAC, tag.mac);
-          });
-        }
-      },
       onTagUpdate: (tag) => {
         if (floorID === this.props.floorID && this.isMounted) {
           this.tagUpdates = { ...this.tagUpdates, [tag.mac]: tag };
+          if (floorID !== tag.map_id) {
+            this.setState(({ tagsByMAC }) => {
+              return objectWithoutKey(tagsByMAC, tag.mac);
+            });
+          }
           if (!this.props.isPanningOrZooming) {
             this.commitTagUpdates();
           }
@@ -153,17 +151,11 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
     }
     this.setState(
       (prevState) => {
-        const tagsByMAC = { ...prevState.tagsByMAC };
-        for (const mac of Object.keys(tagsByMAC)) {
-          if (tagsByMAC[mac].map_id === floorID) {
-            delete tagsByMAC[mac];
-          }
-        }
         const connectionsByFloorID = objectWithoutKey(
           prevState.connectionsByFloorID,
           floorID
         );
-        return { tagsByMAC, connectionsByFloorID };
+        return { tagsByMAC: {}, connectionsByFloorID };
       },
       () => {
         this.onUpdate();

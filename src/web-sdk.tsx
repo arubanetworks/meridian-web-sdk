@@ -183,6 +183,12 @@ export function restrictedPanZoom(event: any): boolean {
 type LatLng = { lat: number; lng: number };
 
 /**
+ * Object with a X & Y
+ */
+
+type XY = { x: number; y: number };
+
+/**
  * Object with a lat, lng, x, y, globalX, globalY for conversion of lat/lng positioning to x/y positioning
  */
 
@@ -272,6 +278,55 @@ export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
   const mapPointY = refPoint1.y + (refPoint2.y - refPoint1.y) * yPercentage;
 
   return { x: mapPointX, y: mapPointY };
+}
+
+/**
+ * Convert from latitude and longitude to a point on a referenced map. Uses equirectangular projection.
+ *
+ * The basic formula to achieve this is as follows:
+ *
+ * x = radius(longitude - central meridian of map) * cos(standard parallels with scale)
+ *
+ * y = radius(latitude - central parallel of map)
+ *
+ */
+
+export function mapPointToLatLng(gpsRefPoints: string, { x, y }: XY) {
+  // Longitude = (x / globalRadius * cos(standard parallels)) + central meridian
+  // Latitude = (y / globalRadius ) + central parallel
+
+  const anchorPointsArray: number[] = [];
+
+  gpsRefPoints.split(",").forEach((item) => {
+    anchorPointsArray.push(Number(item));
+  });
+
+  /** Break up a map's gps_ref_points into two objects we can then
+   * use to calculate map points
+   */
+  const refPoint1: refPoint = {
+    lat: anchorPointsArray[0],
+    lng: anchorPointsArray[1],
+    x: anchorPointsArray[4],
+    y: anchorPointsArray[5],
+  };
+  const refPoint2: refPoint = {
+    lat: anchorPointsArray[2],
+    lng: anchorPointsArray[3],
+    x: anchorPointsArray[6],
+    y: anchorPointsArray[7],
+  };
+  const earthRadius = 6371;
+
+  // Longitude = (x / globalRadius * cos(standard parallels)) + central meridian
+  // Latitude = (y / globalRadius ) + central parallel
+  const mapPointLng =
+    (x / earthRadius) * Math.cos(0) + (refPoint1.lng + refPoint2.lng) / 2;
+  const mapPointLat = y / earthRadius + (refPoint1.lat + refPoint2.lat) / 2;
+  // longitude = minLongitude + (MouseEvent.getX/Canvas.Width)*maxLongitude
+  // lalitude = minLatitude + (MouseEvent.getY/Canvas.Height)*maxLatitude
+
+  return { lat: mapPointLat, lng: mapPointLng };
 }
 
 /**

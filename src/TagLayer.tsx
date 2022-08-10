@@ -107,14 +107,22 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
       },
       onTagUpdate: (tag) => {
         if (floorID === this.props.floorID && this.isMounted) {
-          this.tagUpdates = { ...this.tagUpdates, [tag.mac]: tag };
           if (floorID !== tag.map_id) {
-            this.setState(({ tagsByMAC }) => {
-              return objectWithoutKey(tagsByMAC, tag.mac);
-            });
-          }
-          if (!this.props.isPanningOrZooming) {
-            this.commitTagUpdates();
+            this.setState(
+              (prevState) => {
+                return {
+                  tagsByMAC: objectWithoutKey(prevState.tagsByMAC, tag.mac),
+                };
+              },
+              () => {
+                this.onUpdate();
+              }
+            );
+          } else {
+            this.tagUpdates = { ...this.tagUpdates, [tag.mac]: tag };
+            if (!this.props.isPanningOrZooming) {
+              this.commitTagUpdates();
+            }
           }
         }
       },

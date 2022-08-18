@@ -775,8 +775,6 @@ export interface OpenStreamOptions {
   resourceType?: string;
   /** Called with ALL tags on first load */
   onInitialTags?: (tags: TagData[]) => void;
-  /** Called when a tag exits the floor */
-  onTagLeave?: (tag: TagData) => void;
   /** Called when a tag location updates */
   onTagUpdate?: (tag: TagData) => void;
   /** Called when an error happens */
@@ -1094,7 +1092,6 @@ export class API {
     resourceIDs = [floorID],
     resourceType = "FLOOR",
     onInitialTags = () => {},
-    onTagLeave = () => {},
     onTagUpdate = () => {},
     onException = () => {},
     onClose = () => {},
@@ -1156,9 +1153,7 @@ export class API {
       if (data.result) {
         for (const assetUpdate of data.result.asset_updates) {
           const eventType = assetUpdate.event_type;
-          if (eventType === "DELETE") {
-            asyncClientCall(onTagLeave, assetUpdate);
-          } else if (eventType === "UPDATE") {
+          if (eventType === "UPDATE") {
             asyncClientCall(onTagUpdate, assetUpdate);
           } else {
             throw new Error(`Unknown event type: ${eventType}`);

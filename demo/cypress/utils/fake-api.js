@@ -86,7 +86,6 @@ class FakeAPI {
     locationID,
     floorID,
     onInitialTags,
-    // onTagLeave,
     onTagUpdate,
     // onException,
     // onClose

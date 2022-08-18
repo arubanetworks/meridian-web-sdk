@@ -73,13 +73,13 @@ class FakeAPI {
     return URL.createObjectURL(blob);
   }
 
-  async fetchMapAnchorPoints(_locationID, floorID) {
+  async fetchFloorData(_locationID, floorID) {
     await this._sleep();
     const floorData = mockMaps.results.find((item) => item.id === floorID);
     if (!floorData) {
       return null;
     }
-    return floorData.gps_ref_points;
+    return floorData;
   }
 
   openStream({

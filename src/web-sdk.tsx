@@ -189,6 +189,12 @@ type LatLng = { lat: number; lng: number };
 type XY = { x: number; y: number };
 
 /**
+ * Object to descript the width and height of a map
+ */
+
+type MapDimensions = { width: number; height: number };
+
+/**
  * Object with a lat, lng, x, y, globalX, globalY for conversion of lat/lng positioning to x/y positioning
  */
 
@@ -281,7 +287,7 @@ export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
 }
 
 /**
- * Convert from latitude and longitude to a point on a referenced map. Uses equirectangular projection.
+ * Convert from a point on a referenced map to latitude and longitude. Uses equirectangular projection.
  *
  * The basic formula to achieve this is as follows:
  *
@@ -291,10 +297,11 @@ export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
  *
  */
 
-export function mapPointToLatLng(gpsRefPoints: string, { x, y }: XY) {
-  // Longitude = (x / globalRadius * cos(standard parallels)) + central meridian
-  // Latitude = (y / globalRadius ) + central parallel
-
+export function mapPointToLatLng(
+  gpsRefPoints: string,
+  { x, y }: XY,
+  { width, height }: MapDimensions
+) {
   const anchorPointsArray: number[] = [];
 
   gpsRefPoints.split(",").forEach((item) => {
@@ -316,15 +323,34 @@ export function mapPointToLatLng(gpsRefPoints: string, { x, y }: XY) {
     x: anchorPointsArray[6],
     y: anchorPointsArray[7],
   };
-  const earthRadius = 6371;
 
-  // Longitude = (x / globalRadius * cos(standard parallels)) + central meridian
-  // Latitude = (y / globalRadius ) + central parallel
-  const mapPointLng =
-    (x / earthRadius) * Math.cos(0) + (refPoint1.lng + refPoint2.lng) / 2;
-  const mapPointLat = y / earthRadius + (refPoint1.lat + refPoint2.lat) / 2;
-  // longitude = minLongitude + (MouseEvent.getX/Canvas.Width)*maxLongitude
-  // lalitude = minLatitude + (MouseEvent.getY/Canvas.Height)*maxLatitude
+  function findBottomLat() {
+    let theBottomLat;
+    if (refPoint1.y < refPoint2.y) {
+      theBottomLat = refPoint2.lat;
+    } else {
+      theBottomLat = refPoint1.lat;
+    }
+    return theBottomLat;
+  }
+
+  const mapLonLeft = refPoint1.lng;
+  const mapLonRight = refPoint2.lng;
+  const mapLonDelta = mapLonRight - mapLonLeft;
+  const mapLatBottom = findBottomLat();
+  const mapLatBottomRadian = (mapLatBottom * Math.PI) / 180;
+  const worldMapRadius: number = ((width / mapLonDelta) * 360) / (2 * Math.PI);
+  const mapOffsetY: number =
+    (worldMapRadius / 2) *
+    Math.log(
+      (1 + Math.sin(mapLatBottomRadian)) / (1 - Math.sin(mapLatBottomRadian))
+    );
+  const equatorY: number = height + mapOffsetY;
+  const a: number = (equatorY - y) / worldMapRadius;
+
+  const mapPointLat: number =
+    (180 / Math.PI) * (2 * Math.atan(Math.exp(a)) - Math.PI / 2);
+  const mapPointLng: number = mapLonLeft + (x / width) * mapLonDelta;
 
   return { lat: mapPointLat, lng: mapPointLng };
 }
@@ -978,21 +1004,21 @@ export class API {
   }
 
   /**
-   * [async] Returns the gps_ref_points data of specified floor
+   * [async] Returns the data of specified floor
    */
-  async fetchMapAnchorPoints(
+  async fetchFloorData(
     locationID: string,
     floorID: string
   ): Promise<FloorData[]> {
     if (!locationID) {
-      requiredParam("fetchMapAnchorPoints", "locationID");
+      requiredParam("fetchFloorData", "locationID");
     }
     if (!floorID) {
-      requiredParam("fetchMapAnchorPoints", "floorID");
+      requiredParam("fetchFloorData", "floorID");
     }
     return await fetchAllPaginatedData(async (url) => {
       const { data } = await this._axiosEditorAPI.get(url);
-      return data.gps_ref_points || null;
+      return data || null;
     }, `locations/${locationID}/maps/${floorID}`);
   }
 

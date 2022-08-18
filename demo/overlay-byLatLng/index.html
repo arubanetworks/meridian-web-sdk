@@ -173,7 +173,8 @@
         }
       );
       
-      const mapAnchorPoints = await api.fetchMapAnchorPoints(locationID, floorID);
+      const floorData = await api.fetchFloorData(locationID, floorID);
+      const mapAnchorPoints = floorData.gps_ref_points;
       const pointLocation = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat: 37.38215607501162, lng: -121.98159912048112});
 
       const polygonArray = [];

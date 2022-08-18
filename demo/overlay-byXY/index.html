@@ -172,29 +172,15 @@
         ]
         }
       );
+      const floorData = await api.fetchFloorData(locationID, floorID);
+      const mapAnchorPoints = floorData.gps_ref_points;
 
-      const floorPlacemarks = await api.fetchPlacemarksByFloor(locationID, floorID);
-      console.log(floorPlacemarks)
-      const mapAnchorPoints = await api.fetchMapAnchorPoints(locationID, floorID);
-      const data = await api.fetchFloorsByLocation(locationID);
+      const pointLocation = MeridianSDK.mapPointToLatLng(mapAnchorPoints, {x: 5269.126531688274, y: 3824.493588695426}, {width: floorData.width, height: floorData.height});
 
-      // x: 5269.126531688274, y: 3824.493588695426, lat: 37.38215607501162, lng: -121.98159912048112
-      const pointLocation = MeridianSDK.mapPointToLatLng(mapAnchorPoints, {x: 5269.126531688274, y: 3824.493588695426});
-      // const polygonArray = [];
-      const pointLocation2 = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat: 37.982323470357265, lng: -121.15432290769321});
+      const pointLocation2 = MeridianSDK.latLngToMapPoint(mapAnchorPoints, pointLocation);
 
-      // function coordinateObjectToArray({lat, lng}) {
-      //   const coordObject = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat, lng});
+      console.log("map point to lat lng ", pointLocation);
 
-      //   return [coordObject.x, coordObject.y];
-      // }
-
-      // polygonArray.push(coordinateObjectToArray({lat: 37.38217476738073, lng: -121.98124592380535}));
-      // polygonArray.push(coordinateObjectToArray({lat: 37.38215630276508, lng: -121.98099902518736}));
-      // polygonArray.push(coordinateObjectToArray({lat: 37.382049361776645, lng: -121.98100870748611}));
-      // polygonArray.push(coordinateObjectToArray({lat: 37.382145531737166, lng: -121.98124592380535}));
-      console.log("point Location x/y to lat/lng: ", pointLocation);
-      console.log("then back to xy: ", pointLocation2);
       meridianMap.update({
           annotations: [
             {
@@ -206,13 +192,6 @@
               backgroundImage: MeridianSDK.placemarkIconURL("generic")
             },
           ],
-          // overlays: [
-          //   {
-          //     type: "polygon",
-          //     points: polygonArray,
-          //     fillOpacity: "15%",
-          //   },
-          // ]
         });
     </script>
   </body>

@@ -287,13 +287,12 @@ export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
 }
 
 /**
- * Convert from a point on a referenced map to latitude and longitude. Uses equirectangular projection.
+ * Convert from a point on a referenced map to latitude and longitude. Uses mercator projection.
  *
  * The basic formula to achieve this is as follows:
  *
- * x = radius(longitude - central meridian of map) * cos(standard parallels with scale)
- *
- * y = radius(latitude - central parallel of map)
+ * latitute = 2(tan^-1)[exp(y / radius)]
+ * longitude = central parallel of map + (x / radius) - PI / 2
  *
  */
 
@@ -324,6 +323,18 @@ export function mapPointToLatLng(
     y: anchorPointsArray[7],
   };
 
+  /**
+   * The farthest most left and right longitude of the provided map
+   */
+  const mapLngLeft = refPoint1.lng;
+  const mapLngRight = refPoint2.lng;
+  const mapLonDelta = mapLngRight - mapLngLeft;
+
+  /** We need the bottom latitude of the map to do these calculations, however we don't
+   * immediately know which reference point is the lowest reference point. So we look at
+   * the reference point screen x,y data to see which point is lower. We can then use the
+   * latitude of that reference point as the bottom latitude.
+   */
   function findBottomLat() {
     let theBottomLat;
     if (refPoint1.y < refPoint2.y) {
@@ -333,24 +344,23 @@ export function mapPointToLatLng(
     }
     return theBottomLat;
   }
-
-  const mapLonLeft = refPoint1.lng;
-  const mapLonRight = refPoint2.lng;
-  const mapLonDelta = mapLonRight - mapLonLeft;
   const mapLatBottom = findBottomLat();
   const mapLatBottomRadian = (mapLatBottom * Math.PI) / 180;
   const worldMapRadius: number = ((width / mapLonDelta) * 360) / (2 * Math.PI);
-  const mapOffsetY: number =
+
+  /**
+   * Here we figure out where the map is globally and preserve a conformal map projection
+   */
+  const parallelOffset: number =
     (worldMapRadius / 2) *
     Math.log(
       (1 + Math.sin(mapLatBottomRadian)) / (1 - Math.sin(mapLatBottomRadian))
     );
-  const equatorY: number = height + mapOffsetY;
-  const a: number = (equatorY - y) / worldMapRadius;
+  const mapOffset: number = (height + parallelOffset - y) / worldMapRadius;
 
   const mapPointLat: number =
-    (180 / Math.PI) * (2 * Math.atan(Math.exp(a)) - Math.PI / 2);
-  const mapPointLng: number = mapLonLeft + (x / width) * mapLonDelta;
+    (180 / Math.PI) * (2 * Math.atan(Math.exp(mapOffset)) - Math.PI / 2);
+  const mapPointLng: number = mapLngLeft + (x / width) * mapLonDelta;
 
   return { lat: mapPointLat, lng: mapPointLng };
 }

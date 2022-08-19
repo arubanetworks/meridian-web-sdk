@@ -22,13 +22,13 @@
       }
 
       .map {
-        max-width: 800px;
+        max-width: 1000px;
         margin: auto;
         border: 1px solid #ccc;
       }
 
       .controls {
-        max-width: 760px;
+        max-width: 960px;
         background: hsl(210, 50%, 98%);
         color: hsl(210, 80%, 30%);
         border: 1px solid hsl(210, 30%, 80%);
@@ -37,7 +37,7 @@
       }
 
       .code-container {
-        max-width: 540px;
+        max-width: 740px;
         padding: 20px;
         margin: 20px auto;
         color: black;
@@ -66,12 +66,25 @@
           </span>
           <span>
           Adding an annotation: <br/><br/>
-          <span class="indent">convert your latitude and longitude to a screen x/y and update the map with an annotation</span>
+          <span class="indent">Convert your x and y points to latitude and longitude. 
+            To get an accurate latitude and longitude you need to include the width and height of your map 
+            in addition to the x,y values you would like to convert. In this example you can view the 
+            latitude and longitude in the console.</span>
           <p class="code-container">
             <code>
-              const pointLocation = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat: 37.38215607501162, lng: -121.98159912048112});
+              const xyToLatLng = MeridianSDK.mapPointToLatLng(mapAnchorPoints, 
+              {x: 5269.126531688274, y: 3824.493588695426}, {width: floorData.width, height: floorData.height});
             </code>
-              <br/> <br/>
+          </p>
+        </span>
+        <span>
+          To confirm we have generated the proper latitude and longitute, we will convert our lat/lng
+           to screen X and Y points that we can create an annotation for and update the map with an annotation: <br/>
+          <p class="code-container">
+            <code>
+              const latLngToXy = MeridianSDK.latLngToMapPoint(mapAnchorPoints, xyToLatLng);
+           </code>
+           <br/> <br/>
             <code>
               meridianMap.update({<br/>
                 <code class="indent">
@@ -80,8 +93,8 @@
                   { <br/>
                     <code class="indent">
                     type: "point",<br/>
-                    x: pointLocation.x,<br/>
-                    y: pointLocation.y,<br/>
+                    x: latLngToXy.x,<br/>
+                    y: latLngToXy.y,<br/>
                     size: 32,<br/>
                     backgroundColor: "red",<br/>
                     backgroundImage: MeridianSDK.placemarkIconURL("generic")<br/>
@@ -93,57 +106,7 @@
               });
             </code>
           </p>
-        </span>
-        <span>
-          Adding a polygon:<br/><br/>
-          <span class="indent">polygons are created using an array of coordinate arrays - convert your lat/lng points to x/y points</span>
-          <p class="code-container">
-            <code>
-              const polygonArray = []; <br/><br/>
-            </code>
-            <code>
-              function coordinateObjectToArray({lat, lng}) {<br/>
-                <code class="indent">
-                const coordObject = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat, lng});<br/>
-                return [coordObject.x, coordObject.y];<br/>
-                </code>
-              }<br/>
-            </code>
-          </p>
-          <span class="indent">then push your x/y coordinate arrays to a polygon array</span>  
-          <p class="code-container">
-            <code>
-              polygonArray.push(coordinateObjectToArray({lat: 37.38217476738073, lng: -121.98124592380535}));<br/><br/>
-              polygonArray.push(coordinateObjectToArray({lat: 37.38215630276508, lng: -121.98099902518736}));<br/><br/>
-              polygonArray.push(coordinateObjectToArray({lat: 37.382049361776645, lng: -121.98100870748611}));<br/><br/>
-              polygonArray.push(coordinateObjectToArray({lat: 37.382145531737166, lng: -121.98124592380535}));<br/><br/>
-            </code>
-          </p>
-            <p>
-            <span class="indent">update your overlay points with your polygon array</span>
-            <p class="code-container">
-              <code>
-                <code>
-                  meridianMap.update({<br/>
-                    <code class="indent">
-                    overlays: [ <br/>
-                    <code class="indent">
-                      { <br/>
-                        <code class="indent">
-                        type: "polygon",<br/>
-                        points: polygonArray,<br/>
-                        fillOpacity: "15%",<br/>
-                      </code>
-                      },<br/>
-                    </code>
-                    ],<br/>
-                    </code>
-                  });
-                </code>
-              </code>
-            </p>
-          </p>
-        </span>
+          </span>
       </div>
     </div>
     <script src="../meridian-sdk.js"></script>
@@ -175,18 +138,18 @@
       const floorData = await api.fetchFloorData(locationID, floorID);
       const mapAnchorPoints = floorData.gps_ref_points;
 
-      const pointLocation = MeridianSDK.mapPointToLatLng(mapAnchorPoints, {x: 5269.126531688274, y: 3824.493588695426}, {width: floorData.width, height: floorData.height});
+      const xyToLatLng = MeridianSDK.mapPointToLatLng(mapAnchorPoints, {x: 5269.126531688274, y: 3824.493588695426}, {width: floorData.width, height: floorData.height});
 
-      const pointLocation2 = MeridianSDK.latLngToMapPoint(mapAnchorPoints, pointLocation);
+      const latLngToXy = MeridianSDK.latLngToMapPoint(mapAnchorPoints, xyToLatLng);
 
-      console.log("map point to lat lng ", pointLocation);
+      console.log("MeridianSDK.mapPointToLatLng output: ", xyToLatLng);
 
       meridianMap.update({
           annotations: [
             {
               type: "point",
-              x: pointLocation2.x,
-              y: pointLocation2.y,
+              x: latLngToXy.x,
+              y: latLngToXy.y,
               size: 32,
               backgroundColor: "red",
               backgroundImage: MeridianSDK.placemarkIconURL("generic")

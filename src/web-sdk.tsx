@@ -189,12 +189,6 @@ type LatLng = { lat: number; lng: number };
 type XY = { x: number; y: number };
 
 /**
- * Object to descript the width and height of a map
- */
-
-type MapDimensions = { width: number; height: number };
-
-/**
  * Object with a lat, lng, x, y, globalX, globalY for conversion of lat/lng positioning to x/y positioning
  */
 
@@ -218,13 +212,16 @@ type refPoint = {
  *
  */
 
-export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
+export function latLngToMapPoint(
+  floorData: Partial<FloorData>,
+  { lat, lng }: LatLng
+) {
   const latToConvert = lat;
   const lngToConvert = lng;
 
   const anchorPointsArray: number[] = [];
 
-  gpsRefPoints.split(",").forEach((item) => {
+  floorData.gps_ref_points.split(",").forEach((item: string) => {
     anchorPointsArray.push(Number(item));
   });
 
@@ -296,14 +293,10 @@ export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
  *
  */
 
-export function mapPointToLatLng(
-  gpsRefPoints: string,
-  { x, y }: XY,
-  { width, height }: MapDimensions
-) {
+export function mapPointToLatLng(floorData: Partial<FloorData>, { x, y }: XY) {
   const anchorPointsArray: number[] = [];
 
-  gpsRefPoints.split(",").forEach((item) => {
+  floorData.gps_ref_points.split(",").forEach((item: string) => {
     anchorPointsArray.push(Number(item));
   });
 
@@ -346,7 +339,8 @@ export function mapPointToLatLng(
   }
   const mapLatBottom = findBottomLat();
   const mapLatBottomRadian = (mapLatBottom * Math.PI) / 180;
-  const worldMapRadius: number = ((width / mapLonDelta) * 360) / (2 * Math.PI);
+  const worldMapRadius: number =
+    ((floorData.width / mapLonDelta) * 360) / (2 * Math.PI);
 
   /**
    * Here we figure out where the map is globally and preserve a conformal map projection
@@ -356,11 +350,12 @@ export function mapPointToLatLng(
     Math.log(
       (1 + Math.sin(mapLatBottomRadian)) / (1 - Math.sin(mapLatBottomRadian))
     );
-  const mapOffset: number = (height + parallelOffset - y) / worldMapRadius;
+  const mapOffset: number =
+    (floorData.height + parallelOffset - y) / worldMapRadius;
 
   const mapPointLat: number =
     (180 / Math.PI) * (2 * Math.atan(Math.exp(mapOffset)) - Math.PI / 2);
-  const mapPointLng: number = mapLngLeft + (x / width) * mapLonDelta;
+  const mapPointLng: number = mapLngLeft + (x / floorData.width) * mapLonDelta;
 
   return { lat: mapPointLat, lng: mapPointLng };
 }

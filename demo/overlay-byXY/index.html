@@ -57,23 +57,21 @@
     <div class="controls-container">
       <div class="controls">
         <span>
-          First fetch your map anchor points: <br/>
+          First fetch your floor data: <br/>
           <p class="code-container">
             <code>
-            const mapAnchorPoints = await api.fetchMapAnchorPoints(locationID, floorID);
+              const floorData = await api.fetchFloorData(locationID, floorID);
            </code> <br/>
           </p>
           </span>
           <span>
           Adding an annotation: <br/><br/>
-          <span class="indent">Convert your x and y points to latitude and longitude. 
-            To get an accurate latitude and longitude you need to include the width and height of your map 
-            in addition to the x,y values you would like to convert. In this example you can view the 
-            latitude and longitude in the console.</span>
+          <span class="indent">Convert your x and y points to latitude and longitude. In this example you 
+            can view the latitude and longitude in the console.</span>
           <p class="code-container">
             <code>
-              const xyToLatLng = MeridianSDK.mapPointToLatLng(mapAnchorPoints, 
-              {x: 5269.126531688274, y: 3824.493588695426}, {width: floorData.width, height: floorData.height});
+              const xyToLatLng = MeridianSDK.mapPointToLatLng(floorData, 
+              {x: 5269.126531688274, y: 3824.493588695426});
             </code>
           </p>
         </span>
@@ -136,11 +134,10 @@
         }
       );
       const floorData = await api.fetchFloorData(locationID, floorID);
-      const mapAnchorPoints = floorData.gps_ref_points;
 
-      const xyToLatLng = MeridianSDK.mapPointToLatLng(mapAnchorPoints, {x: 5269.126531688274, y: 3824.493588695426}, {width: floorData.width, height: floorData.height});
+      const xyToLatLng = MeridianSDK.mapPointToLatLng(floorData, {x: 5269.126531688274, y: 3824.493588695426});
 
-      const latLngToXy = MeridianSDK.latLngToMapPoint(mapAnchorPoints, xyToLatLng);
+      const latLngToXy = MeridianSDK.latLngToMapPoint(floorData, xyToLatLng);
 
       console.log("MeridianSDK.mapPointToLatLng output: ", xyToLatLng);
 

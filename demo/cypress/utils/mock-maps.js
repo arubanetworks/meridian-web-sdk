@@ -59,8 +59,11 @@ export default {
       units_per_meter: 81.75817874885607,
       north_offset: 0.0,
       north: 177.93109264506393,
+      // Below is an example of ref points that are in the top left and bottom right of a map
       gps_ref_points:
         "37.38184189317074,-121.98089271787921,37.382210607520115,-121.9818502664566,83.50489950180054,1184.5433292388916,7112.7607421875,4282.70947265625",
+      // Below is an example of ref points that are in the bottom left and top right of a map
+      // "37.38223405175838,-121.980855166953,37.38172040881185,-121.98188245296478,80,4304,7152.030798845043,32",
       overview_map_id: "",
       is_outdoor: false,
       zoom_max: 23.0,

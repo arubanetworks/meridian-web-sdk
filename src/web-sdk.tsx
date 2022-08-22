@@ -183,6 +183,12 @@ export function restrictedPanZoom(event: any): boolean {
 type LatLng = { lat: number; lng: number };
 
 /**
+ * Object with a X & Y
+ */
+
+type XY = { x: number; y: number };
+
+/**
  * Object with a lat, lng, x, y, globalX, globalY for conversion of lat/lng positioning to x/y positioning
  */
 
@@ -206,13 +212,16 @@ type refPoint = {
  *
  */
 
-export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
+export function latLngToMapPoint(
+  floorData: Partial<FloorData>,
+  { lat, lng }: LatLng
+) {
   const latToConvert = lat;
   const lngToConvert = lng;
 
   const anchorPointsArray: number[] = [];
 
-  gpsRefPoints.split(",").forEach((item) => {
+  floorData.gps_ref_points.split(",").forEach((item: string) => {
     anchorPointsArray.push(Number(item));
   });
 
@@ -272,6 +281,83 @@ export function latLngToMapPoint(gpsRefPoints: string, { lat, lng }: LatLng) {
   const mapPointY = refPoint1.y + (refPoint2.y - refPoint1.y) * yPercentage;
 
   return { x: mapPointX, y: mapPointY };
+}
+
+/**
+ * Convert from a point on a referenced map to latitude and longitude. Uses mercator projection.
+ *
+ * The basic formula to achieve this is as follows:
+ *
+ * latitute = 2(tan^-1)[exp(y / radius)]
+ * longitude = central parallel of map + (x / radius) - PI / 2
+ *
+ */
+
+export function mapPointToLatLng(floorData: Partial<FloorData>, { x, y }: XY) {
+  const anchorPointsArray: number[] = [];
+
+  floorData.gps_ref_points.split(",").forEach((item: string) => {
+    anchorPointsArray.push(Number(item));
+  });
+
+  /** Break up a map's gps_ref_points into two objects we can then
+   * use to calculate map points
+   */
+  const refPoint1: refPoint = {
+    lat: anchorPointsArray[0],
+    lng: anchorPointsArray[1],
+    x: anchorPointsArray[4],
+    y: anchorPointsArray[5],
+  };
+  const refPoint2: refPoint = {
+    lat: anchorPointsArray[2],
+    lng: anchorPointsArray[3],
+    x: anchorPointsArray[6],
+    y: anchorPointsArray[7],
+  };
+
+  /**
+   * The farthest most left and right longitude of the provided map
+   */
+  const mapLngLeft = refPoint1.lng;
+  const mapLngRight = refPoint2.lng;
+  const mapLonDelta = mapLngRight - mapLngLeft;
+
+  /** We need the bottom latitude of the map to do these calculations, however we don't
+   * immediately know which reference point is the lowest reference point. So we look at
+   * the reference point screen x,y data to see which point is lower. We can then use the
+   * latitude of that reference point as the bottom latitude.
+   */
+  function findBottomLat() {
+    let theBottomLat;
+    if (refPoint1.y < refPoint2.y) {
+      theBottomLat = refPoint2.lat;
+    } else {
+      theBottomLat = refPoint1.lat;
+    }
+    return theBottomLat;
+  }
+  const mapLatBottom = findBottomLat();
+  const mapLatBottomRadian = (mapLatBottom * Math.PI) / 180;
+  const worldMapRadius: number =
+    ((floorData.width / mapLonDelta) * 360) / (2 * Math.PI);
+
+  /**
+   * Here we figure out where the map is globally and preserve a conformal map projection
+   */
+  const parallelOffset: number =
+    (worldMapRadius / 2) *
+    Math.log(
+      (1 + Math.sin(mapLatBottomRadian)) / (1 - Math.sin(mapLatBottomRadian))
+    );
+  const mapOffset: number =
+    (floorData.height + parallelOffset - y) / worldMapRadius;
+
+  const mapPointLat: number =
+    (180 / Math.PI) * (2 * Math.atan(Math.exp(mapOffset)) - Math.PI / 2);
+  const mapPointLng: number = mapLngLeft + (x / floorData.width) * mapLonDelta;
+
+  return { lat: mapPointLat, lng: mapPointLng };
 }
 
 /**
@@ -921,21 +1007,21 @@ export class API {
   }
 
   /**
-   * [async] Returns the gps_ref_points data of specified floor
+   * [async] Returns the data of specified floor
    */
-  async fetchMapAnchorPoints(
+  async fetchFloorData(
     locationID: string,
     floorID: string
   ): Promise<FloorData[]> {
     if (!locationID) {
-      requiredParam("fetchMapAnchorPoints", "locationID");
+      requiredParam("fetchFloorData", "locationID");
     }
     if (!floorID) {
-      requiredParam("fetchMapAnchorPoints", "floorID");
+      requiredParam("fetchFloorData", "floorID");
     }
     return await fetchAllPaginatedData(async (url) => {
       const { data } = await this._axiosEditorAPI.get(url);
-      return data.gps_ref_points || null;
+      return data || null;
     }, `locations/${locationID}/maps/${floorID}`);
   }
 

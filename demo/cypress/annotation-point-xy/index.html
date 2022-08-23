@@ -48,6 +48,8 @@
       const floorData = await await api.fetchFloorData(locationID, floorID);
 
       const xyToLatLng = MeridianSDK.mapPointToLatLng(floorData, {x: 5269.126531688274, y: 3824.493588695426});
+      
+      console.log(xyToLatLng);
 
       const latLngToXy = MeridianSDK.latLngToMapPoint(floorData, xyToLatLng);
 

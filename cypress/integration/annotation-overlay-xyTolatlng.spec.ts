@@ -7,4 +7,15 @@ describe("Overlay: Point & Polygon by XY converted to Lat/Lng", () => {
       .contains("test")
       .should("exist");
   });
+  it("should log the Lat/Lng converted from xy", () => {
+    cy.visit("/cypress/annotation-point-xy", {
+      onBeforeLoad(win) {
+        cy.stub(win.console, "log").as("consoleLog");
+      },
+    });
+    cy.get("@consoleLog").should("be.calledWith", {
+      lat: 37.38215380256578,
+      lng: -121.9815922111018,
+    });
+  });
 });

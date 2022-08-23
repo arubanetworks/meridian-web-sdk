@@ -45,11 +45,9 @@
           ],
         }
       );
-      const mapAnchorPoints = await api.fetchMapAnchorPoints(
-        locationID,
-        floorID
-      );
-      const pointLocation = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {
+      const mapData = await await api.fetchFloorData(locationID, floorID);
+
+      const pointLocation = MeridianSDK.latLngToMapPoint(mapData, {
         lat: 37.38215607501162,
         lng: -121.98159912048112,
       });
@@ -57,7 +55,7 @@
       const polygonArray = [];
 
       function coordinateObjectToArray({ lat, lng }) {
-        const coordObject = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {
+        const coordObject = MeridianSDK.latLngToMapPoint(mapData, {
           lat,
           lng,
         });

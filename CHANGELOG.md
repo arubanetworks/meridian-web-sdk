@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - Unreleased
+
+### Added
+
+- New Annotation Demo and associated functionality for converting Meridian Map x/y points to real-world coordinates (lat/lng)
+
+## [1.8.0] - 2022-08-09
+
+### Removed
+
+- `stream.onTagLeave()`. This is now handled by `stream.onTagUpdate()`
+
+### Fixed
+
+- Issue where tags that have left the floor after initialization could still
+  appear on the map.
+
+## [1.7.0] - 2022-08-03
+
+- Dependency updates and security audit
+
+### Changed
+
+- Init modification to prevent race conditions
+
 ## [1.6.0] - 2022-07-13
 
 ### Changed

@@ -64,6 +64,8 @@ import {
   requiredParam,
 } from "./util";
 
+import "./i18n";
+
 /** @internal */
 const placemarkFiles = require.context("../files/placemarks", false, /\.svg$/);
 /** @internal */
@@ -546,6 +548,8 @@ export interface MeridianMap {
  * );
  * ```
  */
+
+//  here
 export function createMap(
   element: HTMLElement,
   options: CreateMapOptions
@@ -556,6 +560,7 @@ export function createMap(
   if (!options) {
     requiredParam("createMap", "options");
   }
+
   const destroy = () => {
     if (map.isDestroyed) {
       logError("can't call update on a destroyed MeridianMap");
@@ -567,10 +572,13 @@ export function createMap(
       options.onDestroy();
     }
   };
+
   let mapRef: MapComponent | null = null;
+
   const setMapRef = (newMapRef: MapComponent) => {
     mapRef = newMapRef;
   };
+
   const _update = (
     updatedOptions: Partial<CreateMapOptions>,
     { internalUpdate = true } = {}
@@ -603,11 +611,14 @@ export function createMap(
       internalUpdate,
     });
   };
+
   const api = context.api || options.api;
+
   if (!api) {
     requiredParam("createMap", "options.api");
     throw new Error("couldn't create MeridianMap");
   }
+
   let domRef: HTMLElement = render(
     <MapComponent
       api={api}
@@ -618,6 +629,7 @@ export function createMap(
     />,
     element
   ) as any;
+
   sendAnalyticsCodeEvent({
     action: "createMap",
     locationID: options.locationID,
@@ -625,6 +637,7 @@ export function createMap(
     tagsFilter: Boolean(options.tags && options.tags.filter),
     placemarksFilter: Boolean(options.placemarks && options.placemarks.filter),
   });
+
   const map: MeridianMap = {
     destroy,
     isDestroyed: false,

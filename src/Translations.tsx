@@ -221,11 +221,21 @@ const translations = {
   },
 } as const;
 
-function lookup(
-  lang: keyof typeof translations,
-  str: keyof typeof translations["en"]
-) {
+function language() {
+  const langStr =
+    (navigator.languages && navigator.languages[0]) ||
+    navigator.language ||
+    "en";
+  return langStr.toLowerCase() as Lang;
+}
+
+type Lang = keyof typeof translations;
+
+function lookup(str: keyof typeof translations[Lang]) {
+  const lang = language();
   return translations[lang][str] || translations["en"][str] || str;
 }
 
-export default lookup;
+export default {
+  lookup,
+};

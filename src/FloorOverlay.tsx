@@ -12,6 +12,7 @@ import OverlaySearchBar from "./OverlaySearchBar";
 import { css, cx, mixins, theme } from "./style";
 import { createSearchMatcher, uiText } from "./util";
 import { FloorData } from "./web-sdk";
+import Translations from "./Translations";
 
 export interface FloorOverlayProps {
   toggleFloorOverlay: (options: { open: boolean }) => void;
@@ -31,6 +32,7 @@ class FloorOverlay extends Component<FloorOverlayProps> {
   }
 
   render() {
+    const SEARCH_FLOORS = Translations.lookup("search_floors");
     const { currentFloorID, toggleFloorOverlay, selectFloorByID, floors } =
       this.props;
     const { searchFilter } = this.state;
@@ -59,7 +61,7 @@ class FloorOverlay extends Component<FloorOverlayProps> {
         }}
       >
         <OverlaySearchBar
-          placeholder="Search Floors"
+          placeholder={SEARCH_FLOORS}
           value={searchFilter}
           onChange={(searchFilter) => {
             this.setState({ searchFilter });

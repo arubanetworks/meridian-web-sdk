@@ -6,12 +6,13 @@
  */
 
 import groupBy from "lodash.groupby";
-import { Component, createRef, h, Fragment } from "preact";
+import { Component, createRef, Fragment, h } from "preact";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, mixins, theme } from "./style";
+import Translations from "./Translations";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { CreateMapOptions, FloorData, PlacemarkData, TagData } from "./web-sdk";
 
@@ -62,6 +63,8 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       showPlacemarks,
     } = this.props;
 
+    const SEARCH_TAGS = Translations.lookup("search_tags");
+    const SEARCH_PLACEMARKS = Translations.lookup("search_placemarks");
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
     const floorsByID = groupBy(floors, (floor) => floor.id);
@@ -84,9 +87,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       >
         <OverlaySearchBar
           placeholder={
-            this.state.searchType === "tags"
-              ? "Search Tags"
-              : "Search Placemarks"
+            this.state.searchType === "tags" ? SEARCH_TAGS : SEARCH_PLACEMARKS
           }
           value={searchFilter}
           onChange={(searchFilter) => {

@@ -10,9 +10,9 @@ import { Component, createRef, h } from "preact";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, cx, mixins, theme } from "./style";
+import Translations from "./Translations";
 import { createSearchMatcher, uiText } from "./util";
 import { FloorData } from "./web-sdk";
-import Translations from "./Translations";
 
 export interface FloorOverlayProps {
   toggleFloorOverlay: (options: { open: boolean }) => void;

@@ -57,10 +57,10 @@
     <div class="controls-container">
       <div class="controls">
         <span>
-          First fetch your map anchor points: <br/>
+          First fetch your floor data: <br/>
           <p class="code-container">
             <code>
-            const mapAnchorPoints = await api.fetchMapAnchorPoints(locationID, floorID);
+              const floorData = await api.fetchFloorData(locationID, floorID);
            </code> <br/>
           </p>
           </span>
@@ -69,7 +69,7 @@
           <span class="indent">convert your latitude and longitude to a screen x/y and update the map with an annotation</span>
           <p class="code-container">
             <code>
-              const pointLocation = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat: 37.38215607501162, lng: -121.98159912048112});
+              const pointLocation = MeridianSDK.latLngToMapPoint(floorData, {lat: 37.38215607501162, lng: -121.98159912048112});
             </code>
               <br/> <br/>
             <code>
@@ -173,13 +173,14 @@
         }
       );
       
-      const mapAnchorPoints = await api.fetchMapAnchorPoints(locationID, floorID);
-      const pointLocation = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat: 37.38215607501162, lng: -121.98159912048112});
+      const floorData = await api.fetchFloorData(locationID, floorID);
+
+      const pointLocation = MeridianSDK.latLngToMapPoint(floorData, {lat: 37.38215607501162, lng: -121.98159912048112});
 
       const polygonArray = [];
 
       function coordinateObjectToArray({lat, lng}) {
-        const coordObject = MeridianSDK.latLngToMapPoint(mapAnchorPoints, {lat, lng});
+        const coordObject = MeridianSDK.latLngToMapPoint(floorData, {lat, lng});
 
         return [coordObject.x, coordObject.y];
       }

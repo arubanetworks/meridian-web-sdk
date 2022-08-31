@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Overlay by Lat/Lng | Meridian Web SDK</title>
+    <title>Overlay by X/Y to Lat/Lng | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <style>
@@ -45,66 +45,25 @@
           ],
         }
       );
-      const mapData = await await api.fetchFloorData(locationID, floorID);
+      const floorData = await await api.fetchFloorData(locationID, floorID);
 
-      const pointLocation = MeridianSDK.latLngToMapPoint(mapData, {
-        lat: 37.38215607501162,
-        lng: -121.98159912048112,
-      });
+      const xyToLatLng = MeridianSDK.mapPointToLatLng(floorData, {x: 5269.126531688274, y: 3824.493588695426});
+      
+      console.log(xyToLatLng);
 
-      const polygonArray = [];
+      const latLngToXy = MeridianSDK.latLngToMapPoint(floorData, xyToLatLng);
 
-      function coordinateObjectToArray({ lat, lng }) {
-        const coordObject = MeridianSDK.latLngToMapPoint(mapData, {
-          lat,
-          lng,
-        });
-
-        return [coordObject.x, coordObject.y];
-      }
-
-      polygonArray.push(
-        coordinateObjectToArray({
-          lat: 37.38217476738073,
-          lng: -121.98124592380535,
-        })
-      );
-      polygonArray.push(
-        coordinateObjectToArray({
-          lat: 37.38215630276508,
-          lng: -121.98099902518736,
-        })
-      );
-      polygonArray.push(
-        coordinateObjectToArray({
-          lat: 37.382049361776645,
-          lng: -121.98100870748611,
-        })
-      );
-      polygonArray.push(
-        coordinateObjectToArray({
-          lat: 37.382145531737166,
-          lng: -121.98124592380535,
-        })
-      );
       setTimeout(() => {
         meridianMap.update({
           annotations: [
             {
               type: "point",
-              x: pointLocation.x,
-              y: pointLocation.y,
+              x: latLngToXy.x,
+              y: latLngToXy.y,
               size: 32,
               backgroundColor: "red",
               backgroundImage: MeridianSDK.placemarkIconURL("generic"),
               title: "test",
-            },
-          ],
-          overlays: [
-            {
-              type: "polygon",
-              points: polygonArray,
-              fillOpacity: "15%",
             },
           ],
         });

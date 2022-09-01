@@ -10,6 +10,7 @@ import { Component, createRef, h } from "preact";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, cx, mixins, theme } from "./style";
+import Translations from "./Translations";
 import { createSearchMatcher, uiText } from "./util";
 import { FloorData } from "./web-sdk";
 
@@ -31,6 +32,8 @@ class FloorOverlay extends Component<FloorOverlayProps> {
   }
 
   render() {
+    const TEXT_SEARCH_FLOORS = Translations.lookup("search_floors");
+    const TEXT_NO_RESULTS_FOUND = Translations.lookup("no_results_found");
     const { currentFloorID, toggleFloorOverlay, selectFloorByID, floors } =
       this.props;
     const { searchFilter } = this.state;
@@ -59,14 +62,14 @@ class FloorOverlay extends Component<FloorOverlayProps> {
         }}
       >
         <OverlaySearchBar
-          placeholder="Search Floors"
+          placeholder={TEXT_SEARCH_FLOORS}
           value={searchFilter}
           onChange={(searchFilter) => {
             this.setState({ searchFilter });
           }}
         />
         {buildingNames.length === 0 ? (
-          <div className={cssFloorsListEmpty}>{uiText.noResultsFound}</div>
+          <div className={cssFloorsListEmpty}>{TEXT_NO_RESULTS_FOUND}.</div>
         ) : (
           <div
             className={cssFloorsList}

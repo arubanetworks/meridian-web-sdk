@@ -233,7 +233,6 @@ function lookup(str: keyof typeof translations["en"]) {
   const langAndRegion = language();
   const lang = langAndRegion.split("-").shift() ?? "en";
   const t = translations as Record<string, any>;
-
   return t?.[langAndRegion]?.[str] || t?.[lang]?.[str] || t["en"][str] || str;
 }
 

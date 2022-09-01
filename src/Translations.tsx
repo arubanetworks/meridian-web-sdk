@@ -1,4 +1,4 @@
-const translations: Record<string, any> = {
+const translations = {
   en: {
     tags: "Tags",
     placemarks: "Placemarks",
@@ -219,7 +219,7 @@ const translations: Record<string, any> = {
     no_results_found: "未找到結果",
     close: "關閉",
   },
-};
+} as const;
 
 function language() {
   const langStr =
@@ -229,18 +229,12 @@ function language() {
   return langStr.toLowerCase();
 }
 
-type Lang = keyof typeof translations;
-
-function lookup(str: keyof typeof translations[Lang]) {
+function lookup(str: keyof typeof translations["en"]) {
   const langAndRegion = language();
   const lang = langAndRegion.split("-").shift() ?? "en";
+  const t = translations as Record<string, any>;
 
-  return (
-    translations?.[langAndRegion]?.[str] ||
-    translations?.[lang]?.[str] ||
-    translations["en"][str] ||
-    str
-  );
+  return t?.[langAndRegion]?.[str] || t?.[lang]?.[str] || t["en"][str] || str;
 }
 
 export default {

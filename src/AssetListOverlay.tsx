@@ -184,6 +184,7 @@ function TagResults(props: TagResultsProps) {
     floorToGroup,
   } = props;
 
+  const TEXT_NO_RESULTS_FOUND = Translations.lookup("no_results_found");
   const filteredTags = tags
     // Remove tags from unpublished floors
     .filter((tag: TagData) => {
@@ -240,7 +241,7 @@ function TagResults(props: TagResultsProps) {
   }
 
   if (filteredTags.length === 0) {
-    return <div className={cssAssetListEmpty}>{uiText.noResultsFound}</div>;
+    return <div className={cssAssetListEmpty}>{TEXT_NO_RESULTS_FOUND}</div>;
   }
 
   return (
@@ -301,6 +302,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     loading,
   } = props;
 
+  const TEXT_NO_RESULTS_FOUND = Translations.lookup("no_results_found");
   const filteredPlacemarks = placemarks
     // Remove placemarks from unpublished floors
     .filter((placemark: PlacemarkData) => {
@@ -357,7 +359,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
   }
 
   if (filteredPlacemarks.length === 0) {
-    return <div className={cssAssetListEmpty}>{uiText.noResultsFound}</div>;
+    return <div className={cssAssetListEmpty}>{TEXT_NO_RESULTS_FOUND}</div>;
   }
 
   return (

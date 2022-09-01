@@ -243,7 +243,7 @@ function TagResults(props: TagResultsProps) {
   }
 
   if (filteredTags.length === 0) {
-    return <div className={cssAssetListEmpty}>{TEXT_NO_RESULTS_FOUND}</div>;
+    return <div className={cssAssetListEmpty}>{TEXT_NO_RESULTS_FOUND}.</div>;
   }
 
   return (
@@ -361,7 +361,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
   }
 
   if (filteredPlacemarks.length === 0) {
-    return <div className={cssAssetListEmpty}>{TEXT_NO_RESULTS_FOUND}</div>;
+    return <div className={cssAssetListEmpty}>{TEXT_NO_RESULTS_FOUND}.</div>;
   }
 
   return (

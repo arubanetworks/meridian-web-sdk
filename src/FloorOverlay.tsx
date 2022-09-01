@@ -69,7 +69,7 @@ class FloorOverlay extends Component<FloorOverlayProps> {
           }}
         />
         {buildingNames.length === 0 ? (
-          <div className={cssFloorsListEmpty}>{TEXT_NO_RESULTS_FOUND}</div>
+          <div className={cssFloorsListEmpty}>{TEXT_NO_RESULTS_FOUND}.</div>
         ) : (
           <div
             className={cssFloorsList}

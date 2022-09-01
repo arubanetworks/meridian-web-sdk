@@ -63,8 +63,8 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       showPlacemarks,
     } = this.props;
 
-    const SEARCH_TAGS = Translations.lookup("search_tags");
-    const SEARCH_PLACEMARKS = Translations.lookup("search_placemarks");
+    const TEXT_SEARCH_TAGS = Translations.lookup("search_tags");
+    const TEXT_SEARCH_PLACEMARKS = Translations.lookup("search_placemarks");
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
     const floorsByID = groupBy(floors, (floor) => floor.id);
@@ -87,7 +87,9 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       >
         <OverlaySearchBar
           placeholder={
-            this.state.searchType === "tags" ? SEARCH_TAGS : SEARCH_PLACEMARKS
+            this.state.searchType === "tags"
+              ? TEXT_SEARCH_TAGS
+              : TEXT_SEARCH_PLACEMARKS
           }
           value={searchFilter}
           onChange={(searchFilter) => {

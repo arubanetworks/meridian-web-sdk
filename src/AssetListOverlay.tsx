@@ -63,7 +63,9 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       showPlacemarks,
     } = this.props;
 
+    const TEXT_TAGS = Translations.lookup("tags");
     const TEXT_SEARCH_TAGS = Translations.lookup("search_tags");
+    const TEXT_PLACEMARKS = Translations.lookup("placemarks");
     const TEXT_SEARCH_PLACEMARKS = Translations.lookup("search_placemarks");
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
@@ -113,7 +115,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
                 }}
               />
               <label for="tags" className={cssRadioButtonLabel}>
-                Tags
+                {TEXT_TAGS}
               </label>
             </Fragment>
           ) : null}
@@ -132,7 +134,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
                 }}
               />
               <label for="placemarks" className={cssRadioButtonLabel}>
-                Placemarks
+                {TEXT_PLACEMARKS}
               </label>
             </Fragment>
           ) : null}

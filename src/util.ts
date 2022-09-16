@@ -19,7 +19,6 @@ export const logDeprecated = logWarn.bind(null, "[deprecated]");
 export const uiText = {
   enDash: "–",
   unnamedBuilding: "Unassigned",
-  noResultsFound: "No results found.",
 };
 
 /** New object with just one key missing from it. */

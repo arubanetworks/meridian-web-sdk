@@ -6,12 +6,13 @@
  */
 
 import groupBy from "lodash.groupby";
-import { Component, createRef, h, Fragment } from "preact";
+import { Component, createRef, Fragment, h } from "preact";
 import IconSpinner from "./IconSpinner";
 import LabelList from "./LabelList";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, mixins, theme } from "./style";
+import Translations from "./Translations";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { CreateMapOptions, FloorData, PlacemarkData, TagData } from "./web-sdk";
 
@@ -62,6 +63,10 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       showPlacemarks,
     } = this.props;
 
+    const TEXT_TAGS = Translations.lookup("tags");
+    const TEXT_SEARCH_TAGS = Translations.lookup("search_tags");
+    const TEXT_PLACEMARKS = Translations.lookup("placemarks");
+    const TEXT_SEARCH_PLACEMARKS = Translations.lookup("search_placemarks");
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
     const floorsByID = groupBy(floors, (floor) => floor.id);
@@ -85,8 +90,8 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
         <OverlaySearchBar
           placeholder={
             this.state.searchType === "tags"
-              ? "Search Tags"
-              : "Search Placemarks"
+              ? TEXT_SEARCH_TAGS
+              : TEXT_SEARCH_PLACEMARKS
           }
           value={searchFilter}
           onChange={(searchFilter) => {
@@ -110,7 +115,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
                 }}
               />
               <label for="tags" className={cssRadioButtonLabel}>
-                Tags
+                {TEXT_TAGS}
               </label>
             </Fragment>
           ) : null}
@@ -129,7 +134,7 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
                 }}
               />
               <label for="placemarks" className={cssRadioButtonLabel}>
-                Placemarks
+                {TEXT_PLACEMARKS}
               </label>
             </Fragment>
           ) : null}
@@ -183,6 +188,7 @@ function TagResults(props: TagResultsProps) {
     floorToGroup,
   } = props;
 
+  const TEXT_NO_RESULTS_FOUND = Translations.lookup("no_results_found");
   const filteredTags = tags
     // Remove tags from unpublished floors
     .filter((tag: TagData) => {
@@ -239,7 +245,7 @@ function TagResults(props: TagResultsProps) {
   }
 
   if (filteredTags.length === 0) {
-    return <div className={cssAssetListEmpty}>{uiText.noResultsFound}</div>;
+    return <div className={cssAssetListEmpty}>{TEXT_NO_RESULTS_FOUND}.</div>;
   }
 
   return (
@@ -300,6 +306,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     loading,
   } = props;
 
+  const TEXT_NO_RESULTS_FOUND = Translations.lookup("no_results_found");
   const filteredPlacemarks = placemarks
     // Remove placemarks from unpublished floors
     .filter((placemark: PlacemarkData) => {
@@ -356,7 +363,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
   }
 
   if (filteredPlacemarks.length === 0) {
-    return <div className={cssAssetListEmpty}>{uiText.noResultsFound}</div>;
+    return <div className={cssAssetListEmpty}>{TEXT_NO_RESULTS_FOUND}.</div>;
   }
 
   return (

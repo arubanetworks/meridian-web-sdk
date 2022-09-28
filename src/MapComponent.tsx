@@ -680,7 +680,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   }
 
   renderFloorOverlay() {
-    const { floorID } = this.props;
+    const { floorID, api } = this.props;
     const { isFloorOverlayOpen, floors } = this.state;
     if (isFloorOverlayOpen) {
       return (
@@ -689,6 +689,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           floors={floors}
           toggleFloorOverlay={this.toggleFloorOverlay}
           selectFloorByID={this.selectFloorByID}
+          language={api.language}
         />
       );
     }
@@ -702,6 +703,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       loadPlacemarks,
       tags: tagOptions,
       placemarks: placemarkOptions,
+      api,
     } = this.props;
 
     const {
@@ -731,6 +733,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           showTags={Boolean(loadTags)}
           showPlacemarks={Boolean(loadPlacemarks)}
           placemarks={allPlacemarkData}
+          language={api.language}
         />
       );
     }

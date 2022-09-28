@@ -24,7 +24,7 @@
  */
 
 /**
- * See [[init]] and [[createMap]] for getting started.
+ * See {@link init} and {@link createMap} for getting started.
  *
  * ```js
  * const api = new MeridianSDK.API({ token: "<TOKEN>" });
@@ -57,6 +57,7 @@ import ReconnectingWebSocket from "reconnecting-websocket";
 import placemarkIconGeneric from "../files/placemarks/generic.svg";
 import { sendAnalyticsCodeEvent } from "./analytics";
 import MapComponent from "./MapComponent";
+import { LanguageCodes } from "./Translations";
 import {
   asyncClientCall,
   logDeprecated,
@@ -149,7 +150,7 @@ export const version: string = GLOBAL_VERSION;
  * This prevents accidental map interactions in pages with lots of scrolling
  * content.
  *
- * Pass this to `shouldMapPanZoom` in [[createMap]] if you would like the user
+ * Pass this to `shouldMapPanZoom` in {@link createMap} if you would like the user
  * to use two fingers or hold down a modifier key in order to zoom the map.
  *
  * ```js
@@ -177,18 +178,6 @@ export function restrictedPanZoom(event: any): boolean {
 }
 
 /**
- * Object with a Latitude & Longitude
- */
-
-type LatLng = { lat: number; lng: number };
-
-/**
- * Object with a X & Y
- */
-
-type XY = { x: number; y: number };
-
-/**
  * Object with a lat, lng, x, y, globalX, globalY for conversion of lat/lng positioning to x/y positioning
  */
 
@@ -203,22 +192,14 @@ type refPoint = {
 
 /**
  * Convert from latitude and longitude to a point on a referenced map. Uses equirectangular projection.
- *
- * The basic formula to achieve this is as follows:
- *
- * x = radius(longitude - central meridian of map) * cos(standard parallels with scale)
- *
- * y = radius(latitude - central parallel of map)
- *
  */
 
 export function latLngToMapPoint(
   floorData: Partial<FloorData>,
-  { lat, lng }: LatLng
+  { lat, lng }: { lat: number; lng: number }
 ) {
   const latToConvert = lat;
   const lngToConvert = lng;
-
   const anchorPointsArray: number[] = [];
 
   floorData.gps_ref_points.split(",").forEach((item: string) => {
@@ -293,7 +274,10 @@ export function latLngToMapPoint(
  *
  */
 
-export function mapPointToLatLng(floorData: Partial<FloorData>, { x, y }: XY) {
+export function mapPointToLatLng(
+  floorData: Partial<FloorData>,
+  { x, y }: { x: number; y: number }
+) {
   const anchorPointsArray: number[] = [];
 
   floorData.gps_ref_points.split(",").forEach((item: string) => {
@@ -362,8 +346,8 @@ export function mapPointToLatLng(floorData: Partial<FloorData>, { x, y }: XY) {
 
 /**
  * Initializes a share MeridianSDK API instance for use across all calls to
- * [[createMap]]. You can either call this function or pass your [[API]]
- * instance directly to [[createMap]].
+ * {@link createMap}. You can either call this function or pass your {@link API}
+ * instance directly to {@link createMap}.
  *
  * ```js
  * const api = new MeridianSDK.API({
@@ -492,10 +476,10 @@ export interface CustomAnnotationPoint {
 export type CustomAnnotation = CustomAnnotationPoint;
 
 /**
- * Options passed to [[createMap]].
+ * Options passed to {@link createMap}.
  */
 export interface CreateMapOptions {
-  /** See [[restrictedPanZoom]]. */
+  /** See {@link restrictedPanZoom}. */
   shouldMapPanZoom?: (event: any) => boolean;
   /** Width of the map (e.g. "100%" or "300px"). */
   width?: string;
@@ -505,7 +489,7 @@ export interface CreateMapOptions {
   locationID: string;
   /** Meridian floor ID. */
   floorID: string;
-  /** An [[API]] instance. Defaults to the one passed to [[init]]. */
+  /** An {@link API} instance. Defaults to the one passed to {@link init}. */
   api?: API;
   /** Should we show the floor switcher UI control? Defaults to true. */
   showFloorsControl?: boolean;
@@ -570,7 +554,7 @@ export interface CreateMapOptions {
   onFloorChange?: (floor: FloorData) => void;
   /**
    * Called when the map has been destroyed, either by manually calling
-   * [[destroy]] or by being automatically destroyed when its DOM is tampered
+   * map.destroy() or by being automatically destroyed when its DOM is tampered
    * with.
    */
   onDestroy?: () => void;
@@ -585,7 +569,7 @@ export interface MeridianEvent {
 }
 
 /**
- * Returned from [[createMap]], this object allows you to manipulate a map that
+ * Returned from {@link createMap}, this object allows you to manipulate a map that
  * has already been created in the page.
  */
 export interface MeridianMap {
@@ -753,7 +737,7 @@ export function createMap(
 
 /**
  * @deprecated
- * Deprecated function used to create an instance of [[API]]. Instead of
+ * Deprecated function used to create an instance of {@link API}. Instead of
  * `createAPI(options)` you should now use `new API(options)`.
  */
 export function createAPI(options: APIOptions): API {
@@ -767,7 +751,7 @@ export function createAPI(options: APIOptions): API {
 }
 
 /**
- * Options passed to [[openStream]].
+ * Options passed to { @link API.openStream }.
  */
 export interface OpenStreamOptions {
   /** Meridian location ID */
@@ -789,7 +773,7 @@ export interface OpenStreamOptions {
 }
 
 /**
- * Options passed to [[getDirections]].
+ * Options passed to {@link API.getDirections}.
  */
 export interface getDirectionsOptions {
   /** Meridian Location ID */
@@ -846,6 +830,14 @@ export class API {
   readonly token: string;
 
   /**
+   * Language code that matches a supported language for this location.
+   * Note: The LanguageCodes Type includes all possible language codes. See
+   * "Translations" in Meridian Editor to learn exactly what languages are
+   * supported for this location.
+   */
+  readonly language: LanguageCodes | undefined;
+
+  /**
    * Meridian environment (`"production"` or `"eu"`). Defaults to
    * `"production"`.
    */
@@ -866,11 +858,19 @@ export class API {
     }
     this.token = options.token;
     this.environment = checkDevEnvCase(options.environment) || "production";
+    this.language = options.language;
+    let acceptLanguage = {};
+    if (this.language) {
+      acceptLanguage = {
+        "accept-language": this.language,
+      };
+    }
     this._axiosEditorAPI = axios.create({
       baseURL: envToEditorRestURL[this.environment],
       headers: {
         Authorization: `Token ${options.token}`,
         "Meridian-SDK": `WebSDK/${version}`,
+        ...acceptLanguage,
       },
     });
     this._axiosTagsAPI = axios.create({
@@ -1229,7 +1229,7 @@ const envToEditorRestURL = {
 } as const;
 
 /**
- * Environment name used in [[APIOptions]]. If unsure, use `"production"`.
+ * Environment name used in {@link APIOptions}. If unsure, use `"production"`.
  */
 export type EnvOptions =
   | "production"
@@ -1239,7 +1239,7 @@ export type EnvOptions =
   | "devCloud";
 
 /**
- * Options passed to [[createAPI]].
+ * Options passed to {@link createAPI}.
  *
  * ```js
  * const api = new MeridianSDK.API({
@@ -1251,10 +1251,11 @@ export type EnvOptions =
 export interface APIOptions {
   environment?: EnvOptions;
   token: string;
+  language?: LanguageCodes;
 }
 
 /**
- * An open tag stream that can be closed. Returned by [[API.openStream]].
+ * An open tag stream that can be closed. Returned by {@link API.openStream}.
  *
  * ```js
  * const api = new MeridianSDK.API({

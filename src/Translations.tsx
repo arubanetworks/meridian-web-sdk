@@ -221,7 +221,9 @@ const translations = {
   },
 } as const;
 
-function language() {
+export type LanguageCodes = keyof typeof translations;
+
+function languageCode() {
   const langStr =
     (navigator.languages && navigator.languages[0]) ||
     navigator.language ||
@@ -229,11 +231,11 @@ function language() {
   return langStr.toLowerCase();
 }
 
-function lookup(str: keyof typeof translations["en"]) {
-  const langAndRegion = language();
-  const lang = langAndRegion.split("-").shift() ?? "en";
+function lookup(str: keyof typeof translations["en"], lng?: LanguageCodes) {
+  const code = lng || languageCode();
+  const code_prefix = code.split("-").shift() ?? "en";
   const t = translations as Record<string, any>;
-  return t?.[langAndRegion]?.[str] || t?.[lang]?.[str] || t["en"][str] || str;
+  return t?.[code]?.[str] || t?.[code_prefix]?.[str] || t["en"][str] || str;
 }
 
 export default {

@@ -192,6 +192,13 @@ type refPoint = {
 
 /**
  * Convert from latitude and longitude to a point on a referenced map. Uses equirectangular projection.
+ *
+ * The basic formula to achieve this is as follows:
+ *
+ * x = radius(longitude - central meridian of map) * cos(standard parallels with scale)
+ *
+ * y = radius(latitude - central parallel of map)
+ *
  */
 
 export function latLngToMapPoint(

@@ -62,7 +62,7 @@ export default {
     {
       mac: "546C0E082AFB",
       id: "546C0E082AFB",
-      name: null,
+      name: "MM Precision",
       location_id: "5198682008846336",
       map_id: "5755685136498688",
       x: 1144.0538972336537,

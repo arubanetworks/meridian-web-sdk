@@ -10,7 +10,7 @@ import { Component, createRef, h } from "preact";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, cx, mixins, theme } from "./style";
-import Translations from "./Translations";
+import Translations, { LanguageCodes } from "./Translations";
 import { createSearchMatcher, uiText } from "./util";
 import { FloorData } from "./web-sdk";
 
@@ -19,6 +19,7 @@ export interface FloorOverlayProps {
   currentFloorID: string;
   floors: FloorData[];
   selectFloorByID: (floorID: string) => void;
+  language?: LanguageCodes;
 }
 
 class FloorOverlay extends Component<FloorOverlayProps> {
@@ -32,10 +33,20 @@ class FloorOverlay extends Component<FloorOverlayProps> {
   }
 
   render() {
-    const TEXT_SEARCH_FLOORS = Translations.lookup("search_floors");
-    const TEXT_NO_RESULTS_FOUND = Translations.lookup("no_results_found");
-    const { currentFloorID, toggleFloorOverlay, selectFloorByID, floors } =
-      this.props;
+    const {
+      currentFloorID,
+      toggleFloorOverlay,
+      selectFloorByID,
+      floors,
+      language,
+    } = this.props;
+
+    const TEXT_SEARCH_FLOORS = Translations.lookup("search_floors", language);
+    const TEXT_NO_RESULTS_FOUND = Translations.lookup(
+      "no_results_found",
+      language
+    );
+
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
     const processedFloors = floors.filter((floor) => {
@@ -47,13 +58,16 @@ class FloorOverlay extends Component<FloorOverlayProps> {
     });
     const groupedFloors = groupBy(processedFloors, "group_name");
     const buildingNames = Object.keys(groupedFloors).sort();
+
     if (buildingNames[0] === "") {
       buildingNames.push(buildingNames[0]);
       buildingNames.shift();
     }
+
     for (const name of buildingNames) {
       groupedFloors[name].sort((a, b) => Math.sign(a.level - b.level));
     }
+
     return (
       <Overlay
         position="right"

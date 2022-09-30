@@ -12,7 +12,7 @@ import LabelList from "./LabelList";
 import Overlay from "./Overlay";
 import OverlaySearchBar from "./OverlaySearchBar";
 import { css, mixins, theme } from "./style";
-import Translations from "./Translations";
+import Translations, { LanguageCodes } from "./Translations";
 import { createSearchMatcher, getTagLabels, uiText } from "./util";
 import { CreateMapOptions, FloorData, PlacemarkData, TagData } from "./web-sdk";
 
@@ -34,6 +34,7 @@ interface AssetListOverlayProps {
   toggleAssetListOverlay: (options: { open: boolean }) => void;
   showTags: boolean;
   showPlacemarks: boolean;
+  language?: LanguageCodes;
 }
 
 class AssetListOverlay extends Component<AssetListOverlayProps> {
@@ -61,12 +62,16 @@ class AssetListOverlay extends Component<AssetListOverlayProps> {
       toggleAssetListOverlay,
       showTags,
       showPlacemarks,
+      language,
     } = this.props;
 
-    const TEXT_TAGS = Translations.lookup("tags");
-    const TEXT_SEARCH_TAGS = Translations.lookup("search_tags");
-    const TEXT_PLACEMARKS = Translations.lookup("placemarks");
-    const TEXT_SEARCH_PLACEMARKS = Translations.lookup("search_placemarks");
+    const TEXT_TAGS = Translations.lookup("tags", language);
+    const TEXT_SEARCH_TAGS = Translations.lookup("search_tags", language);
+    const TEXT_PLACEMARKS = Translations.lookup("placemarks", language);
+    const TEXT_SEARCH_PLACEMARKS = Translations.lookup(
+      "search_placemarks",
+      language
+    );
     const { searchFilter } = this.state;
     const match = createSearchMatcher(searchFilter);
     const floorsByID = groupBy(floors, (floor) => floor.id);
@@ -186,9 +191,13 @@ function TagResults(props: TagResultsProps) {
     match,
     floorsByID,
     floorToGroup,
+    language,
   } = props;
 
-  const TEXT_NO_RESULTS_FOUND = Translations.lookup("no_results_found");
+  const TEXT_NO_RESULTS_FOUND = Translations.lookup(
+    "no_results_found",
+    language
+  );
   const filteredTags = tags
     // Remove tags from unpublished floors
     .filter((tag: TagData) => {
@@ -304,9 +313,14 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     onPlacemarkClick,
     floorsByID,
     loading,
+    language,
   } = props;
 
-  const TEXT_NO_RESULTS_FOUND = Translations.lookup("no_results_found");
+  const TEXT_NO_RESULTS_FOUND = Translations.lookup(
+    "no_results_found",
+    language
+  );
+
   const filteredPlacemarks = placemarks
     // Remove placemarks from unpublished floors
     .filter((placemark: PlacemarkData) => {

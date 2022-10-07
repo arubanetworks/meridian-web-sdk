@@ -1251,7 +1251,8 @@ export type EnvOptions =
  * ```js
  * const api = new MeridianSDK.API({
  *   environment: "production", // or "eu"
- *   token: "<token>"
+ *   token: "<token>",
+ *   language: "<languageCode>" // optional, defaults to "en"
  * });
  * ```
  */

@@ -9,11 +9,10 @@ language: node_js
 # Run tests against latest node and current long term support node. Only the LTS
 # job is used for `npm publish`, since we don't want to publish the package
 # twice (that would cause an error).
+os: linux
+dist: jammy
 node_js:
-  # - "node" // MRC-1258 - removed due to node 17 and/or Webpack issue
-  # https://stackoverflow.com/questions/69665222/node-17-0-1-causes-some-error-digital-envelope-routinesunsupported
-  - "lts/*"
-# Cache npm downloads for faster CI jobs
+  - 18
 cache:
   npm: true
 before_install:

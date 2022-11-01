@@ -5,12 +5,12 @@ describe("Auto-Destroy", () => {
     cy.visit("/cypress/basic");
 
     const onDestroyStub = cy.stub();
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({
-        onDestroy: onDestroyStub
+        onDestroy: onDestroyStub,
       });
     });
-    cy.window().should(win => {
+    cy.window().should((win) => {
       const mapContainer = win.document.querySelector("#meridian-map");
       if (!mapContainer) {
         throw new Error("no map container");
@@ -23,7 +23,7 @@ describe("Auto-Destroy", () => {
     cy.get("#meridian-map").should("not.exist");
     // Wait for the auto-destroy polling (1 second interval)
     cy.wait(1200);
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       expect(onDestroyStub).callCount(1);
       expect(meridianMap.isDestroyed).equal(true);
     });
@@ -33,14 +33,14 @@ describe("Auto-Destroy", () => {
     cy.visit("/cypress/basic");
 
     const onDestroyStub = cy.stub();
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({
-        onDestroy: onDestroyStub
+        onDestroy: onDestroyStub,
       });
     });
     // Wait for MeridianMap to be rendered...
     cy.wait(500);
-    cy.window().should(win => {
+    cy.window().should((win) => {
       const mapContainer = win.document.querySelector("#meridian-map");
       if (!mapContainer) {
         throw new Error("no map container");
@@ -51,7 +51,7 @@ describe("Auto-Destroy", () => {
     cy.get(".meridian-map-container").should("not.exist");
     // Wait for the auto-destroy polling (1 second interval)
     cy.wait(1200);
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       expect(onDestroyStub).callCount(1);
       expect(meridianMap.isDestroyed).equal(true);
     });

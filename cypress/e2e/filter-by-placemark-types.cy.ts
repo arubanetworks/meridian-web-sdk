@@ -5,11 +5,11 @@ describe("Filter by placemark types", () => {
     cy.visit("/cypress/basic");
     cy.get(".meridian-placemark-icon").should("have.length", 31);
     // Only show "cafe" placemarks
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({
         placemarks: {
-          filter: p => p.type === "cafe"
-        }
+          filter: (p) => p.type === "cafe",
+        },
       });
     });
     // Only one placemark exists, and it's a "cafe"
@@ -17,11 +17,11 @@ describe("Filter by placemark types", () => {
       .should("have.length", 1)
       .should("have.class", "meridian-placemark-type-cafe");
     // Show all placemarks again
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({
         placemarks: {
-          filter: undefined
-        }
+          filter: undefined,
+        },
       });
     });
     cy.get(".meridian-placemark-icon").should("have.length", 31);

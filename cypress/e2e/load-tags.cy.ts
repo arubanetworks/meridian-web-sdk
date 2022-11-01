@@ -11,7 +11,7 @@ describe("Loading Tags (props.loadTags)", () => {
     );
     cy.get("[data-meridian-tag-id]").should("have.length", 0);
 
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({ loadTags: true });
     });
 

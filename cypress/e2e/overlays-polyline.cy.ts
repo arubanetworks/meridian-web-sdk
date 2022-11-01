@@ -4,30 +4,19 @@ describe("Overlays: Polyline", () => {
   it("should render a polyline added thru .update", () => {
     cy.visit("/cypress/basic");
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({
         overlays: [
           {
             type: "polyline",
             points: [
-              100,
-              100,
-              200,
-              300,
-              400,
-              400,
-              500,
-              900,
-              700,
-              1950,
-              1000,
-              2200
+              100, 100, 200, 300, 400, 400, 500, 900, 700, 1950, 1000, 2200,
             ],
             stroke: "red",
             strokeLineJoin: "round",
-            strokeWidth: 4
-          }
-        ]
+            strokeWidth: 4,
+          },
+        ],
       });
     });
     cy.get(

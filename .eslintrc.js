@@ -2,16 +2,16 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    es6: true
+    es6: true,
   },
   parserOptions: {
-    sourceType: "module"
+    sourceType: "module",
   },
   extends: [
     "eslint:recommended",
     "preact",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
   ],
   plugins: ["@typescript-eslint"],
   rules: {
@@ -23,8 +23,8 @@ module.exports = {
         // Cypress uses `///` comments to load TS types
         markers: ["/"],
         // webpack uses `/*!` comments for license blocks
-        exceptions: ["!"]
-      }
+        exceptions: ["!"],
+      },
     ],
     "consistent-return": "error",
     "no-console": "warn",
@@ -36,6 +36,6 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off"
-  }
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+  },
 };

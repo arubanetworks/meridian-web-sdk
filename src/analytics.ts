@@ -55,21 +55,25 @@ export async function sendAnalyticsCodeEvent(
     user_agent: window.navigator.userAgent, // User Agent
     z: Math.random().toString(36).substring(7), // Cache Buster (per google)
   };
- 
+
   const measurement_id = `G-GCT86YZLFE`;
   const api_secret = `1v79k_rPSLyvvcHpzSDqFQ`;
-  
-  fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${measurement_id}&api_secret=${api_secret}`, {
-    method: "POST",
-    body: JSON.stringify({
-      client_id: locationID,
-      events: [{
-        name: "page_event",
-        params: {
-          ...params,
-        }
-      }]
-    })
-  });
-}
 
+  fetch(
+    `https://www.google-analytics.com/mp/collect?measurement_id=${measurement_id}&api_secret=${api_secret}`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        client_id: locationID,
+        events: [
+          {
+            name: "page_event",
+            params: {
+              ...params,
+            },
+          },
+        ],
+      }),
+    }
+  );
+}

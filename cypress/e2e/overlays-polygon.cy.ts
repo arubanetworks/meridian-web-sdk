@@ -4,7 +4,7 @@ describe("Overlays: Polygon", () => {
   it("should render a polygon added thru .update", () => {
     cy.visit("/cypress/basic");
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({
         overlays: [
           {
@@ -13,9 +13,9 @@ describe("Overlays: Polygon", () => {
             fill: "green",
             stroke: "red",
             strokeLineJoin: "round",
-            strokeWidth: 4
-          }
-        ]
+            strokeWidth: 4,
+          },
+        ],
       });
     });
     cy.get(

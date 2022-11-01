@@ -11,7 +11,7 @@ describe("Loading Placemarks (props.loadPlacemarks)", () => {
     );
     cy.get("[data-meridian-placemark-id]").should("have.length", 0);
 
-    getMeridianMap().then(meridianMap => {
+    getMeridianMap().then((meridianMap) => {
       meridianMap.update({ loadPlacemarks: true });
     });
 

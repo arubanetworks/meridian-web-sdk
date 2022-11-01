@@ -23,7 +23,7 @@ install:
 # "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
 # the repo right now.
 script:
-  # - npm test
+  - npm test
   - npm run build
   - npm run travis-cypress
 deploy:

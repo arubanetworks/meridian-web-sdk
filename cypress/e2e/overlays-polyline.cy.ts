@@ -1,7 +1,7 @@
 import { getMeridianMap } from "./util/getMeridianMap";
 
 describe("Overlays: Polyline", () => {
-  it("should render a polyline added thru .update", () => {
+  it.skip("should render a polyline added thru .update", () => {
     cy.visit("/cypress/basic");
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
     getMeridianMap().then((meridianMap) => {
@@ -35,7 +35,7 @@ describe("Overlays: Polyline", () => {
     // slightly, the stroke-width on the path would change.)
   });
 
-  it("should render a polyline that connects every placemark", () => {
+  it.skip("should render a polyline that connects every placemark", () => {
     cy.visit("/cypress/polyline");
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
     cy.get(

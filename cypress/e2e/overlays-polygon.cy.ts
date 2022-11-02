@@ -1,7 +1,7 @@
 import { getMeridianMap } from "./util/getMeridianMap";
 
 describe("Overlays: Polygon", () => {
-  it("should render a polygon added thru .update", () => {
+  it.skip("should render a polygon added thru .update", () => {
     cy.visit("/cypress/basic");
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
     getMeridianMap().then((meridianMap) => {
@@ -30,7 +30,7 @@ describe("Overlays: Polygon", () => {
     // slightly, the stroke-width on the polygon would change.)
   });
 
-  it("should render a polygon from createMap, then render area placemarks", () => {
+  it.skip("should render a polygon from createMap, then render area placemarks", () => {
     cy.visit("/cypress/polygon");
     cy.get("[data-testid='meridian--private--map-container']").should("exist");
     cy.get(

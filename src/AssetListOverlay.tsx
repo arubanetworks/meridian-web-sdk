@@ -330,7 +330,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       }
       return true;
     })
-    // Remove unsearchable placemarks (handle missing key)
+    // Remove unsearchable placemarks (and handle missing key)
     .filter((placemark: PlacemarkData) => {
       return (
         placemark.is_searchable ||

@@ -15,6 +15,7 @@ export default {
       hide_on_map: false,
       landmark: false,
       is_disabled: false,
+      is_searchable: true,
     },
     {
       id: "5755685136498688_563194337060454411",
@@ -29,6 +30,7 @@ export default {
       hide_on_map: false,
       landmark: false,
       is_disabled: false,
+      is_searchable: true,
     },
     {
       id: "5755685136498688_563194337060454400",
@@ -43,6 +45,7 @@ export default {
       hide_on_map: false,
       landmark: false,
       is_disabled: false,
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5631943370604544",
@@ -64,6 +67,7 @@ export default {
       hide_on_map: false,
       landmark: false,
       is_disabled: false,
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5634387206995968",
@@ -94,6 +98,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5639274879778816",
@@ -121,6 +126,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5643440998055936",
@@ -151,6 +157,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5645478960037888",
@@ -179,6 +186,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5653164804014080",
@@ -208,6 +216,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5661458385862656",
@@ -236,6 +245,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5668600916475904",
@@ -264,6 +274,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       parent_pane: "5755685136498688_5651442522128384",
@@ -304,6 +315,7 @@ export default {
       is_disabled: false,
       category_ids: ["5639274879778816"],
       categories: [{ id: "5639274879778816", name: "Conference Rooms" }],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5678807906254848",
@@ -332,6 +344,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5688737870643200",
@@ -360,6 +373,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5689792285114368",
@@ -390,6 +404,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5693417237512192",
@@ -421,6 +436,7 @@ export default {
         { id: "5713573250596864", name: "Floor 1" },
         { id: "5645784439586816", name: "Restroom" },
       ],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5697982787747840",
@@ -450,6 +466,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5700735861784576",
@@ -480,6 +497,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5707702298738688",
@@ -508,6 +526,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5709068098338816",
@@ -538,6 +557,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5717271485874176",
@@ -569,6 +589,7 @@ export default {
         { id: "6286567746830336", name: "Dolby/Widescreen" },
         { id: "6286567746830337", name: "Conference Room" },
       ],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5718998062727168",
@@ -598,6 +619,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5721036024709120",
@@ -626,6 +648,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5724160613416960",
@@ -654,6 +677,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5728116278296576",
@@ -684,6 +708,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5733935958982656",
@@ -715,6 +740,7 @@ export default {
         { id: "5713573250596864", name: "Floor 1" },
         { id: "5645784439586816", name: "Restroom" },
       ],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5738600293466112",
@@ -745,6 +771,7 @@ export default {
       is_disabled: false,
       category_ids: ["5639274879778816"],
       categories: [{ id: "5639274879778816", name: "Conference Rooms" }],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5750085036015616",
@@ -775,6 +802,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5753952654065664",
@@ -803,6 +831,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5754903989321728",
@@ -832,6 +861,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5757334940811264",
@@ -860,6 +890,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5764640680181760",
@@ -889,6 +920,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_5766466041282560",
@@ -911,6 +943,36 @@ export default {
       image_layout: "widescreen",
       is_facility: false,
       hide_on_map: true,
+      landmark: false,
+      feed: "",
+      deep_link: null,
+      is_disabled: false,
+      category_ids: [],
+      categories: [],
+      is_searchable: true,
+    },
+    {
+      id: "5755685136498688_5766466041281460",
+      map: "5755685136498688",
+      x: 1981.9901123046875,
+      y: 4096.05419921875,
+      name: "Executive Bathroom (not searchable)",
+      area: null,
+      links: [],
+      type: "generic",
+      type_category: "Markers",
+      type_name: "Placemark",
+      color: "88689e",
+      description: null,
+      keywords: null,
+      phone: null,
+      email: null,
+      url: null,
+      image_url: null,
+      image_layout: "widescreen",
+      is_facility: false,
+      hide_on_map: false,
+      is_searchable: false,
       landmark: false,
       feed: "",
       deep_link: null,
@@ -945,6 +1007,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5755685136498688_6237196809142272",
@@ -973,6 +1036,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_563194337060454455",
@@ -987,6 +1051,7 @@ export default {
       hide_on_map: false,
       landmark: false,
       is_disabled: false,
+      is_searchable: true,
     },
     {
       id: "5715161717407744_563194337060454444",
@@ -1001,6 +1066,7 @@ export default {
       hide_on_map: false,
       landmark: false,
       is_disabled: false,
+      is_searchable: true,
     },
     {
       id: "5715161717407744_563194337060454433",
@@ -1015,6 +1081,7 @@ export default {
       hide_on_map: false,
       landmark: false,
       is_disabled: false,
+      is_searchable: true,
     },
     {
       id: "5715161717407744_4814261133246464",
@@ -1043,6 +1110,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_4825980946350080",
@@ -1073,6 +1141,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_4832691901693952",
@@ -1101,6 +1170,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_5067160539889664",
@@ -1131,6 +1201,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_5068292263772160",
@@ -1161,6 +1232,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_5074086174654464",
@@ -1191,6 +1263,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_5081296799006720",
@@ -1219,6 +1292,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_5085384086126592",
@@ -1249,6 +1323,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_5085993434611712",
@@ -1279,6 +1354,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
     {
       id: "5715161717407744_5086441721823232",
@@ -1309,6 +1385,7 @@ export default {
       is_disabled: false,
       category_ids: [],
       categories: [],
+      is_searchable: true,
     },
   ],
 };

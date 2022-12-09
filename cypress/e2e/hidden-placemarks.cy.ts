@@ -5,7 +5,7 @@ describe("Hidden Placemarks", () => {
     // hidden placemarks not visible by default
     cy.visit("/cypress/basic");
 
-    cy.get("[data-meridian-placemark-id]").should("have.length", 34);
+    cy.get("[data-meridian-placemark-id]").should("have.length", 35);
     cy.get('[data-meridian-placemark-id="5766466041282560"]').should(
       "not.exist"
     );
@@ -16,13 +16,13 @@ describe("Hidden Placemarks", () => {
       });
     });
 
-    cy.get("[data-meridian-placemark-id]").should("have.length", 35);
+    cy.get("[data-meridian-placemark-id]").should("have.length", 36);
     cy.get('[data-meridian-placemark-id="5766466041282560"]').should("exist");
 
     // hidden placemarks visible by default
     cy.visit("/cypress/hidden-placemarks");
 
-    cy.get("[data-meridian-placemark-id]").should("have.length", 35);
+    cy.get("[data-meridian-placemark-id]").should("have.length", 36);
     cy.get('[data-meridian-placemark-id="5766466041282560"]').should("exist");
 
     getMeridianMap().then((meridianMap) => {
@@ -31,7 +31,7 @@ describe("Hidden Placemarks", () => {
       });
     });
 
-    cy.get("[data-meridian-placemark-id]").should("have.length", 34);
+    cy.get("[data-meridian-placemark-id]").should("have.length", 35);
     cy.get('[data-meridian-placemark-id="5766466041282560"]').should(
       "not.exist"
     );

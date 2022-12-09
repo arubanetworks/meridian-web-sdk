@@ -330,10 +330,15 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       }
       return true;
     })
-    // Remove placemarks that don't match the local search terms
+    // Remove unsearchable placemarks (and handle missing key)
     .filter((placemark: PlacemarkData) => {
-      return match(placemark.name || "") || match(placemark.type_name || "");
+      return (
+        placemark.is_searchable ||
+        placemark.is_searchable === null ||
+        placemark.is_searchable === undefined
+      );
     })
+    // remove exclusion areas and hidden placemarks
     .filter((placemark: PlacemarkData) => {
       if (placemark.type === "exclusion_area") {
         return false;
@@ -342,6 +347,10 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
         return !placemark.hide_on_map;
       }
       return true;
+    })
+    // Remove placemarks that don't match the local search terms
+    .filter((placemark: PlacemarkData) => {
+      return match(placemark.name || "") || match(placemark.type_name || "");
     })
     // Sort by name
     .sort((a: PlacemarkData, b: PlacemarkData) => {

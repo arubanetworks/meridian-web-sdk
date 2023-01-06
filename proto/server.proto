@@ -1,0 +1,104 @@
+syntax = "proto3";
+package track;
+
+import "google/api/annotations.proto";
+
+option java_package = "com.arubanetworks.meridian";
+option java_outer_classname = "trackProto";
+
+message AssetRequest {
+    enum ResourceType {
+        LOCATION = 0;
+        TAG = 1;
+        FLOOR = 2;
+        LABEL = 3;
+        ZONE = 4;
+    }
+    ResourceType resource_type = 1;
+    string location_id = 2;
+    repeated string resource_ids = 3;
+}
+
+message AssetRequestList {
+    repeated AssetRequest asset_requests = 1;
+}
+
+message AllAssetRequest {
+    string location_id = 1;
+    string floor_id = 2;
+}
+
+message Tag {
+    string id = 1;
+    string name = 2;
+}
+
+message ZoneEvent {
+    enum Action {
+        EXIT = 0;
+        ENTER = 1;
+    }
+    Action action = 1;
+    uint64 zone_id = 2;
+}
+
+message MapEvent {
+    enum Action {
+        EXIT = 0;
+        ENTER = 1;
+    }
+    Action action = 1;
+    string map_id = 2;
+}
+
+message AssetUpdate {
+    string mac = 1;
+    string id = 2;
+    string name = 3;
+    string location_id = 4;
+    string map_id = 5;
+    double x = 6;
+    double y = 7;
+    enum EventType {
+        DELETE = 0;
+        UPDATE = 1;
+    }
+    EventType event_type = 8;
+    int64 timestamp = 9;
+    string created = 10;
+    string modified = 11;
+    string external_id = 12;
+    string image_url = 13;
+    double battery_level = 14;
+    double control_x = 15;
+    double control_y = 16;
+    bool is_control_tag = 17;
+    int64 current_zone_id = 18;
+    repeated Tag tags = 19;
+    repeated string tag_ids = 20;
+    repeated ZoneEvent zone_events = 21;
+    repeated MapEvent map_events = 22;
+    int64 ingestion_time = 23;
+    double lat = 24;
+    double lon = 25;
+}
+
+
+message AssetUpdateList {
+    repeated AssetUpdate asset_updates = 1;
+}
+
+service Tracking {
+    rpc TrackAssets (AssetRequestList) returns (stream AssetUpdateList) {
+        option (google.api.http) = {
+            post: "/streams/v1/track/assets"
+            body: "*"
+        };
+    }
+    rpc GetAllAssets (AllAssetRequest) returns (AssetUpdateList) {
+        option (google.api.http) = {
+            post: "/api/v1/track/assets"
+            body: "*"
+        };
+    }
+}

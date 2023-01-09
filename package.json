@@ -47,6 +47,7 @@
     "lodash.groupby": "^4.6.0",
     "lodash.throttle": "^4.1.1",
     "long": "^5.2.1",
+    "nice-grpc-web": "^2.0.1",
     "preact": "^10.11.3",
     "prop-types": "^15.8.1",
     "protobufjs": "^7.1.2",

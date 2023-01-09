@@ -1190,6 +1190,64 @@ export class API {
     loadInitialTags();
     return { close };
   }
+
+  testGrpc({
+    locationID,
+    floorID,
+    // resourceIDs = [floorID],
+    // resourceType = "FLOOR",
+    onInitialTags = () => {},
+    onException = () => {},
+    onClose = () => {},
+  }: OpenStreamOptions): Stream {
+    if (!locationID) {
+      requiredParam("openStream", "locationID");
+    }
+    if (!floorID) {
+      requiredParam("openStream", "floorID");
+    }
+    let isClosed = false;
+
+    const params = new URLSearchParams({
+      method: "POST",
+      authorization: `Token ${this.token}`,
+    });
+
+    const url = envToTagTrackerGrpcURL[this.environment];
+    const ws = new ReconnectingWebSocket(`${url}?${params}`);
+
+    // const request = {
+    //   asset_requests: [
+    //     {
+    //       resource_type: resourceType,
+    //       location_id: locationID,
+    //       resource_ids: resourceIDs,
+    //     },
+    //   ],
+    // };
+
+    const close = () => {
+      if (isClosed) {
+        return;
+      }
+      isClosed = true;
+      asyncClientCall(onClose);
+      ws.close();
+    };
+
+    const loadInitialTags = async () => {
+      try {
+        const tags = await this.fetchTagsByFloor(locationID, floorID);
+        asyncClientCall(onInitialTags, tags);
+      } catch (err: any) {
+        asyncClientCall(onException, err);
+        close();
+      }
+    };
+
+    loadInitialTags();
+    return { close };
+  }
 }
 
 /** @internal */
@@ -1219,6 +1277,15 @@ const envToTagTrackerBaseRestURL = {
 
 /** @internal */
 const envToTagTrackerStreamingURL = {
+  development: "ws://localhost:8091/streams/v1/track/assets",
+  devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
+  production: "wss://tags.meridianapps.com/streams/v1/track/assets",
+  eu: "wss://tags-eu.meridianapps.com/streams/v1/track/assets",
+  staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets",
+} as const;
+
+/** @internal */
+const envToTagTrackerGrpcURL = {
   development: "ws://localhost:8091/streams/v1/track/assets",
   devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
   production: "wss://tags.meridianapps.com/streams/v1/track/assets",

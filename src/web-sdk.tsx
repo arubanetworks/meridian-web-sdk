@@ -51,6 +51,7 @@
  */
 
 import axios, { AxiosInstance } from "axios";
+import { createChannel, createClient } from "nice-grpc-web";
 import path from "path";
 import { h, render } from "preact";
 import ReconnectingWebSocket from "reconnecting-websocket";
@@ -1190,6 +1191,8 @@ export class API {
     loadInitialTags();
     return { close };
   }
+
+  // here
 
   testGrpc({
     locationID,

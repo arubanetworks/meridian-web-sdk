@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as Long from "long";
+import { default as Long } from "long";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import * as _m0 from "protobufjs/minimal";
 
@@ -99,7 +99,10 @@ function createBaseAssetRequest(): AssetRequest {
 }
 
 export const AssetRequest = {
-  encode(message: AssetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: AssetRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.resourceType !== 0) {
       writer.uint32(8).int32(message.resourceType);
     }
@@ -150,7 +153,10 @@ function createBaseAssetRequestList(): AssetRequestList {
 }
 
 export const AssetRequestList = {
-  encode(message: AssetRequestList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: AssetRequestList,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.assetRequests) {
       AssetRequest.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -165,7 +171,9 @@ export const AssetRequestList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.assetRequests.push(AssetRequest.decode(reader, reader.uint32()));
+          message.assetRequests.push(
+            AssetRequest.decode(reader, reader.uint32())
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -177,7 +185,8 @@ export const AssetRequestList = {
 
   fromPartial(object: DeepPartial<AssetRequestList>): AssetRequestList {
     const message = createBaseAssetRequestList();
-    message.assetRequests = object.assetRequests?.map((e) => AssetRequest.fromPartial(e)) || [];
+    message.assetRequests =
+      object.assetRequests?.map((e) => AssetRequest.fromPartial(e)) || [];
     return message;
   },
 };
@@ -187,7 +196,10 @@ function createBaseAllAssetRequest(): AllAssetRequest {
 }
 
 export const AllAssetRequest = {
-  encode(message: AllAssetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: AllAssetRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.locationId !== "") {
       writer.uint32(10).string(message.locationId);
     }
@@ -275,7 +287,10 @@ function createBaseZoneEvent(): ZoneEvent {
 }
 
 export const ZoneEvent = {
-  encode(message: ZoneEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ZoneEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.action !== 0) {
       writer.uint32(8).int32(message.action);
     }
@@ -319,7 +334,10 @@ function createBaseMapEvent(): MapEvent {
 }
 
 export const MapEvent = {
-  encode(message: MapEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: MapEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.action !== 0) {
       writer.uint32(8).int32(message.action);
     }
@@ -389,7 +407,10 @@ function createBaseAssetUpdate(): AssetUpdate {
 }
 
 export const AssetUpdate = {
-  encode(message: AssetUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: AssetUpdate,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.mac !== "") {
       writer.uint32(10).string(message.mac);
     }
@@ -580,8 +601,10 @@ export const AssetUpdate = {
     message.currentZoneId = object.currentZoneId ?? 0;
     message.tags = object.tags?.map((e) => Tag.fromPartial(e)) || [];
     message.tagIds = object.tagIds?.map((e) => e) || [];
-    message.zoneEvents = object.zoneEvents?.map((e) => ZoneEvent.fromPartial(e)) || [];
-    message.mapEvents = object.mapEvents?.map((e) => MapEvent.fromPartial(e)) || [];
+    message.zoneEvents =
+      object.zoneEvents?.map((e) => ZoneEvent.fromPartial(e)) || [];
+    message.mapEvents =
+      object.mapEvents?.map((e) => MapEvent.fromPartial(e)) || [];
     message.ingestionTime = object.ingestionTime ?? 0;
     message.lat = object.lat ?? 0;
     message.lon = object.lon ?? 0;
@@ -594,7 +617,10 @@ function createBaseAssetUpdateList(): AssetUpdateList {
 }
 
 export const AssetUpdateList = {
-  encode(message: AssetUpdateList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: AssetUpdateList,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.assetUpdates) {
       AssetUpdate.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -609,7 +635,9 @@ export const AssetUpdateList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.assetUpdates.push(AssetUpdate.decode(reader, reader.uint32()));
+          message.assetUpdates.push(
+            AssetUpdate.decode(reader, reader.uint32())
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -621,7 +649,8 @@ export const AssetUpdateList = {
 
   fromPartial(object: DeepPartial<AssetUpdateList>): AssetUpdateList {
     const message = createBaseAssetUpdateList();
-    message.assetUpdates = object.assetUpdates?.map((e) => AssetUpdate.fromPartial(e)) || [];
+    message.assetUpdates =
+      object.assetUpdates?.map((e) => AssetUpdate.fromPartial(e)) || [];
     return message;
   },
 };
@@ -653,17 +682,23 @@ export const TrackingDefinition = {
 export interface TrackingServiceImplementation<CallContextExt = {}> {
   trackAssets(
     request: AssetRequestList,
-    context: CallContext & CallContextExt,
+    context: CallContext & CallContextExt
   ): ServerStreamingMethodResult<DeepPartial<AssetUpdateList>>;
-  getAllAssets(request: AllAssetRequest, context: CallContext & CallContextExt): Promise<DeepPartial<AssetUpdateList>>;
+  getAllAssets(
+    request: AllAssetRequest,
+    context: CallContext & CallContextExt
+  ): Promise<DeepPartial<AssetUpdateList>>;
 }
 
 export interface TrackingClient<CallOptionsExt = {}> {
   trackAssets(
     request: DeepPartial<AssetRequestList>,
-    options?: CallOptions & CallOptionsExt,
+    options?: CallOptions & CallOptionsExt
   ): AsyncIterable<AssetUpdateList>;
-  getAllAssets(request: DeepPartial<AllAssetRequest>, options?: CallOptions & CallOptionsExt): Promise<AssetUpdateList>;
+  getAllAssets(
+    request: DeepPartial<AllAssetRequest>,
+    options?: CallOptions & CallOptionsExt
+  ): Promise<AssetUpdateList>;
 }
 
 declare var self: any | undefined;
@@ -685,16 +720,30 @@ var tsProtoGlobalThis: any = (() => {
   throw "Unable to locate global object";
 })();
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error(
+      "Value is larger than Number.MAX_SAFE_INTEGER"
+    );
   }
   return long.toNumber();
 }
@@ -706,4 +755,6 @@ if (_m0.util.Long !== Long) {
   _m0.configure();
 }
 
-export type ServerStreamingMethodResult<Response> = { [Symbol.asyncIterator](): AsyncIterator<Response, void> };
+export type ServerStreamingMethodResult<Response> = {
+  [Symbol.asyncIterator](): AsyncIterator<Response, void>;
+};

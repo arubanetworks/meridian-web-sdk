@@ -43,21 +43,21 @@
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjczMDQ4OTQ0LCJ2YWx1ZSI6Ijg1NmNkY2MyYWUxZTRlMTcyZGJkNjdhMzgzMmE4Yzg3ZDllNjE4MzgifQ.SvEnRxw_ERabYwnCSTf5z0TJ5r1Mylacqv54wlg4D_o",
       });
 
-      const newSocket = myApi.openStream({
+      const newSocket = myApi.testGrpc({
         locationID: "5103333125914624",
         floorID: "4656010235084800",
-        onInitialTags: function (tags) {
-          console.log("onInitialTags", tags);
-        },
-        onTagUpdate: function (tags) {
-          console.log("onTagUpdate", tags);
-        },
-        onException: function (err) {
-          console.log("onException", err);
-        },
-        onClose: function () {
-          console.log("onClose");
-        },
+        // onInitialTags: function (tags) {
+        //   console.log("onInitialTags", tags);
+        // },
+        // onTagUpdate: function (tags) {
+        //   console.log("onTagUpdate", tags);
+        // },
+        // onException: function (err) {
+        //   console.log("onException", err);
+        // },
+        // onClose: function () {
+        //   console.log("onClose");
+        // },
       });
     </script>
   </body>

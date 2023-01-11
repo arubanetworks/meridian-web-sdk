@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO - *** remove ^
 /** @jsx h */
 
 /*!
@@ -52,6 +54,12 @@
 
 import axios, { AxiosInstance } from "axios";
 import { createChannel, createClient } from "nice-grpc-web";
+import {
+  AssetRequest,
+  AssetRequest_ResourceType,
+  TrackingClient,
+  TrackingDefinition,
+} from "../compiled_proto/server";
 import path from "path";
 import { h, render } from "preact";
 import ReconnectingWebSocket from "reconnecting-websocket";
@@ -65,6 +73,20 @@ import {
   logError,
   requiredParam,
 } from "./util";
+
+/** @internal */
+function streamResourceType(resourceType: string): number {
+  return (
+    {
+      LOCATION: 0,
+      TAG: 1,
+      FLOOR: 2,
+      LABEL: 3,
+      ZONE: 4,
+      UNRECOGNIZED: -1,
+    }[resourceType] || 2
+  );
+}
 
 /** @internal */
 const placemarkFiles = require.context("../files/placemarks", false, /\.svg$/);
@@ -1192,17 +1214,15 @@ export class API {
     return { close };
   }
 
-  // here
+  // grpc
 
-  testGrpc({
+  async testGrpc({
     locationID,
     floorID,
-    // resourceIDs = [floorID],
-    // resourceType = "FLOOR",
-    onInitialTags = () => {},
-    onException = () => {},
+    resourceIDs = [floorID],
+    resourceType = "FLOOR",
     onClose = () => {},
-  }: OpenStreamOptions): Stream {
+  }: OpenStreamOptions) {
     if (!locationID) {
       requiredParam("openStream", "locationID");
     }
@@ -1211,23 +1231,36 @@ export class API {
     }
     let isClosed = false;
 
+    // TODO: add auth middleware
     const params = new URLSearchParams({
       method: "POST",
       authorization: `Token ${this.token}`,
     });
 
-    const url = envToTagTrackerGrpcURL[this.environment];
-    const ws = new ReconnectingWebSocket(`${url}?${params}`);
+    const stream_request = {
+      assetRequests: [
+        {
+          resourceType: streamResourceType(resourceType),
+          locationId: locationID,
+          resourceIds: resourceIDs,
+        },
+      ] as AssetRequest[],
+    };
 
-    // const request = {
-    //   asset_requests: [
-    //     {
-    //       resource_type: resourceType,
-    //       location_id: locationID,
-    //       resource_ids: resourceIDs,
-    //     },
-    //   ],
-    // };
+    const url = envToTagTrackerGrpcURL[this.environment];
+    const channel = createChannel(`${url}`);
+    const client: TrackingClient = createClient(TrackingDefinition, channel);
+
+    for await (const response of client.trackAssets(stream_request)) {
+      console.info("response", response);
+    }
+
+    // const response = await client.getAllAssets({
+    //   locationId: locationID,
+    //   floorId: floorID,
+    // });
+
+    // console.info(response);
 
     const close = () => {
       if (isClosed) {
@@ -1235,20 +1268,9 @@ export class API {
       }
       isClosed = true;
       asyncClientCall(onClose);
-      ws.close();
+      // stream.close();
     };
 
-    const loadInitialTags = async () => {
-      try {
-        const tags = await this.fetchTagsByFloor(locationID, floorID);
-        asyncClientCall(onInitialTags, tags);
-      } catch (err: any) {
-        asyncClientCall(onException, err);
-        close();
-      }
-    };
-
-    loadInitialTags();
     return { close };
   }
 }
@@ -1289,11 +1311,11 @@ const envToTagTrackerStreamingURL = {
 
 /** @internal */
 const envToTagTrackerGrpcURL = {
-  development: "ws://localhost:8091/streams/v1/track/assets",
-  devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
-  production: "wss://tags.meridianapps.com/streams/v1/track/assets",
-  eu: "wss://tags-eu.meridianapps.com/streams/v1/track/assets",
-  staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets",
+  development: "http://localhost:8091/streams/v1/track/assets",
+  devCloud: "https://dev-tags.meridianapps.com/streams/v1/track/assets",
+  production: "https://tags.meridianapps.com/streams/v1/track/assets",
+  eu: "https://tags-eu.meridianapps.com/streams/v1/track/assets",
+  staging: "https://staging-tags.meridianapps.com/streams/v1/track/assets",
 } as const;
 
 /** @internal */

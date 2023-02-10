@@ -5,27 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Security
+
+- Dependency Updates and Security Audit
+
 ## [1.11.2] - 2023-01-10
 
-## Security
+### Security
 
 - Dependency updates and security audit
 
 ## [1.11.0] - 2022-12-12
 
-## Added
+### Added
 
 - SearchOverlay, handle Placemarks that are not searchable
 
 ## [1.10.0] - 2022-10-07
 
-## Added
+### Added
 
 - Ability to manually set language via a new API option
 
 ## [1.9.2] - 2022-09-19
 
-## Fixed
+### Fixed
 
 - Incorrect Examples for Lat/Lng and X/Y conversions
 

@@ -1115,26 +1115,6 @@ export class API {
       requiredParam("openStream", "floorID");
     }
     let isClosed = false;
-
-    const myInit = {
-      // method: "GET",
-      mode: "no-cors",
-      headers: {
-        Authorization:
-          "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNTg0NTc3NDA2LCJ2YWx1ZSI6IjE2NzNlODkyMmYzODllNDdiY2UzMzFiMWUzMzBlNjI5MjUwZjJkMWMifQ.I6bE3G-rORh-mlHHXEjRMjXJFqH4hUWQOfQXXYrAVfo",
-      },
-    } as any;
-
-    const myRequest = new Request(
-      "https://tags.meridianapps.com/api/lastheard/5079072172933120",
-      myInit
-    );
-
-    fetch(myRequest, myInit).then((response) => {
-      // …
-      console.log("response", response);
-    });
-
     const params = new URLSearchParams({
       method: "POST",
       authorization: `Token ${this.token}`,

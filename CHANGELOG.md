@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for custom Placemark images
+- Placemarks, support for custom Placemark images in detail overlay
 
 ## [1.11.2] - 2023-01-10
 

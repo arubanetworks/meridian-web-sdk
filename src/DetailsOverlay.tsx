@@ -25,6 +25,12 @@ const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
   toggleDetailsOverlay,
 }) => {
   const imageStyle: Record<string, any> = (() => {
+    if (kind === "placemark" && item.image_url) {
+      return {
+        backgroundImage: `url('${item.image_url}')`,
+        height: 300,
+      };
+    }
     if (kind === "placemark") {
       const url = placemarkIconURL(item.type);
       return {

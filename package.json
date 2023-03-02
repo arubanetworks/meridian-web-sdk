@@ -14,7 +14,7 @@
     "analyze": "webpack --mode production --env analyze --config webpack.analyze.config.js",
     "postversion": "git push --follow-tags",
     "test": "bash bin/test.sh",
-    "upgrade": "npx npm-check -u"
+    "upgrade": "npx -yes npm-check -u"
   },
   "browserslist": [
     "defaults"

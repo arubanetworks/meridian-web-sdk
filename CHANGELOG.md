@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Use new backend endpoints without "track" in the URL. This helps limit
+  potential issues with Ad Blockers.
+
 ### Added
 
 - Notes to README and demos indicating the WebSDK is not a complete

@@ -1019,17 +1019,16 @@ export class API {
   async fetchFloorData(
     locationID: string,
     floorID: string
-  ): Promise<FloorData[]> {
+  ): Promise<FloorData> {
     if (!locationID) {
       requiredParam("fetchFloorData", "locationID");
     }
     if (!floorID) {
       requiredParam("fetchFloorData", "floorID");
     }
-    return await fetchAllPaginatedData(async (url) => {
-      const { data } = await this._axiosEditorAPI.get(url);
-      return data || null;
-    }, `locations/${locationID}/maps/${floorID}`);
+    const url = `locations/${locationID}/maps/${floorID}`;
+    const { data } = await this._axiosEditorAPI.get(url);
+    return data;
   }
 
   /**

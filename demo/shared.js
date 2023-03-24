@@ -2,16 +2,16 @@
 /* global hljs */
 /* global MeridianSDK */
 
-import { fakeAPI } from "./cypress/utils/fake-api.js";
+import { mockAPI } from "./cypress/utils/mock-api.js";
 
 if (MeridianSDK) {
   if (document.documentElement.dataset.fakeApi !== "false") {
     // Enable live updates for demo usage
-    fakeAPI._live = true;
+    mockAPI._live = true;
     // This uses a regular function, not an arrow function, so that we can safely
     // use `new` with it.
-    MeridianSDK.API = function() {
-      return fakeAPI;
+    MeridianSDK.API = function () {
+      return mockAPI;
     };
   }
 } else {
@@ -25,7 +25,7 @@ function trimIndent(str) {
   if (!match) {
     return str;
   }
-  const lengths = match.map(x => x.length);
+  const lengths = match.map((x) => x.length);
   const indent = Math.min(...lengths);
   const re = new RegExp(`^[ \\t]{${indent}}`, "gm");
   const s = indent > 0 ? str.replace(re, "") : str;
@@ -53,10 +53,7 @@ function showTheCode() {
     .appendTo(heading);
   const code = trimIndent($("#the-code").text());
   const html = hljs.highlight("javascript", code).value;
-  $("<pre>")
-    .html(html)
-    .addClass("section")
-    .appendTo(dialog);
+  $("<pre>").html(html).addClass("section").appendTo(dialog);
   $("body").append(dialog);
 }
 
@@ -68,9 +65,7 @@ function addToolbar() {
     .on("click", () => {
       window.location = "..";
     });
-  const code = $("<button>")
-    .text("Code")
-    .on("click", showTheCode);
+  const code = $("<button>").text("Code").on("click", showTheCode);
   container.append(back);
   if (window.location.pathname.indexOf("/docs/") === -1) {
     container.append($("<span>").addClass("separator")).append(code);

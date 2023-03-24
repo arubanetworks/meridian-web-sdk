@@ -23,17 +23,17 @@
     <div class="map" id="meridian-map"></div>
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
-      import { fakeAPI } from "../utils/fake-api.js";
+      import { mockAPI } from "../utils/mock-api.js";
 
       const root = document.getElementById("meridian-map");
       const meridianMap = MeridianSDK.createMap(root, {
-        api: fakeAPI,
+        api: mockAPI,
         locationID: "5198682008846336",
         floorID: "5755685136498688",
         height: "600px",
         tags: {
-          showControlTags: true
-        }
+          showControlTags: true,
+        },
       });
 
       Object.assign(window, { meridianMap });

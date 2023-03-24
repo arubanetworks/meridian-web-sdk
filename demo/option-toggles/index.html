@@ -195,7 +195,7 @@
       // ---vvv SDK setup vvv---
       const api = new MeridianSDK.API({
         environment: "production",
-        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
       });
 
       const state = {
@@ -207,14 +207,14 @@
         loadTags: true,
         placemarks: {},
         tags: {},
-        onTagsUpdate: tags => {
+        onTagsUpdate: (tags) => {
           if (state.tags.filter === filterSingle) {
-            const tag = tags.allTags.find(t => t.mac === singleMAC);
+            const tag = tags.allTags.find((t) => t.mac === singleMAC);
             if (tag) {
               meridianMap.zoomToPoint({ x: tag.x, y: tag.y, scale: 2 });
             }
           }
-        }
+        },
       };
 
       const meridianMap = MeridianSDK.createMap(
@@ -236,7 +236,7 @@
         meridianMap.zoomToDefault();
       }
 
-      $("[name='placemark-filter']").on("change", event => {
+      $("[name='placemark-filter']").on("change", (event) => {
         switch (event.target.value) {
           case "filter-none":
             state.placemarks.filter = () => false;
@@ -245,10 +245,10 @@
             state.placemarks.filter = () => true;
             break;
           case "filter-cafe":
-            state.placemarks.filter = placemark => placemark.type === "cafe";
+            state.placemarks.filter = (placemark) => placemark.type === "cafe";
             break;
           case "filter-water_fountain":
-            state.placemarks.filter = placemark =>
+            state.placemarks.filter = (placemark) =>
               placemark.type === "water_fountain";
             break;
           default:
@@ -257,7 +257,7 @@
         updateMap();
       });
 
-      $("[name='tag-filter']").on("change", event => {
+      $("[name='tag-filter']").on("change", (event) => {
         switch (event.target.value) {
           case "filter-none":
             state.tags.filter = () => false;
@@ -266,8 +266,8 @@
             state.tags.filter = () => true;
             break;
           case "filter-Jamboard":
-            state.tags.filter = tag =>
-              tag.tags.map(x => x.name).includes("Jamboard");
+            state.tags.filter = (tag) =>
+              tag.tags.map((x) => x.name).includes("Jamboard");
             break;
           case "filter-Single":
             state.tags.filter = filterSingle;
@@ -278,37 +278,37 @@
         updateMap();
       });
 
-      $("[name='placemark-label-mode']").on("change", event => {
+      $("[name='placemark-label-mode']").on("change", (event) => {
         state.placemarks.labelMode = event.target.value;
         updateMap();
       });
 
-      $("#show-control-tags").on("change", event => {
+      $("#show-control-tags").on("change", (event) => {
         state.tags.showControlTags = event.target.checked;
         updateMap();
       });
 
-      $("#show-hidden-placemarks").on("change", event => {
+      $("#show-hidden-placemarks").on("change", (event) => {
         state.placemarks.showHiddenPlacemarks = event.target.checked;
         updateMap();
       });
 
-      $("#disable-placemarks").on("change", event => {
+      $("#disable-placemarks").on("change", (event) => {
         state.placemarks.disabled = event.target.checked;
         updateMap();
       });
 
-      $("#disable-tags").on("change", event => {
+      $("#disable-tags").on("change", (event) => {
         state.tags.disabled = event.target.checked;
         updateMap();
       });
 
-      $("#load-placemarks").on("change", event => {
+      $("#load-placemarks").on("change", (event) => {
         state.loadPlacemarks = event.target.checked;
         updateMap();
       });
 
-      $("#load-tags").on("change", event => {
+      $("#load-tags").on("change", (event) => {
         state.loadTags = event.target.checked;
         updateMap();
       });

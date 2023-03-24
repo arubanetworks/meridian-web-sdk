@@ -23,16 +23,16 @@
     <div class="map" id="meridian-map"></div>
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
-      import { fakeAPI } from "../utils/fake-api.js";
+      import { mockAPI } from "../utils/mock-api.js";
 
       const triangle = {
         type: "polygon",
-        points: [400, 100, 800, 600, 100, 800]
+        points: [400, 100, 800, 600, 100, 800],
       };
 
       const root = document.getElementById("meridian-map");
       const meridianMap = MeridianSDK.createMap(root, {
-        api: fakeAPI,
+        api: mockAPI,
         locationID: "5198682008846336",
         floorID: "5755685136498688",
         height: "600px",
@@ -40,9 +40,9 @@
           {
             type: "point",
             x: 0,
-            y: 0
-          }
-        ]
+            y: 0,
+          },
+        ],
       });
 
       setTimeout(() => {
@@ -54,7 +54,7 @@
               y: 100,
               size: 32,
               backgroundColor: "red",
-              backgroundImage: MeridianSDK.placemarkIconURL("generic")
+              backgroundImage: MeridianSDK.placemarkIconURL("generic"),
             },
             {
               type: "point",
@@ -84,7 +84,7 @@
               size: 24,
               backgroundImage: MeridianSDK.placemarkIconURL("atm"),
               backgroundSize: "75%",
-              title: "This is a very long title that should wrap"
+              title: "This is a very long title that should wrap",
             },
             {
               type: "point",
@@ -93,7 +93,7 @@
               size: 24,
               backgroundImage: MeridianSDK.placemarkIconURL("gaming"),
               backgroundSize: "75%",
-              title: "Title"
+              title: "Title",
             },
             {
               type: "point",
@@ -112,7 +112,7 @@
               backgroundColor: "yellow",
               backgroundImage: "https://placehold.it/24x24",
             },
-          ]
+          ],
         });
       }, 100);
 

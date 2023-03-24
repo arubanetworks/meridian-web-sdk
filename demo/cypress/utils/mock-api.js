@@ -1,6 +1,6 @@
 import mockMaps from "./mock-maps.js";
 import mockPlacemarks from "./mock-placemarks.js";
-import mockSvg from "./mock-svg.js";
+import mockSvgDefault from "./mock-svg.js";
 import mockAllAssets from "./mock-all-assets.js";
 import mockFloorAssets from "./mock-floor-assets.js";
 
@@ -29,7 +29,7 @@ async function sleep(time) {
   });
 }
 
-class FakeAPI {
+class MockAPI {
   constructor() {
     this.token = "[FAKE_TOKEN]";
     this.environment = "production";
@@ -69,7 +69,7 @@ class FakeAPI {
 
   async fetchSVG() {
     await this._sleep();
-    const blob = new Blob([mockSvg], { type: "image/svg+xml" });
+    const blob = new Blob([mockSvgDefault], { type: "image/svg+xml" });
     return URL.createObjectURL(blob);
   }
 
@@ -125,4 +125,4 @@ function rand(a, b) {
   return a + Math.floor(c * Math.random());
 }
 
-export const fakeAPI = missingPropertyProxy("API", new FakeAPI());
+export const mockAPI = missingPropertyProxy("API", new MockAPI());

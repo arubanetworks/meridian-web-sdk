@@ -39,7 +39,7 @@
         margin: auto;
         border: 1px solid #ccc;
       }
-      
+
       .meridian-tag[data-meridian-tag-id="546C0E032A87"] {
         width: 50px;
         height: 50px;
@@ -79,63 +79,66 @@
   </head>
 
   <body>
-      <div class="map" id="meridian-map"></div>
-        <div class="controls-container">
-          <div class="controls">
-            <span>
-              Styling by ID:<br/>
-              <div class="code-container">
-                <code>
-                  .meridian-tag[data-meridian-tag-id="546C0E032A87"] {
-                  <code class="indent">
-                    width: 50px;<br/>
-                    height: 50px;<br/>
-                    border-color: cyan;<br/>
-                    background-color: cyan;<br/>
-                    animation: pulsing 5s infinite;<br/>
-                  </code>
-                  }
-                </code>
-              </div>
-            </span>
-            <span>
-              Styling by Label:<br/>
-              <div class="code-container">
-                <code>
-                  body .meridian-tag-label-CT-HumanPersonnel {
-                  <code class="indent">
-                    border-color: yellow;<br/>
-                    width: 50px;<br/>
-                    height: 50px;<br/>
-                    animation: pulsing 5s infinite;<br/>
-                  </code>
-                  }
-                </code>
-              </div>
-            </span>
-            <span>
-              <p> Note: Labels with special characters need to be targeted accordingly. Spaces and most special characters (with the exception of underscores and dashes) are removed.</p>
-              <p>Example: For the tag label “CT-Human/Personnel”, target "meridian-tag-label-CT-HumanPersonnel". </p>
-            </span>
+    <div class="map" id="meridian-map"></div>
+    <div class="controls-container">
+      <div class="controls">
+        <div>
+          Styling by ID:<br />
+          <div class="code-container">
+            <code>
+              .meridian-tag[data-meridian-tag-id="546C0E032A87"] {
+              <code class="indent">
+                width: 50px;<br />
+                height: 50px;<br />
+                border-color: cyan;<br />
+                background-color: cyan;<br />
+                animation: pulsing 5s infinite;<br />
+              </code>
+              }
+            </code>
           </div>
         </div>
+        <div>
+          Styling by Label:<br />
+          <div class="code-container">
+            <code>
+              body .meridian-tag-label-CT-HumanPersonnel {
+              <code class="indent">
+                border-color: yellow;<br />
+                width: 50px;<br />
+                height: 50px;<br />
+                animation: pulsing 5s infinite;<br />
+              </code>
+              }
+            </code>
+          </div>
+        </div>
+        <div>
+          <p>
+            Note: Labels with special characters need to be targeted
+            accordingly. Spaces and most special characters (with the exception
+            of underscores and dashes) are removed.
+          </p>
+          <p>
+            Example: For the tag label “CT-Human/Personnel”, target
+            "meridian-tag-label-CT-HumanPersonnel".
+          </p>
+        </div>
       </div>
+    </div>
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
       MeridianSDK.init({
         api: new MeridianSDK.API({
           environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        })
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
+        }),
       });
-      var map = MeridianSDK.createMap(
-        document.getElementById("meridian-map"),
-        {
-          locationID: "5198682008846336",
-          floorID: "5755685136498688",
-          height: "400px",
-        }
-      );
+      var map = MeridianSDK.createMap(document.getElementById("meridian-map"), {
+        locationID: "5198682008846336",
+        floorID: "5755685136498688",
+        height: "400px",
+      });
     </script>
   </body>
 </html>

@@ -26,21 +26,21 @@
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
       /* global MeridianSDK */
-      import { fakeAPI } from "../utils/fake-api.js";
+      import { mockAPI } from "../utils/mock-api.js";
 
       const root = document.getElementById("meridian-map");
       const meridianMap = MeridianSDK.createMap(root, {
-        api: fakeAPI,
+        api: mockAPI,
         locationID: "5198682008846336",
         floorID: "5755685136498688",
         height: "100%",
         tags: {
-          filter: tag => tag.id === "546C0E032A87"
+          filter: (tag) => tag.id === "546C0E032A87",
         },
         placemarks: {
-          filter: placemark =>
-            placemark.id === "5755685136498688_5717271485874176"
-        }
+          filter: (placemark) =>
+            placemark.id === "5755685136498688_5717271485874176",
+        },
       });
     </script>
   </body>

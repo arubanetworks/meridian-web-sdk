@@ -45,7 +45,7 @@
       window.create = () => {
         const api = new MeridianSDK.API({
           environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
         });
         meridianMap = MeridianSDK.createMap(
           document.getElementById("meridian-map"),
@@ -53,7 +53,7 @@
             api: api,
             locationID: "5198682008846336",
             floorID: "5755685136498688",
-            height: "500px"
+            height: "500px",
           }
         );
       };

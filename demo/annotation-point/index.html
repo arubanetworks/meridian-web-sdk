@@ -40,7 +40,7 @@
     <script type="module" id="the-code">
       const api = new MeridianSDK.API({
         environment: "production",
-        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
       });
 
       const meridianMap = MeridianSDK.createMap(
@@ -50,7 +50,7 @@
           locationID: "5198682008846336",
           floorID: "5755685136498688",
           height: "100%",
-          onFloorChange: floor => {
+          onFloorChange: (floor) => {
             console.log("onFloorChange", floor);
           },
           annotations: [
@@ -60,28 +60,28 @@
               x: 1000,
               y: 1000,
               backgroundColor: "#222",
-              size: 8
+              size: 8,
             },
             {
               type: "point",
               x: 1050,
               y: 1050,
               backgroundColor: "#444",
-              size: 8
+              size: 8,
             },
             {
               type: "point",
               x: 1100,
               y: 1100,
               backgroundColor: "#666",
-              size: 8
+              size: 8,
             },
             {
               type: "point",
               x: 1150,
               y: 1150,
               backgroundColor: "#888",
-              size: 8
+              size: 8,
             },
             {
               type: "point",
@@ -90,17 +90,17 @@
               backgroundColor: "#c00",
               title: "Clickable, open console",
               data: { name: "foo", area: "conference" },
-              onClick: data => {
+              onClick: (data) => {
                 // arbitrary data can be passed for each annotation
                 console.info("clicked annotation, data:", data);
-              }
+              },
             },
             {
               type: "point",
               x: 2000,
               y: 3000,
               backgroundColor: "rgba(255, 255, 255, 0.5)",
-              title: "Transparent White"
+              title: "Transparent White",
             },
             {
               type: "point",
@@ -108,9 +108,9 @@
               y: 3000,
               backgroundColor: "rgb(32, 32, 32, 0.5)",
               backgroundSize: "75%",
-              backgroundImage: MeridianSDK.placemarkIconURL("generic")
-            }
-          ]
+              backgroundImage: MeridianSDK.placemarkIconURL("generic"),
+            },
+          ],
         }
       );
     </script>

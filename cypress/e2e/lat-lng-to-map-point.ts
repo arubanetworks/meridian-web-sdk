@@ -1,6 +1,6 @@
-describe("Overlay: Point & Polygon by Lat/Lng", () => {
+describe("Lat/Lng to Map Point", () => {
   it("should render an annotation point named test by lat/lng", () => {
-    cy.visit("/cypress/annotation-point-lat-lng");
+    cy.visit("/cypress/lat-lng-to-map-point");
 
     cy.get("[data-testid=meridian--private--annotation-layer]").should("exist");
     cy.get("[data-testid=meridian--private--annotation-point]")

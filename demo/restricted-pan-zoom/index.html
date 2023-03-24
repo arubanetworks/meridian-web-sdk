@@ -102,7 +102,11 @@
       <code>restrictedPanZoom</code> on it, which prevents desktop zooming
       unless holding <code>Shift</code>, as well as preventing mobile/touch
       panning unless using two fingers. See
-      <a href="https://arubanetworks.github.io/meridian-web-sdk/modules.html#createMap">createMap</a> for more information.
+      <a
+        href="https://arubanetworks.github.io/meridian-web-sdk/modules.html#createMap"
+        >createMap</a
+      >
+      for more information.
     </p>
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto ullam
@@ -152,21 +156,21 @@
       MeridianSDK.init({
         api: new MeridianSDK.API({
           environment: "production",
-          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78"
-        })
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
+        }),
       });
 
       MeridianSDK.createMap(document.getElementById("meridian-map-1"), {
         locationID: "5198682008846336",
         floorID: "5755685136498688",
-        height: "500px"
+        height: "500px",
       });
 
       MeridianSDK.createMap(document.getElementById("meridian-map-2"), {
         locationID: "5198682008846336",
         floorID: "5755685136498688",
         height: "500px",
-        shouldMapPanZoom: MeridianSDK.restrictedPanZoom
+        shouldMapPanZoom: MeridianSDK.restrictedPanZoom,
       });
     </script>
   </body>

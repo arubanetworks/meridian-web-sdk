@@ -23,16 +23,16 @@
     <div class="map" id="meridian-map"></div>
     <script src="../../meridian-sdk.js"></script>
     <script type="module">
-      import { fakeAPI } from "../utils/fake-api.js";
+      import { mockAPI } from "../utils/mock-api.js";
 
       const line = {
         type: "polyline",
-        points: [0,100,1000,2000]
+        points: [0, 100, 1000, 2000],
       };
 
       const root = document.getElementById("meridian-map");
       const meridianMap = MeridianSDK.createMap(root, {
-        api: fakeAPI,
+        api: mockAPI,
         locationID: "5198682008846336",
         floorID: "5755685136498688",
         height: "600px",
@@ -40,11 +40,11 @@
         onPlacemarksUpdate: ({ filteredPlacemarks }) => {
           const points = [...filteredPlacemarks]
             .sort((a, b) => Math.sign(a.y - b.y))
-            .flatMap(p => [p.x, p.y]);
+            .flatMap((p) => [p.x, p.y]);
           meridianMap.update({
-            overlays: [{ type: "polyline", points }]
+            overlays: [{ type: "polyline", points }],
           });
-        }
+        },
       });
 
       Object.assign(window, { meridianMap });

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-fake-api="false">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -44,16 +44,15 @@
 
       window.create = () => {
         const api = new MeridianSDK.API({
-          environment: "staging",
-          token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjc5NTIwODM3LCJ2YWx1ZSI6IjA0YjdiZDdiZjY0ODYzZWU2NjAwNjI2MjFkYThkNWVkOWM0MDY4NjQifQ.CjcfcfI-TE2OHX_umfjf0kcGANzHUVWt0iJXXRuFDww",
+          environment: "production",
+          token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
         });
         meridianMap = MeridianSDK.createMap(
           document.getElementById("meridian-map"),
           {
             api: api,
-            locationID: "4832798769152000",
-            floorID: "6198917326962688",
+            locationID: "5198682008846336",
+            floorID: "5755685136498688",
             height: "500px",
           }
         );

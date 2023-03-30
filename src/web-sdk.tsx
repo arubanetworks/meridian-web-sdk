@@ -946,7 +946,7 @@ export class API {
     if (!floorID) {
       requiredParam("fetchTagsByFloor", "floorID");
     }
-    const response = await this._axiosTagsAPI.post("track/assets", {
+    const response = await this._axiosTagsAPI.post("/assets", {
       floor_id: floorID,
       location_id: locationID,
     });
@@ -960,7 +960,7 @@ export class API {
     if (!locationID) {
       requiredParam("fetchTagsByLocation", "locationID");
     }
-    const response = await this._axiosTagsAPI.post("/track/assets", {
+    const response = await this._axiosTagsAPI.post("/assets", {
       location_id: locationID,
     });
     return response.data.asset_updates;
@@ -1218,11 +1218,11 @@ const envToTagTrackerBaseRestURL = {
 
 /** @internal */
 const envToTagTrackerStreamingURL = {
-  development: "ws://localhost:8091/streams/v1/track/assets",
-  devCloud: "wss://dev-tags.meridianapps.com/streams/v1/track/assets",
-  production: "wss://tags.meridianapps.com/streams/v1/track/assets",
-  eu: "wss://tags-eu.meridianapps.com/streams/v1/track/assets",
-  staging: "wss://staging-tags.meridianapps.com/streams/v1/track/assets",
+  development: "ws://localhost:8091/streams/v1/assets",
+  devCloud: "wss://dev-tags.meridianapps.com/streams/v1/assets",
+  production: "wss://tags.meridianapps.com/streams/v1/assets",
+  eu: "wss://tags-eu.meridianapps.com/streams/v1/assets",
+  staging: "wss://staging-tags.meridianapps.com/streams/v1/assets",
 } as const;
 
 /** @internal */

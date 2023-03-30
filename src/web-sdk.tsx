@@ -515,6 +515,16 @@ export interface CreateMapOptions {
   /** An array of custom annotations to draw on the map. */
   annotations?: CustomAnnotation[];
   /**
+   * Minimum zoom level. Default value is dynamically calculated and matches
+   * the initial map scale (further zooming out is not allowed
+   */
+  minZoomLevel?: number;
+  /**
+   * Maximum zoom level. Default value is 8 which equals eight times the
+   * actual scale of the map.
+   */
+  maxZoomLevel?: number;
+  /**
    * Called when the user clicks on the map. This is mostly useful as a way of
    * knowing that the user has potentially unfocused a tag or placemark. This is
    * NOT called when the user pans or zooms the map.

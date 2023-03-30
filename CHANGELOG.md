@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Minimum zoom level is now dynamically calculated and matches the initial
+  map scale (further zooming out is not allowed). The previous default value
+  was arbitrarily set to 1/60 of the actual map scale. See below for information
+  on how to customize this value.
+
+- Maximum zoom level was changed to 8 which equals eight times the actual scale
+  of the map. The previous default value was arbitrarily set to 14. See below
+  for information on how to customize this value.
+
+### Added
+
+- Option to specify a minimum zoom level (minZoomLevel). The default value is
+  dynamically calculated and matches the initial map scale (further zooming out is not allowed).
+
+- Option to specify a maximum zoom level (maxZoomLevel). The default value is
+  8 which equals eight times the scale of the map.
+
+- Pan limiting functionality to help keep the map in view when zooming in/out.
+
 ## [1.14.2] - 2023-03-30
 
 ### Changed

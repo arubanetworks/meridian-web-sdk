@@ -533,13 +533,36 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
             ? this.props.shouldMapPanZoom(d3Event)
             : true
         )
-        // min/max zoom levels
-        .scaleExtent([1 / 60, 14])
         .duration(ZOOM_DURATION)
         .on("zoom", onZoom)
         .on("end.zoom", onZoomEnd);
       this.mapSelection = d3Select(this.mapRef.current);
       this.mapSelection.call(this.zoomD3);
+    }
+  }
+
+  setExtents(mapWidth: number, mapHeight: number) {
+    const PAN_PAD = 400;
+    const ZOOM_MAX = 8;
+
+    if (this.mapRef.current) {
+      const customMinZoomLevel = this.props.minZoomLevel;
+      const customMaxZoomLevel = this.props.maxZoomLevel;
+      const { k } = d3ZoomTransform(this.mapRef.current);
+
+      const minZoom =
+        customMinZoomLevel && typeof customMinZoomLevel === "number"
+          ? customMinZoomLevel
+          : k;
+      const maxZoom =
+        customMaxZoomLevel && typeof customMaxZoomLevel === "number"
+          ? customMaxZoomLevel
+          : ZOOM_MAX;
+
+      this.zoomD3?.scaleExtent([minZoom, maxZoom]).translateExtent([
+        [-PAN_PAD, -PAN_PAD],
+        [mapWidth + PAN_PAD, mapHeight + PAN_PAD],
+      ]);
     }
   }
 
@@ -554,7 +577,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       this.mapSelection.call(
         this.zoomD3.translateTo,
         mapWidth / 2,
-        mapHeight / 1.8 // nudge the map up a little to accommodate floor label
+        mapHeight / 2
       );
       this.mapSelection.call(
         this.zoomD3.scaleTo,
@@ -563,6 +586,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           (0.7 * mapContainerSize.height) / mapHeight
         )
       );
+      this.setExtents(mapWidth, mapHeight);
     }
   }
 
@@ -584,7 +608,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
       throw new Error("zoomD3 is not defined");
     }
     const { width, height } = this.getMapRefSize();
-    // I'm so sorry, but it's really hard to center things, and also math
     const t = d3ZoomIdentity
       .translate(-k * x + width / 2, -k * y + height / 2)
       .scale(k);

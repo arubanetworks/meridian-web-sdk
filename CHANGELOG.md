@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   of the map. The previous default value was arbitrarily set to 14. See below
   for information on how to customize this value.
 
+- Minor styling modifications to Detail Overlay/Modal. See below for information
+  on overriding default styles.
+
 ### Added
 
 - Option to specify a minimum zoom level (minZoomLevel). The default value is
@@ -27,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   8 which equals eight times the scale of the map.
 
 - Pan limiting functionality to help keep the map in view when zooming in/out.
+
+- Output Placemark Description in Detail Overlay/Modal.
+
+- Additional Detail Overlay/Modal related classnames to target for styling.
 
 ## [1.14.2] - 2023-03-30
 

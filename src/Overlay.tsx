@@ -7,7 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import IconClose from "./IconClose";
-import { css, mixins, theme } from "./style";
+import { css, mixins, theme, cx } from "./style";
 
 interface OverlayProps {
   position: "left" | "right";
@@ -20,7 +20,10 @@ const Overlay: FunctionComponent<OverlayProps> = ({
   children,
 }) => (
   <div
-    className={position === "left" ? cssOverlayLeft : cssOverlayRight}
+    className={cx(
+      "meridian-details-overlay",
+      position === "left" ? cssOverlayLeft : cssOverlayRight
+    )}
     data-testid="meridian--private--map-overlay"
   >
     <button
@@ -35,7 +38,7 @@ const Overlay: FunctionComponent<OverlayProps> = ({
 );
 
 const cssOverlay = css(mixins.shadow, mixins.rounded, {
-  label: "overlay",
+  label: "details-overlay",
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
@@ -47,8 +50,7 @@ const cssOverlay = css(mixins.shadow, mixins.rounded, {
   left: 15,
   top: 15,
   right: 15,
-  // TODO: maxHeight should really be based on the Map height minus 30px or so
-  maxHeight: 500,
+  maxHeight: 600,
   zIndex: 2,
   maxWidth: 400,
 });
@@ -66,7 +68,7 @@ const cssClose = css(
   mixins.buttonHoverActive,
   mixins.focusRing,
   {
-    label: "overlay-close",
+    label: "details-overlay-close",
     cursor: "pointer",
     position: "absolute",
     zIndex: 2,

@@ -541,15 +541,23 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     }
   }
 
+  resetExtents() {
+    this.zoomD3?.scaleExtent([0, Infinity]).translateExtent([
+      [-Infinity, -Infinity],
+      [+Infinity, +Infinity],
+    ]);
+  }
+
   setExtents(mapWidth: number, mapHeight: number) {
     const ZOOM_MAX = 8;
-    const PAD_X = mapWidth * 0.8;
-    const PAD_Y = mapHeight * 0.8;
+    const customMinZoomLevel = this.props.minZoomLevel;
+    const customMaxZoomLevel = this.props.maxZoomLevel;
 
     if (this.mapRef.current) {
-      const customMinZoomLevel = this.props.minZoomLevel;
-      const customMaxZoomLevel = this.props.maxZoomLevel;
       const { k } = d3ZoomTransform(this.mapRef.current);
+      const mapContainerSize = this.getMapRefSize();
+      const PAD_X = mapContainerSize.width / k / 1.5;
+      const PAD_Y = mapContainerSize.height / k / 1.5;
 
       const minZoom =
         customMinZoomLevel && typeof customMinZoomLevel === "number"
@@ -575,6 +583,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     this.mapContainerSize = mapContainerSize;
 
     if (mapWidth && mapHeight && this.mapSelection && this.zoomD3) {
+      this.resetExtents();
       this.mapSelection.call(
         this.zoomD3.translateTo,
         mapWidth / 2,

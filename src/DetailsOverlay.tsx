@@ -9,7 +9,7 @@ import { FunctionComponent, h } from "preact";
 import LabelList from "./LabelList";
 import MapComponent from "./MapComponent";
 import Overlay from "./Overlay";
-import { css, theme } from "./style";
+import { css, theme, cx } from "./style";
 import { getTagLabels } from "./util";
 import { PlacemarkData, placemarkIconURL, TagData } from "./web-sdk";
 
@@ -24,20 +24,29 @@ const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
   item,
   toggleDetailsOverlay,
 }) => {
+  function placemarkDescription() {
+    if (kind === "placemark" && item.description) {
+      return { __html: item.description };
+    }
+    return undefined;
+  }
   const imageStyle: Record<string, any> = (() => {
     if (kind === "placemark" && item.image_url) {
       return {
         backgroundImage: `url('${item.image_url}')`,
+        backgroundSize: "contain",
         height: 300,
+        minHeight: 220,
       };
     }
     if (kind === "placemark") {
       const url = placemarkIconURL(item.type);
       return {
-        backgroundSize: "70%",
+        backgroundSize: "contain",
         backgroundImage: `url('${url}')`,
         backgroundColor: `#${item.color}`,
         height: 300,
+        minHeight: 220,
       };
     }
     if (kind === "tag" && item.image_url) {
@@ -59,10 +68,12 @@ const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
       }}
     >
       <div className={cssOverlayImage} style={imageStyle} />
-      <div className={cssOverlayContent}>
-        <p className={cssOverlayName}>{item.name || item.type_name}</p>
+      <div className={cx("meridian-overlay-content", cssOverlayContent)}>
+        <p className={cx("meridian-overlay-item-name", cssOverlayName)}>
+          {item.name || item.type_name}
+        </p>
         {kind === "tag" ? (
-          <div className={cssTagData}>
+          <div className={cx("meridian-overlay-tag-data", cssTagData)}>
             <LabelList
               align="left"
               labels={getTagLabels(item as TagData)}
@@ -70,7 +81,17 @@ const DetailsOverlay: FunctionComponent<DetailsOverlayProps> = ({
             />
             <p>MAC: {item.mac}</p>
           </div>
-        ) : null}
+        ) : (
+          <div
+            className={cx(
+              "meridian-overlay-placemark-description",
+              cssPlacemarkDescription
+            )}
+            // Content is sanitized on the BE upon submission
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={placemarkDescription()}
+          />
+        )}
       </div>
     </Overlay>
   );
@@ -87,15 +108,22 @@ const cssOverlayImage = css({
 
 const cssOverlayName = css({
   label: "overlay-name",
-  fontSize: 24,
+  fontSize: 22,
 });
 
 const cssOverlayContent = css({
   label: "overlay-content",
-  padding: "0 20px 10px 20px",
+  padding: "0 20px 15px 20px",
+  overflow: "auto",
 });
 
 const cssTagData = css({
+  label: "overlay-tag-data",
+  fontSize: 14,
+});
+
+const cssPlacemarkDescription = css({
+  label: "overlay-placemark-data",
   fontSize: 14,
 });
 

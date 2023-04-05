@@ -614,7 +614,7 @@ export interface MeridianMap {
    */
   zoomToPoint: (options: { x: number; y: number; scale: number }) => void;
   /**
-   * Center the map while retaining current scale.
+   * Center the map while retaining the current scale.
    */
   centerMap: () => void;
 }

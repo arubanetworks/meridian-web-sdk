@@ -610,6 +610,20 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     };
   }
 
+  centerMap() {
+    const mapData = this.getMapData();
+    const mapWidth = mapData?.width;
+    const mapHeight = mapData?.height;
+
+    if (mapWidth && mapHeight && this.mapSelection && this.zoomD3) {
+      this.mapSelection.call(
+        this.zoomD3.translateTo,
+        mapWidth / 2,
+        mapHeight / 2
+      );
+    }
+  }
+
   zoomToPoint = (x: number, y: number, k: number) => {
     if (!this.mapSelection) {
       throw new Error("mapSelection is not defined");

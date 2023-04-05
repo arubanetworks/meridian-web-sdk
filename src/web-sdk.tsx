@@ -613,6 +613,10 @@ export interface MeridianMap {
    * Zoom to a given x, y coordinate and scale to a given zoom factor.
    */
   zoomToPoint: (options: { x: number; y: number; scale: number }) => void;
+  /**
+   * Center the map while retaining current scale.
+   */
+  centerMap: () => void;
 }
 
 /**
@@ -747,6 +751,13 @@ export function createMap(
         requiredParam("map.zoomToPoint", "options.scale");
       }
       mapRef?.zoomToPoint(options.x, options.y, options.scale);
+    },
+    centerMap: () => {
+      if (map.isDestroyed) {
+        logError("can't call update on a destroyed MeridianMap");
+        return;
+      }
+      mapRef?.centerMap();
     },
   };
   return map;

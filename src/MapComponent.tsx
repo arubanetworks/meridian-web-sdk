@@ -542,8 +542,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   }
 
   setExtents(mapWidth: number, mapHeight: number) {
-    const PAN_PAD = 400;
     const ZOOM_MAX = 8;
+    const PAD_X = mapWidth * 0.8;
+    const PAD_Y = mapHeight * 0.8;
 
     if (this.mapRef.current) {
       const customMinZoomLevel = this.props.minZoomLevel;
@@ -560,8 +561,8 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           : ZOOM_MAX;
 
       this.zoomD3?.scaleExtent([minZoom, maxZoom]).translateExtent([
-        [-PAN_PAD, -PAN_PAD],
-        [mapWidth + PAN_PAD, mapHeight + PAN_PAD],
+        [-PAD_X, -PAD_Y],
+        [mapWidth + PAD_X, mapHeight + PAD_Y],
       ]);
     }
   }

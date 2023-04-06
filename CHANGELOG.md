@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Pan limiting functionality to help keep the map in view when zooming in/out.
 
+- New method to center the map while retaining the current scale. `centerMap: () => void;`
+
 - Output Placemark Description in Detail Overlay/Modal.
 
 - Additional Detail Overlay/Modal related classnames to target for styling.

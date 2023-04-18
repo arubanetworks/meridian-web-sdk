@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- API.openStream, OpenStreamOptions - More specific types
+
+- Additional API.openStream demos for each resourceType option
+
+### Changed
+
+- API.openStream, OpenStreamOptions - floorID is no longer required when
+  resourceType is set to a value other than "FLOOR".
+
+- API.openStream, OpenStreamOptions - default value for resourceType is
+  dynamically calculated. Previous default value was set to "FLOOR" which
+  made floorID required.
+
+- API.openStream - When resourceType is set to a value other than "FLOOR",
+  the loadInitialTags callback will return all tags at the location.
+
 ## [1.15.1] - 2023-04-12
 
 ### Added

@@ -30,7 +30,8 @@
     <div class="container">
       <p>
         This is a standalone socket example. You can see the output in your Dev
-        Tools console.
+        Tools console and the code by clicking the "Code" button on the lower
+        left.
       </p>
     </div>
 
@@ -38,18 +39,15 @@
     <script type="module" id="the-code">
       // ---^^^ SDK setup ^^^---
       const myApi = new MeridianSDK.API({
-        environment: "production",
-        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
+        environment: "staging",
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjY1NDI1MDYwLCJ2YWx1ZSI6ImYwZmMwNmUxNDc3MjY5MjNlZjNmMWU5OTVkNDUzMjkzMzdmMTlmNjkifQ.GFGcZz-UmfemQgNxand4eELd_GR7OhSG3rufjOj22Xc",
       });
 
       const newSocket = myApi.openStream({
-        locationID: "5468665088573440",
-        floorID: "5653104741580800",
-        resourceIDs: ["1218"],
+        locationID: "4887018519789568",
+        resourceIDs: ["1442"],
         resourceType: "ZONE",
-        onInitialTags: function (tags) {
-          console.log("onInitialTags (ALL tags on the current floor)", tags);
-        },
         onTagUpdate: function (tags) {
           console.log("onTagUpdate", tags);
         },

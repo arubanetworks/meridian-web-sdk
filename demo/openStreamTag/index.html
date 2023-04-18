@@ -3,9 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>
-      api.openStream(), All Tags on a single Floor | Meridian Web SDK
-    </title>
+    <title>api.openStream(), Single Tag example | Meridian Web SDK</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
@@ -48,12 +46,8 @@
 
       const newSocket = myApi.openStream({
         locationID: "4887018519789568",
-        floorID: "6014099341312000",
-        // resourceIDs will default to the Floor ID: ["6014099341312000"],
-        // resourceType will default to: "FLOOR",
-        onInitialTags: function (tags) {
-          console.log("onInitialTags", tags);
-        },
+        resourceIDs: ["A0E6F83803D5"],
+        resourceType: "TAG",
         onTagUpdate: function (tags) {
           console.log("onTagUpdate", tags);
         },

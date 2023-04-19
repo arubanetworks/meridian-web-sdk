@@ -19,8 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   resourceType is set to a value other than "FLOOR".
 
 - API.openStream, OpenStreamOptions - default value for resourceType is
-  dynamically calculated. Previous default value was set to "FLOOR" which
-  made floorID required.
+  now dynamically calculated. Previous default value was set to "FLOOR"
+  which made floorID required.
 
 - API.openStream - When resourceType is set to a value other than "FLOOR",
   the loadInitialTags callback will return all tags at the location.

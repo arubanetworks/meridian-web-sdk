@@ -785,11 +785,17 @@ export interface OpenStreamOptions {
   /** Meridian location ID */
   locationID: string;
   /** Meridian floor ID */
-  floorID: string;
-  /** Default: [floorID], Valid values: [locationID | tagID | floorID | tagLabel | zoneID] */
+  floorID?: string;
+  /**
+   * Default: [floorID] if resourceType === "FLOOR" OR [locationID] if resourceType === "LOCATION",
+   * Valid values: [locationID | floorIDs | tagIDs | tagLabelIDs | zoneIDs]
+   */
   resourceIDs?: string[];
-  /** Default: "FLOOR", Valid values: "LOCATION" | "TAG" | "FLOOR" | "LABEL" | "ZONE"  */
-  resourceType?: string;
+  /**
+   * Default: "FLOOR" if floorID is defined
+   * Valid values: "LOCATION" | "TAG" | "FLOOR" | "LABEL" | "ZONE"
+   */
+  resourceType?: "LOCATION" | "TAG" | "FLOOR" | "LABEL" | "ZONE";
   /** Called with ALL tags on first load */
   onInitialTags?: (tags: TagData[]) => void;
   /** Called when a tag location updates */
@@ -1121,19 +1127,29 @@ export class API {
   openStream({
     locationID,
     floorID,
-    resourceIDs = [floorID],
+    resourceIDs,
     resourceType = "FLOOR",
     onInitialTags = () => {},
     onTagUpdate = () => {},
     onException = () => {},
     onClose = () => {},
   }: OpenStreamOptions): Stream {
+    if (resourceType === "FLOOR" && floorID && !resourceIDs) {
+      resourceIDs = [floorID];
+    }
+    if (resourceType === "LOCATION" && locationID && !resourceIDs) {
+      resourceIDs = [locationID];
+    }
     if (!locationID) {
       requiredParam("openStream", "locationID");
     }
-    if (!floorID) {
+    if (resourceType === "FLOOR" && !floorID) {
       requiredParam("openStream", "floorID");
     }
+    if (!resourceIDs) {
+      requiredParam("openStream", "resourceIDs");
+    }
+
     let isClosed = false;
     const params = new URLSearchParams({
       method: "POST",
@@ -1159,12 +1175,22 @@ export class API {
       ws.close();
     };
     const loadInitialTags = async () => {
-      try {
-        const tags = await this.fetchTagsByFloor(locationID, floorID);
-        asyncClientCall(onInitialTags, tags);
-      } catch (err: any) {
-        asyncClientCall(onException, err);
-        close();
+      if (floorID && resourceType === "FLOOR") {
+        try {
+          const tags = await this.fetchTagsByFloor(locationID, floorID);
+          asyncClientCall(onInitialTags, tags);
+        } catch (err: any) {
+          asyncClientCall(onException, err);
+          close();
+        }
+      } else if (locationID && resourceType === "LOCATION") {
+        try {
+          const tags = await this.fetchTagsByLocation(locationID);
+          asyncClientCall(onInitialTags, tags);
+        } catch (err: any) {
+          asyncClientCall(onException, err);
+          close();
+        }
       }
     };
     ws.addEventListener("open", () => {

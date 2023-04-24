@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- API.openStream, OpenStreamOptions - More specific types
-
 - Additional API.openStream demos for each resourceType option
 
 ### Changed
+
+- API.openStream, OpenStreamOptions - More specific types
 
 - API.openStream, OpenStreamOptions - floorID is no longer required when
   resourceType is set to a value other than "FLOOR".

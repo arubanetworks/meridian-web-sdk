@@ -883,6 +883,9 @@ export class API {
   /** @internal */
   private readonly _axiosTagsAPI: AxiosInstance;
 
+  /** @internal */
+  private readonly _axiosTagDetailAPI: AxiosInstance;
+
   /**
    * Pass the result to `init()` or `createMap()`.
    */
@@ -909,6 +912,12 @@ export class API {
     });
     this._axiosTagsAPI = axios.create({
       baseURL: envToTagTrackerBaseRestURL[this.environment],
+      headers: {
+        Authorization: `Token ${options.token}`,
+      },
+    });
+    this._axiosTagDetailAPI = axios.create({
+      baseURL: envToTagTrackerDetailURL[this.environment],
       headers: {
         Authorization: `Token ${options.token}`,
       },
@@ -991,6 +1000,19 @@ export class API {
       location_id: locationID,
     });
     return response.data.asset_updates;
+  }
+
+  /**
+   * [async] Returns dynamicly updated data for a specific tag.
+   */
+  async fetchTagDetail(mac: string): Promise<TagData> {
+    if (!mac) {
+      requiredParam("fetchTagDetail", "mac");
+    }
+    const response = await this._axiosTagDetailAPI.get(
+      `/tagsinfo/detail/${mac}`
+    );
+    return response.data;
   }
 
   /**
@@ -1261,6 +1283,15 @@ const envToTagTrackerBaseRestURL = {
   production: "https://tags.meridianapps.com/api/v1",
   eu: "https://tags-eu.meridianapps.com/api/v1",
   staging: "https://staging-tags.meridianapps.com/api/v1",
+} as const;
+
+/** @internal */
+const envToTagTrackerDetailURL = {
+  development: "http://localhost:8091/api",
+  devCloud: "https://dev-tags.meridianapps.com/api",
+  production: "https://tags.meridianapps.com/api",
+  eu: "https://tags-eu.meridianapps.com/api",
+  staging: "https://staging-tags.meridianapps.com/api",
 } as const;
 
 /** @internal */

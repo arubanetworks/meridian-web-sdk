@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Additional API.openStream demos for each resourceType option
 
+- API.fetchTagDetails which returns dynamicly updated data for a specific tag.
+
 ### Changed
 
 - API.openStream, OpenStreamOptions - More specific types

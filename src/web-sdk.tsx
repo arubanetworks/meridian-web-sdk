@@ -456,9 +456,44 @@ export interface CustomOverlayPolyline {
 }
 
 /**
+ * Object describing a SVG path drawn on the map
+ */
+export interface CustomOverlayPath {
+  type: "path";
+  shape: string;
+  fill?: string;
+  fillOpacity?: number | string;
+  stroke?: string;
+  strokeWidth?: number;
+  style?: h.JSX.CSSProperties;
+  id?: string;
+  className?: string;
+}
+
+/**
+ * Object describing a SVG image drawn on the map
+ */
+export interface CustomOverlayImage {
+  type: "image";
+  x?: number;
+  y?: number;
+  width: number;
+  height: number;
+  href: string;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  style?: h.JSX.CSSProperties;
+  id?: string;
+  className?: string;
+}
+
+/**
  * Object describing a custom overlay
  */
-export type CustomOverlay = CustomOverlayPolygon | CustomOverlayPolyline;
+export type CustomOverlay =
+  | CustomOverlayImage
+  | CustomOverlayPath
+  | CustomOverlayPolygon
+  | CustomOverlayPolyline;
 
 /**
  * Object describing a point annotation drawn on the map

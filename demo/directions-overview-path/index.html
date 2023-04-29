@@ -25,6 +25,7 @@
   <body>
     <div class="directions-overlay">
       <h3>Directions Request</h3>
+      <image src="area-node-selected.png" />
       <p class="directions-request">
         <strong class="from">From:</strong>
         <em>Customer Service Center (Second Floor)</em><br />
@@ -44,6 +45,8 @@
       const floorID = "5928450816475136";
       const startPlacemarkID = "5928450816475136_5368476738519040";
       const endPlacemarkID = "5928450816475136_5969855240732672";
+      let startx;
+      let starty;
 
       function formatDirections(route) {
         let floor;
@@ -69,17 +72,22 @@
         return formattedDirections;
       }
 
-      function stepsToPoints(steps) {
-        return steps.flatMap((step) => {
+      function stepsToShape(steps) {
+        console.info("orig steps", steps);
+        let shape = steps.flatMap((step) => {
           return step.points.split(",").map(Number);
         });
+        shape = shape.join(", ");
+        startx = shape[0];
+        starty = shape[1];
+        return "M " + shape;
       }
 
       function displayRoute(meridianMap, routes, routeIndex) {
         const directions = routes[routeIndex];
-        const points = stepsToPoints(directions.steps);
+        const shape = stepsToShape(directions.steps);
 
-        console.info("oinstsdf", points);
+        console.info("shape", shape);
 
         document.getElementById("route-start").hidden = true;
         document.getElementById("directions-text").innerText =
@@ -88,27 +96,20 @@
         meridianMap.update({
           overlays: [
             {
-              type: "polyline",
-              points,
+              type: "path",
+              shape,
               stroke: "yellow",
-              strokeWidth: 15,
-              strokeLineJoin: "round",
-              strokeLineCap: "round",
+              strokeWidth: 5,
             },
             {
-              type: "polyline",
-              points,
-              stroke: "orange",
-              strokeWidth: 8,
-              strokeLineJoin: "round",
-              strokeLineCap: "round",
-              strokeDasharray: "50",
-              strokeDashoffset: "250",
-              animate: {
-                attributeName: "stroke-dashoffset",
-                from: "250",
-                to: "50",
-                dur: "2s",
+              type: "image",
+              href: "area-node-selected.png",
+              width: 18,
+              height: 18,
+              begin: "0",
+              animateMotion: {
+                path: shape,
+                dur: "10s",
                 repeatCount: "indefinite",
               },
             },

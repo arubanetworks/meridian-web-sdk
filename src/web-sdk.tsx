@@ -458,14 +458,20 @@ export interface CustomOverlayPolyline {
 /**
  * Object describing a SVG path drawn on the map
  */
-export interface CustomOverlayPath {
+export interface CustomOverlayPath extends Partial<SVGPathElement> {
   type: "path";
   shape: string;
   fill?: string;
-  fillOpacity?: number | string;
   stroke?: string;
   strokeWidth?: number;
-  style?: h.JSX.CSSProperties;
+  strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  mpath?: SVGMPathElement;
+  style?: CSSStyleDeclaration;
   id?: string;
   className?: string;
 }
@@ -481,6 +487,7 @@ export interface CustomOverlayImage {
   height: number;
   href: string;
   animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  mpath?: SVGMPathElement;
   style?: h.JSX.CSSProperties;
   id?: string;
   className?: string;

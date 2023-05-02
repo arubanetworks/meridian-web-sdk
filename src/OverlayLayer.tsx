@@ -36,7 +36,9 @@ const OverlayLayer: FunctionComponent<OverlayLayerProps> = ({
             );
           case "path":
             return (
-              <OverlayPath key={i} {...obj} mapZoomFactor={mapZoomFactor} />
+              <g transform="translate(0,0)">
+                <OverlayPath key={i} {...obj} mapZoomFactor={mapZoomFactor} />
+              </g>
             );
           case "image":
             return (

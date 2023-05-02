@@ -97,9 +97,12 @@
           overlays: [
             {
               type: "path",
+              id: "mypath",
               shape,
               stroke: "yellow",
               strokeWidth: 5,
+              strokeOpacity: 0.3,
+              style: "stroke: blue",
             },
             {
               type: "image",
@@ -107,8 +110,9 @@
               width: 18,
               height: 18,
               begin: "0",
+              mpath: "mypath",
               animateMotion: {
-                path: shape,
+                // path: shape,
                 dur: "10s",
                 repeatCount: "indefinite",
               },

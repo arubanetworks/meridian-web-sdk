@@ -458,10 +458,34 @@ export interface CustomOverlayPolyline {
 /**
  * Object describing a SVG path drawn on the map
  */
-export interface CustomOverlayPath extends Partial<SVGPathElement> {
+export interface CustomOverlayPath {
   type: "path";
   shape: string;
   fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  mpath?: SVGMPathElement;
+  style?: CSSStyleDeclaration;
+  id?: string;
+  className?: string;
+}
+/**
+ * Object describing a SVG circle drawn on the map
+ */
+export interface CustomOverlayCircle {
+  type: "circle";
+  cx: string;
+  cy: string;
+  r: string;
+  pathLength: number;
+  fill?: string;
+  fillOpacity?: number | string;
   stroke?: string;
   strokeWidth?: number;
   strokeLineJoin?: "miter" | "round";
@@ -500,7 +524,8 @@ export type CustomOverlay =
   | CustomOverlayImage
   | CustomOverlayPath
   | CustomOverlayPolygon
-  | CustomOverlayPolyline;
+  | CustomOverlayPolyline
+  | CustomOverlayCircle;
 
 /**
  * Object describing a point annotation drawn on the map

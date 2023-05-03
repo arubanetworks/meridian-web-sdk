@@ -10,6 +10,7 @@ import OverlayImage from "./OverlayImage";
 import OverlayPath from "./OverlayPath";
 import OverlayPolygon from "./OverlayPolygon";
 import OverlayPolyline from "./OverlayPolyline";
+import OverlayCircle from "./OverlayCircle";
 import { css } from "./style";
 import { CustomOverlay } from "./web-sdk";
 
@@ -36,9 +37,11 @@ const OverlayLayer: FunctionComponent<OverlayLayerProps> = ({
             );
           case "path":
             return (
-              <g transform="translate(0,0)">
-                <OverlayPath key={i} {...obj} mapZoomFactor={mapZoomFactor} />
-              </g>
+              <OverlayPath key={i} {...obj} mapZoomFactor={mapZoomFactor} />
+            );
+          case "circle":
+            return (
+              <OverlayCircle key={i} {...obj} mapZoomFactor={mapZoomFactor} />
             );
           case "image":
             return (

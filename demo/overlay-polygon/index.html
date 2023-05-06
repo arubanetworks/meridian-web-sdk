@@ -89,12 +89,23 @@
               strokeWidth: 1,
               strokeDashoffset: "250",
               strokeDasharray: "50",
+              id: "mypolygon",
               animate: {
                 attributeName: "stroke-dashoffset",
                 from: "250",
                 to: "50",
                 dur: "2s",
                 repeatCount: "indefinite",
+              },
+            },
+            {
+              type: "circle",
+              r: "6",
+              animateMotion: {
+                path: "M 3200 2000 3633.0127018922194 1750 3633.0127018922194 1250 3200 1000 2766.9872981077806 1249.9999999999998 2766.9872981077806 1749.9999999999995 3199.9999999999995 2000",
+                dur: "10s",
+                repeatCount: "indefinite",
+                begin: "mypolygon.click",
               },
             },
             {

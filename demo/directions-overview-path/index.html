@@ -34,7 +34,7 @@
       </p>
       <p><em id="directions-text"></em></p>
       <div class="route-actions">
-        <button id="route-start" onclick="window.startRoute()">start</button>
+        <button id="route_start" onclick="window.startRoute()">start</button>
       </div>
     </div>
     <main class="map" id="meridian-map"></main>
@@ -73,7 +73,6 @@
       }
 
       function stepsToShape(steps) {
-        console.info("orig steps", steps);
         let shape = steps.flatMap((step) => {
           return step.points.split(",").map(Number);
         });
@@ -87,9 +86,7 @@
         const directions = routes[routeIndex];
         const shape = stepsToShape(directions.steps);
 
-        console.info("shape", shape);
-
-        document.getElementById("route-start").hidden = true;
+        document.getElementById("route_start").hidden = true;
         document.getElementById("directions-text").innerText =
           "Follow Route to Your Destination";
 
@@ -100,21 +97,59 @@
               id: "mypath",
               shape,
               stroke: "yellow",
-              strokeWidth: 5,
               strokeOpacity: 0.3,
               style: "stroke: blue",
+              animate: {
+                attributeName: "stroke-opacity",
+                from: "0",
+                to: "0.3",
+                repeatCount: "1",
+                dur: "1s",
+                id: "mypathanimation",
+              },
+            },
+            {
+              type: "circle",
+              r: "6",
+              fillOpacity: "0",
+              mpath: "mypath",
+              animateMotion: {
+                dur: "10s",
+                repeatCount: "indefinite",
+                begin: "mypathanimation.beginEvent",
+              },
+              animate: {
+                attributeName: "fill-opacity",
+                from: "0",
+                to: "1",
+                repeatCount: "1",
+                dur: "1ms",
+                fill: "freeze",
+                begin: "mypathanimation.beginEvent",
+              },
             },
             {
               type: "image",
               href: "area-node-selected.png",
-              width: 18,
-              height: 18,
-              begin: "0",
+              width: 16,
+              height: 16,
+              id: "myImage",
               mpath: "mypath",
+              opacity: "0",
               animateMotion: {
-                // path: shape,
-                dur: "10s",
+                dur: "14s",
                 repeatCount: "indefinite",
+                begin: "mypathanimation.beginEvent",
+                id: "myImageAnimation",
+              },
+              animate: {
+                attributeName: "opacity",
+                from: "0",
+                to: "1",
+                repeatCount: "1",
+                dur: "1ms",
+                fill: "freeze",
+                begin: "myImageAnimation.beginEvent",
               },
             },
           ],

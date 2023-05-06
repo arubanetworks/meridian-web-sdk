@@ -24,6 +24,7 @@ const OverlayPath: FunctionComponent<OverlayPathProps> = ({
   strokeDashoffset,
   strokeOpacity,
   animateMotion = {},
+  animate = {},
   mpath,
   style = "",
   className,
@@ -31,16 +32,22 @@ const OverlayPath: FunctionComponent<OverlayPathProps> = ({
   ...rest
 }) => {
   let animateElement: any = null;
+  let animateMotionElement: any = null;
+
   if (Object.keys(animateMotion).length) {
     if (mpath) {
-      animateElement = (
+      animateMotionElement = (
         <animateMotion {...animateMotion}>
           <mpath xlinkHref={`#${mpath}`} />
         </animateMotion>
       );
     } else {
-      animateElement = <animateMotion {...animateMotion} />;
+      animateMotionElement = <animateMotion {...animateMotion} />;
     }
+  }
+
+  if (Object.keys(animate).length) {
+    animateElement = <animate {...animate} />;
   }
 
   return (
@@ -60,6 +67,7 @@ const OverlayPath: FunctionComponent<OverlayPathProps> = ({
       {...(rest as any)}
     >
       {animateElement}
+      {animateMotionElement}
     </path>
   );
 };

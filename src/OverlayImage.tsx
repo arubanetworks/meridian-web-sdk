@@ -20,6 +20,7 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
   y,
   id,
   className,
+  animate = {},
   animateMotion = {},
   style = "",
   mpath,
@@ -27,18 +28,23 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
   ...rest
 }) => {
   const scale = 1 / mapZoomFactor;
-
   let animateElement: any = null;
+  let animateMotionElement: any = null;
+
   if (Object.keys(animateMotion).length) {
     if (mpath) {
-      animateElement = (
+      animateMotionElement = (
         <animateMotion {...animateMotion}>
           <mpath xlinkHref={`#${mpath}`} />
         </animateMotion>
       );
     } else {
-      animateElement = <animateMotion {...animateMotion} />;
+      animateMotionElement = <animateMotion {...animateMotion} />;
     }
+  }
+
+  if (Object.keys(animate).length) {
+    animateElement = <animate {...animate} />;
   }
 
   return (
@@ -57,6 +63,7 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
       {...rest}
     >
       {animateElement}
+      {animateMotionElement}
     </image>
   );
 };

@@ -470,6 +470,7 @@ export interface CustomOverlayPath {
   strokeDashoffset?: string | number;
   strokeOpacity?: number | string;
   animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
   mpath?: SVGMPathElement;
   style?: CSSStyleDeclaration;
   id?: string;
@@ -494,6 +495,7 @@ export interface CustomOverlayCircle {
   strokeDashoffset?: string | number;
   strokeOpacity?: number | string;
   animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
   mpath?: SVGMPathElement;
   style?: CSSStyleDeclaration;
   id?: string;
@@ -511,6 +513,7 @@ export interface CustomOverlayImage {
   height: number;
   href: string;
   animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
   mpath?: SVGMPathElement;
   style?: h.JSX.CSSProperties;
   id?: string;

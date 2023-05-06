@@ -28,23 +28,31 @@ const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
   strokeDashoffset,
   strokeOpacity,
   animateMotion = {},
+  animate = {},
   mpath,
   style = "",
   className,
   mapZoomFactor,
   ...rest
 }) => {
+  const scale = 1 / mapZoomFactor;
   let animateElement: any = null;
+  let animateMotionElement: any = null;
+
   if (Object.keys(animateMotion).length) {
     if (mpath) {
-      animateElement = (
+      animateMotionElement = (
         <animateMotion {...animateMotion}>
           <mpath xlinkHref={`#${mpath}`} />
         </animateMotion>
       );
     } else {
-      animateElement = <animateMotion {...animateMotion} />;
+      animateMotionElement = <animateMotion {...animateMotion} />;
     }
+  }
+
+  if (Object.keys(animate).length) {
+    animateElement = <animate {...animate} />;
   }
 
   return (
@@ -64,10 +72,12 @@ const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
       stroke-dashoffset={strokeDashoffset}
       stroke-opacity={strokeOpacity}
       className={className}
+      transform={`scale(${scale})`}
       style={style}
       {...(rest as any)}
     >
       {animateElement}
+      {animateMotionElement}
     </circle>
   );
 };

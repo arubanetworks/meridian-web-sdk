@@ -7,6 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import { CustomOverlayImage } from "./web-sdk";
+import { asyncClientCall } from "./util";
 
 interface OverlayImage extends CustomOverlayImage {
   mapZoomFactor: number;
@@ -25,6 +26,8 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
   style = "",
   mpath,
   mapZoomFactor,
+  onClick,
+  data = {},
   ...rest
 }) => {
   const scale = 1 / mapZoomFactor;
@@ -60,6 +63,9 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
         height / mapZoomFactor / 2
       }) scale(${scale})`}
       style={style}
+      onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
+      cursor={onClick ? "pointer" : undefined}
+      pointer-events={onClick ? "all" : undefined}
       {...rest}
     >
       {animateElement}

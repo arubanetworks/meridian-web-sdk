@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>
+      Overlay SVG path, image and circle elements | Meridian Web SDK
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 0;
+        max-width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="map" id="meridian-map"></div>
+
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      const api = new MeridianSDK.API({
+        environment: "production",
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
+      });
+
+      const meridianMap = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          api,
+          locationID: "5198682008846336",
+          floorID: "5755685136498688",
+          height: "100%",
+          overlays: [
+            {
+              type: "circle",
+              fill: "green",
+              r: 250,
+              fillOpacity: "15%",
+              transform: "translate(2900, 2150)",
+            },
+            {
+              type: "path",
+              id: "mypath",
+              shape:
+                "M24.828,8.159L7197.3,16.587L7191.79,4331.63L19.189,4328.76L24.828,8.159Z",
+              stroke: "white",
+              strokeOpacity: "0",
+            },
+            {
+              type: "image",
+              href: "car.png",
+              width: 40,
+              height: 40,
+              id: "myImage",
+              mpath: "mypath",
+              animateMotion: {
+                dur: "14s",
+                repeatCount: "indefinite",
+                begin: "2s",
+                id: "myImageAnimation",
+                rotate: "auto",
+              },
+            },
+          ],
+        }
+      );
+    </script>
+  </body>
+</html>

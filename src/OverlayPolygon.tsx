@@ -30,6 +30,7 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
   animate = {},
   onClick,
   data = {},
+  ...rest
 }) => {
   let animateElement: any = null;
   if (Object.keys(animate).length) {
@@ -53,6 +54,7 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
       onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
       cursor={onClick ? "pointer" : undefined}
       pointer-events={onClick ? "all" : undefined}
+      {...rest}
     >
       {animateElement}
     </polygon>

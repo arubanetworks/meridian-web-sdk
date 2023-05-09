@@ -472,7 +472,7 @@ export interface CustomOverlayPath {
   animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
   animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
   mpath?: SVGMPathElement;
-  style?: CSSStyleDeclaration;
+  style?: h.JSX.CSSProperties;
   id?: string;
   className?: string;
 }
@@ -497,9 +497,12 @@ export interface CustomOverlayCircle {
   animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
   animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
   mpath?: SVGMPathElement;
-  style?: CSSStyleDeclaration;
+  style?: h.JSX.CSSProperties;
   id?: string;
   className?: string;
+  /** Arbitrary data for use with onClick handler */
+  data?: Record<string, any>;
+  onClick?: (data: Record<string, any>) => void;
 }
 
 /**
@@ -518,6 +521,9 @@ export interface CustomOverlayImage {
   style?: h.JSX.CSSProperties;
   id?: string;
   className?: string;
+  /** Arbitrary data for use with onClick handler */
+  data?: Record<string, any>;
+  onClick?: (data: Record<string, any>) => void;
 }
 
 /**

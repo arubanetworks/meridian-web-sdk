@@ -7,6 +7,7 @@
 
 import { FunctionComponent, h } from "preact";
 import { CustomOverlayCircle } from "./web-sdk";
+import { asyncClientCall } from "./util";
 
 interface OverlayCircleProps extends CustomOverlayCircle {
   mapZoomFactor: number;
@@ -33,6 +34,8 @@ const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
   style = "",
   className,
   mapZoomFactor,
+  onClick,
+  data = {},
   ...rest
 }) => {
   const scale = 1 / mapZoomFactor;
@@ -74,7 +77,10 @@ const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
       className={className}
       transform={`scale(${scale})`}
       style={style}
-      {...(rest as any)}
+      onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
+      cursor={onClick ? "pointer" : undefined}
+      pointer-events={onClick ? "all" : undefined}
+      {...rest}
     >
       {animateElement}
       {animateMotionElement}

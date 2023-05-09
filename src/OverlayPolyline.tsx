@@ -28,6 +28,7 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   style,
   mapZoomFactor,
   animate = {},
+  ...rest
 }) => {
   let animateElement: any = null;
   if (Object.keys(animate).length) {
@@ -49,6 +50,7 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
       stroke-dasharray={strokeDasharray}
       stroke-dashoffset={strokeDashoffset}
       stroke-opacity={strokeOpacity}
+      {...rest}
     >
       {animateElement}
     </polyline>

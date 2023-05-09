@@ -26,7 +26,7 @@ const OverlayPath: FunctionComponent<OverlayPathProps> = ({
   animateMotion = {},
   animate = {},
   mpath,
-  style = "",
+  style = {},
   className,
   mapZoomFactor,
   ...rest
@@ -64,7 +64,7 @@ const OverlayPath: FunctionComponent<OverlayPathProps> = ({
       stroke-opacity={strokeOpacity}
       className={className}
       style={style}
-      {...(rest as any)}
+      {...rest}
     >
       {animateElement}
       {animateMotionElement}

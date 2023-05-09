@@ -23,7 +23,7 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
   className,
   animate = {},
   animateMotion = {},
-  style = "",
+  style = {},
   mpath,
   mapZoomFactor,
   onClick,
@@ -33,6 +33,13 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
   const scale = 1 / mapZoomFactor;
   let animateElement: any = null;
   let animateMotionElement: any = null;
+
+  const elementStyle = {
+    transform: `translate(-${width / mapZoomFactor / 2}px, -${
+      height / mapZoomFactor / 2
+    }px) scale(${scale})`,
+    ...style,
+  };
 
   if (Object.keys(animateMotion).length) {
     if (mpath) {
@@ -59,10 +66,7 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
       y={y}
       id={id}
       className={className}
-      transform={`translate(-${width / mapZoomFactor / 2} -${
-        height / mapZoomFactor / 2
-      }) scale(${scale})`}
-      style={style}
+      style={elementStyle}
       onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
       cursor={onClick ? "pointer" : undefined}
       pointer-events={onClick ? "all" : undefined}

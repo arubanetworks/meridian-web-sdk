@@ -54,18 +54,12 @@
           height: "100%",
           overlays: [
             {
-              type: "circle",
-              fill: "green",
-              r: 20,
-              fillOpacity: "15%",
-            },
-            {
               type: "path",
               id: "mypath",
               shape:
                 "M24.828,8.159L7197.3,16.587L7191.79,4331.63L19.189,4328.76L24.828,8.159Z",
-              stroke: "white",
-              strokeOpacity: "0",
+              stroke: "green",
+              strokeOpacity: ".3",
             },
             {
               type: "image",
@@ -82,13 +76,19 @@
                 rotate: "auto",
               },
             },
-            // {
-            //   type: "image",
-            //   href: "car.png",
-            //   width: 60,
-            //   height: 60,
-            //   id: "myImage2",
-            // },
+            {
+              type: "circle",
+              fill: "green",
+              r: 20,
+              fillOpacity: "15%",
+              mpath: "mypath",
+              animateMotion: {
+                dur: "10s",
+                repeatCount: "indefinite",
+                begin: "2s",
+                id: "myImageAnimation",
+              },
+            },
           ],
         }
       );

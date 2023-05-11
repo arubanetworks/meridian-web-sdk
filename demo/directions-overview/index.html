@@ -75,9 +75,18 @@
         });
       }
 
+      function stepsToShape(steps) {
+        let shape = steps.flatMap((step) => {
+          return step.points.split(",").map(Number);
+        });
+        shape = shape.join(", ");
+        return "M " + shape;
+      }
+
       function displayRoute(meridianMap, routes, routeIndex) {
         const directions = routes[routeIndex];
         const points = stepsToPoints(directions.steps);
+        const shape = stepsToShape(directions.steps);
 
         document.getElementById("route-start").hidden = true;
         document.getElementById("directions-text").innerText =
@@ -88,18 +97,47 @@
             {
               type: "polyline",
               points,
-              stroke: "orange",
+              stroke: "yellow",
+              strokeOpacity: ".5",
               strokeWidth: 8,
               strokeLineJoin: "round",
               strokeLineCap: "round",
-              strokeDasharray: "50",
-              strokeDashoffset: "250",
+            },
+            {
+              type: "path",
+              id: "mypath",
+              shape,
+              stroke: "blue",
               animate: {
-                attributeName: "stroke-dashoffset",
-                from: "250",
-                to: "50",
-                dur: "2s",
+                attributeName: "stroke-opacity",
+                from: "0.2",
+                to: "0.5",
+                repeatCount: "1",
+                dur: "1s",
+                id: "mypathanimation",
+                fill: "freeze",
+              },
+            },
+            {
+              type: "circle",
+              r: "6",
+              fillOpacity: "0",
+              style: { fill: "red" },
+              mpath: "mypath",
+              animateMotion: {
+                dur: "10s",
                 repeatCount: "indefinite",
+                id: "mycircleanimation",
+                begin: "mypathanimation.beginEvent",
+              },
+              animate: {
+                attributeName: "fill-opacity",
+                from: "0",
+                to: "1",
+                repeatCount: "1",
+                dur: "1ms",
+                fill: "freeze",
+                begin: "mycircleanimation.beginEvent",
               },
             },
           ],

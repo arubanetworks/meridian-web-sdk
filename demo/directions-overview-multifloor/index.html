@@ -145,52 +145,33 @@
         }
 
         const updateOptions = ((currentFloorID) => {
+          const overlay = {
+            type: "polyline",
+            points,
+            stroke: "orange",
+            strokeWidth: 8,
+            strokeLineJoin: "round",
+            strokeLineCap: "round",
+            strokeDasharray: "50",
+            strokeDashoffset: "250",
+            animate: {
+              attributeName: "stroke-dashoffset",
+              from: "250",
+              to: "50",
+              dur: "2s",
+              repeatCount: "indefinite",
+            },
+          };
           if (floorID === currentFloorID) {
             return {
-              overlays: [
-                {
-                  type: "polyline",
-                  points,
-                  stroke: "orange",
-                  strokeWidth: 8,
-                  strokeLineJoin: "round",
-                  strokeLineCap: "round",
-                  strokeDasharray: "50",
-                  strokeDashoffset: "250",
-                  animate: {
-                    attributeName: "stroke-dashoffset",
-                    from: "250",
-                    to: "50",
-                    dur: "2s",
-                    repeatCount: "indefinite",
-                  },
-                },
-              ],
+              overlays: [overlay],
             };
           } else {
             return {
               floorID: floorID,
               onPlacemarksUpdate: () => {
                 meridianMap.update({
-                  overlays: [
-                    {
-                      type: "polyline",
-                      points,
-                      stroke: "orange",
-                      strokeWidth: 8,
-                      strokeLineJoin: "round",
-                      strokeLineCap: "round",
-                      strokeDasharray: "50",
-                      strokeDashoffset: "250",
-                      animate: {
-                        attributeName: "stroke-dashoffset",
-                        from: "250",
-                        to: "50",
-                        dur: "2s",
-                        repeatCount: "indefinite",
-                      },
-                    },
-                  ],
+                  overlays: [overlay],
                 });
               },
             };

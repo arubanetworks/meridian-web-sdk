@@ -6,16 +6,16 @@
  */
 
 import { FunctionComponent, h } from "preact";
-import { CustomOverlayPolyline } from "./web-sdk";
+import { CustomOverlayPath } from "./web-sdk";
 
-interface OverlayPolygonProps extends CustomOverlayPolyline {
+interface OverlayPathProps extends CustomOverlayPath {
   mapZoomFactor: number;
 }
 
-const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
-  points,
+const OverlayPath: FunctionComponent<OverlayPathProps> = ({
+  id,
+  shape,
   fill = "none",
-  fillOpacity,
   stroke = "hsl(207, 65%, 46%)",
   strokeWidth = 2,
   strokeLineJoin = "miter",
@@ -23,26 +23,38 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   strokeDasharray,
   strokeDashoffset,
   strokeOpacity,
-  id,
-  className,
-  style,
-  mapZoomFactor,
+  animateMotion = {},
   animate = {},
+  mpath,
+  style = {},
+  className,
+  mapZoomFactor,
   ...rest
 }) => {
   let animateElement: any = null;
+  let animateMotionElement: any = null;
+
+  if (Object.keys(animateMotion).length) {
+    if (mpath) {
+      animateMotionElement = (
+        <animateMotion {...animateMotion}>
+          <mpath xlinkHref={`#${mpath}`} />
+        </animateMotion>
+      );
+    } else {
+      animateMotionElement = <animateMotion {...animateMotion} />;
+    }
+  }
+
   if (Object.keys(animate).length) {
     animateElement = <animate {...animate} />;
   }
 
   return (
-    <polyline
+    <path
       id={id}
-      className={className}
-      style={style}
-      points={points.join(" ")}
+      d={shape}
       fill={fill}
-      fill-opacity={fillOpacity}
       stroke={stroke}
       stroke-width={strokeWidth / mapZoomFactor}
       stroke-linejoin={strokeLineJoin}
@@ -50,13 +62,16 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
       stroke-dasharray={strokeDasharray}
       stroke-dashoffset={strokeDashoffset}
       stroke-opacity={strokeOpacity}
+      className={className}
+      style={style}
       {...rest}
     >
       {animateElement}
-    </polyline>
+      {animateMotionElement}
+    </path>
   );
 };
 
-OverlayPolyline.displayName = "OverlayPolyline";
+OverlayPath.displayName = "OverlayPath";
 
-export default OverlayPolyline;
+export default OverlayPath;

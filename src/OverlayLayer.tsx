@@ -6,8 +6,11 @@
  */
 
 import { FunctionComponent, h } from "preact";
+import OverlayImage from "./OverlayImage";
+import OverlayPath from "./OverlayPath";
 import OverlayPolygon from "./OverlayPolygon";
 import OverlayPolyline from "./OverlayPolyline";
+import OverlayCircle from "./OverlayCircle";
 import { css } from "./style";
 import { CustomOverlay } from "./web-sdk";
 
@@ -31,6 +34,18 @@ const OverlayLayer: FunctionComponent<OverlayLayerProps> = ({
           case "polyline":
             return (
               <OverlayPolyline key={i} {...obj} mapZoomFactor={mapZoomFactor} />
+            );
+          case "path":
+            return (
+              <OverlayPath key={i} {...obj} mapZoomFactor={mapZoomFactor} />
+            );
+          case "circle":
+            return (
+              <OverlayCircle key={i} {...obj} mapZoomFactor={mapZoomFactor} />
+            );
+          case "image":
+            return (
+              <OverlayImage key={i} {...obj} mapZoomFactor={mapZoomFactor} />
             );
           default:
             return null;

@@ -456,9 +456,85 @@ export interface CustomOverlayPolyline {
 }
 
 /**
+ * Object describing a SVG path drawn on the map
+ */
+export interface CustomOverlayPath {
+  type: "path";
+  shape: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
+  mpath?: SVGMPathElement;
+  style?: h.JSX.CSSProperties;
+  id?: string;
+  className?: string;
+}
+/**
+ * Object describing a SVG circle drawn on the map
+ */
+export interface CustomOverlayCircle {
+  type: "circle";
+  cx: string;
+  cy: string;
+  r: string;
+  pathLength: number;
+  fill?: string;
+  fillOpacity?: number | string;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
+  mpath?: SVGMPathElement;
+  style?: h.JSX.CSSProperties;
+  id?: string;
+  className?: string;
+  /** Arbitrary data for use with onClick handler */
+  data?: Record<string, any>;
+  onClick?: (data: Record<string, any>) => void;
+}
+
+/**
+ * Object describing a SVG image drawn on the map
+ */
+export interface CustomOverlayImage {
+  type: "image";
+  x?: number;
+  y?: number;
+  width: number;
+  height: number;
+  href: string;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
+  mpath?: SVGMPathElement;
+  style?: h.JSX.CSSProperties;
+  id?: string;
+  className?: string;
+  /** Arbitrary data for use with onClick handler */
+  data?: Record<string, any>;
+  onClick?: (data: Record<string, any>) => void;
+}
+
+/**
  * Object describing a custom overlay
  */
-export type CustomOverlay = CustomOverlayPolygon | CustomOverlayPolyline;
+export type CustomOverlay =
+  | CustomOverlayImage
+  | CustomOverlayPath
+  | CustomOverlayPolygon
+  | CustomOverlayPolyline
+  | CustomOverlayCircle;
 
 /**
  * Object describing a point annotation drawn on the map

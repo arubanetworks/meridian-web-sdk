@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 - Dependency updates and Security Sudit
+- Security, CI key rotation
 
 ## [1.17.0] - 2023-05-11
 

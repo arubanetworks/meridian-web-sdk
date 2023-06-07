@@ -10,8 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
-    <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/preact@10.15.1/dist/preact.umd.js"></script>
+    <script src="https://unpkg.com/preact@10.15.1/hooks/dist/hooks.umd.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
     <link rel="stylesheet" href="../shared.css" />
     <link
@@ -23,29 +23,102 @@
   </head>
 
   <body>
-    <div class="directions-overlay">
-      <h3>Directions Request</h3>
-      <p class="directions-request">
-        <strong class="from">From:</strong>
-        <em>Customer Service Center (Second Floor)</em><br />
-        <strong class="to">To:</strong>
-        <em>Lost & Found (Second Floor)</em>
-      </p>
-      <p><em id="directions-text"></em></p>
-      <div class="route-actions">
-        <button id="route-start" onclick="window.startRoute()">start</button>
-      </div>
+    <div id="preact-root">
+      <!-- <DirectionsOverlay /> -->
+      preact root
     </div>
+
     <main class="map" id="meridian-map"></main>
 
     <script src="../meridian-sdk.js"></script>
-    <script type="module" id="the-code">
+
+    <script type="text/babel" id="the-code">
+      window.React = { createElement: preact.h };
       const locationID = "5402771045744640";
       const floorID = "5928450816475136";
-      const startPlacemarkID = "5928450816475136_5368476738519040";
-      const endPlacemarkID = "5928450816475136_5969855240732672";
 
-      function formatDirections(route) {
+      const Directions = (props) => {
+        const [directions, setDirections] = preactHooks.useState(null);
+        const [startFloorID, setStartFloorID] = preactHooks.useState(floorID);
+
+        const [startPlacemarkID, setStartPlacemarkID] = preactHooks.useState(
+          "5928450816475136_5368476738519040"
+        );
+
+        const [endPlacemarkID, setEndPlacemarkID] = preactHooks.useState(
+          "5928450816475136_5969855240732672"
+        );
+
+        // console.info("directions prop", directions);
+        // console.info("startFloorID", startFloorID);
+        // console.info("startPlacemarkID", startPlacemarkID);
+        // console.info("endPlacemarkID", endPlacemarkID);
+
+        function getDirections({ meridianMap }) {
+          api
+            .getDirections({
+              locationID: locationID,
+              startFloorID: floorID,
+              startPlacemarkID: startPlacemarkID,
+              endPlacemarkID: endPlacemarkID,
+            })
+            .then((result) => {
+              const route = result.routes[0];
+              const directions = directionsByFloor(route);
+              setDirections(directions);
+            })
+            .catch((err) => {
+              // TODO
+              console.info(err);
+            });
+        }
+
+        function displayDirections() {
+          displayRoute(meridianMap, directions, 1);
+        }
+
+        return (
+          <div class="directions-overlay">
+            <h3>Directions Request</h3>
+            <p class="directions-request">
+              <strong class="from">From:</strong>
+              <em>Customer Service Center (Second Floor)</em>
+              <br />
+              <strong class="to">To:</strong>
+              <em>Lost & Found (Second Floor)</em>
+            </p>
+            <p>
+              <em id="directions-text"></em>
+            </p>
+            <div class="route-actions">
+              <button
+                id="route-start"
+                onclick={() =>
+                  displayDirections({ meridianMap: window.meridianMap })
+                }
+                hidden={!Boolean(directions)}
+              >
+                start
+              </button>
+              <button
+                id="route-get"
+                onclick={() => {
+                  getDirections(window.meridianMap);
+                }}
+                hidden={Boolean(directions)}
+              >
+                getDirs
+              </button>
+            </div>
+          </div>
+        );
+      };
+
+      function renderOverlayApp() {
+        preact.render(<Directions />, document.getElementById("preact-root"));
+      }
+
+      function directionsByFloor(route) {
         let floor;
         let floor_index = 0;
         const formattedDirections = [...route.steps].reduce(
@@ -66,6 +139,7 @@
           },
           {}
         );
+        console.info("formattedDirections", formattedDirections);
         return formattedDirections;
       }
 
@@ -158,24 +232,15 @@
           floorID: floorID,
           height: "100%",
           onPlacemarksUpdate: () => {
-            const startRoute = async function () {
-              const apiResponse = await api.getDirections({
-                locationID: locationID,
-                startFloorID: floorID,
-                startPlacemarkID: startPlacemarkID,
-                endPlacemarkID: endPlacemarkID,
-              });
-              const route = apiResponse.routes[0];
-              const directions = formatDirections(route);
-              displayRoute(meridianMap, directions, 1);
-            };
-            Object.assign(window, {
-              meridianMap,
-              startRoute,
-            });
+            // show directions overlay
+            renderOverlayApp();
           },
         }
       );
+
+      Object.assign(window, {
+        meridianMap,
+      });
     </script>
   </body>
 </html>

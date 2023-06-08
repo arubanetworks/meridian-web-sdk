@@ -23,100 +23,16 @@
   </head>
 
   <body>
-    <div id="preact-root">
-      <!-- <DirectionsOverlay /> -->
-      preact root
+    <div>
+      <div id="preact-root" />
     </div>
-
-    <main class="map" id="meridian-map"></main>
 
     <script src="../meridian-sdk.js"></script>
 
     <script type="text/babel" id="the-code">
-      window.React = { createElement: preact.h };
+      window.React = { createElement: preact.h, ...preactHooks };
       const locationID = "5402771045744640";
       const floorID = "5928450816475136";
-
-      const Directions = (props) => {
-        const [directions, setDirections] = preactHooks.useState(null);
-        const [startFloorID, setStartFloorID] = preactHooks.useState(floorID);
-
-        const [startPlacemarkID, setStartPlacemarkID] = preactHooks.useState(
-          "5928450816475136_5368476738519040"
-        );
-
-        const [endPlacemarkID, setEndPlacemarkID] = preactHooks.useState(
-          "5928450816475136_5969855240732672"
-        );
-
-        // console.info("directions prop", directions);
-        // console.info("startFloorID", startFloorID);
-        // console.info("startPlacemarkID", startPlacemarkID);
-        // console.info("endPlacemarkID", endPlacemarkID);
-
-        function getDirections({ meridianMap }) {
-          api
-            .getDirections({
-              locationID: locationID,
-              startFloorID: floorID,
-              startPlacemarkID: startPlacemarkID,
-              endPlacemarkID: endPlacemarkID,
-            })
-            .then((result) => {
-              const route = result.routes[0];
-              const directions = directionsByFloor(route);
-              setDirections(directions);
-            })
-            .catch((err) => {
-              // TODO
-              console.info(err);
-            });
-        }
-
-        function displayDirections() {
-          displayRoute(meridianMap, directions, 1);
-        }
-
-        return (
-          <div class="directions-overlay">
-            <h3>Directions Request</h3>
-            <p class="directions-request">
-              <strong class="from">From:</strong>
-              <em>Customer Service Center (Second Floor)</em>
-              <br />
-              <strong class="to">To:</strong>
-              <em>Lost & Found (Second Floor)</em>
-            </p>
-            <p>
-              <em id="directions-text"></em>
-            </p>
-            <div class="route-actions">
-              <button
-                id="route-start"
-                onclick={() =>
-                  displayDirections({ meridianMap: window.meridianMap })
-                }
-                hidden={!Boolean(directions)}
-              >
-                start
-              </button>
-              <button
-                id="route-get"
-                onclick={() => {
-                  getDirections(window.meridianMap);
-                }}
-                hidden={Boolean(directions)}
-              >
-                getDirs
-              </button>
-            </div>
-          </div>
-        );
-      };
-
-      function renderOverlayApp() {
-        preact.render(<Directions />, document.getElementById("preact-root"));
-      }
 
       function directionsByFloor(route) {
         let floor;
@@ -159,88 +75,176 @@
 
       function displayRoute(meridianMap, routes, routeIndex) {
         const directions = routes[routeIndex];
-        const points = stepsToPoints(directions.steps);
-        const shape = stepsToShape(directions.steps);
+        const polylinePoints = stepsToPoints(directions.steps);
+        const pathShape = stepsToShape(directions.steps);
 
         document.getElementById("route-start").hidden = true;
         document.getElementById("directions-text").innerText =
           "Follow Route to Your Destination";
 
-        meridianMap.update({
-          overlays: [
-            {
-              type: "polyline",
-              points,
-              stroke: "yellow",
-              strokeOpacity: ".5",
-              strokeWidth: 8,
-              strokeLineJoin: "round",
-              strokeLineCap: "round",
-            },
-            {
-              type: "path",
-              id: "mypath",
-              shape,
-              stroke: "blue",
-              animate: {
-                attributeName: "stroke-opacity",
-                from: "0.2",
-                to: "0.5",
-                repeatCount: "1",
-                dur: "1s",
-                id: "mypathanimation",
-                fill: "freeze",
+        if (meridianMap) {
+          meridianMap.update({
+            overlays: [
+              {
+                type: "polyline",
+                points: polylinePoints,
+                stroke: "yellow",
+                strokeOpacity: ".5",
+                strokeWidth: 8,
+                strokeLineJoin: "round",
+                strokeLineCap: "round",
               },
-            },
-            {
-              type: "circle",
-              r: "6",
-              fillOpacity: "0",
-              style: { fill: "red" },
-              mpath: "mypath",
-              animateMotion: {
-                dur: "10s",
-                repeatCount: "indefinite",
-                id: "mycircleanimation",
-                begin: "mypathanimation.beginEvent",
+              {
+                type: "path",
+                id: "mypath",
+                shape: pathShape,
+                stroke: "blue",
+                animate: {
+                  attributeName: "stroke-opacity",
+                  from: "0.2",
+                  to: "0.5",
+                  repeatCount: "1",
+                  dur: "1s",
+                  id: "mypathanimation",
+                  fill: "freeze",
+                },
               },
-              animate: {
-                attributeName: "fill-opacity",
-                from: "0",
-                to: "1",
-                repeatCount: "1",
-                dur: "1ms",
-                fill: "freeze",
-                begin: "mycircleanimation.beginEvent",
+              {
+                type: "circle",
+                r: "6",
+                fillOpacity: "0",
+                style: { fill: "red" },
+                mpath: "mypath",
+                animateMotion: {
+                  dur: "10s",
+                  repeatCount: "indefinite",
+                  id: "mycircleanimation",
+                  begin: "mypathanimation.beginEvent",
+                },
+                animate: {
+                  attributeName: "fill-opacity",
+                  from: "0",
+                  to: "1",
+                  repeatCount: "1",
+                  dur: "1ms",
+                  fill: "freeze",
+                  begin: "mycircleanimation.beginEvent",
+                },
               },
-            },
-          ],
-        });
+            ],
+          });
+        } else {
+          console.info("!meridianMap");
+        }
       }
 
-      const api = new MeridianSDK.API({
-        environment: "devCloud",
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
-      });
+      const App = (props) => {
+        const mapContainerRef = React.useRef(null);
+        const meridianMapRef = React.useRef(null);
+        const [api, setApi] = React.useState(null);
+        const [directions, setDirections] = React.useState(null);
+        const [startFloorID, setStartFloorID] = React.useState(floorID);
+        const [startPlacemarkID, setStartPlacemarkID] = React.useState(
+          "5928450816475136_5368476738519040"
+        );
+        const [endPlacemarkID, setEndPlacemarkID] = React.useState(
+          "5928450816475136_5969855240732672"
+        );
 
-      const meridianMap = MeridianSDK.createMap(
-        document.getElementById("meridian-map"),
-        {
-          api,
-          locationID: locationID,
-          floorID: floorID,
-          height: "100%",
-          onPlacemarksUpdate: () => {
-            // show directions overlay
-            renderOverlayApp();
-          },
+        React.useEffect(() => {
+          const api = new MeridianSDK.API({
+            environment: "devCloud",
+            token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
+          });
+
+          setApi(api);
+        }, []);
+
+        React.useEffect(() => {
+          if (mapContainerRef.current && api) {
+            console.info("rendering map");
+
+            const meridianMap = MeridianSDK.createMap(mapContainerRef.current, {
+              api,
+              locationID: locationID,
+              floorID: floorID,
+              height: "100%",
+              onPlacemarksUpdate: () => {
+                // show directions overlay
+              },
+            });
+
+            meridianMapRef.current = meridianMap;
+
+            Object.assign(window, {
+              meridianMap,
+            });
+          }
+        }, [mapContainerRef, api]);
+
+        function getDirections({ meridianMap }) {
+          api
+            .getDirections({
+              locationID: locationID,
+              startFloorID: floorID,
+              startPlacemarkID: startPlacemarkID,
+              endPlacemarkID: endPlacemarkID,
+            })
+            .then((result) => {
+              const route = result.routes[0];
+              const directions = directionsByFloor(route);
+              setDirections(directions);
+            })
+            .catch((err) => {
+              // TODO
+              console.info(err);
+            });
         }
-      );
 
-      Object.assign(window, {
-        meridianMap,
-      });
+        function displayDirections() {
+          displayRoute(meridianMapRef.current, directions, 1);
+        }
+
+        return (
+          <div>
+            <div class="directions-overlay">
+              <h3>Directions Request</h3>
+              <p class="directions-request">
+                <strong class="from">From:</strong>
+                <em>Customer Service Center (Second Floor)</em>
+                <br />
+                <strong class="to">To:</strong>
+                <em>Lost & Found (Second Floor)</em>
+              </p>
+              <p>
+                <em id="directions-text"></em>
+              </p>
+              <div class="route-actions">
+                <button
+                  id="route-start"
+                  onclick={() => displayDirections()}
+                  hidden={!Boolean(directions)}
+                >
+                  start
+                </button>
+                <button
+                  id="route-get"
+                  onclick={() => {
+                    getDirections(meridianMapRef.current);
+                  }}
+                  hidden={Boolean(directions)}
+                >
+                  getDirs
+                </button>
+              </div>
+            </div>
+            <main class="map" id="meridian-map" ref={mapContainerRef}></main>
+          </div>
+        );
+      };
+
+      preact.render(<App />, document.getElementById("preact-root"));
     </script>
   </body>
 </html>

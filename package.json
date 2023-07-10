@@ -46,7 +46,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.groupby": "^4.6.0",
     "lodash.throttle": "^4.1.1",
-    "preact": "^10.15.0",
+    "preact": "^10.16.0",
     "prop-types": "^15.8.1",
     "reconnecting-websocket": "^4.4.0"
   },

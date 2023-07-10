@@ -22,6 +22,7 @@ describe("Auto-Destroy", () => {
     });
     cy.get("#meridian-map").should("not.exist");
     // Wait for the auto-destroy polling (1 second interval)
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1200);
     getMeridianMap().then((meridianMap) => {
       expect(onDestroyStub).callCount(1);
@@ -39,6 +40,7 @@ describe("Auto-Destroy", () => {
       });
     });
     // Wait for MeridianMap to be rendered...
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(500);
     cy.window().should((win) => {
       const mapContainer = win.document.querySelector("#meridian-map");
@@ -50,6 +52,7 @@ describe("Auto-Destroy", () => {
     // Check that the map container's contents have been deleted
     cy.get(".meridian-map-container").should("not.exist");
     // Wait for the auto-destroy polling (1 second interval)
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1200);
     getMeridianMap().then((meridianMap) => {
       expect(onDestroyStub).callCount(1);

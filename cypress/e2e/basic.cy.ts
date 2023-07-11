@@ -1,4 +1,5 @@
-describe("Basic", () => {
+// eslint-disable-next-line jest/valid-describe-callback
+describe("Basic", { testIsolation: false }, () => {
   before(() => {
     cy.visit("/cypress/basic");
   });

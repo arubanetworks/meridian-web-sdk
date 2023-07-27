@@ -31,8 +31,11 @@
 
     <script type="text/babel" id="the-code">
       window.React = { createElement: preact.h, ...preactHooks };
+      // const locationID = "5402771045744640";
+      // const floorID = "5928450816475136";
+
       const locationID = "5402771045744640";
-      const floorID = "5928450816475136";
+      const floorID = "5933249679065088";
 
       function directionsByFloor(route) {
         let floor;
@@ -75,6 +78,7 @@
 
       function displayRoute(meridianMap, routes, routeIndex) {
         const directions = routes[routeIndex];
+        console.info("directions", directions);
         const polylinePoints = stepsToPoints(directions.steps);
         const pathShape = stepsToShape(directions.steps);
 
@@ -85,6 +89,7 @@
         if (meridianMap) {
           meridianMap.update({
             overlays: [
+              // full route highlight
               {
                 type: "polyline",
                 points: polylinePoints,
@@ -116,7 +121,7 @@
                 style: { fill: "red" },
                 mpath: "mypath",
                 animateMotion: {
-                  dur: "10s",
+                  dur: "5s",
                   repeatCount: "indefinite",
                   id: "mycircleanimation",
                   begin: "mypathanimation.beginEvent",
@@ -145,10 +150,10 @@
         const [directions, setDirections] = React.useState(null);
         const [startFloorID, setStartFloorID] = React.useState(floorID);
         const [startPlacemarkID, setStartPlacemarkID] = React.useState(
-          "5928450816475136_5368476738519040"
+          "5933249679065088_5480121796132864"
         );
         const [endPlacemarkID, setEndPlacemarkID] = React.useState(
-          "5928450816475136_5969855240732672"
+          "5927589843304448_6383031899914240"
         );
 
         React.useEffect(() => {

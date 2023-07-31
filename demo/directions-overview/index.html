@@ -31,15 +31,13 @@
 
     <script type="text/babel" id="the-code">
       window.React = { createElement: preact.h, ...preactHooks };
-      // const locationID = "5402771045744640";
-      // const floorID = "5928450816475136";
 
       const locationID = "5402771045744640";
       const floorID = "5933249679065088";
 
       function directionsByFloor(route) {
         let floor;
-        let floor_index = 0;
+        let floor_index = -1;
         const formattedDirections = [...route.steps].reduce(
           (accumulator, current) => {
             let map_id = current.map_id;
@@ -68,23 +66,35 @@
         });
       }
 
-      function stepsToShape(steps) {
-        let shape = steps.flatMap((step) => {
-          return step.points.split(",").map(Number);
-        });
+      function stepsToShape(steps, step) {
+        let shape;
+        if (typeof step === "number" && step !== undefined && steps[step]) {
+          shape = steps[step].points.split(",").map(Number);
+        } else {
+          shape = steps.flatMap((step) => {
+            return step.points.split(",").map(Number);
+          });
+        }
         shape = shape.join(", ");
         return "M " + shape;
       }
 
-      function displayRoute(meridianMap, routes, routeIndex) {
-        const directions = routes[routeIndex];
+      function displayRoute({
+        meridianMap,
+        directions,
+        routeIndex,
+        stepIndex,
+      }) {
         console.info("directions", directions);
-        const polylinePoints = stepsToPoints(directions.steps);
-        const pathShape = stepsToShape(directions.steps);
+        const route = directions[routeIndex];
+        console.info("route", route);
 
-        document.getElementById("route-start").hidden = true;
-        document.getElementById("directions-text").innerText =
-          "Follow Route to Your Destination";
+        const polylinePoints = stepsToPoints(route.steps);
+        const pathShape = stepsToShape(route.steps, stepIndex);
+
+        // document.getElementById("route-start").hidden = true;
+        // document.getElementById("directions-text").innerText =
+        //   "Follow Route to Your Destination";
 
         if (meridianMap) {
           meridianMap.update({
@@ -114,28 +124,28 @@
                   fill: "freeze",
                 },
               },
-              {
-                type: "circle",
-                r: "6",
-                fillOpacity: "0",
-                style: { fill: "red" },
-                mpath: "mypath",
-                animateMotion: {
-                  dur: "5s",
-                  repeatCount: "indefinite",
-                  id: "mycircleanimation",
-                  begin: "mypathanimation.beginEvent",
-                },
-                animate: {
-                  attributeName: "fill-opacity",
-                  from: "0",
-                  to: "1",
-                  repeatCount: "1",
-                  dur: "1ms",
-                  fill: "freeze",
-                  begin: "mycircleanimation.beginEvent",
-                },
-              },
+              // {
+              //   type: "circle",
+              //   r: "6",
+              //   fillOpacity: "0",
+              //   style: { fill: "red" },
+              //   mpath: "mypath",
+              //   animateMotion: {
+              //     dur: "5s",
+              //     repeatCount: "indefinite",
+              //     id: "mycircleanimation",
+              //     begin: "mypathanimation.beginEvent",
+              //   },
+              //   animate: {
+              //     attributeName: "fill-opacity",
+              //     from: "0",
+              //     to: "1",
+              //     repeatCount: "1",
+              //     dur: "1ms",
+              //     fill: "freeze",
+              //     begin: "mycircleanimation.beginEvent",
+              //   },
+              // },
             ],
           });
         } else {
@@ -147,7 +157,11 @@
         const mapContainerRef = React.useRef(null);
         const meridianMapRef = React.useRef(null);
         const [api, setApi] = React.useState(null);
-        const [directions, setDirections] = React.useState(null);
+        const [_directions, setDirections] = React.useState(null);
+        const [_routeIndex, setRouteIndex] = React.useState(0);
+        const [_stepIndex, setStepIndex] = React.useState(0);
+        const [_step, setStep] = React.useState(null);
+
         const [startFloorID, setStartFloorID] = React.useState(floorID);
         const [startPlacemarkID, setStartPlacemarkID] = React.useState(
           "5933249679065088_5480121796132864"
@@ -169,47 +183,199 @@
         React.useEffect(() => {
           if (mapContainerRef.current && api) {
             console.info("rendering map");
-
             const meridianMap = MeridianSDK.createMap(mapContainerRef.current, {
               api,
               locationID: locationID,
               floorID: floorID,
               height: "100%",
               onPlacemarksUpdate: () => {
-                // show directions overlay
+                // show more?
               },
             });
 
             meridianMapRef.current = meridianMap;
 
-            Object.assign(window, {
-              meridianMap,
-            });
+            // For CI tests
+            // Object.assign(window, {
+            //   meridianMap,
+            // });
           }
         }, [mapContainerRef, api]);
 
         function getDirections({ meridianMap }) {
-          api
-            .getDirections({
-              locationID: locationID,
-              startFloorID: floorID,
-              startPlacemarkID: startPlacemarkID,
-              endPlacemarkID: endPlacemarkID,
-            })
-            .then((result) => {
-              const route = result.routes[0];
-              const directions = directionsByFloor(route);
-              setDirections(directions);
-            })
-            .catch((err) => {
-              // TODO
-              console.info(err);
-            });
+          const res = {
+            routes: [
+              {
+                distance: 173.6494099360142,
+                type: "walking",
+                steps: [
+                  {
+                    map_id: "5933249679065088",
+                    text: "Turn Left",
+                    icon: "DirectionArrowLeft",
+                    distance: 22.20810628201945,
+                    points:
+                      "1203.555451,1131.806333,1346.249930,803.296597,1345.277424,666.919790",
+                  },
+                  {
+                    map_id: "5933249679065088",
+                    text: "Take the Stairs Up to Second Floor",
+                    icon: "DirectionArrowStraight",
+                    distance: 26.526829072144572,
+                    points: "1345.277424,666.919790,754.583777,661.952793",
+                  },
+                  {
+                    map_id: "5928450816475136",
+                    text: "Turn Right",
+                    icon: "DirectionArrowRight",
+                    distance: 23.003618547338487,
+                    points: "755.335749,658.825140,1307.370346,658.778590",
+                  },
+                  {
+                    map_id: "5928450816475136",
+                    text: "Turn Right",
+                    icon: "DirectionArrowRight",
+                    distance: 13.168066246534437,
+                    points:
+                      "1307.370346,658.778590,1307.209074,762.585620,1306.894947,974.781915",
+                  },
+                  {
+                    map_id: "5928450816475136",
+                    text: "Turn Left",
+                    icon: "DirectionArrowLeft",
+                    distance: 4.88389664867226,
+                    points: "1306.894947,974.781915,1189.698138,975.929521",
+                  },
+                  {
+                    map_id: "5928450816475136",
+                    text: "Take the Second/Third Floor Stairway Up to Third Floor",
+                    icon: "DirectionArrowStraight",
+                    distance: 6.5422174258483174,
+                    points: "1189.698138,975.929521,1189.488520,1132.927741",
+                  },
+                  {
+                    map_id: "5927589843304448",
+                    text: "Turn Left",
+                    icon: "DirectionArrowLeft",
+                    distance: 26.038499811118538,
+                    points: "1219.289015,1130.721243,664.369326,1129.641445",
+                  },
+                  {
+                    map_id: "5927589843304448",
+                    text: "Turn Left",
+                    icon: "DirectionArrowLeft",
+                    distance: 15.245190201136646,
+                    points: "664.369326,1129.641445,663.287354,1454.538246",
+                  },
+                  {
+                    map_id: "5927589843304448",
+                    text: "Turn Left",
+                    icon: "DirectionArrowLeft",
+                    distance: 16.37668771873165,
+                    points: "663.287354,1454.538246,1012.297443,1455.853264",
+                  },
+                  {
+                    map_id: "5927589843304448",
+                    text: "Turn Right",
+                    icon: "DirectionArrowRight",
+                    distance: 6.358484512966587,
+                    points: "1012.297443,1455.853264,1013.091166,1320.346440",
+                  },
+                  {
+                    map_id: "5927589843304448",
+                    text: "Turn Right",
+                    icon: "DirectionArrowRight",
+                    distance: 8.841318607843597,
+                    points: "1013.091166,1320.346440,1201.510061,1321.460138",
+                  },
+                  {
+                    map_id: "5927589843304448",
+                    text: "Arrive at Your Destination",
+                    icon: "DirectionsArrived",
+                    distance: 4.456494861659649,
+                    points: "1201.510061,1321.460138,1201.198154,1416.434430",
+                  },
+                ],
+                time: 143.12885029660828,
+              },
+            ],
+          };
+
+          const directions = directionsByFloor(res.routes[0]);
+          setDirections(directions);
+
+          // api
+          //   .getDirections({
+          //     locationID: locationID,
+          //     startFloorID: floorID,
+          //     startPlacemarkID: startPlacemarkID,
+          //     endPlacemarkID: endPlacemarkID,
+          //   })
+          //   .then((result) => {
+          //     const route = result.routes[0];
+          //     const directions = directionsByFloor(route);
+          //     setDirections(directions);
+          //     setRouteIndex(0);
+          //     setStepIndex(0);
+          //   })
+          //   .catch((err) => {
+          //     // TODO
+          //     console.info(err);
+          //   });
         }
 
-        function displayDirections() {
-          displayRoute(meridianMapRef.current, directions, 1);
+        function startDirections() {
+          // TODO validate first step
+          setRouteIndex(0);
+          setStepIndex(0);
+          setStep(_directions[0].steps[0]);
+
+          // console.info("_directions[0].steps[0]", _directions[0].steps[0]);
+
+          displayRoute({
+            meridianMap: meridianMapRef.current,
+            directions: _directions,
+            routeIndex: 0,
+            stepIndex: 0,
+          });
         }
+
+        function continueDirections() {
+          console.info("continueDirections");
+          const currentRoute = _directions[_routeIndex];
+          const nextStepIndex = _stepIndex + 1;
+          const nextStep = currentRoute.steps[nextStepIndex];
+
+          console.info("currentRoute", currentRoute);
+          console.info("currentStepIndex", _stepIndex);
+          console.info("currentStep", _step);
+          console.info("nextStepIndex", nextStepIndex);
+          console.info("nextStep", nextStep);
+
+          if (nextStep) {
+            setStepIndex(nextStepIndex);
+            setStep(nextStep);
+            displayRoute({
+              meridianMap: meridianMapRef.current,
+              directions: _directions,
+              routeIndex: _routeIndex,
+              stepIndex: nextStepIndex,
+            });
+          } else {
+            console.info("NO next step on current route available");
+          }
+
+          // displayRoute({
+          //   meridianMap: meridianMapRef.current,
+          //   directions: _directions,
+          //   routeIndex: 0,
+          //   stepIndex: 0,
+          // });
+        }
+
+        console.info("_step", _step);
+
+        // make component for buttons and text below
 
         return (
           <div>
@@ -222,23 +388,30 @@
                 <strong class="to">To:</strong>
                 <em>Lost & Found (Second Floor)</em>
               </p>
-              <p>
-                <em id="directions-text"></em>
+              <p hidden={!Boolean(_step)}>
+                <em id="directions-text">{_step ? _step["text"] : ""}</em>
               </p>
               <div class="route-actions">
                 <button
                   id="route-start"
-                  onclick={() => displayDirections()}
-                  hidden={!Boolean(directions)}
+                  onclick={() => startDirections()}
+                  hidden={!Boolean(_directions) || Boolean(_step)}
                 >
                   start
+                </button>
+                <button
+                  id="route-start"
+                  onclick={() => continueDirections()}
+                  hidden={!Boolean(_directions) || !Boolean(_step)}
+                >
+                  continue
                 </button>
                 <button
                   id="route-get"
                   onclick={() => {
                     getDirections(meridianMapRef.current);
                   }}
-                  hidden={Boolean(directions)}
+                  hidden={Boolean(_directions)}
                 >
                   getDirs
                 </button>

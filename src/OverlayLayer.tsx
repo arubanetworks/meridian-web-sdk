@@ -13,6 +13,7 @@ import OverlayPolyline from "./OverlayPolyline";
 import OverlayCircle from "./OverlayCircle";
 import { css } from "./style";
 import { CustomOverlay } from "./web-sdk";
+import OverlayMarker from "./OverlayMarker";
 
 interface OverlayLayerProps {
   mapZoomFactor: number;
@@ -46,6 +47,10 @@ const OverlayLayer: FunctionComponent<OverlayLayerProps> = ({
           case "image":
             return (
               <OverlayImage key={i} {...obj} mapZoomFactor={mapZoomFactor} />
+            );
+          case "marker":
+            return (
+              <OverlayMarker key={i} {...obj} mapZoomFactor={mapZoomFactor} />
             );
           default:
             return null;

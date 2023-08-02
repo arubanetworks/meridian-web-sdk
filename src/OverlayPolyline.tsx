@@ -23,6 +23,9 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   strokeDasharray,
   strokeDashoffset,
   strokeOpacity,
+  markerStart,
+  markerMid,
+  markerEnd,
   id,
   className,
   style,
@@ -50,6 +53,9 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
       stroke-dasharray={strokeDasharray}
       stroke-dashoffset={strokeDashoffset}
       stroke-opacity={strokeOpacity}
+      marker-start={markerStart}
+      marker-mid={markerMid}
+      marker-end={markerEnd}
       {...rest}
     >
       {animateElement}

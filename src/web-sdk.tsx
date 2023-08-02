@@ -412,7 +412,7 @@ export interface CreateMapPlacemarksOptions {
 }
 
 /**
- * Object describing a polygon overlay drawn on the map
+ * Object describing a SVG polygon drawn on the map
  */
 export interface CustomOverlayPolygon {
   type: "polygon";
@@ -435,7 +435,7 @@ export interface CustomOverlayPolygon {
 }
 
 /**
- * Object describing a polyline overlay drawn on the map
+ * Object describing a SVG polyline drawn on the map
  */
 export interface CustomOverlayPolyline {
   type: "polyline";
@@ -449,6 +449,9 @@ export interface CustomOverlayPolyline {
   strokeDasharray?: string | number;
   strokeDashoffset?: string | number;
   strokeOpacity?: number | string;
+  markerStart: string;
+  markerMid: string;
+  markerEnd: string;
   animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
   style?: h.JSX.CSSProperties;
   id?: string;
@@ -527,6 +530,33 @@ export interface CustomOverlayImage {
 }
 
 /**
+ * Object describing a SVG marker drawn on the map
+ */
+export interface CustomOverlayMarker {
+  type: "marker";
+  shapeElementType: "circle" | "polygon" | "polyline" | "path" | "image";
+  shapeElementAttributes: Record<string, any>;
+  viewBox: string;
+  refX: string;
+  refY: string;
+  markerWidth: number;
+  markerHeight: number;
+  orient: string;
+  fill?: string;
+  fillOpacity?: number | string;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  style?: h.JSX.CSSProperties;
+  id?: string;
+  className?: string;
+}
+
+/**
  * Object describing a custom overlay
  */
 export type CustomOverlay =
@@ -534,7 +564,8 @@ export type CustomOverlay =
   | CustomOverlayPath
   | CustomOverlayPolygon
   | CustomOverlayPolyline
-  | CustomOverlayCircle;
+  | CustomOverlayCircle
+  | CustomOverlayMarker;
 
 /**
  * Object describing a point annotation drawn on the map

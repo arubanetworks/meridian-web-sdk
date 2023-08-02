@@ -51,6 +51,31 @@
           height: "100%",
           overlays: [
             {
+              type: "marker",
+              id: "arrow",
+              viewBox: "0 0 40 40",
+              shapeElementType: "image",
+
+              shapeElementAttributes: {
+                type: "image",
+                href: "car.png",
+                width: 40,
+                height: 40,
+                fill: "green",
+              },
+
+              refX: "20",
+              refY: "20",
+              markerWidth: 8,
+              markerHeight: 8,
+              orient: "auto",
+
+              // stroke: "orange",
+              // strokeWidth: 0,
+              // strokeLineJoin: "round",
+              // strokeLineCap: "round",
+            },
+            {
               type: "polyline",
               points: [125, 2500, 7100, 2500],
               stroke: "orange",
@@ -67,6 +92,9 @@
               strokeLineJoin: "round",
               strokeLineCap: "round",
               strokeOpacity: "50%",
+              markerStart: "url(#arrow)",
+              markerMid: "url(#arrow)",
+              markerEnd: "url(#arrow)",
             },
           ],
         }

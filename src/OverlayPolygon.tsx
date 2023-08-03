@@ -6,14 +6,18 @@
  */
 
 import { FunctionComponent, h } from "preact";
-import { CustomOverlayPolygon } from "./web-sdk";
 import { asyncClientCall } from "./util";
+import { CustomOverlayPolygon } from "./web-sdk";
 
 interface OverlayPolygonProps extends CustomOverlayPolygon {
   mapZoomFactor: number;
 }
 
 const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
+  defs = false,
+  id,
+  className,
+  style,
   points,
   fill = "hsla(207, 65%, 46%,  0.5)",
   fillOpacity,
@@ -23,13 +27,13 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
   strokeDasharray,
   strokeDashoffset,
   strokeOpacity,
-  id,
-  className,
-  style,
+  markerStart,
+  markerMid,
+  markerEnd,
   mapZoomFactor,
   animate = {},
-  onClick,
   data = {},
+  onClick,
   ...rest
 }) => {
   let animateElement: any = null;
@@ -37,7 +41,7 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
     animateElement = <animate {...animate} />;
   }
 
-  return (
+  const polygon = (
     <polygon
       id={id}
       className={className}
@@ -51,6 +55,9 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
       stroke-dasharray={strokeDasharray}
       stroke-dashoffset={strokeDashoffset}
       stroke-opacity={strokeOpacity}
+      marker-start={markerStart}
+      marker-mid={markerMid}
+      marker-end={markerEnd}
       onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
       cursor={onClick ? "pointer" : undefined}
       pointer-events={onClick ? "all" : undefined}
@@ -59,6 +66,12 @@ const OverlayPolygon: FunctionComponent<OverlayPolygonProps> = ({
       {animateElement}
     </polygon>
   );
+
+  if (defs) {
+    return <defs>{polygon}</defs>;
+  }
+
+  return polygon;
 };
 
 OverlayPolygon.displayName = "OverlayPolygon";

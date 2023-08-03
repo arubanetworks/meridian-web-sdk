@@ -6,14 +6,13 @@
  */
 
 import { FunctionComponent, h } from "preact";
-import { asyncClientCall } from "./util";
-import { CustomOverlayImage } from "./web-sdk";
+import { CustomOverlayUse } from "./web-sdk";
 
-interface OverlayImage extends CustomOverlayImage {
+interface OverlayUseProps extends CustomOverlayUse {
   mapZoomFactor: number;
 }
 
-const OverlayImage: FunctionComponent<OverlayImage> = ({
+const OverlayUse: FunctionComponent<OverlayUseProps> = ({
   defs = false,
   id,
   className,
@@ -23,12 +22,18 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
   href,
   x,
   y,
+  fill = "none",
+  stroke = "hsl(207, 65%, 46%)",
+  strokeWidth = 2,
+  strokeLineJoin = "miter",
+  strokeLineCap = "butt",
+  strokeDasharray,
+  strokeDashoffset,
+  strokeOpacity,
   animate = {},
   animateMotion = {},
   mpath,
   mapZoomFactor,
-  onClick,
-  data = {},
   ...rest
 }) => {
   const scale = 1 / mapZoomFactor;
@@ -58,8 +63,8 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
     animateElement = <animate {...animate} />;
   }
 
-  const image = (
-    <image
+  const path = (
+    <use
       id={id}
       className={className}
       style={elementStyle}
@@ -68,23 +73,28 @@ const OverlayImage: FunctionComponent<OverlayImage> = ({
       href={href}
       x={x}
       y={y}
-      onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
-      cursor={onClick ? "pointer" : undefined}
-      pointer-events={onClick ? "all" : undefined}
+      fill={fill}
+      stroke={stroke}
+      stroke-width={strokeWidth / mapZoomFactor}
+      stroke-linejoin={strokeLineJoin}
+      stroke-linecap={strokeLineCap}
+      stroke-dasharray={strokeDasharray}
+      stroke-dashoffset={strokeDashoffset}
+      stroke-opacity={strokeOpacity}
       {...rest}
     >
       {animateElement}
       {animateMotionElement}
-    </image>
+    </use>
   );
 
   if (defs) {
-    return <defs>{image}</defs>;
+    return <defs>{path}</defs>;
   }
 
-  return image;
+  return path;
 };
 
-OverlayImage.displayName = "OverlayImage";
+OverlayUse.displayName = "OverlayUse";
 
-export default OverlayImage;
+export default OverlayUse;

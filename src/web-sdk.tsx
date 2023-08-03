@@ -375,28 +375,28 @@ export function init(options: { api: API }): void {
 }
 
 export interface CreateMapTagsOptions {
-  /** Should we show control tags? Defaults to false. */
+  /** Should we show control tags? Defaults to `false`. */
   showControlTags?: boolean;
   /**
-   * Filter function used to hide tags. Return false to hide a tag. Defaults
+   * Filter function used to hide tags. Return `false` to hide a tag. Defaults
    * to `() => true`.
    */
   filter?: (tag: TagData) => boolean;
-  /** Disable clicking tags when true. Defaults to false. */
+  /** Disable clicking tags when `true`. Defaults to `false`. */
   disabled?: boolean;
   /** Update interval in milliseconds, defaults to 5000 */
   updateInterval?: number;
 }
 
 export interface CreateMapPlacemarksOptions {
-  /** Should we show hidden placemarks? Defaults to false. */
+  /** Should we show hidden placemarks? Defaults to `false`. */
   showHiddenPlacemarks?: boolean;
   /**
-   * Filter function used to hide placemarks. Return false to hide a
+   * Filter function used to hide placemarks. Return `false` to hide a
    * placemark. Defaults to `() => true`.
    */
   filter?: (placemark: PlacemarkData) => boolean;
-  /** Disable clicking placemarks when true. Defaults to false. */
+  /** Disable clicking placemarks when `true`. Defaults to `false`. */
   disabled?: boolean;
   /**
    * Which mode should we use for displaying placemark labels
@@ -412,10 +412,21 @@ export interface CreateMapPlacemarksOptions {
 }
 
 /**
- * Object describing a polygon overlay drawn on the map
+ * Object describing an SVG `<polygon>` element drawn on the map
+ *
+ * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polygon>
  */
 export interface CustomOverlayPolygon {
   type: "polygon";
+  /**
+   * `true` will result in the element being wrapped in a `<defs>` (default: `false`)
+   *
+   * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs>
+   */
+  defs?: boolean;
+  id?: string;
+  className?: string;
+  style?: h.JSX.CSSProperties;
   points: number[];
   fill?: string;
   fillOpacity?: number | string;
@@ -425,20 +436,31 @@ export interface CustomOverlayPolygon {
   strokeDasharray?: string | number;
   strokeDashoffset?: string | number;
   strokeOpacity?: number | string;
+  markerStart: string;
+  markerMid: string;
+  markerEnd: string;
   animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
-  style?: h.JSX.CSSProperties;
-  id?: string;
-  className?: string;
   /** Arbitrary data for use with onClick handler */
   data?: Record<string, any>;
   onClick?: (data: Record<string, any>) => void;
 }
 
 /**
- * Object describing a polyline overlay drawn on the map
+ * Object describing an SVG `<polyline>` element drawn on the map
+ *
+ * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/polyline>
  */
 export interface CustomOverlayPolyline {
   type: "polyline";
+  /**
+   * `true` will result in the element being wrapped in a `<defs>` (default: `false`)
+   *
+   * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs>
+   */
+  defs?: boolean;
+  id?: string;
+  className?: string;
+  style?: h.JSX.CSSProperties;
   points: number[];
   fill?: string;
   fillOpacity?: number | string;
@@ -449,17 +471,28 @@ export interface CustomOverlayPolyline {
   strokeDasharray?: string | number;
   strokeDashoffset?: string | number;
   strokeOpacity?: number | string;
+  markerStart: string;
+  markerMid: string;
+  markerEnd: string;
   animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
-  style?: h.JSX.CSSProperties;
-  id?: string;
-  className?: string;
 }
 
 /**
- * Object describing a SVG path drawn on the map
+ * Object describing an SVG `<path>` element drawn on the map
+ *
+ * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/path>
  */
 export interface CustomOverlayPath {
   type: "path";
+  /**
+   * `true` will result in the element being wrapped in a `<defs>` (default: `false`)
+   *
+   * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs>
+   */
+  defs?: boolean;
+  id?: string;
+  className?: string;
+  style?: h.JSX.CSSProperties;
   shape: string;
   fill?: string;
   stroke?: string;
@@ -469,18 +502,30 @@ export interface CustomOverlayPath {
   strokeDasharray?: string | number;
   strokeDashoffset?: string | number;
   strokeOpacity?: number | string;
-  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  markerStart: string;
+  markerMid: string;
+  markerEnd: string;
   animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
   mpath?: SVGMPathElement;
-  style?: h.JSX.CSSProperties;
-  id?: string;
-  className?: string;
 }
+
 /**
- * Object describing a SVG circle drawn on the map
+ * Object describing an SVG `<circle>` element drawn on the map
+ *
+ * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/circle>
  */
 export interface CustomOverlayCircle {
   type: "circle";
+  /**
+   * `true` will result in the element being wrapped in a `<defs>` (default: `false`)
+   *
+   * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs>
+   */
+  defs?: boolean;
+  id?: string;
+  className?: string;
+  style?: h.JSX.CSSProperties;
   cx: string;
   cy: string;
   r: string;
@@ -494,22 +539,30 @@ export interface CustomOverlayCircle {
   strokeDasharray?: string | number;
   strokeDashoffset?: string | number;
   strokeOpacity?: number | string;
-  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
   animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
   mpath?: SVGMPathElement;
-  style?: h.JSX.CSSProperties;
-  id?: string;
-  className?: string;
   /** Arbitrary data for use with onClick handler */
   data?: Record<string, any>;
   onClick?: (data: Record<string, any>) => void;
 }
 
 /**
- * Object describing a SVG image drawn on the map
+ * Object describing an SVG `<image>` element drawn on the map
+ *
+ * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/image>
  */
 export interface CustomOverlayImage {
   type: "image";
+  /**
+   * `true` will result in the element being wrapped in a `<defs>` (default: `false`)
+   *
+   * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs>
+   */
+  defs?: boolean;
+  id?: string;
+  className?: string;
+  style?: h.JSX.CSSProperties;
   x?: number;
   y?: number;
   width: number;
@@ -518,12 +571,78 @@ export interface CustomOverlayImage {
   animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
   animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
   mpath?: SVGMPathElement;
-  style?: h.JSX.CSSProperties;
-  id?: string;
-  className?: string;
   /** Arbitrary data for use with onClick handler */
   data?: Record<string, any>;
   onClick?: (data: Record<string, any>) => void;
+}
+
+/**
+ * Object describing an SVG `<marker>` element drawn on the map
+ *
+ * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker>
+ */
+export interface CustomOverlayMarker {
+  type: "marker";
+  /**
+   * `true` will result in the element being wrapped in a `<defs>` (default: `false`)
+   *
+   * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs>
+   */
+  defs?: boolean;
+  id?: string;
+  className?: string;
+  style?: h.JSX.CSSProperties;
+  viewBox: string;
+  refX: string;
+  refY: string;
+  markerWidth: number;
+  markerHeight: number;
+  orient: string;
+  fill?: string;
+  fillOpacity?: number | string;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  shapeElementType: "circle" | "polygon" | "polyline" | "path" | "image";
+  shapeElementAttributes: Record<string, any>;
+}
+
+/**
+ * Object describing an SVG `<use>` element drawn on the map.
+ *
+ * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use>
+ */
+export interface CustomOverlayUse {
+  type: "use";
+  /**
+   * `true` will result in the element being wrapped in a `<defs>` (default: `false`)
+   *
+   * <https://developer.mozilla.org/en-US/docs/Web/SVG/Element/defs>
+   */
+  defs?: boolean;
+  id?: string;
+  className?: string;
+  style?: h.JSX.CSSProperties;
+  x?: number;
+  y?: number;
+  width: number;
+  height: number;
+  href: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  strokeLineJoin?: "miter" | "round";
+  strokeLineCap?: "butt" | "round" | "square";
+  strokeDasharray?: string | number;
+  strokeDashoffset?: string | number;
+  strokeOpacity?: number | string;
+  animate?: h.JSX.SVGAttributes<SVGAnimateElement>;
+  animateMotion?: h.JSX.SVGAttributes<SVGAnimateMotionElement>;
+  mpath?: SVGMPathElement;
 }
 
 /**
@@ -534,7 +653,9 @@ export type CustomOverlay =
   | CustomOverlayPath
   | CustomOverlayPolygon
   | CustomOverlayPolyline
-  | CustomOverlayCircle;
+  | CustomOverlayCircle
+  | CustomOverlayMarker
+  | CustomOverlayUse;
 
 /**
  * Object describing a point annotation drawn on the map
@@ -574,15 +695,15 @@ export interface CreateMapOptions {
   floorID: string;
   /** An {@link API} instance. Defaults to the one passed to {@link init}. */
   api?: API;
-  /** Should we show the floor switcher UI control? Defaults to true. */
+  /** Should we show the floor switcher UI control? Defaults to `true`. */
   showFloorsControl?: boolean;
-  /** Should we show the Search UI control? Defaults to true. */
+  /** Should we show the Search UI control? Defaults to `true`. */
   showSearchControl?: boolean;
-  /** Set to false to disable loading tags (default: true) */
+  /** Set to `false` to disable loading tags (default: `true`) */
   loadTags?: boolean;
   /** Options related to tags. */
   tags?: CreateMapTagsOptions;
-  /** Set to false to disable loading placemarks (default: true) */
+  /** Set to `false` to disable loading placemarks (default: `true`) */
   loadPlacemarks?: boolean;
   /** Options related to placemarks. */
   placemarks?: CreateMapPlacemarksOptions;

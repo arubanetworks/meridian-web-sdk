@@ -13,8 +13,10 @@ interface OverlayMarkerProps extends CustomOverlayMarker {
 }
 
 const OverlayMarker: FunctionComponent<OverlayMarkerProps> = ({
-  shapeElementType,
-  shapeElementAttributes,
+  defs = true,
+  id,
+  className,
+  style,
   viewBox,
   refX,
   refY,
@@ -30,13 +32,13 @@ const OverlayMarker: FunctionComponent<OverlayMarkerProps> = ({
   strokeDasharray,
   strokeDashoffset,
   strokeOpacity,
-  id,
-  className,
-  style,
+  shapeElementType,
+  shapeElementAttributes,
   mapZoomFactor,
   ...rest
 }) => {
   let shape: any = null;
+
   if (Object.keys(shapeElementAttributes).length && shapeElementType) {
     switch (shapeElementType) {
       case "path":
@@ -57,33 +59,36 @@ const OverlayMarker: FunctionComponent<OverlayMarkerProps> = ({
     }
   }
 
-  return (
-    <defs>
-      <marker
-        id={id}
-        className={className}
-        style={style}
-        fill={fill}
-        fill-opacity={fillOpacity}
-        viewBox={viewBox}
-        refX={refX}
-        refY={refY}
-        markerWidth={markerWidth}
-        markerHeight={markerHeight}
-        orient={orient}
-        stroke={stroke}
-        stroke-width={strokeWidth / mapZoomFactor}
-        stroke-linejoin={strokeLineJoin}
-        stroke-linecap={strokeLineCap}
-        stroke-dasharray={strokeDasharray}
-        stroke-dashoffset={strokeDashoffset}
-        stroke-opacity={strokeOpacity}
-        {...rest}
-      >
-        {shape}
-      </marker>
-    </defs>
+  const marker = (
+    <marker
+      id={id}
+      className={className}
+      style={style}
+      viewBox={viewBox}
+      refX={refX}
+      refY={refY}
+      markerWidth={markerWidth}
+      markerHeight={markerHeight}
+      orient={orient}
+      fill={fill}
+      fill-opacity={fillOpacity}
+      stroke={stroke}
+      stroke-width={strokeWidth / mapZoomFactor}
+      stroke-linejoin={strokeLineJoin}
+      stroke-linecap={strokeLineCap}
+      stroke-dasharray={strokeDasharray}
+      stroke-dashoffset={strokeDashoffset}
+      stroke-opacity={strokeOpacity}
+      {...rest}
+    >
+      {shape}
+    </marker>
   );
+
+  if (defs) {
+    return <defs>{marker}</defs>;
+  }
+  return marker;
 };
 
 OverlayMarker.displayName = "OverlayMarker";

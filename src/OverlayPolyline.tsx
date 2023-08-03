@@ -13,6 +13,10 @@ interface OverlayPolygonProps extends CustomOverlayPolyline {
 }
 
 const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
+  defs = false,
+  id,
+  className,
+  style,
   points,
   fill = "none",
   fillOpacity,
@@ -26,11 +30,8 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
   markerStart,
   markerMid,
   markerEnd,
-  id,
-  className,
-  style,
-  mapZoomFactor,
   animate = {},
+  mapZoomFactor,
   ...rest
 }) => {
   let animateElement: any = null;
@@ -38,7 +39,7 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
     animateElement = <animate {...animate} />;
   }
 
-  return (
+  const polyline = (
     <polyline
       id={id}
       className={className}
@@ -61,6 +62,11 @@ const OverlayPolyline: FunctionComponent<OverlayPolygonProps> = ({
       {animateElement}
     </polyline>
   );
+
+  if (defs) {
+    return <defs>{polyline}</defs>;
+  }
+  return polyline;
 };
 
 OverlayPolyline.displayName = "OverlayPolyline";

@@ -13,7 +13,10 @@ interface OverlayPathProps extends CustomOverlayPath {
 }
 
 const OverlayPath: FunctionComponent<OverlayPathProps> = ({
+  defs = false,
   id,
+  className,
+  style = {},
   shape,
   fill = "none",
   stroke = "hsl(207, 65%, 46%)",
@@ -23,11 +26,12 @@ const OverlayPath: FunctionComponent<OverlayPathProps> = ({
   strokeDasharray,
   strokeDashoffset,
   strokeOpacity,
-  animateMotion = {},
+  markerStart,
+  markerMid,
+  markerEnd,
   animate = {},
+  animateMotion = {},
   mpath,
-  style = {},
-  className,
   mapZoomFactor,
   ...rest
 }) => {
@@ -50,9 +54,11 @@ const OverlayPath: FunctionComponent<OverlayPathProps> = ({
     animateElement = <animate {...animate} />;
   }
 
-  return (
+  const path = (
     <path
       id={id}
+      className={className}
+      style={style}
       d={shape}
       fill={fill}
       stroke={stroke}
@@ -62,14 +68,21 @@ const OverlayPath: FunctionComponent<OverlayPathProps> = ({
       stroke-dasharray={strokeDasharray}
       stroke-dashoffset={strokeDashoffset}
       stroke-opacity={strokeOpacity}
-      className={className}
-      style={style}
+      marker-start={markerStart}
+      marker-mid={markerMid}
+      marker-end={markerEnd}
       {...rest}
     >
       {animateElement}
       {animateMotionElement}
     </path>
   );
+
+  if (defs) {
+    return <defs>{path}</defs>;
+  }
+
+  return path;
 };
 
 OverlayPath.displayName = "OverlayPath";

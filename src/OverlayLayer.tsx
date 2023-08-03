@@ -6,14 +6,15 @@
  */
 
 import { FunctionComponent, h } from "preact";
+import OverlayCircle from "./OverlayCircle";
 import OverlayImage from "./OverlayImage";
+import OverlayMarker from "./OverlayMarker";
 import OverlayPath from "./OverlayPath";
 import OverlayPolygon from "./OverlayPolygon";
 import OverlayPolyline from "./OverlayPolyline";
-import OverlayCircle from "./OverlayCircle";
+import OverlayUse from "./OverlayUse";
 import { css } from "./style";
 import { CustomOverlay } from "./web-sdk";
-import OverlayMarker from "./OverlayMarker";
 
 interface OverlayLayerProps {
   mapZoomFactor: number;
@@ -51,6 +52,10 @@ const OverlayLayer: FunctionComponent<OverlayLayerProps> = ({
           case "marker":
             return (
               <OverlayMarker key={i} {...obj} mapZoomFactor={mapZoomFactor} />
+            );
+          case "use":
+            return (
+              <OverlayUse key={i} {...obj} mapZoomFactor={mapZoomFactor} />
             );
           default:
             return null;

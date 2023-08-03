@@ -6,15 +6,18 @@
  */
 
 import { FunctionComponent, h } from "preact";
-import { CustomOverlayCircle } from "./web-sdk";
 import { asyncClientCall } from "./util";
+import { CustomOverlayCircle } from "./web-sdk";
 
 interface OverlayCircleProps extends CustomOverlayCircle {
   mapZoomFactor: number;
 }
 
 const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
+  defs = false,
   id,
+  className,
+  style = {},
   cx,
   cy,
   r,
@@ -28,14 +31,12 @@ const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
   strokeDasharray,
   strokeDashoffset,
   strokeOpacity,
-  animateMotion = {},
   animate = {},
+  animateMotion = {},
   mpath,
-  style = {},
-  className,
-  mapZoomFactor,
-  onClick,
   data = {},
+  onClick,
+  mapZoomFactor,
   ...rest
 }) => {
   const scale = 1 / mapZoomFactor;
@@ -63,9 +64,11 @@ const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
     animateElement = <animate {...animate} />;
   }
 
-  return (
+  const circle = (
     <circle
       id={id}
+      className={className}
+      style={elementStyle}
       cx={cx}
       cy={cy}
       r={r}
@@ -79,8 +82,6 @@ const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
       stroke-dasharray={strokeDasharray}
       stroke-dashoffset={strokeDashoffset}
       stroke-opacity={strokeOpacity}
-      className={className}
-      style={elementStyle}
       onClick={onClick ? () => asyncClientCall(onClick, data) : undefined}
       cursor={onClick ? "pointer" : undefined}
       pointer-events={onClick ? "all" : undefined}
@@ -90,8 +91,14 @@ const OverlayCircle: FunctionComponent<OverlayCircleProps> = ({
       {animateMotionElement}
     </circle>
   );
+
+  if (defs) {
+    return <defs>{circle}</defs>;
+  }
+
+  return circle;
 };
 
-OverlayCircle.displayName = "OverlayPath";
+OverlayCircle.displayName = "OverlayCircle";
 
 export default OverlayCircle;

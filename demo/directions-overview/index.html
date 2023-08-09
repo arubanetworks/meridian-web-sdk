@@ -32,26 +32,44 @@
     <script type="text/babel" id="the-code">
       window.React = { createElement: preact.h, ...preactHooks };
 
-      function stepsToPoints(steps, mapID) {
-        const foo = steps.filter((step) => step.map_id === mapID);
-
-        return foo.flatMap((step) => {
-          return step.points.split(",").map(Number);
-        });
+      function stepsToPolygonPoints(steps, mapID) {
+        let prevPoints = [];
+        let points = steps
+          .filter((step) => step.map_id === mapID)
+          .flatMap((step) => {
+            let newPoints = step.points.split(",").map(Number);
+            if (
+              newPoints &&
+              newPoints.length > 1 &&
+              prevPoints.slice(-2).join() === newPoints.slice(0, 2).join()
+            ) {
+              newPoints.splice(0, 2);
+            }
+            prevPoints = newPoints;
+            return newPoints;
+          });
+        return points;
       }
 
-      // function stepsToShape(steps, step) {
-      //   let shape;
-      //   if (typeof step === "number" && step !== undefined && steps[step]) {
-      //     shape = steps[step].points.split(",").map(Number);
-      //   } else {
-      //     shape = steps.flatMap((step) => {
-      //       return step.points.split(",").map(Number);
-      //     });
-      //   }
-      //   shape = shape.join(", ");
-      //   return "M " + shape;
-      // }
+      function stepsToShape(steps, mapID) {
+        let prevPoints = [];
+        let shape = steps
+          .filter((step) => step.map_id === mapID)
+          .flatMap((step) => {
+            let newPoints = step.points.split(",").map(Number);
+            if (
+              newPoints &&
+              newPoints.length > 1 &&
+              prevPoints.slice(-2).join() === newPoints.slice(0, 2).join()
+            ) {
+              newPoints.splice(0, 2);
+            }
+            prevPoints = newPoints;
+            return newPoints;
+          });
+        shape = shape.join(", ");
+        return "M " + shape;
+      }
 
       function stepToShape(step) {
         let shape = step.points.split(",").map(Number);
@@ -59,13 +77,11 @@
         return "M " + shape;
       }
 
-      function displayRoute({ meridianMap, floorID, directions, stepIndex }) {
+      function generateRouteOverlays({ floorID, directions, stepIndex }) {
         const step = directions.steps[stepIndex];
-        console.info("directions", directions);
-        console.info("step", step);
-
-        const polylinePoints = stepsToPoints(directions.steps, floorID);
-        const pathShape = stepToShape(step);
+        const polylinePoints = stepsToPolygonPoints(directions.steps, floorID);
+        const fullPathShape = stepsToShape(directions.steps, floorID);
+        const stepShape = stepToShape(step);
 
         const overlays = [
           // full route highlight
@@ -77,21 +93,46 @@
             strokeWidth: 8,
             strokeLineJoin: "round",
             strokeLineCap: "round",
+            markerStart: "url(#arrow)",
+            markerMid: "url(#arrow)",
+            markerEnd: "url(#arrow)",
           },
+          // {
+          //   type: "path",
+          //   shape: fullPathShape,
+          //   stroke: "yellow",
+          //   strokeOpacity: ".5",
+          //   strokeWidth: 8,
+          //   strokeLineJoin: "round",
+          //   strokeLineCap: "round",
+          //   markerStart: "url(#arrow)",
+          //   markerMid: "url(#arrow)",
+          //   markerEnd: "url(#arrow)",
+          // },
           {
             type: "path",
             id: "mypath",
-            shape: pathShape,
+            shape: stepShape,
             stroke: "blue",
-            animate: {
-              attributeName: "stroke-opacity",
-              from: "0.2",
-              to: "0.5",
-              repeatCount: "1",
-              dur: "1s",
-              id: "mypathanimation",
-              fill: "freeze",
+            strokeOpacity: ".5",
+          },
+          {
+            type: "marker",
+            id: "arrow",
+            viewBox: "0 0 10 10",
+            fill: "blue",
+            fillOpacity: ".5",
+            refX: "5",
+            refY: "5",
+            // markerWidth: "5",
+            // markerHeight: "5",
+            orient: "auto",
+            shapeElementType: "path",
+            shapeElementAttributes: {
+              d: "M 0 0 L 10 5 L 0 10 z",
+              // stroke: "context-stroke",
             },
+            // markerUnits: "strokeWidth",
           },
           // {
           //   type: "circle",
@@ -116,22 +157,7 @@
           //   },
           // },
         ];
-
-        //
-        if (meridianMap) {
-          meridianMap.update({
-            overlays: window.currentFloorID === floorID ? overlays : [],
-            floorID: floorID,
-            onPlacemarksUpdate: () => {
-              meridianMap.update({
-                overlays,
-              });
-            },
-          });
-          window.currentFloorID = floorID;
-        } else {
-          console.info("!meridianMap");
-        }
+        return overlays;
       }
 
       const App = (props) => {
@@ -146,7 +172,7 @@
         const [_stepIndex, setStepIndex] = React.useState(0);
         const [_step, setStep] = React.useState(null);
 
-        const [startFloorID, setStartFloorID] = React.useState(floorID);
+        const [currentFloorID, setCurrentFloorID] = React.useState(floorID);
 
         const [startPlacemarkID, setStartPlacemarkID] = React.useState(
           "5933249679065088_5480121796132864"
@@ -173,19 +199,35 @@
               locationID: locationID,
               floorID: floorID,
               height: "100%",
-              onPlacemarksUpdate: () => {
-                // show more?
-              },
             });
 
             meridianMapRef.current = meridianMap;
 
+            // remove to limit confusion?
             Object.assign(window, {
-              currentFloorID: floorID,
               meridianMap,
             });
           }
         }, [mapContainerRef, api]);
+
+        function updateMap({ overlays, floorID }) {
+          const meridianMap = meridianMapRef.current;
+
+          if (meridianMap) {
+            meridianMap.update({
+              overlays: currentFloorID === floorID ? overlays : [],
+              floorID: floorID,
+              onPlacemarksUpdate: () => {
+                meridianMap.update({
+                  overlays,
+                });
+              },
+            });
+            setCurrentFloorID(floorID);
+          } else {
+            console.info("!meridianMap");
+          }
+        }
 
         function getDirections({ meridianMap }) {
           const res = {
@@ -292,7 +334,7 @@
           // api
           //   .getDirections({
           //     locationID: locationID,
-          //     startFloorID: floorID,
+          //     currentFloorID: floorID,
           //     startPlacemarkID: startPlacemarkID,
           //     endPlacemarkID: endPlacemarkID,
           //   })
@@ -308,59 +350,42 @@
           //   });
         }
 
-        function startDirections() {
-          // TODO validate first step
-          setStepIndex(0);
-          setStep(_directions.steps[0]);
-
-          displayRoute({
-            meridianMap: meridianMapRef.current,
-            floorID: startFloorID,
-            directions: _directions,
-            stepIndex: 0,
-          });
-        }
-
-        function continueDirections() {
-          console.info("continueDirections");
-
-          const nextStepIndex = _stepIndex + 1;
+        function displayRoute({ nextStepIndex }) {
           const nextStep = _directions.steps[nextStepIndex];
+
+          console.info("nextStepIndex", nextStepIndex);
+          console.info("nextStep", nextStep);
 
           if (nextStep) {
             setStepIndex(nextStepIndex);
             setStep(nextStep);
-            displayRoute({
-              meridianMap: meridianMapRef.current,
+
+            const overlays = generateRouteOverlays({
               floorID: nextStep.map_id,
               directions: _directions,
               stepIndex: nextStepIndex,
             });
+
+            updateMap({
+              floorID: nextStep.map_id,
+              overlays,
+            });
           } else {
-            console.info("NO next stepavailable");
+            console.info("displayRoute() - NO next stepavailable");
             // update UI to components so this cannot happen
           }
         }
 
+        function startDirections() {
+          displayRoute({ nextStepIndex: 0 });
+        }
+
+        function continueDirections() {
+          displayRoute({ nextStepIndex: _stepIndex + 1 });
+        }
+
         function reverseDirections() {
-          console.info("reverseDirections");
-
-          const prevStepIndex = _stepIndex - 1;
-          const prevStep = _directions.steps[prevStepIndex];
-
-          if (prevStep) {
-            setStepIndex(prevStepIndex);
-            setStep(prevStep);
-            displayRoute({
-              meridianMap: meridianMapRef.current,
-              floorID: prevStep.map_id,
-              directions: _directions,
-              stepIndex: prevStepIndex,
-            });
-          } else {
-            console.info("NO prev stepavailable");
-            // update UI to components so this cannot happen
-          }
+          displayRoute({ nextStepIndex: _stepIndex - 1 });
         }
 
         // make components for buttons and text below
@@ -376,8 +401,8 @@
                 <strong class="to">To:</strong>
                 <em>Lost & Found (Second Floor)</em>
               </p>
-              <p hidden={!Boolean(_step)}>
-                <em id="directions-text">{_step ? _step["text"] : ""}</em>
+              <p>
+                <em id="directions-text">{_step ? _step["text"] : "-"}</em>
               </p>
               <div class="route-actions">
                 <button

@@ -32,6 +32,8 @@
     <script type="text/babel" id="the-code">
       window.React = { createElement: preact.h, ...preactHooks };
 
+      // START stateless functions
+
       function stepsToPolygonPoints(steps, mapID) {
         let prevPoints = [];
         let points = steps
@@ -160,6 +162,8 @@
         return overlays;
       }
 
+      // END stateless functions
+
       const App = (props) => {
         const mapContainerRef = React.useRef(null);
         const meridianMapRef = React.useRef(null);
@@ -167,20 +171,16 @@
         const floorID = "5933249679065088";
         const locationID = "5402771045744640";
 
+        const startPlacemarkID = "5933249679065088_5480121796132864";
+        const endPlacemarkID = "5927589843304448_6383031899914240";
+
         const [api, setApi] = React.useState(null);
-        const [_directions, setDirections] = React.useState(null);
-        const [_stepIndex, setStepIndex] = React.useState(0);
-        const [_step, setStep] = React.useState(null);
+        const [directions, setDirections] = React.useState(null);
+        const [stepIndex, setStepIndex] = React.useState(0);
+        const [step, setStep] = React.useState(null);
+        const [currentFloorID, setCurrentFloorID] = React.useState(null);
 
-        const [currentFloorID, setCurrentFloorID] = React.useState(floorID);
-
-        const [startPlacemarkID, setStartPlacemarkID] = React.useState(
-          "5933249679065088_5480121796132864"
-        );
-        const [endPlacemarkID, setEndPlacemarkID] = React.useState(
-          "5927589843304448_6383031899914240"
-        );
-
+        // API init
         React.useEffect(() => {
           const api = new MeridianSDK.API({
             environment: "devCloud",
@@ -191,22 +191,22 @@
           setApi(api);
         }, []);
 
+        // Map init
         React.useEffect(() => {
           if (mapContainerRef.current && api) {
             console.info("rendering map");
-            const meridianMap = MeridianSDK.createMap(mapContainerRef.current, {
-              api,
-              locationID: locationID,
-              floorID: floorID,
-              height: "100%",
-            });
+            meridianMapRef.current = MeridianSDK.createMap(
+              mapContainerRef.current,
+              {
+                api,
+                locationID: locationID,
+                floorID,
+                height: "100%",
+              }
+            );
 
-            meridianMapRef.current = meridianMap;
-
-            // remove to limit confusion?
-            Object.assign(window, {
-              meridianMap,
-            });
+            // meridianMapRef.current = meridianMap;
+            setCurrentFloorID(floorID);
           }
         }, [mapContainerRef, api]);
 
@@ -334,14 +334,13 @@
           // api
           //   .getDirections({
           //     locationID: locationID,
-          //     currentFloorID: floorID,
+          //     startFloorID: floorID,
           //     startPlacemarkID: startPlacemarkID,
           //     endPlacemarkID: endPlacemarkID,
           //   })
           //   .then((result) => {
           //     const route = result.routes[0];
-          //     const directions = directionsByFloor(route);
-          //     setDirections(directions);
+          //     setDirections(route);
           //     setStepIndex(0);
           //   })
           //   .catch((err) => {
@@ -351,7 +350,7 @@
         }
 
         function displayRoute({ nextStepIndex }) {
-          const nextStep = _directions.steps[nextStepIndex];
+          const nextStep = directions.steps[nextStepIndex];
 
           console.info("nextStepIndex", nextStepIndex);
           console.info("nextStep", nextStep);
@@ -362,7 +361,7 @@
 
             const overlays = generateRouteOverlays({
               floorID: nextStep.map_id,
-              directions: _directions,
+              directions: directions,
               stepIndex: nextStepIndex,
             });
 
@@ -381,11 +380,11 @@
         }
 
         function continueDirections() {
-          displayRoute({ nextStepIndex: _stepIndex + 1 });
+          displayRoute({ nextStepIndex: stepIndex + 1 });
         }
 
         function reverseDirections() {
-          displayRoute({ nextStepIndex: _stepIndex - 1 });
+          displayRoute({ nextStepIndex: stepIndex - 1 });
         }
 
         // make components for buttons and text below
@@ -393,36 +392,29 @@
         return (
           <div>
             <div class="directions-overlay">
-              <h3>Directions Request</h3>
-              <p class="directions-request">
-                <strong class="from">From:</strong>
-                <em>Customer Service Center (Second Floor)</em>
-                <br />
-                <strong class="to">To:</strong>
-                <em>Lost & Found (Second Floor)</em>
-              </p>
+              <h3>Directions Overview</h3>
               <p>
-                <em id="directions-text">{_step ? _step["text"] : "-"}</em>
+                <em id="directions-text">{step ? step["text"] : "-"}</em>
               </p>
               <div class="route-actions">
                 <button
                   id="route-start"
                   onclick={() => startDirections()}
-                  hidden={!Boolean(_directions) || Boolean(_step)}
+                  hidden={!Boolean(directions) || Boolean(step)}
                 >
                   start
                 </button>
                 <button
                   id="route-start"
                   onclick={() => reverseDirections()}
-                  hidden={!Boolean(_directions) || !Boolean(_step)}
+                  hidden={!Boolean(directions) || !Boolean(step)}
                 >
                   previous
                 </button>
                 <button
                   id="route-start"
                   onclick={() => continueDirections()}
-                  hidden={!Boolean(_directions) || !Boolean(_step)}
+                  hidden={!Boolean(directions) || !Boolean(step)}
                 >
                   continue
                 </button>
@@ -431,7 +423,7 @@
                   onclick={() => {
                     getDirections(meridianMapRef.current);
                   }}
-                  hidden={Boolean(_directions)}
+                  hidden={Boolean(directions)}
                 >
                   getDirs
                 </button>

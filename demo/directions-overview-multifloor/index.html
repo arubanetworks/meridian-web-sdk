@@ -96,19 +96,10 @@
         });
       }
 
-      function stepsToShape(steps) {
-        let shape = steps.flatMap((step) => {
-          return step.points.split(",").map(Number);
-        });
-        shape = shape.join(", ");
-        return "M " + shape;
-      }
-
       function displayRoute(meridianMap, routes, routeIndex, currentFloorID) {
         const directions = routes[routeIndex];
         const floorID = directions.floorID;
         const points = stepsToPoints(directions.steps);
-        const path = stepsToShape(directions.steps);
         const nextRouteIndex = routeIndex + 1;
 
         if (floorID !== currentFloorID) {
@@ -154,61 +145,33 @@
         }
 
         const updateOptions = ((currentFloorID) => {
-          const overlays = [
-            // {
-            //   type: "path",
-            //   shape: path,
-            //   stroke: "yellow",
-            //   strokeOpacity: ".5",
-            //   strokeWidth: 8,
-            //   strokeLineJoin: "round",
-            //   strokeLineCap: "round",
-            //   markerStart: "url(#arrow)",
-            //   markerMid: "url(#arrow)",
-            //   markerEnd: "url(#arrow)",
-            // },
-            {
+          const overlay = {
               type: "polyline",
-              points: points,
-              stroke: "yellow",
-              strokeOpacity: ".5",
+            points,
+            stroke: "orange",
               strokeWidth: 8,
               strokeLineJoin: "round",
               strokeLineCap: "round",
-              markerStart: "url(#arrow)",
-              // markerMid: "url(#arrow)",
-              markerEnd: "url(#arrow)",
+            strokeDasharray: "50",
+            strokeDashoffset: "250",
+            animate: {
+              attributeName: "stroke-dashoffset",
+              from: "250",
+              to: "50",
+              dur: "2s",
+              repeatCount: "indefinite",
             },
-            {
-              type: "marker",
-              id: "arrow",
-              viewBox: "0 0 10 10",
-              fill: "blue",
-              fillOpacity: ".5",
-              refX: "5",
-              refY: "5",
-              // markerWidth: "5",
-              // markerHeight: "5",
-              orient: "auto",
-              shapeElementType: "path",
-              shapeElementAttributes: {
-                d: "M 0 0 L 10 5 L 0 10 z",
-                // stroke: "context-stroke",
-              },
-              // markerUnits: "strokeWidth",
-            },
-          ];
-
+          };
           if (floorID === currentFloorID) {
             return {
-              overlays,
+              overlays: [overlay],
             };
           } else {
             return {
               floorID: floorID,
               onPlacemarksUpdate: () => {
                 meridianMap.update({
-                  overlays,
+                  overlays: [overlay],
                 });
               },
             };

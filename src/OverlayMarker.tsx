@@ -26,15 +26,15 @@ const OverlayMarker: FunctionComponent<OverlayMarkerProps> = ({
   fill = "none",
   fillOpacity,
   stroke = "hsl(207, 65%, 46%)",
-  strokeWidth = 2,
-  strokeLineJoin = "miter",
-  strokeLineCap = "butt",
+  strokeWidth,
+  strokeLineJoin,
+  strokeLineCap,
   strokeDasharray,
   strokeDashoffset,
   strokeOpacity,
   shapeElementType,
   shapeElementAttributes,
-  mapZoomFactor,
+  mapZoomFactor: _mapZoomFactor,
   ...rest
 }) => {
   let shape: any = null;
@@ -73,7 +73,7 @@ const OverlayMarker: FunctionComponent<OverlayMarkerProps> = ({
       fill={fill}
       fill-opacity={fillOpacity}
       stroke={stroke}
-      stroke-width={strokeWidth / mapZoomFactor}
+      stroke-width={strokeWidth}
       stroke-linejoin={strokeLineJoin}
       stroke-linecap={strokeLineCap}
       stroke-dasharray={strokeDasharray}

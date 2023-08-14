@@ -95,9 +95,9 @@
             strokeWidth: 8,
             strokeLineJoin: "round",
             strokeLineCap: "round",
-            markerStart: "url(#arrow)",
-            markerMid: "url(#arrow)",
-            markerEnd: "url(#arrow)",
+            // markerStart: "url(#arrow)",
+            // markerMid: "url(#arrow)",
+            // markerEnd: "url(#arrow)",
           },
           // {
           //   type: "path",
@@ -108,15 +108,26 @@
           //   strokeLineJoin: "round",
           //   strokeLineCap: "round",
           //   markerStart: "url(#arrow)",
-          //   markerMid: "url(#foo)",
+          //   markerMid: "url(#arrow)",
           //   markerEnd: "url(#arrow)",
           // },
+
+          // current route step/segment
           {
             type: "path",
             id: "mypath",
             shape: stepShape,
             stroke: "blue",
             strokeOpacity: ".5",
+            strokeDasharray: "50",
+            strokeDashoffset: "250",
+            animate: {
+              attributeName: "stroke-dashoffset",
+              from: "250",
+              to: "50",
+              dur: "2s",
+              repeatCount: "indefinite",
+            },
           },
           {
             type: "marker",
@@ -124,57 +135,17 @@
             viewBox: "0 0 10 10",
             fill: "blue",
             fillOpacity: ".5",
-            // markerWidth: 5,
-            // markerHeight: 5,
+            stroke: "none",
             refX: "5",
             refY: "5",
+            markerWidth: "2",
+            markerHeight: "2",
             orient: "auto",
             shapeElementType: "path",
             shapeElementAttributes: {
               d: "M 0 0 L 10 5 L 0 10 z",
             },
           },
-          {
-            type: "marker",
-            defs: false,
-            id: "foo",
-            viewBox: "0 0 10 10",
-            fill: "blue",
-            // fillOpacity: ".5",
-            refX: "5",
-            refY: "5",
-            // markerWidth: "5",
-            // markerHeight: "5",
-            // orient: "auto",
-            shapeElementType: "path",
-            shapeElementAttributes: {
-              d: "M 3,3 L 7,7 M 3,7 L 7,3",
-              // stroke: "context-stroke",
-            },
-            // markerUnits: "strokeWidth",
-          },
-          // {
-          //   type: "circle",
-          //   r: "6",
-          //   fillOpacity: "0",
-          //   style: { fill: "red" },
-          //   mpath: "mypath",
-          //   animateMotion: {
-          //     dur: "5s",
-          //     repeatCount: "indefinite",
-          //     id: "mycircleanimation",
-          //     begin: "mypathanimation.beginEvent",
-          //   },
-          //   animate: {
-          //     attributeName: "fill-opacity",
-          //     from: "0",
-          //     to: "1",
-          //     repeatCount: "1",
-          //     dur: "1ms",
-          //     fill: "freeze",
-          //     begin: "mycircleanimation.beginEvent",
-          //   },
-          // },
         ];
         return overlays;
       }
@@ -404,17 +375,117 @@
           displayRoute({ nextStepIndex: stepIndex - 1 });
         }
 
+        function getArrowImage(iconStr) {
+          if (iconStr) {
+            const URL = getArrowURL(iconStr);
+            const image = URL ? <img src={URL} height="80px" /> : undefined;
+            return image;
+          } else {
+            return undefined;
+          }
+        }
+
+        function getDistanceText(distance) {
+          if (distance && typeof distance === "number") {
+            const distanceInFeet = Math.floor(distance * 3.280839895);
+            return (
+              <span>
+                {distanceInFeet + " Feet"}
+                <br />
+              </span>
+            );
+          } else {
+            return undefined;
+          }
+        }
+
+        function getArrowURL(str) {
+          if (!str) {
+            return undefined;
+          }
+
+          switch (str) {
+            case "DirectionArrowStraight":
+              return "arrow-straight.png";
+              break;
+
+            case "DirectionArrowRightSoft":
+              return "arrow-right-soft.png";
+              break;
+
+            case "DirectionArrowRight":
+              return "arrow-right.png";
+              break;
+
+            case "DirectionArrowRightHard":
+              return "arrow-right-hard.png";
+              break;
+
+            case "DirectionArrowLeftSoft":
+              return "arrow-left-soft.png";
+              break;
+
+            case "DirectionArrowLeft":
+              return "arrow-left.png";
+              break;
+
+            case "DirectionArrowLeftHard":
+              return "arrow-left-hard.png";
+              break;
+
+            case "DirectionsArrived":
+              return "directions-arrived.png";
+              break;
+
+            default:
+              return undefined;
+              break;
+          }
+        }
+
+        function displayDirections(step) {
+          if (step) {
+            const directions = step.text;
+            const arrowImage = getArrowImage(step.icon);
+            const distance = getDistanceText(step.distance);
+
+            if (directions) {
+              return (
+                <div
+                  style={{
+                    padding: 10,
+                    minHeight: 80,
+                    display: "flex",
+                  }}
+                >
+                  <div>{arrowImage}</div>
+                  <div style={{ paddingLeft: 10 }}>
+                    <div style={{ fontSize: 40 }}>{distance}</div>
+                    <div style={{ color: "#ccc", paddingLeft: 5 }}>
+                      {directions}
+                    </div>
+                  </div>
+                </div>
+              );
+            } else {
+              return undefined;
+            }
+          } else {
+            return undefined;
+          }
+        }
+
         // make components for buttons and text below
-        // don't display buttons when map is loading, should the SDK have a "loading" state?
 
         return (
           <div>
             <div class="directions-overlay">
-              <h3>Directions Overview</h3>
-              <p style={{ minHeight: 80 }}>
-                <em id="directions-text">{step ? step["text"] : "-"}</em>
-              </p>
-              <div class="route-actions">
+              <h3 style={{ fontWeight: "normal", color: "#ccc" }}>
+                Directions Overview
+              </h3>
+
+              {displayDirections(step)}
+              <div class="route-actions" style={{ marginTop: 20 }}>
                 <button
                   id="route-start"
                   onclick={() => startDirections()}
@@ -423,16 +494,17 @@
                   start
                 </button>
                 <button
-                  id="route-start"
+                  id="route-reverse"
                   onclick={() => reverseDirections()}
                   hidden={!Boolean(directions) || !Boolean(step)}
                 >
                   previous
                 </button>
                 <button
-                  id="route-start"
+                  id="route-continue"
                   onclick={() => continueDirections()}
                   hidden={!Boolean(directions) || !Boolean(step)}
+                  style={{ float: "right" }}
                 >
                   continue
                 </button>

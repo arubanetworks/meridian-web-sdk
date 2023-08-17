@@ -32,7 +32,7 @@
     <script type="text/babel" id="the-code">
       window.React = { createElement: preact.h, ...preactHooks };
 
-      // START stateless functions
+      // Stateless functions
 
       function stepsToPolygonPoints(steps, mapID) {
         let prevPoints = [];
@@ -129,6 +129,22 @@
               repeatCount: "indefinite",
             },
           },
+          // {
+          //   type: "path",
+          //   id: "mypath",
+          //   shape: stepShape,
+          //   stroke: "blue",
+          //   strokeOpacity: ".5",
+          //   strokeDasharray: "50",
+          //   strokeDashoffset: "250",
+          //   animate: {
+          //     attributeName: "stroke-dashoffset",
+          //     from: "250",
+          //     to: "50",
+          //     dur: "2s",
+          //     repeatCount: "indefinite",
+          //   },
+          // },
           {
             type: "marker",
             id: "arrow",
@@ -150,8 +166,6 @@
         return overlays;
       }
 
-      // END stateless functions
-
       const App = (props) => {
         const mapContainerRef = React.useRef(null);
         const meridianMapRef = React.useRef(null);
@@ -167,6 +181,7 @@
         const [stepIndex, setStepIndex] = React.useState(0);
         const [step, setStep] = React.useState(null);
         const [currentFloorID, setCurrentFloorID] = React.useState(null);
+        const [isMapUpdating, setIsMapUpdating] = React.useState(false);
 
         // API init
         React.useEffect(() => {
@@ -190,17 +205,18 @@
                 locationID: locationID,
                 floorID,
                 height: "100%",
+                onLoadStateChange: (loadingState) => {
+                  setIsMapUpdating(loadingState);
+                },
               }
             );
-
-            // meridianMapRef.current = meridianMap;
+            // TODO: maybe move this up?
             setCurrentFloorID(floorID);
           }
         }, [mapContainerRef, api]);
 
         function updateMap({ overlays, floorID }) {
           const meridianMap = meridianMapRef.current;
-
           if (meridianMap) {
             meridianMap.update({
               overlays: currentFloorID === floorID ? overlays : [],
@@ -209,6 +225,9 @@
                 meridianMap.update({
                   overlays,
                 });
+              },
+              onLoadStateChange: (loadingState) => {
+                setIsMapUpdating(loadingState);
               },
             });
             setCurrentFloorID(floorID);
@@ -337,24 +356,20 @@
           //   });
         }
 
-        function displayRoute({ nextStepIndex }) {
-          const nextStep = directions.steps[nextStepIndex];
-
-          console.info("nextStepIndex", nextStepIndex);
-          console.info("nextStep", nextStep);
-
-          if (nextStep) {
-            setStepIndex(nextStepIndex);
-            setStep(nextStep);
+        function displayRoute({ stepIndex: _stepIndex }) {
+          const _step = directions.steps[_stepIndex];
+          if (_step) {
+            setStepIndex(_stepIndex);
+            setStep(_step);
 
             const overlays = generateRouteOverlays({
-              floorID: nextStep.map_id,
+              floorID: _step.map_id,
               directions: directions,
-              stepIndex: nextStepIndex,
+              stepIndex: _stepIndex,
             });
 
             updateMap({
-              floorID: nextStep.map_id,
+              floorID: _step.map_id,
               overlays,
             });
           } else {
@@ -364,15 +379,15 @@
         }
 
         function startDirections() {
-          displayRoute({ nextStepIndex: 0 });
+          displayRoute({ stepIndex: 0 });
         }
 
         function continueDirections() {
-          displayRoute({ nextStepIndex: stepIndex + 1 });
+          displayRoute({ stepIndex: stepIndex + 1 });
         }
 
         function reverseDirections() {
-          displayRoute({ nextStepIndex: stepIndex - 1 });
+          displayRoute({ stepIndex: stepIndex - 1 });
         }
 
         function getArrowImage(iconStr) {
@@ -475,7 +490,68 @@
           }
         }
 
-        // make components for buttons and text below
+        function BtnStartDirections() {
+          if (Boolean(directions) && !Boolean(step) && !isMapUpdating) {
+            return (
+              <button id="route-start" onclick={() => startDirections()}>
+                start
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function BtnContinueDirections() {
+          if (
+            Boolean(directions) &&
+            Boolean(step) &&
+            stepIndex < directions.steps.length - 1 &&
+            !isMapUpdating
+          ) {
+            return (
+              <button
+                id="route-continue"
+                onclick={() => continueDirections()}
+                style={{ float: "right" }}
+              >
+                continue
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function BtnPreviouisDirections() {
+          if (
+            Boolean(directions) &&
+            Boolean(step) &&
+            stepIndex > 0 &&
+            !isMapUpdating
+          ) {
+            return (
+              <button id="route-reverse" onclick={() => reverseDirections()}>
+                previous
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function BtnGetDirections() {
+          if (!Boolean(directions) && !isMapUpdating) {
+            return (
+              <button
+                id="route-get"
+                onclick={() => {
+                  getDirections(meridianMapRef.current);
+                }}
+              >
+                getDirs
+              </button>
+            );
+          }
+          return undefined;
+        }
 
         return (
           <div>
@@ -486,37 +562,10 @@
 
               {displayDirections(step)}
               <div class="route-actions" style={{ marginTop: 20 }}>
-                <button
-                  id="route-start"
-                  onclick={() => startDirections()}
-                  hidden={!Boolean(directions) || Boolean(step)}
-                >
-                  start
-                </button>
-                <button
-                  id="route-reverse"
-                  onclick={() => reverseDirections()}
-                  hidden={!Boolean(directions) || !Boolean(step)}
-                >
-                  previous
-                </button>
-                <button
-                  id="route-continue"
-                  onclick={() => continueDirections()}
-                  hidden={!Boolean(directions) || !Boolean(step)}
-                  style={{ float: "right" }}
-                >
-                  continue
-                </button>
-                <button
-                  id="route-get"
-                  onclick={() => {
-                    getDirections(meridianMapRef.current);
-                  }}
-                  hidden={Boolean(directions)}
-                >
-                  getDirs
-                </button>
+                <BtnStartDirections />
+                <BtnPreviouisDirections />
+                <BtnContinueDirections />
+                <BtnGetDirections />
               </div>
             </div>
             <main class="map" id="meridian-map" ref={mapContainerRef}></main>

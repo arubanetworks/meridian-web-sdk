@@ -767,6 +767,10 @@ export interface CreateMapOptions {
    */
   onFloorChange?: (floor: FloorData) => void;
   /**
+   * Called when the loading state is changed.
+   */
+  onLoadStateChange?: (loadingState: boolean) => void;
+  /**
    * Called when the map has been destroyed, either by manually calling
    * map.destroy() or by being automatically destroyed when its DOM is tampered
    * with.

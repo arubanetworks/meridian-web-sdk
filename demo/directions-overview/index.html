@@ -355,7 +355,7 @@
           }
         }
 
-        function getDirections({ meridianMap }) {
+        function fetchDirections({ meridianMap }) {
           const res = {
             routes: [
               {
@@ -562,7 +562,7 @@
               <button
                 class="directions-button"
                 onclick={() => {
-                  getDirections(meridianMapRef.current);
+                  fetchDirections(meridianMapRef.current);
                 }}
               >
                 Get Directions

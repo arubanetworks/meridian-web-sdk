@@ -19,7 +19,57 @@
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
     <script type="module" src="../shared.js"></script>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .map {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        max-width: 100%;
+        border: 0;
+      }
+
+      .directions-button {
+        margin: 0;
+        font: inherit;
+        color: #282c34;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 6px 8px;
+        /* width: 40px;
+    height: 40px; */
+        border: 0;
+        font-size: 14px;
+        /* font-weight: 200; */
+        /* background: hsl(200, 60%, 97%); */
+      }
+
+      .directions-overlay {
+        box-shadow: 0 0 4px rgb(0 0 0 / 25%);
+        border-radius: 6px;
+        background: #2e2e2e;
+        color: #fafafa;
+        position: absolute;
+        margin: 0;
+        left: 15px;
+        top: 15px;
+        z-index: 2;
+        width: 350px;
+        padding: 20px;
+      }
+
+      h3 {
+        margin-top: 0px;
+        margin-bottom: 15px;
+      }
+    </style>
   </head>
 
   <body>
@@ -166,6 +216,75 @@
         return overlays;
       }
 
+      function getArrowImage(iconStr) {
+        if (iconStr) {
+          const URL = getArrowURL(iconStr);
+          const image = URL ? <img src={URL} height="80px" /> : undefined;
+          return image;
+        } else {
+          return undefined;
+        }
+      }
+
+      function getDistanceText(distance) {
+        if (distance && typeof distance === "number") {
+          const distanceInFeet = Math.floor(distance * 3.280839895);
+          return (
+            <span>
+              {distanceInFeet + " Feet"}
+              <br />
+            </span>
+          );
+        } else {
+          return undefined;
+        }
+      }
+
+      function getArrowURL(str) {
+        if (!str) {
+          return undefined;
+        }
+
+        switch (str) {
+          case "DirectionArrowStraight":
+            return "arrow-straight.png";
+            break;
+
+          case "DirectionArrowRightSoft":
+            return "arrow-right-soft.png";
+            break;
+
+          case "DirectionArrowRight":
+            return "arrow-right.png";
+            break;
+
+          case "DirectionArrowRightHard":
+            return "arrow-right-hard.png";
+            break;
+
+          case "DirectionArrowLeftSoft":
+            return "arrow-left-soft.png";
+            break;
+
+          case "DirectionArrowLeft":
+            return "arrow-left.png";
+            break;
+
+          case "DirectionArrowLeftHard":
+            return "arrow-left-hard.png";
+            break;
+
+          case "DirectionsArrived":
+            return "directions-arrived.png";
+            break;
+
+          default:
+            return undefined;
+            break;
+        }
+      }
+
+      // React (Preact) App
       const App = (props) => {
         const mapContainerRef = React.useRef(null);
         const meridianMapRef = React.useRef(null);
@@ -181,7 +300,7 @@
         const [stepIndex, setStepIndex] = React.useState(0);
         const [step, setStep] = React.useState(null);
         const [currentFloorID, setCurrentFloorID] = React.useState(null);
-        const [isMapUpdating, setIsMapUpdating] = React.useState(false);
+        const [isMapUpdating, setIsMapUpdating] = React.useState(true);
 
         // API init
         React.useEffect(() => {
@@ -390,75 +509,86 @@
           displayRoute({ stepIndex: stepIndex - 1 });
         }
 
-        function getArrowImage(iconStr) {
-          if (iconStr) {
-            const URL = getArrowURL(iconStr);
-            const image = URL ? <img src={URL} height="80px" /> : undefined;
-            return image;
-          } else {
-            return undefined;
-          }
-        }
-
-        function getDistanceText(distance) {
-          if (distance && typeof distance === "number") {
-            const distanceInFeet = Math.floor(distance * 3.280839895);
+        function BtnStartDirections() {
+          if (Boolean(directions) && !Boolean(step)) {
             return (
-              <span>
-                {distanceInFeet + " Feet"}
-                <br />
-              </span>
+              <button
+                class="directions-button"
+                onclick={() => startDirections()}
+              >
+                start
+              </button>
             );
-          } else {
-            return undefined;
           }
+          return undefined;
         }
 
-        function getArrowURL(str) {
-          if (!str) {
-            return undefined;
+        function BtnContinueDirections() {
+          if (
+            Boolean(directions) &&
+            Boolean(step) &&
+            stepIndex < directions.steps.length - 1
+          ) {
+            return (
+              <button
+                class="directions-button"
+                onclick={() => continueDirections()}
+                style={{ float: "right" }}
+              >
+                continue
+              </button>
+            );
           }
-
-          switch (str) {
-            case "DirectionArrowStraight":
-              return "arrow-straight.png";
-              break;
-
-            case "DirectionArrowRightSoft":
-              return "arrow-right-soft.png";
-              break;
-
-            case "DirectionArrowRight":
-              return "arrow-right.png";
-              break;
-
-            case "DirectionArrowRightHard":
-              return "arrow-right-hard.png";
-              break;
-
-            case "DirectionArrowLeftSoft":
-              return "arrow-left-soft.png";
-              break;
-
-            case "DirectionArrowLeft":
-              return "arrow-left.png";
-              break;
-
-            case "DirectionArrowLeftHard":
-              return "arrow-left-hard.png";
-              break;
-
-            case "DirectionsArrived":
-              return "directions-arrived.png";
-              break;
-
-            default:
-              return undefined;
-              break;
-          }
+          return undefined;
         }
 
-        function displayDirections(step) {
+        function BtnPreviouisDirections() {
+          if (Boolean(directions) && Boolean(step) && stepIndex > 0) {
+            return (
+              <button
+                onclick={() => reverseDirections()}
+                class="directions-button"
+              >
+                previous
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function BtnGetDirections() {
+          if (!Boolean(directions)) {
+            return (
+              <button
+                class="directions-button"
+                onclick={() => {
+                  getDirections(meridianMapRef.current);
+                }}
+              >
+                Get Directions
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function RouteActions() {
+          return (
+            <div
+              style={{
+                marginTop: 20,
+                visibility: isMapUpdating ? "hidden" : "visible",
+              }}
+            >
+              <BtnStartDirections />
+              <BtnPreviouisDirections />
+              <BtnContinueDirections />
+              <BtnGetDirections />
+            </div>
+          );
+        }
+
+        function DirectionsText() {
           if (step) {
             const directions = step.text;
             const arrowImage = getArrowImage(step.icon);
@@ -471,6 +601,7 @@
                     padding: 10,
                     minHeight: 80,
                     display: "flex",
+                    visibility: isMapUpdating ? "hidden" : "visible",
                   }}
                 >
                   <div>{arrowImage}</div>
@@ -490,64 +621,19 @@
           }
         }
 
-        function BtnStartDirections() {
-          if (Boolean(directions) && !Boolean(step) && !isMapUpdating) {
+        function DirectionsDestination() {
+          if (!Boolean(directions)) {
             return (
-              <button id="route-start" onclick={() => startDirections()}>
-                start
-              </button>
-            );
-          }
-          return undefined;
-        }
-
-        function BtnContinueDirections() {
-          if (
-            Boolean(directions) &&
-            Boolean(step) &&
-            stepIndex < directions.steps.length - 1 &&
-            !isMapUpdating
-          ) {
-            return (
-              <button
-                id="route-continue"
-                onclick={() => continueDirections()}
-                style={{ float: "right" }}
-              >
-                continue
-              </button>
-            );
-          }
-          return undefined;
-        }
-
-        function BtnPreviouisDirections() {
-          if (
-            Boolean(directions) &&
-            Boolean(step) &&
-            stepIndex > 0 &&
-            !isMapUpdating
-          ) {
-            return (
-              <button id="route-reverse" onclick={() => reverseDirections()}>
-                previous
-              </button>
-            );
-          }
-          return undefined;
-        }
-
-        function BtnGetDirections() {
-          if (!Boolean(directions) && !isMapUpdating) {
-            return (
-              <button
-                id="route-get"
-                onclick={() => {
-                  getDirections(meridianMapRef.current);
+              <div
+                style={{
+                  lineHeight: "1.5em",
+                  fontSize: 14,
                 }}
               >
-                getDirs
-              </button>
+                <strong>From:</strong> Information Kiosk (First Floor)
+                <br />
+                <strong>To:</strong> Zoom Conference Room (Third Floor)
+              </div>
             );
           }
           return undefined;
@@ -559,20 +645,14 @@
               <h3 style={{ fontWeight: "normal", color: "#ccc" }}>
                 Directions Overview
               </h3>
-
-              {displayDirections(step)}
-              <div class="route-actions" style={{ marginTop: 20 }}>
-                <BtnStartDirections />
-                <BtnPreviouisDirections />
-                <BtnContinueDirections />
-                <BtnGetDirections />
-              </div>
+              <DirectionsDestination />
+              <DirectionsText />
+              <RouteActions />
             </div>
             <main class="map" id="meridian-map" ref={mapContainerRef}></main>
           </div>
         );
       };
-
       preact.render(<App />, document.getElementById("preact-root"));
     </script>
   </body>

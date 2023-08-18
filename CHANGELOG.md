@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Support for additional SVG elements: `<defs>`, `<marker>` and `<use>`
+- Step-by-step functionality to the Directions Overview (multi-floor) demo (BETA)
 
 ## [1.17.2] - 2023-07-11
 

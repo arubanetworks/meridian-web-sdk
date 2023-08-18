@@ -92,7 +92,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     annotations: [],
     onTagsUpdate: () => {},
     onFloorChange: () => {},
-    onLoadStateChange: () => {},
+    onLoadingStateChange: () => {},
     onFloorsUpdate: () => {},
   };
 
@@ -397,9 +397,9 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     const isLoaded = Object.keys(loadingSources).some((item) => {
       return loadingSources[item] === true;
     });
-    if (this.props.onLoadStateChange && this.isLoaded !== isLoaded) {
+    if (this.props.onLoadingStateChange && this.isLoaded !== isLoaded) {
       this.isLoaded = isLoaded;
-      asyncClientCall(this.props.onLoadStateChange, isLoaded);
+      asyncClientCall(this.props.onLoadingStateChange, isLoaded);
     }
     return isLoaded;
   }

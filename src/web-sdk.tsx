@@ -759,13 +759,17 @@ export interface CreateMapOptions {
     filteredPlacemarks: PlacemarkData[];
   }) => void;
   /**
-   * Called with an array of floors after the floors list is updated.
+   * Called after the floors list is updated.
    */
   onFloorsUpdate?: (floors: FloorData[]) => void;
   /**
-   * Called with a floor object when the floor is changed.
+   * Called after the floor is changed.
    */
   onFloorChange?: (floor: FloorData) => void;
+  /**
+   * Called when the loading state changes.
+   */
+  onLoadingStateChange?: (isLoading: boolean) => void;
   /**
    * Called when the map has been destroyed, either by manually calling
    * map.destroy() or by being automatically destroyed when its DOM is tampered

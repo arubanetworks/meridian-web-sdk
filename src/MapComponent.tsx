@@ -92,6 +92,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     annotations: [],
     onTagsUpdate: () => {},
     onFloorChange: () => {},
+    onLoadingStateChange: () => {},
     onFloorsUpdate: () => {},
   };
 
@@ -122,6 +123,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
   };
 
   isMounted = false;
+  isLoaded = false;
   fetchAllTagsTimeout: any;
   fetchAllTagsInitialized = false;
   fetchAllPlacemarksTimeout: any;
@@ -392,9 +394,14 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
 
   showLoadingSpinner() {
     const { loadingSources } = this.state;
-    return Object.keys(loadingSources).some((item) => {
+    const isLoaded = Object.keys(loadingSources).some((item) => {
       return loadingSources[item] === true;
     });
+    if (this.props.onLoadingStateChange && this.isLoaded !== isLoaded) {
+      this.isLoaded = isLoaded;
+      asyncClientCall(this.props.onLoadingStateChange, isLoaded);
+    }
+    return isLoaded;
   }
 
   toggleDetailsOverlay = ({

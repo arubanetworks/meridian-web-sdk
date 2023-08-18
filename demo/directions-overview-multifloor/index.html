@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>
-      [BETA] Directions Overview (Multiple Floors) | Meridian Web SDK
+      [BETA] Directions Overview, multi-floor, step by step | Meridian Web SDK
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
@@ -12,8 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
-    <script src="https://unpkg.com/react@16.4.1/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@16.4.1/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/preact@10.15.1/dist/preact.umd.js"></script>
+    <script src="https://unpkg.com/preact@10.15.1/hooks/dist/hooks.umd.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
     <link rel="stylesheet" href="../shared.css" />
     <link
@@ -21,137 +21,134 @@
       href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
     />
     <script type="module" src="../shared.js"></script>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .map {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        max-width: 100%;
+        border: 0;
+      }
+
+      .directions-button {
+        margin: 0;
+        font: inherit;
+        color: #282c34;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 6px 8px;
+        border: 0;
+        font-size: 14px;
+      }
+
+      .directions-overlay {
+        box-shadow: 0 0 4px rgb(0 0 0 / 25%);
+        border-radius: 6px;
+        background: #2e2e2e;
+        color: #fafafa;
+        position: absolute;
+        margin: 0;
+        left: 15px;
+        top: 15px;
+        z-index: 2;
+        width: 350px;
+        padding: 20px;
+      }
+
+      h3 {
+        margin-top: 0px;
+        margin-bottom: 15px;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="directions-overlay">
-      <h3>Directions Request</h3>
-      <p class="directions-request">
-        <strong class="from">From:</strong>
-        <em>Information Desk (First Floor)</em><br />
-        <strong class="to">To:</strong>
-        <em>Zoom Conference Room (Third Floor)</em>
-      </p>
-      <p><em id="directions-text"></em></p>
-      <div class="route-actions">
-        <button id="route-start" onclick="window.startRoute()">start</button>
-        <button id="route-back" onclick="window.reverseRoute()" hidden>
-          back
-        </button>
-        <button id="route-continue" onclick="window.continueRoute()" hidden>
-          continue
-        </button>
-      </div>
+    <div>
+      <div id="preact-root" />
     </div>
-    <main class="map" id="meridian-map"></main>
 
     <script src="../meridian-sdk.js"></script>
-    <script type="module" id="the-code">
-      const locationID = "5402771045744640";
-      const floorID = "5933249679065088";
-      const startPlacemarkID = "5933249679065088_5480121796132864";
-      const endPlacemarkID = "5927589843304448_6383031899914240";
 
-      function getRouteNavButton(action) {
-        return document.getElementById(`route-${action}`);
-      }
+    <script type="text/babel" id="the-code">
+      window.React = { createElement: preact.h, ...preactHooks };
 
-      function setRouteDirectionsText(text) {
-        document.getElementById("directions-text").innerText =
-          "Follow Route: " + text;
-      }
-      function setRouteDestinationText() {
-        document.getElementById("directions-text").innerText =
-          "Follow Route to Your Destination";
-      }
-
-      function formatDirections(route) {
-        let floor;
-        let floor_index = 0;
-        const formattedDirections = [...route.steps].reduce(
-          (accumulator, current) => {
-            let map_id = current.map_id;
-            let points = current.points;
-
-            if (floor !== map_id) {
-              floor_index++;
-              accumulator[floor_index] = {
-                floorID: map_id,
-                steps: [],
-              };
+      function stepsToPolygonPoints(steps, mapID) {
+        let prevPoints = [];
+        let points = steps
+          .filter((step) => step.map_id === mapID)
+          .flatMap((step) => {
+            let newPoints = step.points.split(",").map(Number);
+            if (
+              newPoints &&
+              newPoints.length > 1 &&
+              prevPoints.slice(-2).join() === newPoints.slice(0, 2).join()
+            ) {
+              newPoints.splice(0, 2);
             }
-            accumulator[floor_index].steps.push(current);
-            floor = map_id;
-            return accumulator;
-          },
-          {}
-        );
-        return formattedDirections;
+            prevPoints = newPoints;
+            return newPoints;
+          });
+        return points;
       }
 
-      function stepsToPoints(steps) {
-        return steps.flatMap((step) => {
-          return step.points.split(",").map(Number);
-        });
+      function stepsToShape(steps, mapID) {
+        let prevPoints = [];
+        let shape = steps
+          .filter((step) => step.map_id === mapID)
+          .flatMap((step) => {
+            let newPoints = step.points.split(",").map(Number);
+            if (
+              newPoints &&
+              newPoints.length > 1 &&
+              prevPoints.slice(-2).join() === newPoints.slice(0, 2).join()
+            ) {
+              newPoints.splice(0, 2);
+            }
+            prevPoints = newPoints;
+            return newPoints;
+          });
+        shape = shape.join(", ");
+        return "M " + shape;
       }
 
-      function displayRoute(meridianMap, routes, routeIndex, currentFloorID) {
-        const directions = routes[routeIndex];
-        const floorID = directions.floorID;
-        const points = stepsToPoints(directions.steps);
-        const nextRouteIndex = routeIndex + 1;
+      function stepToShape(step) {
+        let shape = step.points.split(",").map(Number);
+        shape = shape.join(", ");
+        return "M " + shape;
+      }
 
-        if (floorID !== currentFloorID) {
-          meridianMap.update({ overlays: [] });
-        }
+      function generateRouteOverlays({ floorID, directions, stepIndex }) {
+        const step = directions.steps[stepIndex];
+        const polylinePoints = stepsToPolygonPoints(directions.steps, floorID);
+        const fullPathShape = stepsToShape(directions.steps, floorID);
+        const stepShape = stepToShape(step);
 
-        Object.assign(window, {
-          continueRoute: displayRoute.bind(
-            null,
-            meridianMap,
-            routes,
-            nextRouteIndex,
-            floorID
-          ),
-          reverseRoute: displayRoute.bind(
-            null,
-            meridianMap,
-            routes,
-            routeIndex - 1,
-            floorID
-          ),
-        });
-
-        getRouteNavButton("start").hidden = true;
-
-        if (routes[nextRouteIndex]) {
-          getRouteNavButton("continue").hidden = false;
-          getRouteNavButton("back").hidden = false;
-          getRouteNavButton("continue").disabled = false;
-
-          setRouteDirectionsText(
-            directions.steps[directions.steps.length - 1].text
-          );
-
-          if (routeIndex === 1) {
-            getRouteNavButton("back").disabled = true;
-          } else {
-            getRouteNavButton("back").disabled = false;
-          }
-        } else {
-          getRouteNavButton("continue").disabled = true;
-          setRouteDestinationText();
-        }
-
-        const updateOptions = ((currentFloorID) => {
-          const overlay = {
+        const overlays = [
+          // full route highlight
+          {
             type: "polyline",
-            points,
-            stroke: "orange",
+            points: polylinePoints,
+            stroke: "yellow",
+            strokeOpacity: ".5",
             strokeWidth: 8,
             strokeLineJoin: "round",
             strokeLineCap: "round",
+          },
+          // current route step/segment
+          {
+            type: "path",
+            id: "mypath",
+            shape: stepShape,
+            stroke: "blue",
+            strokeOpacity: ".5",
             strokeDasharray: "50",
             strokeDashoffset: "250",
             animate: {
@@ -161,60 +158,341 @@
               dur: "2s",
               repeatCount: "indefinite",
             },
-          };
-          if (floorID === currentFloorID) {
-            return {
-              overlays: [overlay],
-            };
-          } else {
-            return {
+          },
+        ];
+        return overlays;
+      }
+
+      function getArrowImage(iconStr) {
+        if (iconStr) {
+          const URL = getArrowURL(iconStr);
+          const image = URL ? <img src={URL} height="80px" /> : undefined;
+          return image;
+        } else {
+          return undefined;
+        }
+      }
+
+      function getDistanceText(distance) {
+        if (distance && typeof distance === "number") {
+          const distanceInFeet = Math.floor(distance * 3.280839895);
+          return (
+            <span>
+              {distanceInFeet + " Feet"}
+              <br />
+            </span>
+          );
+        } else {
+          return undefined;
+        }
+      }
+
+      function getArrowURL(str) {
+        if (!str) {
+          return undefined;
+        }
+
+        switch (str) {
+          case "DirectionArrowStraight":
+            return "arrow-straight.png";
+            break;
+
+          case "DirectionArrowRightSoft":
+            return "arrow-right-soft.png";
+            break;
+
+          case "DirectionArrowRight":
+            return "arrow-right.png";
+            break;
+
+          case "DirectionArrowRightHard":
+            return "arrow-right-hard.png";
+            break;
+
+          case "DirectionArrowLeftSoft":
+            return "arrow-left-soft.png";
+            break;
+
+          case "DirectionArrowLeft":
+            return "arrow-left.png";
+            break;
+
+          case "DirectionArrowLeftHard":
+            return "arrow-left-hard.png";
+            break;
+
+          case "DirectionsArrived":
+            return "directions-arrived.png";
+            break;
+
+          default:
+            return undefined;
+            break;
+        }
+      }
+
+      // React (Preact) App
+      const App = (props) => {
+        const mapContainerRef = React.useRef(null);
+        const meridianMapRef = React.useRef(null);
+
+        const floorID = "5933249679065088";
+        const locationID = "5402771045744640";
+
+        const startPlacemarkID = "5933249679065088_5480121796132864";
+        const endPlacemarkID = "5927589843304448_6383031899914240";
+
+        const [api, setApi] = React.useState(null);
+        const [directions, setDirections] = React.useState(null);
+        const [stepIndex, setStepIndex] = React.useState(0);
+        const [step, setStep] = React.useState(null);
+        const [currentFloorID, setCurrentFloorID] = React.useState(null);
+        const [isMapUpdating, setIsMapUpdating] = React.useState(true);
+
+        // API init
+        React.useEffect(() => {
+          const api = new MeridianSDK.API({
+            environment: "devCloud",
+            token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
+          });
+
+          setApi(api);
+        }, []);
+
+        // Map init
+        React.useEffect(() => {
+          if (mapContainerRef.current && api) {
+            meridianMapRef.current = MeridianSDK.createMap(
+              mapContainerRef.current,
+              {
+                api,
+                locationID: locationID,
+                floorID,
+                height: "100%",
+                onLoadingStateChange: (isLoading) => {
+                  setIsMapUpdating(isLoading);
+                },
+              }
+            );
+            setCurrentFloorID(floorID);
+          }
+        }, [mapContainerRef, api]);
+
+        function updateMap({ overlays, floorID }) {
+          const meridianMap = meridianMapRef.current;
+          if (meridianMap) {
+            meridianMap.update({
+              overlays: currentFloorID === floorID ? overlays : [],
               floorID: floorID,
               onPlacemarksUpdate: () => {
                 meridianMap.update({
-                  overlays: [overlay],
+                  overlays,
                 });
               },
-            };
-          }
-        })(currentFloorID);
-
-        meridianMap.update({
-          ...updateOptions,
-        });
-      }
-
-      const api = new MeridianSDK.API({
-        environment: "devCloud",
-        token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
-      });
-
-      const meridianMap = MeridianSDK.createMap(
-        document.getElementById("meridian-map"),
-        {
-          api,
-          locationID: locationID,
-          floorID: floorID,
-          height: "100%",
-          onPlacemarksUpdate: () => {
-            const startRoute = async function () {
-              const apiResponse = await api.getDirections({
-                locationID: locationID,
-                startFloorID: floorID,
-                startPlacemarkID: startPlacemarkID,
-                endPlacemarkID: endPlacemarkID,
-              });
-              const route = apiResponse.routes[0];
-              const directions = formatDirections(route);
-              displayRoute(meridianMap, directions, 1, floorID);
-            };
-            Object.assign(window, {
-              meridianMap,
-              startRoute,
+              onLoadingStateChange: (isLoading) => {
+                setIsMapUpdating(isLoading);
+              },
             });
-          },
+            setCurrentFloorID(floorID);
+          } else {
+            console.info("!meridianMap");
+          }
         }
-      );
+
+        function fetchDirections({ meridianMap }) {
+          api
+            .getDirections({
+              locationID: locationID,
+              startFloorID: floorID,
+              startPlacemarkID: startPlacemarkID,
+              endPlacemarkID: endPlacemarkID,
+            })
+            .then((result) => {
+              const route = result.routes[0];
+              setDirections(route);
+              setStepIndex(0);
+            })
+            .catch((err) => {
+              console.info("Directions API error", err);
+            });
+        }
+
+        function displayRoute({ stepIndex: _stepIndex }) {
+          const _step = directions.steps[_stepIndex];
+          if (_step) {
+            setStepIndex(_stepIndex);
+            setStep(_step);
+
+            const overlays = generateRouteOverlays({
+              floorID: _step.map_id,
+              directions: directions,
+              stepIndex: _stepIndex,
+            });
+
+            updateMap({
+              floorID: _step.map_id,
+              overlays,
+            });
+          } else {
+            console.info("displayRoute() - NO next stepavailable");
+          }
+        }
+
+        function startDirections() {
+          displayRoute({ stepIndex: 0 });
+        }
+
+        function continueDirections() {
+          displayRoute({ stepIndex: stepIndex + 1 });
+        }
+
+        function reverseDirections() {
+          displayRoute({ stepIndex: stepIndex - 1 });
+        }
+
+        function BtnStartDirections() {
+          if (Boolean(directions) && !Boolean(step)) {
+            return (
+              <button
+                class="directions-button"
+                onclick={() => startDirections()}
+              >
+                start
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function BtnContinueDirections() {
+          if (
+            Boolean(directions) &&
+            Boolean(step) &&
+            stepIndex < directions.steps.length - 1
+          ) {
+            return (
+              <button
+                class="directions-button"
+                onclick={() => continueDirections()}
+                style={{ float: "right" }}
+              >
+                continue
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function BtnPreviouisDirections() {
+          if (Boolean(directions) && Boolean(step) && stepIndex > 0) {
+            return (
+              <button
+                onclick={() => reverseDirections()}
+                class="directions-button"
+              >
+                previous
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function BtnGetDirections() {
+          if (!Boolean(directions)) {
+            return (
+              <button
+                class="directions-button"
+                onclick={() => {
+                  fetchDirections(meridianMapRef.current);
+                }}
+              >
+                Get Directions
+              </button>
+            );
+          }
+          return undefined;
+        }
+
+        function RouteActions() {
+          return (
+            <div
+              style={{
+                marginTop: 20,
+                visibility: isMapUpdating ? "hidden" : "visible",
+              }}
+            >
+              <BtnStartDirections />
+              <BtnPreviouisDirections />
+              <BtnContinueDirections />
+              <BtnGetDirections />
+            </div>
+          );
+        }
+
+        function DirectionsText() {
+          if (step) {
+            const directions = step.text;
+            const arrowImage = getArrowImage(step.icon);
+            const distance = getDistanceText(step.distance);
+
+            if (directions) {
+              return (
+                <div
+                  style={{
+                    padding: 10,
+                    minHeight: 80,
+                    display: "flex",
+                    visibility: isMapUpdating ? "hidden" : "visible",
+                  }}
+                >
+                  <div>{arrowImage}</div>
+                  <div style={{ paddingLeft: 10 }}>
+                    <div style={{ fontSize: 40 }}>{distance}</div>
+                    <div style={{ color: "#ccc", paddingLeft: 5 }}>
+                      {directions}
+                    </div>
+                  </div>
+                </div>
+              );
+            } else {
+              return undefined;
+            }
+          } else {
+            return undefined;
+          }
+        }
+
+        function DirectionsDestination() {
+          return (
+            <div
+              style={{
+                lineHeight: "1.5em",
+                fontSize: 13,
+                marginBottom: 25,
+                color: "#CCC",
+              }}
+            >
+              <strong>From:</strong> Information Kiosk (First Floor)
+              <br />
+              <strong>To:</strong> Zoom Conference Room (Third Floor)
+            </div>
+          );
+        }
+
+        return (
+          <div>
+            <div class="directions-overlay">
+              <h3 style={{ fontWeight: "normal" }}>Directions Overview</h3>
+              <DirectionsDestination />
+              <DirectionsText />
+              <RouteActions />
+            </div>
+            <main class="map" id="meridian-map" ref={mapContainerRef}></main>
+          </div>
+        );
+      };
+      preact.render(<App />, document.getElementById("preact-root"));
     </script>
   </body>
 </html>

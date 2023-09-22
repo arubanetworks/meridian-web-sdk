@@ -63,6 +63,9 @@ import {
   logDeprecated,
   logError,
   requiredParam,
+  cleanQuery,
+  placemarkSearchParams,
+  debouncedPlacemarkSearch,
 } from "./util";
 
 /** @internal */
@@ -1087,6 +1090,12 @@ export class API {
   /** @internal */
   private readonly _axiosTagDetailAPI: AxiosInstance;
 
+  /** @internal */
+  private _placemarkSearchAbortController: AbortController | null;
+
+  /** @internal */
+  private _localSearchAbortController: AbortController | null;
+
   /**
    * Pass the result to `init()` or `createMap()`.
    */
@@ -1097,6 +1106,9 @@ export class API {
     this.token = options.token;
     this.environment = checkDevEnvCase(options.environment) || "production";
     this.language = options.language;
+    this._placemarkSearchAbortController = null;
+    this._localSearchAbortController = null;
+
     let acceptLanguage = {};
     if (this.language) {
       acceptLanguage = {
@@ -1300,6 +1312,136 @@ export class API {
       responseType: "blob",
     });
     return URL.createObjectURL(data);
+  }
+
+  // todos
+  // required param checks
+
+  // The API defaults to a single instance with abort and debounce (?) support.
+  // make abortcontroller var an array [searchInstanceIDs]
+  // searchAbortControllers[searchInstanceIDs]
+  // use default if a unique searchInstanceID is not provided
+  //
+
+  async #placemarkSearch(options: {
+    searchInstanceID?: string;
+    locationID: string;
+    refPoint?: string;
+    refFloorID?: string;
+    searchStr: string;
+  }): Promise<Record<string, any>[] | null> {
+    const queryStr = cleanQuery(options.searchStr);
+
+    if (this._placemarkSearchAbortController) {
+      this._placemarkSearchAbortController.abort();
+    }
+
+    if (this._localSearchAbortController) {
+      this._localSearchAbortController.abort();
+    }
+
+    if (!queryStr) {
+      return [];
+    }
+
+    this._placemarkSearchAbortController = new AbortController();
+
+    const searchParams = new URLSearchParams({
+      q: `${queryStr} AND (${placemarkSearchParams})`,
+      page_size: "100",
+    });
+
+    try {
+      const apiRequest = await this._axiosEditorAPI
+        .get(`locations/${options.locationID}/search`, {
+          signal: this._placemarkSearchAbortController.signal,
+          params: searchParams,
+        })
+        .then(async (res) => {
+          const placemarkSearchResults = res.data.results;
+
+          // Combine results with Local Search if a point and floorID are provided
+          if (
+            options.refPoint &&
+            options.refFloorID &&
+            placemarkSearchResults.length
+          ) {
+            const localSearchResults = await this.#localSearch({
+              locationID: options.locationID,
+              searchStr: queryStr,
+              point: options.refPoint,
+              mapID: options.refFloorID,
+            });
+
+            const uniqueResults: object[] = [];
+            const localSearchResultIDs = localSearchResults.map(
+              (item) => item.id
+            );
+
+            placemarkSearchResults.forEach((item: Record<string, any>) => {
+              if (!localSearchResultIDs.includes(item.id)) {
+                uniqueResults.push(item);
+              }
+            });
+
+            this._placemarkSearchAbortController = null;
+            return [...localSearchResults, ...uniqueResults];
+          }
+
+          this._placemarkSearchAbortController = null;
+          return placemarkSearchResults;
+        });
+
+      return apiRequest;
+    } catch (error: any) {
+      if (error.message === "canceled") {
+        // request was cancelled by AbortController
+        return null;
+      }
+      throw new Error(error);
+    }
+  }
+
+  debouncedPlacemarkSearchBeta = debouncedPlacemarkSearch(
+    this.#placemarkSearch.bind(this),
+    600
+  );
+
+  async #localSearch(options: {
+    locationID: string;
+    point: string;
+    mapID: string;
+    searchStr: string;
+  }): Promise<Record<string, any>[]> {
+    const queryStr = cleanQuery(options.searchStr);
+
+    if (this._localSearchAbortController) {
+      this._localSearchAbortController.abort();
+    }
+
+    if (!queryStr) {
+      return [];
+    }
+
+    this._localSearchAbortController = new AbortController();
+
+    const searchParams = new URLSearchParams({
+      q: `${queryStr} AND (${placemarkSearchParams})`,
+      limit: "10",
+      appid: options.locationID,
+      map_id: options.mapID,
+      point: options.point,
+    });
+
+    return this._axiosEditorAPI
+      .get(`search/local`, {
+        signal: this._localSearchAbortController.signal,
+        params: searchParams,
+      })
+      .then((res) => {
+        this._localSearchAbortController = null;
+        return res.data.results;
+      });
   }
 
   /**

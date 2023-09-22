@@ -37,18 +37,6 @@
         border: 0;
       }
 
-      .directions-button {
-        margin: 0;
-        font: inherit;
-        color: #282c34;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
-        border-radius: 6px;
-        cursor: pointer;
-        padding: 6px 8px;
-        border: 0;
-        font-size: 14px;
-      }
-
       .directions-overlay {
         box-shadow: 0 0 4px rgb(0 0 0 / 25%);
         border-radius: 6px;
@@ -61,6 +49,55 @@
         z-index: 2;
         width: 350px;
         padding: 20px;
+      }
+
+      .point-picker-container {
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      input.point-picker {
+        width: 100%;
+        border: none;
+        box-sizing: border-box;
+        padding: 5px;
+        font-size: 125%;
+        margin-top: 5px;
+      }
+
+      input.point-picker:focus,
+      input.point-picker:focus-within {
+        outline: none;
+      }
+
+      input.point-picker::placeholder {
+        color: #ccc;
+      }
+
+      .point-picker-results {
+        padding: 0 5px;
+        border-top: 1px solid #9fa8ae;
+        background-color: white;
+        color: #666;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        font-size: 110%;
+        line-height: 130%;
+      }
+
+      .point-picker-result {
+        display: block;
+      }
+
+      .point-edit,
+      .reset-directions {
+        font-size: 90%;
+        color: aquamarine;
+      }
+
+      .clickable {
+        text-decoration: underline;
+        cursor: pointer;
       }
 
       h3 {
@@ -79,6 +116,62 @@
 
     <script type="text/babel" id="the-code">
       window.React = { createElement: preact.h, ...preactHooks };
+
+      const defaultStartPoint = {
+        doc_id: "en/placemark/5933249679065088_5480121796132864",
+        kind: "placemark",
+        name: "Information (first floor)",
+        name_suggestions:
+          "I In Inf Info Infor Inform Informa Informat Informati Informatio Information f fi fir firs first f fl flo floo floor",
+        created: "2022-02-01T22:48:56.659000",
+        modified: "2023-10-03T01:11:34.993000",
+        entity:
+          "ahZzfm1lcmlkaWFuLWRldmVsb3BtZW50ciYLEgNNYXAYgIDwu6WIxQoMCxIJUGxhY2VtYXJrGICA8MfEhN4JDKIBEjU0MDI3NzEwNDU3NDQ2NDBfMQ",
+        id: "5933249679065088_5480121796132864",
+        type_name: "Information",
+        type_name_suggestions:
+          "I In Inf Info Infor Inform Informa Informat Informati Informatio Information",
+        x: 1204.72074468,
+        y: 1132.3125,
+        map_id: "5933249679065088",
+        is_facility: true,
+        color: "5ba68d",
+        group_id: "6003084370903040",
+        is_map_published: true,
+        is_disabled: false,
+        is_searchable: true,
+        map_name: "First Floor",
+        group_name: "Block 300",
+        custom_1: null,
+        custom_2: null,
+        custom_3: null,
+        custom_4: null,
+        description: null,
+        category_ids: null,
+        keywords: null,
+        keywords_suggestions: null,
+        type: "information",
+        language: "en",
+        label: "Information (first floor)",
+      };
+
+      const defaultEndPoint = {
+        distance: 142,
+        map_id: "5927589843304448",
+        name: "Charging Station (third floor)",
+        color: "5ba68d",
+        time: 122,
+        type_name: "Device Charging",
+        is_disabled: "false",
+        custom_4: "",
+        custom_1: "",
+        custom_2: "",
+        custom_3: "",
+        y: 1398.21723882,
+        x: 744.067917427,
+        type: "device_charging",
+        id: "5927589843304448_4587218522996736",
+      };
 
       function stepsToPolygonPoints(steps, mapID) {
         let prevPoints = [];
@@ -177,10 +270,10 @@
         if (distance && typeof distance === "number") {
           const distanceInFeet = Math.floor(distance * 3.280839895);
           return (
-            <span>
+            <div>
               {distanceInFeet + " Feet"}
               <br />
-            </span>
+            </div>
           );
         } else {
           return undefined;
@@ -231,23 +324,42 @@
         }
       }
 
+      function getPlacemarkPoint(placemark) {
+        if (placemark) {
+          const { x, y } = placemark;
+          if ((x != null) & (y != null)) {
+            return `${x},${y}`;
+          }
+          return undefined;
+        }
+        return undefined;
+      }
+
+      function getPlacemarkFloorID(placemark) {
+        if (placemark && placemark.map_id) {
+          return placemark.map_id;
+        }
+        return undefined;
+      }
+
       // React (Preact) App
       const App = (props) => {
         const mapContainerRef = React.useRef(null);
         const meridianMapRef = React.useRef(null);
 
-        const floorID = "5933249679065088";
+        const initialFloorID = "5933249679065088";
         const locationID = "5402771045744640";
 
-        const startPlacemarkID = "5933249679065088_5480121796132864";
-        const endPlacemarkID = "5927589843304448_6383031899914240";
-
-        const [api, setApi] = React.useState(null);
+        const [mapAPI, setMapAPI] = React.useState(null);
         const [directions, setDirections] = React.useState(null);
         const [stepIndex, setStepIndex] = React.useState(0);
         const [step, setStep] = React.useState(null);
-        const [currentFloorID, setCurrentFloorID] = React.useState(null);
+        const [currentFloorID, setCurrentFloorID] =
+          React.useState(initialFloorID);
         const [isMapUpdating, setIsMapUpdating] = React.useState(true);
+
+        const [startPoint, setStartPoint] = React.useState(defaultStartPoint);
+        const [endPoint, setEndPoint] = React.useState(defaultEndPoint);
 
         // API init
         React.useEffect(() => {
@@ -256,30 +368,32 @@
             token:
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
           });
-
-          setApi(api);
+          setMapAPI(api);
         }, []);
 
         // Map init
         React.useEffect(() => {
-          if (mapContainerRef.current && api) {
+          if (mapContainerRef.current && mapAPI) {
             meridianMapRef.current = MeridianSDK.createMap(
               mapContainerRef.current,
               {
-                api,
+                api: mapAPI,
                 locationID: locationID,
-                floorID,
+                floorID: initialFloorID,
                 height: "100%",
                 onLoadingStateChange: (isLoading) => {
                   setIsMapUpdating(isLoading);
                 },
+                onFloorChange: (floor) => {
+                  setCurrentFloorID(floor.id);
+                },
               }
             );
-            setCurrentFloorID(floorID);
+            setCurrentFloorID(initialFloorID);
           }
-        }, [mapContainerRef, api]);
+        }, [mapContainerRef, mapAPI]);
 
-        function updateMap({ overlays, floorID }) {
+        function updateMap({ overlays, floorID, showFloorsControl }) {
           const meridianMap = meridianMapRef.current;
           if (meridianMap) {
             meridianMap.update({
@@ -290,9 +404,7 @@
                   overlays,
                 });
               },
-              onLoadingStateChange: (isLoading) => {
-                setIsMapUpdating(isLoading);
-              },
+              showFloorsControl,
             });
             setCurrentFloorID(floorID);
           } else {
@@ -300,25 +412,27 @@
           }
         }
 
-        function fetchDirections({ meridianMap }) {
-          api
+        async function fetchDirections({ meridianMap }) {
+          return mapAPI
             .getDirections({
               locationID: locationID,
-              startFloorID: floorID,
-              startPlacemarkID: startPlacemarkID,
-              endPlacemarkID: endPlacemarkID,
+              startFloorID: startPoint.map_id,
+              startPlacemarkID: startPoint.id,
+              endPlacemarkID: endPoint.id,
             })
             .then((result) => {
-              const route = result.routes[0];
-              setDirections(route);
+              const directions = result.routes[0];
+              setDirections(directions);
               setStepIndex(0);
+              return directions;
             })
             .catch((err) => {
               console.info("Directions API error", err);
+              return undefined;
             });
         }
 
-        function displayRoute({ stepIndex: _stepIndex }) {
+        function displayRoute({ stepIndex: _stepIndex, directions }) {
           const _step = directions.steps[_stepIndex];
           if (_step) {
             setStepIndex(_stepIndex);
@@ -333,36 +447,22 @@
             updateMap({
               floorID: _step.map_id,
               overlays,
+              showFloorsControl: false,
             });
           } else {
             console.info("displayRoute() - NO next stepavailable");
           }
         }
 
-        function startDirections() {
-          displayRoute({ stepIndex: 0 });
-        }
-
-        function continueDirections() {
-          displayRoute({ stepIndex: stepIndex + 1 });
-        }
-
-        function reverseDirections() {
-          displayRoute({ stepIndex: stepIndex - 1 });
-        }
-
-        function BtnStartDirections() {
-          if (Boolean(directions) && !Boolean(step)) {
-            return (
-              <button
-                class="directions-button"
-                onclick={() => startDirections()}
-              >
-                start
-              </button>
-            );
-          }
-          return undefined;
+        function clearDirections() {
+          setDirections(null);
+          setStep(null);
+          setStepIndex(0);
+          updateMap({
+            undefined,
+            floorID: initialFloorID,
+            showFloorsControl: true,
+          });
         }
 
         function BtnContinueDirections() {
@@ -374,7 +474,9 @@
             return (
               <button
                 class="directions-button"
-                onclick={() => continueDirections()}
+                onclick={() =>
+                  displayRoute({ stepIndex: stepIndex + 1, directions })
+                }
                 style={{ float: "right" }}
               >
                 continue
@@ -388,7 +490,9 @@
           if (Boolean(directions) && Boolean(step) && stepIndex > 0) {
             return (
               <button
-                onclick={() => reverseDirections()}
+                onclick={() =>
+                  displayRoute({ stepIndex: stepIndex - 1, directions })
+                }
                 class="directions-button"
               >
                 previous
@@ -399,12 +503,15 @@
         }
 
         function BtnGetDirections() {
-          if (!Boolean(directions)) {
+          if (!Boolean(directions) && startPoint && endPoint) {
             return (
               <button
                 class="directions-button"
-                onclick={() => {
-                  fetchDirections(meridianMapRef.current);
+                onclick={async () => {
+                  const directions = await fetchDirections(
+                    meridianMapRef.current
+                  );
+                  displayRoute({ stepIndex: 0, directions });
                 }}
               >
                 Get Directions
@@ -414,7 +521,7 @@
           return undefined;
         }
 
-        function RouteActions() {
+        function DirectionsActions() {
           return (
             <div
               style={{
@@ -422,7 +529,6 @@
                 visibility: isMapUpdating ? "hidden" : "visible",
               }}
             >
-              <BtnStartDirections />
               <BtnPreviouisDirections />
               <BtnContinueDirections />
               <BtnGetDirections />
@@ -432,11 +538,11 @@
 
         function DirectionsText() {
           if (step) {
-            const directions = step.text;
+            const text = step.text;
             const arrowImage = getArrowImage(step.icon);
             const distance = getDistanceText(step.distance);
 
-            if (directions) {
+            if (text) {
               return (
                 <div
                   style={{
@@ -449,9 +555,7 @@
                   <div>{arrowImage}</div>
                   <div style={{ paddingLeft: 10 }}>
                     <div style={{ fontSize: 40 }}>{distance}</div>
-                    <div style={{ color: "#ccc", paddingLeft: 5 }}>
-                      {directions}
-                    </div>
+                    <div style={{ color: "#ccc", paddingLeft: 5 }}>{text}</div>
                   </div>
                 </div>
               );
@@ -463,30 +567,134 @@
           }
         }
 
-        function DirectionsDestination() {
+        function PointPicker(props) {
+          // const [_searchStr, _setSearchStr] = React.useState("");
+          const [searchResults, setSearchResults] = React.useState([]);
+          const [loading, setLoading] = React.useState(false);
+
+          async function searchPlacemarks(searchStr) {
+            // const api = new MeridianSDK.API({
+            //   environment: "devCloud",
+            //   token:
+            //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
+            // });
+            setLoading(true);
+            try {
+              const res = await mapAPI.debouncedPlacemarkSearchBeta({
+                locationID: props.locationID,
+                searchStr,
+                refPoint: props.refPoint,
+                refFloorID: props.refFloorID,
+              });
+              if (res) {
+                // res is null when previous call was debounced
+                setSearchResults(res);
+                setLoading(false);
+              }
+            } catch (error) {
+              console.info("searchPlacemarks API error", error);
+              setLoading(false);
+              setSearchResults([]);
+            }
+          }
+
+          if (!mapAPI || isMapUpdating) {
+            return undefined;
+          }
+
+          function renderResults() {
+            if (loading) {
+              return <div>loading ....</div>;
+            }
+            return searchResults.map((item) => {
+              return (
+                <div
+                  class="clickable point-picker-result"
+                  onClick={() => props.pointSet(item)}
+                >
+                  {item.name || item.type_name || item.label}
+                </div>
+              );
+            });
+          }
+
+          if (props.pointValue) {
+            return (
+              <div class="point-picker-container">
+                <strong>
+                  {props.pointLabel}
+                  {": "}
+                </strong>
+                <em>{props.pointValue.name} </em>
+                {!Boolean(directions) ? (
+                  <a
+                    class="clickable point-edit"
+                    onClick={() => props.pointSet(null)}
+                  >
+                    edit
+                  </a>
+                ) : undefined}
+              </div>
+            );
+          }
+
           return (
-            <div
-              style={{
-                lineHeight: "1.5em",
-                fontSize: 13,
-                marginBottom: 25,
-                color: "#CCC",
-              }}
-            >
-              <strong>From:</strong> Information Kiosk (First Floor)
-              <br />
-              <strong>To:</strong> Zoom Conference Room (Third Floor)
+            <div class="point-picker-container">
+              <strong>
+                {props.pointLabel}
+                {": "}
+              </strong>
+              <input
+                class="point-picker"
+                type="text"
+                placeholder="Search for Placemark"
+                onInput={(event) => {
+                  searchPlacemarks(event.target.value.trim());
+                }}
+              />
+              <div class="point-picker-results">{renderResults()}</div>
             </div>
           );
+        }
+
+        function LinkStartOver() {
+          if (Boolean(directions) && !isMapUpdating) {
+            return (
+              <a
+                class="clickable reset-directions"
+                style={{ float: "right" }}
+                onClick={() => clearDirections()}
+              >
+                start over
+              </a>
+            );
+          }
+          return undefined;
         }
 
         return (
           <div>
             <div class="directions-overlay">
+              <LinkStartOver />
               <h3 style={{ fontWeight: "normal" }}>Directions Overview</h3>
-              <DirectionsDestination />
+              <PointPicker
+                pointLabel="Start Point"
+                pointValue={startPoint}
+                pointSet={setStartPoint}
+                locationID={locationID}
+                refFloorID={getPlacemarkFloorID(endPoint) || currentFloorID}
+                refPoint={getPlacemarkPoint(endPoint)}
+              />
+              <PointPicker
+                pointLabel="End Point"
+                pointValue={endPoint}
+                pointSet={setEndPoint}
+                locationID={locationID}
+                refFloorID={getPlacemarkFloorID(startPoint) || currentFloorID}
+                refPoint={getPlacemarkPoint(startPoint)}
+              />
               <DirectionsText />
-              <RouteActions />
+              <DirectionsActions />
             </div>
             <main class="map" id="meridian-map" ref={mapContainerRef}></main>
           </div>

@@ -568,33 +568,58 @@
         }
 
         function PointPicker(props) {
-          // const [_searchStr, _setSearchStr] = React.useState("");
           const [searchResults, setSearchResults] = React.useState([]);
+          const [searchString, setSearchString] = React.useState("");
           const [loading, setLoading] = React.useState(false);
+          const inputRef = React.useRef(null);
+
+          React.useEffect(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+            }
+          }, [inputRef]);
 
           async function searchPlacemarks(searchStr) {
-            // const api = new MeridianSDK.API({
-            //   environment: "devCloud",
-            //   token:
-            //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
-            // });
+            /*
+             The search call below returns an array of results or `null` when
+             a request is cancelled or debounced. Cancellation happens when a
+             new request is made before the previous request finished. The
+             Debounce wait time is 6ms and the function is invoked with the last
+             arguments provided.
+             
+             Both cancelled and debounced requests will eventually resolve with
+             an array of results (possibly empty).
+             
+             Requests that throw an exception will return an empty array and
+             output a warning message to the Web console.
+
+             Placemark Search defaults to a single instance per API. In this
+             example we're simply calling search on the Map API instance.
+             This should work fine for most use cases, but if you need to make
+             multiple unique search calls simultaneously, each will need a
+             unique API instance like shown below.
+             
+             Search Widget API Instance.
+             const apiInstance1 = new MeridianSDK.API({
+               token: "<TOKEN GOES HERE>"
+             });
+             
+             Call search on apiInstance1 created above
+             const res = await apiInstance1.debouncedPlacemarkSearchBeta({...
+            */
+
             setLoading(true);
-            try {
-              const res = await mapAPI.debouncedPlacemarkSearchBeta({
-                locationID: props.locationID,
-                searchStr,
-                refPoint: props.refPoint,
-                refFloorID: props.refFloorID,
-              });
-              if (res) {
-                // res is null when previous call was debounced
-                setSearchResults(res);
-                setLoading(false);
-              }
-            } catch (error) {
-              console.info("searchPlacemarks API error", error);
+            setSearchString(searchStr);
+            const res = await mapAPI.debouncedPlacemarkSearchBeta({
+              locationID: props.locationID,
+              searchStr,
+              refPoint: props.refPoint,
+              refFloorID: props.refFloorID,
+            });
+            if (res) {
+              // see notes above
+              setSearchResults(res);
               setLoading(false);
-              setSearchResults([]);
             }
           }
 
@@ -605,6 +630,9 @@
           function renderResults() {
             if (loading) {
               return <div>loading ....</div>;
+            }
+            if (searchResults.length < 1 && searchString) {
+              return <div>no results</div>;
             }
             return searchResults.map((item) => {
               return (
@@ -646,6 +674,7 @@
               </strong>
               <input
                 class="point-picker"
+                ref={inputRef}
                 type="text"
                 placeholder="Search for Placemark"
                 onInput={(event) => {

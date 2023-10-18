@@ -581,31 +581,35 @@
 
           async function searchPlacemarks(searchStr) {
             /*
-             The search call below returns an array of results or `null` when
-             a request is cancelled or debounced. Cancellation happens when a
-             new request is made before the previous request finished. The
-             Debounce wait time is 6ms and the function is invoked with the last
-             arguments provided.
-             
-             Both cancelled and debounced requests will eventually resolve with
-             an array of results (possibly empty).
-             
-             Requests that throw an exception will return an empty array and
-             output a warning message to the Web console.
+            The search call below returns an array of results or `null` when
+            a request is cancelled or debounced. Cancellation happens when a
+            new request is made before the previous request finished. The
+            Debounce wait time is 6ms and the function is invoked with the last
+            arguments provided.
 
-             Placemark Search defaults to a single instance per API. In this
-             example we're simply calling search on the Map API instance.
-             This should work fine for most use cases, but if you need to make
-             multiple unique search calls simultaneously, each will need a
-             unique API instance like shown below.
-             
-             Search Widget API Instance.
-             const apiInstance1 = new MeridianSDK.API({
-               token: "<TOKEN GOES HERE>"
-             });
-             
-             Call search on apiInstance1 created above
-             const res = await apiInstance1.debouncedPlacemarkSearchBeta({...
+            Both cancelled and debounced requests will eventually resolve with
+            an array of results (possibly empty).
+
+            Requests that throw an exception will return an empty array and
+            output a warning message to the Web console.
+
+            Local/Nearby Search integration. If both refFloorID AND refPoint are
+            provided, a second API call will be made and the results will be ordered
+            where placemarks closest to the refPoint (x/y) will appear first.
+
+            Placemark Search defaults to a single instance per API. In this
+            example we're simply calling search on the Map API instance.
+            This should work fine for most use cases, but if you need to make
+            multiple unique search calls simultaneously, each will need a
+            unique API instance like shown below.
+
+            Search Widget API Instance.
+            const apiInstance1 = new MeridianSDK.API({
+              token: "<TOKEN GOES HERE>"
+            });
+
+            Call search on apiInstance1 created above
+            const res = await apiInstance1.debouncedPlacemarkSearchBeta({...
             */
 
             setLoading(true);
@@ -613,6 +617,7 @@
             const res = await mapAPI.debouncedPlacemarkSearchBeta({
               locationID: props.locationID,
               searchStr,
+              // see above regarding the following two arguements
               refPoint: props.refPoint,
               refFloorID: props.refFloorID,
             });
@@ -653,7 +658,11 @@
                   {props.pointLabel}
                   {": "}
                 </strong>
-                <em>{props.pointValue.name} </em>
+                <em>
+                  {props.pointValue.name ||
+                    props.pointValue.type_name ||
+                    props.pointValue.label}{" "}
+                </em>
                 {!Boolean(directions) ? (
                   <a
                     class="clickable point-edit"

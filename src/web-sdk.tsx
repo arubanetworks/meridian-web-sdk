@@ -1335,21 +1335,24 @@ export class API {
   }
 
   /**
-   * [async] Returns an array of results or `null` when a request is cancelled
-   * or debounced. Cancellation happens when a new request is made before the
-   * previous request finished. The Debounce wait time is 6ms and the function
-   * is invoked with the last arguments provided.
+   * [async] Returns an array of results or `null` when a request is cancelled.
+   * Cancellation happens when a new request is made before the previous
+   * request completes.
    *
-   * Both cancelled and debounced requests will eventually resolve with an array
-   * of results (possibly empty).
+   * Cancelled requests will eventually resolve with an array of results
+   * (possibly empty).
    *
    * Requests that throw an exception will return an empty array and output a
    * warning message to the Web console.
    *
+   * Local/Nearby Search integration. If both refFloorID AND refPoint are
+   * provided, a second API call will be made and the results will be ordered
+   * where placemarks closest to the refPoint (x/y) will appear first.
+   *
    * Placemark Search defaults to a single instance per API. This should work
    * fine for most use cases, but if you need to make multiple unique search
    * calls simultaneously, each will need a unique API instance like shown below.
-   * @example
+   *
    * ```ts
    * // Search Widget One API Instance.
    * const apiInstance1 = new MeridianSDK.API({
@@ -1361,10 +1364,6 @@ export class API {
    *   token: "<TOKEN GOES HERE>"
    * });
    * ```
-   * Local/Nearby Search integration. If both refFloorID AND refPoint are
-   * provided, a second API call will be made and the results will be ordered
-   * where placemarks closest to the refPoint (x/y) will appear first.
-   *
    */
 
   async #placemarkSearch(
@@ -1448,10 +1447,45 @@ export class API {
     }
   }
 
+  /**
+   *
+   * @experimental
+   * [async] Returns an array of results or `null` when a request is cancelled
+   * or debounced. Cancellation happens when a new request is made before the
+   * previous request completes. The Debounce wait time is 6ms and the function
+   * is invoked with the last arguments provided.
+   *
+   * Both cancelled and debounced requests will eventually resolve with an array
+   * of results (possibly empty).
+   *
+   * Requests that throw an exception will return an empty array and output a
+   * warning message to the Web console.
+   *
+   * Local/Nearby Search integration. If both refFloorID AND refPoint are
+   * provided, a second API call will be made and the results will be ordered
+   * where placemarks closest to the refPoint (x/y) will appear first.
+   *
+   * Placemark Search defaults to a single instance per API. This should work
+   * fine for most use cases, but if you need to make multiple unique search
+   * calls simultaneously, each will need a unique API instance like shown below.
+   * ```ts
+   * // Search Widget One API Instance.
+   * const apiInstance1 = new MeridianSDK.API({
+   *   token: "<TOKEN GOES HERE>"
+   * });
+   *
+   * // Search Widget Two API Instance
+   * const apiInstance2 = new MeridianSDK.API({
+   *   token: "<TOKEN GOES HERE>"
+   * });
+   * ```
+   */
   debouncedPlacemarkSearchBeta = debouncedPlacemarkSearch(
     this.#placemarkSearch.bind(this),
     600
-  );
+  ) as (
+    options: placemarkSearchOptions
+  ) => Promise<Record<string, any>[] | null>;
 
   async #localSearch(options: {
     locationID: string;

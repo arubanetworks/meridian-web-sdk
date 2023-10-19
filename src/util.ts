@@ -87,3 +87,60 @@ export function isEnvOptions(env: string): env is EnvOptions {
     env === "devCloud"
   );
 }
+
+export function cleanQuery(query: string) {
+  return (
+    query
+      // Strip dashes ("-") out completely since they fail queries for names that have them
+      .replace(/-/g, " ")
+      // Strip colons (":") out completely so full mac searches will succeed
+      .replace(/:/g, " ")
+      // Strip " and ( and ) since they will cause search errors
+      .replace(/[\\)"(]/g, " ")
+      // Clean up double white space made by the previous line
+      .replace(/[ ]{2,}/g, " ")
+      // Trim leading and trailing whitespace search errors
+      .trim()
+  );
+}
+
+export const placemarkSearchParams =
+  "is_map_published=true AND kind:placemark AND NOT is_searchable=false AND NOT type=exclusion_area";
+
+export function debouncedPlacemarkSearch(func: any, wait = 0) {
+  let timerId: any,
+    latestResolve: null | ((value: unknown) => void),
+    shouldCancel: boolean;
+
+  return function (...args: []) {
+    if (!latestResolve) {
+      return new Promise((resolve) => {
+        latestResolve = resolve;
+        timerId = setTimeout(
+          invokeFn.bind(debouncedPlacemarkSearch, args, resolve),
+          wait
+        );
+      });
+    }
+
+    shouldCancel = true;
+    return new Promise((resolve) => {
+      latestResolve = resolve;
+      timerId = setTimeout(
+        invokeFn.bind(debouncedPlacemarkSearch, args, resolve),
+        wait
+      );
+    });
+  };
+
+  function invokeFn(args: [], resolve: (value: unknown) => void) {
+    if (shouldCancel && resolve !== latestResolve) {
+      resolve(null);
+    } else {
+      func.apply(debouncedPlacemarkSearch, args).then(resolve).catch(resolve);
+      shouldCancel = false;
+      clearTimeout(timerId);
+      timerId = latestResolve = null;
+    }
+  }
+}

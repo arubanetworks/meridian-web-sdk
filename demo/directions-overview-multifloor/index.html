@@ -37,18 +37,6 @@
         border: 0;
       }
 
-      .directions-button {
-        margin: 0;
-        font: inherit;
-        color: #282c34;
-        box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
-        border-radius: 6px;
-        cursor: pointer;
-        padding: 6px 8px;
-        border: 0;
-        font-size: 14px;
-      }
-
       .directions-overlay {
         box-shadow: 0 0 4px rgb(0 0 0 / 25%);
         border-radius: 6px;
@@ -61,6 +49,55 @@
         z-index: 2;
         width: 350px;
         padding: 20px;
+      }
+
+      .point-picker-container {
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      input.point-picker {
+        width: 100%;
+        border: none;
+        box-sizing: border-box;
+        padding: 5px;
+        font-size: 125%;
+        margin-top: 5px;
+      }
+
+      input.point-picker:focus,
+      input.point-picker:focus-within {
+        outline: none;
+      }
+
+      input.point-picker::placeholder {
+        color: #ccc;
+      }
+
+      .point-picker-results {
+        padding: 0 5px;
+        border-top: 1px solid #9fa8ae;
+        background-color: white;
+        color: #666;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        font-size: 110%;
+        line-height: 130%;
+      }
+
+      .point-picker-result {
+        display: block;
+      }
+
+      .point-edit,
+      .reset-directions {
+        font-size: 90%;
+        color: aquamarine;
+      }
+
+      .clickable {
+        text-decoration: underline;
+        cursor: pointer;
       }
 
       h3 {
@@ -79,6 +116,24 @@
 
     <script type="text/babel" id="the-code">
       window.React = { createElement: preact.h, ...preactHooks };
+
+      // Default start point (optional)
+      const defaultStartPoint = {
+        id: "5933249679065088_5480121796132864",
+        name: "Information (first floor)",
+        map_id: "5933249679065088",
+        x: 1204.72074468,
+        y: 1132.3125,
+      };
+
+      // Default end point (optional)
+      const defaultEndPoint = {
+        id: "5927589843304448_4587218522996736",
+        name: "Charging Station (third floor)",
+        map_id: "5927589843304448",
+        y: 1398.21723882,
+        x: 744.067917427,
+      };
 
       function stepsToPolygonPoints(steps, mapID) {
         let prevPoints = [];
@@ -177,10 +232,10 @@
         if (distance && typeof distance === "number") {
           const distanceInFeet = Math.floor(distance * 3.280839895);
           return (
-            <span>
+            <div>
               {distanceInFeet + " Feet"}
               <br />
-            </span>
+            </div>
           );
         } else {
           return undefined;
@@ -231,23 +286,43 @@
         }
       }
 
+      function getPlacemarkPoint(placemark) {
+        if (placemark) {
+          const { x, y } = placemark;
+          if ((x != null) & (y != null)) {
+            return `${x},${y}`;
+          }
+          return undefined;
+        }
+        return undefined;
+      }
+
+      function getPlacemarkFloorID(placemark) {
+        if (placemark && placemark.map_id) {
+          return placemark.map_id;
+        }
+        return undefined;
+      }
+
       // React (Preact) App
       const App = (props) => {
         const mapContainerRef = React.useRef(null);
         const meridianMapRef = React.useRef(null);
 
-        const floorID = "5933249679065088";
+        const initialFloorID = "5933249679065088";
         const locationID = "5402771045744640";
 
-        const startPlacemarkID = "5933249679065088_5480121796132864";
-        const endPlacemarkID = "5927589843304448_6383031899914240";
-
-        const [api, setApi] = React.useState(null);
+        const [mapAPI, setMapAPI] = React.useState(null);
         const [directions, setDirections] = React.useState(null);
         const [stepIndex, setStepIndex] = React.useState(0);
         const [step, setStep] = React.useState(null);
-        const [currentFloorID, setCurrentFloorID] = React.useState(null);
+        const [currentFloorID, setCurrentFloorID] =
+          React.useState(initialFloorID);
         const [isMapUpdating, setIsMapUpdating] = React.useState(true);
+
+        // both start and end points use an optional default
+        const [startPoint, setStartPoint] = React.useState(defaultStartPoint);
+        const [endPoint, setEndPoint] = React.useState(defaultEndPoint);
 
         // API init
         React.useEffect(() => {
@@ -256,30 +331,32 @@
             token:
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
           });
-
-          setApi(api);
+          setMapAPI(api);
         }, []);
 
         // Map init
         React.useEffect(() => {
-          if (mapContainerRef.current && api) {
+          if (mapContainerRef.current && mapAPI) {
             meridianMapRef.current = MeridianSDK.createMap(
               mapContainerRef.current,
               {
-                api,
+                api: mapAPI,
                 locationID: locationID,
-                floorID,
+                floorID: initialFloorID,
                 height: "100%",
                 onLoadingStateChange: (isLoading) => {
                   setIsMapUpdating(isLoading);
                 },
+                onFloorChange: (floor) => {
+                  setCurrentFloorID(floor.id);
+                },
               }
             );
-            setCurrentFloorID(floorID);
+            setCurrentFloorID(initialFloorID);
           }
-        }, [mapContainerRef, api]);
+        }, [mapContainerRef, mapAPI]);
 
-        function updateMap({ overlays, floorID }) {
+        function updateMap({ overlays, floorID, showFloorsControl }) {
           const meridianMap = meridianMapRef.current;
           if (meridianMap) {
             meridianMap.update({
@@ -290,9 +367,7 @@
                   overlays,
                 });
               },
-              onLoadingStateChange: (isLoading) => {
-                setIsMapUpdating(isLoading);
-              },
+              showFloorsControl,
             });
             setCurrentFloorID(floorID);
           } else {
@@ -300,25 +375,27 @@
           }
         }
 
-        function fetchDirections({ meridianMap }) {
-          api
+        async function fetchDirections({ meridianMap }) {
+          return mapAPI
             .getDirections({
               locationID: locationID,
-              startFloorID: floorID,
-              startPlacemarkID: startPlacemarkID,
-              endPlacemarkID: endPlacemarkID,
+              startFloorID: startPoint.map_id,
+              startPlacemarkID: startPoint.id,
+              endPlacemarkID: endPoint.id,
             })
             .then((result) => {
-              const route = result.routes[0];
-              setDirections(route);
+              const directions = result.routes[0];
+              setDirections(directions);
               setStepIndex(0);
+              return directions;
             })
             .catch((err) => {
               console.info("Directions API error", err);
+              return undefined;
             });
         }
 
-        function displayRoute({ stepIndex: _stepIndex }) {
+        function displayRoute({ stepIndex: _stepIndex, directions }) {
           const _step = directions.steps[_stepIndex];
           if (_step) {
             setStepIndex(_stepIndex);
@@ -333,36 +410,22 @@
             updateMap({
               floorID: _step.map_id,
               overlays,
+              showFloorsControl: false,
             });
           } else {
             console.info("displayRoute() - NO next stepavailable");
           }
         }
 
-        function startDirections() {
-          displayRoute({ stepIndex: 0 });
-        }
-
-        function continueDirections() {
-          displayRoute({ stepIndex: stepIndex + 1 });
-        }
-
-        function reverseDirections() {
-          displayRoute({ stepIndex: stepIndex - 1 });
-        }
-
-        function BtnStartDirections() {
-          if (Boolean(directions) && !Boolean(step)) {
-            return (
-              <button
-                class="directions-button"
-                onclick={() => startDirections()}
-              >
-                start
-              </button>
-            );
-          }
-          return undefined;
+        function clearDirections() {
+          setDirections(null);
+          setStep(null);
+          setStepIndex(0);
+          updateMap({
+            undefined,
+            floorID: initialFloorID,
+            showFloorsControl: true,
+          });
         }
 
         function BtnContinueDirections() {
@@ -374,7 +437,9 @@
             return (
               <button
                 class="directions-button"
-                onclick={() => continueDirections()}
+                onclick={() =>
+                  displayRoute({ stepIndex: stepIndex + 1, directions })
+                }
                 style={{ float: "right" }}
               >
                 continue
@@ -388,7 +453,9 @@
           if (Boolean(directions) && Boolean(step) && stepIndex > 0) {
             return (
               <button
-                onclick={() => reverseDirections()}
+                onclick={() =>
+                  displayRoute({ stepIndex: stepIndex - 1, directions })
+                }
                 class="directions-button"
               >
                 previous
@@ -399,12 +466,15 @@
         }
 
         function BtnGetDirections() {
-          if (!Boolean(directions)) {
+          if (!Boolean(directions) && startPoint && endPoint) {
             return (
               <button
                 class="directions-button"
-                onclick={() => {
-                  fetchDirections(meridianMapRef.current);
+                onclick={async () => {
+                  const directions = await fetchDirections(
+                    meridianMapRef.current
+                  );
+                  displayRoute({ stepIndex: 0, directions });
                 }}
               >
                 Get Directions
@@ -414,7 +484,7 @@
           return undefined;
         }
 
-        function RouteActions() {
+        function DirectionsActions() {
           return (
             <div
               style={{
@@ -422,7 +492,6 @@
                 visibility: isMapUpdating ? "hidden" : "visible",
               }}
             >
-              <BtnStartDirections />
               <BtnPreviouisDirections />
               <BtnContinueDirections />
               <BtnGetDirections />
@@ -432,11 +501,11 @@
 
         function DirectionsText() {
           if (step) {
-            const directions = step.text;
+            const text = step.text;
             const arrowImage = getArrowImage(step.icon);
             const distance = getDistanceText(step.distance);
 
-            if (directions) {
+            if (text) {
               return (
                 <div
                   style={{
@@ -449,9 +518,7 @@
                   <div>{arrowImage}</div>
                   <div style={{ paddingLeft: 10 }}>
                     <div style={{ fontSize: 40 }}>{distance}</div>
-                    <div style={{ color: "#ccc", paddingLeft: 5 }}>
-                      {directions}
-                    </div>
+                    <div style={{ color: "#ccc", paddingLeft: 5 }}>{text}</div>
                   </div>
                 </div>
               );
@@ -463,30 +530,172 @@
           }
         }
 
-        function DirectionsDestination() {
+        function PointPicker(props) {
+          const [searchResults, setSearchResults] = React.useState([]);
+          const [searchString, setSearchString] = React.useState("");
+          const [loading, setLoading] = React.useState(false);
+          const inputRef = React.useRef(null);
+
+          React.useEffect(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+            }
+          }, [inputRef]);
+
+          async function searchPlacemarks(searchStr) {
+            /*
+            The search call below returns an array of results or `null` when
+            a request is cancelled or debounced. Cancellation happens when a
+            new request is made before the previous request finished. The
+            Debounce wait time is 6ms and the function is invoked with the last
+            arguments provided.
+
+            Both cancelled and debounced requests will eventually resolve with
+            an array of results (possibly empty).
+
+            Requests that throw an exception will return an empty array and
+            output a warning message to the Web console.
+
+            Local/Nearby Search integration. If both refFloorID AND refPoint are
+            provided, a second API call will be made and the results will be ordered
+            where placemarks closest to the refPoint (x/y) will appear first.
+
+            Placemark Search defaults to a single instance per API. In this
+            example we're simply calling search on the Map API instance.
+            This should work fine for most use cases, but if you need to make
+            multiple unique search calls simultaneously, each will need a
+            unique API instance like shown below.
+
+            Search Widget API Instance.
+            const apiInstance1 = new MeridianSDK.API({
+              token: "<TOKEN GOES HERE>"
+            });
+
+            Call search on apiInstance1 created above
+            const res = await apiInstance1.debouncedPlacemarkSearchBeta({...
+            */
+
+            setLoading(true);
+            setSearchString(searchStr);
+            const res = await mapAPI.debouncedPlacemarkSearchBeta({
+              locationID: props.locationID,
+              searchStr,
+              // see above regarding the following two arguements
+              refPoint: props.refPoint,
+              refFloorID: props.refFloorID,
+            });
+            if (res) {
+              // see notes above
+              setSearchResults(res);
+              setLoading(false);
+            }
+          }
+
+          if (!mapAPI || isMapUpdating) {
+            return undefined;
+          }
+
+          function renderResults() {
+            if (loading) {
+              return <div>loading ....</div>;
+            }
+            if (searchResults.length < 1 && searchString) {
+              return <div>no results</div>;
+            }
+            return searchResults.map((item) => {
+              return (
+                <div
+                  class="clickable point-picker-result"
+                  onClick={() => props.pointSet(item)}
+                >
+                  {item.name || item.type_name || item.label}
+                </div>
+              );
+            });
+          }
+
+          if (props.pointValue) {
+            return (
+              <div class="point-picker-container">
+                <strong>
+                  {props.pointLabel}
+                  {": "}
+                </strong>
+                <em>
+                  {props.pointValue.name ||
+                    props.pointValue.type_name ||
+                    props.pointValue.label}{" "}
+                </em>
+                {!Boolean(directions) ? (
+                  <a
+                    class="clickable point-edit"
+                    onClick={() => props.pointSet(null)}
+                  >
+                    edit
+                  </a>
+                ) : undefined}
+              </div>
+            );
+          }
+
           return (
-            <div
-              style={{
-                lineHeight: "1.5em",
-                fontSize: 13,
-                marginBottom: 25,
-                color: "#CCC",
-              }}
-            >
-              <strong>From:</strong> Information Kiosk (First Floor)
-              <br />
-              <strong>To:</strong> Zoom Conference Room (Third Floor)
+            <div class="point-picker-container">
+              <strong>
+                {props.pointLabel}
+                {": "}
+              </strong>
+              <input
+                class="point-picker"
+                ref={inputRef}
+                type="text"
+                placeholder="Search for Placemark"
+                onInput={(event) => {
+                  searchPlacemarks(event.target.value.trim());
+                }}
+              />
+              <div class="point-picker-results">{renderResults()}</div>
             </div>
           );
+        }
+
+        function LinkStartOver() {
+          if (Boolean(directions) && !isMapUpdating) {
+            return (
+              <a
+                class="clickable reset-directions"
+                style={{ float: "right" }}
+                onClick={() => clearDirections()}
+              >
+                start over
+              </a>
+            );
+          }
+          return undefined;
         }
 
         return (
           <div>
             <div class="directions-overlay">
+              <LinkStartOver />
               <h3 style={{ fontWeight: "normal" }}>Directions Overview</h3>
-              <DirectionsDestination />
+              <PointPicker
+                pointLabel="Start Point"
+                pointValue={startPoint}
+                pointSet={setStartPoint}
+                locationID={locationID}
+                refFloorID={getPlacemarkFloorID(endPoint) || currentFloorID}
+                refPoint={getPlacemarkPoint(endPoint)}
+              />
+              <PointPicker
+                pointLabel="End Point"
+                pointValue={endPoint}
+                pointSet={setEndPoint}
+                locationID={locationID}
+                refFloorID={getPlacemarkFloorID(startPoint) || currentFloorID}
+                refPoint={getPlacemarkPoint(startPoint)}
+              />
               <DirectionsText />
-              <RouteActions />
+              <DirectionsActions />
             </div>
             <main class="map" id="meridian-map" ref={mapContainerRef}></main>
           </div>

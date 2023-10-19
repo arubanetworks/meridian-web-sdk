@@ -52,8 +52,8 @@
   },
   "devDependencies": {
     "@types/d3-zoom": "^3.0.6",
-    "@types/webpack-env": "^1.18.1",
-    "@types/ws": "^8.5.4",
+    "@types/webpack-env": "^1.18.3",
+    "@types/ws": "^8.5.8",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "cypress": "^12.17.1",

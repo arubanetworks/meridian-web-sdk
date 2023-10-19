@@ -36,9 +36,9 @@
   "dependencies": {
     "@emotion/css": "^11.11.2",
     "@types/d3-transition": "^3.0.6",
-    "@types/lodash.debounce": "^4.0.7",
-    "@types/lodash.groupby": "^4.6.7",
-    "@types/lodash.throttle": "^4.1.7",
+    "@types/lodash.debounce": "^4.0.8",
+    "@types/lodash.groupby": "^4.6.8",
+    "@types/lodash.throttle": "^4.1.8",
     "axios": "^1.5.0",
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",

@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
 - Add Placemark search to the Directions Overview (multi-floor) demo (BETA).
   Search can be used for selecting both start and destintion endpoints.
+
+### Security
+
+- Dependency Updates and Security Audit
 
 ## [1.18.1] - 2023-09-21
 

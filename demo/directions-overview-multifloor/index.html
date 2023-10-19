@@ -117,60 +117,22 @@
     <script type="text/babel" id="the-code">
       window.React = { createElement: preact.h, ...preactHooks };
 
+      // Default start point (optional)
       const defaultStartPoint = {
-        doc_id: "en/placemark/5933249679065088_5480121796132864",
-        kind: "placemark",
-        name: "Information (first floor)",
-        name_suggestions:
-          "I In Inf Info Infor Inform Informa Informat Informati Informatio Information f fi fir firs first f fl flo floo floor",
-        created: "2022-02-01T22:48:56.659000",
-        modified: "2023-10-03T01:11:34.993000",
-        entity:
-          "ahZzfm1lcmlkaWFuLWRldmVsb3BtZW50ciYLEgNNYXAYgIDwu6WIxQoMCxIJUGxhY2VtYXJrGICA8MfEhN4JDKIBEjU0MDI3NzEwNDU3NDQ2NDBfMQ",
         id: "5933249679065088_5480121796132864",
-        type_name: "Information",
-        type_name_suggestions:
-          "I In Inf Info Infor Inform Informa Informat Informati Informatio Information",
+        name: "Information (first floor)",
+        map_id: "5933249679065088",
         x: 1204.72074468,
         y: 1132.3125,
-        map_id: "5933249679065088",
-        is_facility: true,
-        color: "5ba68d",
-        group_id: "6003084370903040",
-        is_map_published: true,
-        is_disabled: false,
-        is_searchable: true,
-        map_name: "First Floor",
-        group_name: "Block 300",
-        custom_1: null,
-        custom_2: null,
-        custom_3: null,
-        custom_4: null,
-        description: null,
-        category_ids: null,
-        keywords: null,
-        keywords_suggestions: null,
-        type: "information",
-        language: "en",
-        label: "Information (first floor)",
       };
 
+      // Default end point (optional)
       const defaultEndPoint = {
-        distance: 142,
-        map_id: "5927589843304448",
+        id: "5927589843304448_4587218522996736",
         name: "Charging Station (third floor)",
-        color: "5ba68d",
-        time: 122,
-        type_name: "Device Charging",
-        is_disabled: "false",
-        custom_4: "",
-        custom_1: "",
-        custom_2: "",
-        custom_3: "",
+        map_id: "5927589843304448",
         y: 1398.21723882,
         x: 744.067917427,
-        type: "device_charging",
-        id: "5927589843304448_4587218522996736",
       };
 
       function stepsToPolygonPoints(steps, mapID) {
@@ -358,6 +320,7 @@
           React.useState(initialFloorID);
         const [isMapUpdating, setIsMapUpdating] = React.useState(true);
 
+        // both start and end points use an optional default
         const [startPoint, setStartPoint] = React.useState(defaultStartPoint);
         const [endPoint, setEndPoint] = React.useState(defaultEndPoint);
 

@@ -40,7 +40,7 @@
     "@types/lodash.groupby": "^4.6.8",
     "@types/lodash.throttle": "^4.1.8",
     "@types/ws": "^8.5.4",
-    "axios": "^1.5.1",
+    "axios": "^1.6.0",
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",
     "d3-zoom": "^3.0.0",

@@ -810,11 +810,11 @@ export interface MeridianMap {
    */
   update: (updatedOptions: Partial<CreateMapOptions>) => void;
   /**
-   * Zoom to the default zoom level and pan to the default position.
+   * Set zoom to the default level and pan to the default position.
    */
   zoomToDefault: () => void;
   /**
-   * Zoom to a given x, y coordinate and scale to a given zoom factor.
+   * Pan to x/y coordinate and scale to a given zoom factor.
    */
   zoomToPoint: (options: { x: number; y: number; scale: number }) => void;
   /**
@@ -1557,9 +1557,6 @@ export class API {
    *   floorID: floorID,
    *   resourceIDs: ["1218"],
    *   resourceType: "ZONE",
-   *   onInitialTags: (tags) => {
-   *     console.log("tags", tags);
-   *   },
    *   onTagUpdate: (tag) => {
    *     console.log("update", tag);
    *   }

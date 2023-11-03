@@ -1008,6 +1008,8 @@ export interface OpenStreamOptions {
   onException?: (error: Error) => void;
   /** Called when the stream closes */
   onClose?: () => void;
+  /** Called when the stream opens */
+  onOpen?: () => void;
 }
 
 /**
@@ -1575,6 +1577,7 @@ export class API {
     onTagUpdate = () => {},
     onException = () => {},
     onClose = () => {},
+    onOpen = () => {},
   }: OpenStreamOptions): Stream {
     if (resourceType === "FLOOR" && floorID && !resourceIDs) {
       resourceIDs = [floorID];
@@ -1639,6 +1642,7 @@ export class API {
       if (isClosed) {
         return;
       }
+      onOpen();
       ws.send(JSON.stringify(request));
     });
     ws.addEventListener("message", (event) => {

@@ -1,7 +1,6 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  video: false,
   e2e: {
     baseUrl: "http://localhost:3011",
     setupNodeEvents(_on, _config) {

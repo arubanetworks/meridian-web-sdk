@@ -126,7 +126,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
           }
         }
       },
-      onClose: () => {
+      onException: () => {
         this.props.toggleLoadingSpinner({ show: false, source: "tags" });
       },
     });
@@ -151,6 +151,7 @@ export default class TagLayer extends Component<TagLayerProps, TagLayerState> {
   disconnect(floorID: string) {
     const connection = this.state.connectionsByFloorID[floorID];
     if (connection) {
+      this.props.toggleLoadingSpinner({ show: false, source: "tags" });
       connection.close();
     }
     this.tagUpdates = {};

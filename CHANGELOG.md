@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fire Extinguisher Placemark icon
 
+### Fixed
+
+- Loading spinner issue related to changing floors and disconnecting where the
+  spinner didn't accurately reflect the tag loading state (web socket connection)
+
 ## [1.20.0] - 2023-11-03
 
 ### Added

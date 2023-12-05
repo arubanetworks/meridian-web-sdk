@@ -1636,6 +1636,9 @@ export class API {
           asyncClientCall(onException, err);
           close();
         }
+      } else {
+        // for resource types other than "FLOOR" AND "LOCATION"
+        asyncClientCall(onInitialTags, []);
       }
     };
     ws.addEventListener("open", () => {

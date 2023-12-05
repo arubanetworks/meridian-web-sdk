@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Loading spinner issue related to changing floors and disconnecting where the
   spinner didn't accurately reflect the tag loading state (web socket connection)
 
+### Changed
+
+- Default Tag image was changed to a PNG to improve performance.
+
 ## [1.20.0] - 2023-11-03
 
 ### Added

@@ -6,7 +6,7 @@
  */
 
 import { FunctionComponent, h } from "preact";
-import defaultTagImageURL from "../files/tags/generic.svg";
+import defaultTagImageURL from "../files/tags/generic.png";
 import { css, cx, mixins } from "./style";
 import { getTagLabels } from "./util";
 import { TagData } from "./web-sdk";

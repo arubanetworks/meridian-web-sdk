@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Floor switcher UI - added new CreateMap option `floorsControlSortDescending`
+  to change floor sort order to descending. Defaults to `false`.
+
 ## [1.21.1] - 2023-12-06
 
 ### Added
@@ -14,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Loading spinner issue related to changing floors and disconnecting where the
-  spinner didn't accurately reflect the tag loading state (web socket connection)
+  spinner didn't accurately reflect the tag loading state (web socket connection).
 
 ### Changed
 
@@ -24,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- API.openStream, onOpen function that's called when the stream opens
+- API.openStream, onOpen function that's called when the stream opens.
 - Demo: `centerMap`
 - Demo: `zoomToDefault`
 - Demo: `zoomToPoint`

@@ -702,11 +702,19 @@ export interface CreateMapOptions {
   showFloorsControl?: boolean;
   /** Should we show the Search UI control? Defaults to `true`. */
   showSearchControl?: boolean;
-  /** Set to `false` to disable loading tags (default: `true`) */
+  /**
+   * Sort the floors in the switcher UI control descending in order.
+   * Defaults to `false` (ascending in order).
+   */
+  floorsControlSortDescending?: boolean;
+  /**
+   * Set to `false` to disable loading tags. Defaults to `true`.
+   * This is required for locations without a TAGS SKU license
+   */
   loadTags?: boolean;
   /** Options related to tags. */
   tags?: CreateMapTagsOptions;
-  /** Set to `false` to disable loading placemarks (default: `true`) */
+  /** Set to `false` to disable loading placemarks. Defaults to `true`. */
   loadPlacemarks?: boolean;
   /** Options related to placemarks. */
   placemarks?: CreateMapPlacemarksOptions;
@@ -761,17 +769,11 @@ export interface CreateMapOptions {
     allPlacemarks: PlacemarkData[];
     filteredPlacemarks: PlacemarkData[];
   }) => void;
-  /**
-   * Called after the floors list is updated.
-   */
+  /** Called after the floors list is updated. */
   onFloorsUpdate?: (floors: FloorData[]) => void;
-  /**
-   * Called after the floor is changed.
-   */
+  /** Called after the floor is changed. */
   onFloorChange?: (floor: FloorData) => void;
-  /**
-   * Called when the loading state changes.
-   */
+  /** Called when the loading state changes. */
   onLoadingStateChange?: (isLoading: boolean) => void;
   /**
    * Called when the map has been destroyed, either by manually calling

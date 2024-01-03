@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Floor switcher UI - added new CreateMap option `floorsControlSortDescending`
-  to change floor sort order to descending. Defaults to `false`.
+- Added new Create Map option `floorsControlSortDescending`
+  to change Floor Switcher UI sort order to descending. Defaults to `false`.
 
 ## [1.21.1] - 2023-12-06
 

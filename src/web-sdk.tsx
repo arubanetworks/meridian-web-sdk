@@ -703,7 +703,7 @@ export interface CreateMapOptions {
   /** Should we show the Search UI control? Defaults to `true`. */
   showSearchControl?: boolean;
   /**
-   * Sort the floors in the switcher UI control descending in order.
+   * Sort the floors in the Floor Switcher UI control descending in order.
    * Defaults to `false` (ascending in order).
    */
   floorsControlSortDescending?: boolean;

@@ -83,6 +83,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
     loadPlacemarks: true,
     showSearchControl: true,
     showFloorsControl: true,
+    floorsControlSortDescending: false,
     shouldMapPanZoom: () => true,
     width: "100%",
     height: "400px",
@@ -741,6 +742,7 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
         <FloorOverlay
           currentFloorID={floorID}
           floors={floors}
+          sortDescending={Boolean(this.props.floorsControlSortDescending)}
           toggleFloorOverlay={this.toggleFloorOverlay}
           selectFloorByID={this.selectFloorByID}
           language={api.language}

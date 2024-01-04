@@ -18,6 +18,7 @@ export interface FloorOverlayProps {
   toggleFloorOverlay: (options: { open: boolean }) => void;
   currentFloorID: string;
   floors: FloorData[];
+  sortDescending: boolean;
   selectFloorByID: (floorID: string) => void;
   language?: LanguageCodes;
 }
@@ -66,6 +67,9 @@ class FloorOverlay extends Component<FloorOverlayProps> {
 
     for (const name of buildingNames) {
       groupedFloors[name].sort((a, b) => Math.sign(a.level - b.level));
+      if (this.props.sortDescending) {
+        groupedFloors[name].reverse();
+      }
     }
 
     return (

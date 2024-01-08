@@ -35,11 +35,11 @@
   "homepage": "https://github.com/arubanetworks/meridian-web-sdk#readme",
   "dependencies": {
     "@emotion/css": "^11.11.2",
-    "@types/d3-transition": "^3.0.6",
-    "@types/lodash.debounce": "^4.0.8",
-    "@types/lodash.groupby": "^4.6.8",
-    "@types/lodash.throttle": "^4.1.8",
-    "@types/ws": "^8.5.4",
+    "@types/d3-transition": "^3.0.8",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/lodash.groupby": "^4.6.9",
+    "@types/lodash.throttle": "^4.1.9",
+    "@types/ws": "^8.5.10",
     "axios": "^1.6.0",
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",
@@ -52,7 +52,7 @@
     "reconnecting-websocket": "^4.4.0"
   },
   "devDependencies": {
-    "@types/d3-zoom": "^3.0.6",
+    "@types/d3-zoom": "^3.0.8",
     "@types/webpack-env": "^1.18.3",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",

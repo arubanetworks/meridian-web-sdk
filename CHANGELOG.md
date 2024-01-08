@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Security
+
+- Security Audit and Dependency Updates
+
 ### Added
 
 - Added new Create Map option `floorsControlSortDescending`

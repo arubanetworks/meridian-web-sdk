@@ -37,15 +37,21 @@
     <script src="../meridian-sdk.js"></script>
     <script type="module" id="the-code">
       // ---^^^ SDK setup ^^^---
-      const myApi = new MeridianSDK.API({
-        environment: "production",
+      const devCloudAPI = new MeridianSDK.API({
+        environment: "devCloud",
         token:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjczMDQ4OTQ0LCJ2YWx1ZSI6Ijg1NmNkY2MyYWUxZTRlMTcyZGJkNjdhMzgzMmE4Yzg3ZDllNjE4MzgifQ.SvEnRxw_ERabYwnCSTf5z0TJ5r1Mylacqv54wlg4D_o",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
       });
 
-      const newSocket = myApi.testGrpc({
-        locationID: "5103333125914624",
-        floorID: "4656010235084800",
+      const stagingAPI = new MeridianSDK.API({
+        environment: "staging",
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNzAxMzgzMzc3LCJ2YWx1ZSI6ImY0NjljN2ZkYjE4NGE3MmViYTg3YTUyM2I2Nzg0NzQ4ZWRlMmYxNWEifQ.FEcVNpQp3vqjSCGE6jUQMvqcCVLJ0Ds_22bZZBs0x9c",
+      });
+
+      const newSocket = stagingAPI.testGrpc({
+        locationID: "5402771045744640",
+        floorID: "5933249679065088",
         // onInitialTags: function (tags) {
         //   console.log("onInitialTags", tags);
         // },

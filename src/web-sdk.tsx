@@ -51,6 +51,13 @@
  */
 
 import axios, { AxiosInstance } from "axios";
+import { createChannel, createClient } from "nice-grpc-web";
+import {
+  AssetRequest,
+  AssetRequest_ResourceType,
+  TrackingClient,
+  TrackingDefinition,
+} from "../compiled_proto/server";
 import path from "path";
 import { h, render } from "preact";
 import ReconnectingWebSocket from "reconnecting-websocket";
@@ -67,6 +74,20 @@ import {
   placemarkSearchParams,
   debouncedPlacemarkSearch,
 } from "./util";
+
+/** @internal */
+function streamResourceType(resourceType: string): AssetRequest_ResourceType {
+  return (
+    {
+      LOCATION: 0,
+      TAG: 1,
+      FLOOR: 2,
+      LABEL: 3,
+      ZONE: 4,
+      UNRECOGNIZED: -1,
+    }[resourceType] || 2
+  );
+}
 
 /** @internal */
 const placemarkFiles = require.context("../files/placemarks", false, /\.svg$/);
@@ -1687,6 +1708,57 @@ export class API {
     loadInitialTags();
     return { close };
   }
+
+  async testGrpc({
+    locationID,
+    floorID,
+    resourceIDs = [floorID as string],
+    resourceType = "FLOOR",
+  }: OpenStreamOptions) {
+    if (!locationID) {
+      requiredParam("openStream", "locationID");
+    }
+    if (!floorID) {
+      requiredParam("openStream", "floorID");
+    }
+
+    const stream_request = {
+      assetRequests: [
+        {
+          resourceType: streamResourceType(resourceType),
+          locationId: locationID,
+          resourceIds: resourceIDs,
+        },
+      ] as AssetRequest[],
+    };
+
+    // eslint-disable-next-line no-console
+    console.info("stream_request", stream_request);
+
+    const url = envToTagTrackerGrpcURL[this.environment];
+    const channel = createChannel(`${url}`);
+    const client: TrackingClient = createClient(TrackingDefinition, channel);
+
+    // trackAssets
+
+    try {
+      for await (const response of client.trackAssets(stream_request)) {
+        // eslint-disable-next-line no-console
+        console.info("response", response);
+      }
+    } catch (error: unknown) {
+      // eslint-disable-next-line no-console
+      console.info("error", error);
+    }
+
+    // getAllAssets
+    const response = await client.getAllAssets({
+      locationId: locationID,
+      floorId: floorID,
+    });
+    // eslint-disable-next-line no-console
+    console.info(response);
+  }
 }
 
 /** @internal */
@@ -1739,6 +1811,15 @@ const envToEditorRestURL = {
   production: "https://edit.meridianapps.com/api",
   eu: "https://edit-eu.meridianapps.com/api",
   staging: "https://staging-edit.meridianapps.com/api",
+} as const;
+
+/** @internal */
+const envToTagTrackerGrpcURL = {
+  development: "http://localhost:8091/streams/v1/track/assets",
+  devCloud: "https://dev-tags.meridianapps.com/streams/v1/track/assets",
+  production: "https://tags.meridianapps.com/streams/v1/track/assets",
+  eu: "https://tags-eu.meridianapps.com/streams/v1/track/assets",
+  staging: "https://staging-tags.meridianapps.com/streams/v1/track/assets",
 } as const;
 
 /**

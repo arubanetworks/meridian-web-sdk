@@ -51,7 +51,7 @@
  */
 
 import axios, { AxiosInstance } from "axios";
-import { createChannel, createClient } from "nice-grpc-web";
+import { Metadata, createChannel, createClient } from "nice-grpc-web";
 import {
   AssetRequest,
   AssetRequest_ResourceType,
@@ -1712,8 +1712,8 @@ export class API {
   async testGrpc({
     locationID,
     floorID,
-    resourceIDs = [floorID as string],
-    resourceType = "FLOOR",
+    resourceIDs = [locationID as string],
+    resourceType = "LOCATION",
   }: OpenStreamOptions) {
     if (!locationID) {
       requiredParam("openStream", "locationID");
@@ -1742,7 +1742,9 @@ export class API {
     // trackAssets
 
     try {
-      for await (const response of client.trackAssets(stream_request)) {
+      for await (const response of client.trackAssets(stream_request, {
+        metadata: Metadata({ Authorization: `Token ${this.token}` }),
+      })) {
         // eslint-disable-next-line no-console
         console.info("response", response);
       }
@@ -1752,10 +1754,15 @@ export class API {
     }
 
     // getAllAssets
-    const response = await client.getAllAssets({
-      locationId: locationID,
-      floorId: floorID,
-    });
+    const response = await client.getAllAssets(
+      {
+        locationId: locationID,
+        floorId: floorID,
+      },
+      {
+        metadata: Metadata({ Authorization: `Token ${this.token}` }),
+      }
+    );
     // eslint-disable-next-line no-console
     console.info(response);
   }
@@ -1816,10 +1823,12 @@ const envToEditorRestURL = {
 /** @internal */
 const envToTagTrackerGrpcURL = {
   development: "http://localhost:8091/streams/v1/track/assets",
-  devCloud: "https://dev-tags.meridianapps.com/streams/v1/track/assets",
+  // devCloud: "https://dev-tags.meridianapps.com/streams/v1/track/assets",
+  devCloud: "https://34.122.114.50:10000",
   production: "https://tags.meridianapps.com/streams/v1/track/assets",
   eu: "https://tags-eu.meridianapps.com/streams/v1/track/assets",
-  staging: "https://staging-tags.meridianapps.com/streams/v1/track/assets",
+  // staging: "https://staging-tags.meridianapps.com/streams/v1/track/assets",
+  staging: "https://34.122.114.50:10000",
 } as const;
 
 /**

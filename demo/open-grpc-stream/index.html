@@ -49,12 +49,23 @@
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNzAxMzgzMzc3LCJ2YWx1ZSI6ImY0NjljN2ZkYjE4NGE3MmViYTg3YTUyM2I2Nzg0NzQ4ZWRlMmYxNWEifQ.FEcVNpQp3vqjSCGE6jUQMvqcCVLJ0Ds_22bZZBs0x9c",
       });
 
-      console.info("stagingAPI", stagingAPI);
+      const staging2API = new MeridianSDK.API({
+        environment: "staging",
+        token:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsIjo2Mjc0MTQxNDY5NjcxNDI0LCJ0IjoxNjk2MzU5Mjg2fQ.v_fixY5R7Oi-jq7-jUMGn0TVdGGWpKrYQfC_LkRTk7w",
+      });
 
-      devCloudAPI.testGrpc({
-        locationID: "5402771045744640",
+      // console.info("stagingAPI", stagingAPI);
+
+      staging2API.testGrpc({
+        locationID: "6274141469671424",
         floorID: "5933249679065088",
       });
+
+      // stagingAPI.testGrpc({
+      //   locationID: "5402771045744640",
+      //   floorID: "5933249679065088",
+      // });
     </script>
   </body>
 </html>

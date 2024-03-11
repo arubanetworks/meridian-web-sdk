@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html data-fake-api="false">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Location Viewer | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <style>
+      .map {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        max-width: 100%;
+        border: 0;
+      }
+
+      .form {
+        padding: 10px;
+      }
+
+      .form input,
+      .form button {
+        display: block;
+        margin-bottom: 16px;
+        font-family: inherit;
+        font-size: 24px;
+        padding: 8px 16px;
+      }
+
+      .form input:focus,
+      .form button:focus {
+        outline: 0;
+        box-shadow: 0 0 0 2px white, 0 0 0 4px black;
+      }
+
+      .form input {
+        width: 100%;
+        border: 2px solid #ccc;
+      }
+
+      .form {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .form button {
+        margin-top: 32px;
+        border: 0;
+        border-radius: 4px;
+        background: hsl(146, 57%, 35%);
+        color: white;
+      }
+
+      .form button:hover {
+        background: hsl(146, 57%, 28%);
+      }
+
+      .form label {
+        display: block;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 2px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form action="" method="POST" id="map-form" class="form">
+      <label for="environment">Environment</label>
+      <input type="text" id="environment" />
+      <label for="token">Token</label>
+      <input type="text" id="token" />
+      <label for="location-id">Location ID</label>
+      <input type="text" id="location-id" />
+      <label for="floor-id">Floor ID</label>
+      <input type="text" id="floor-id" />
+      <button>Create map</button>
+    </form>
+    <div class="map" id="meridian-map" style="display: none"></div>
+
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      // Load last used form values
+      $("#environment").val(localStorage.LAST_ENVIRONMENT || "production");
+      $("#token").val(localStorage.LAST_TOKEN || "");
+      $("#location-id").val(localStorage.LAST_LOCATION_ID || "");
+      $("#floor-id").val(localStorage.LAST_FLOOR_ID || "");
+
+      // Add form submit handler
+      $("#map-form").on("submit", (event) => {
+        event.preventDefault();
+
+        // Show the map
+        $("#map-form").hide();
+        $("#meridian-map").show();
+
+        // Gather the form values
+        const environment = $("#environment").val();
+        const token = $("#token").val();
+        const locationID = $("#location-id").val();
+        const floorID = $("#floor-id").val();
+
+        // Save the form values for next page load
+        localStorage.LAST_ENVIRONMENT = environment;
+        localStorage.LAST_TOKEN = token;
+        localStorage.LAST_LOCATION_ID = locationID;
+        localStorage.LAST_FLOOR_ID = floorID;
+
+        // Create the map
+        const api = new MeridianSDK.API({
+          environment: environment,
+          token: token,
+        });
+        const meridianMap = MeridianSDK.createMap(
+          document.getElementById("meridian-map"),
+          {
+            api,
+            locationID: locationID,
+            floorID: floorID,
+            height: "100%",
+          }
+        );
+
+        Object.assign(window, { meridianMap });
+      });
+    </script>
+  </body>
+</html>

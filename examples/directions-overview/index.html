@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html data-fake-api="false">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>[BETA] Directions Overview (Single Floor) | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <script src="https://unpkg.com/preact@10.15.1/dist/preact.umd.js"></script>
+    <script src="https://unpkg.com/preact@10.15.1/hooks/dist/hooks.umd.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .map {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        max-width: 100%;
+        border: 0;
+      }
+
+      .directions-button {
+        margin: 0;
+        font: inherit;
+        color: #282c34;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 6px 8px;
+        border: 0;
+        font-size: 14px;
+      }
+
+      .directions-overlay {
+        box-shadow: 0 0 4px rgb(0 0 0 / 25%);
+        border-radius: 6px;
+        background: #2e2e2e;
+        color: #fafafa;
+        position: absolute;
+        margin: 0;
+        left: 15px;
+        top: 15px;
+        z-index: 2;
+        width: 350px;
+        padding: 20px;
+      }
+
+      h3 {
+        margin-top: 0px;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <div id="preact-root" />
+    </div>
+
+    <script src="../meridian-sdk.js"></script>
+
+    <script type="text/babel" id="the-code">
+      window.React = { createElement: preact.h, ...preactHooks };
+
+      function stepsToPolygonPoints(steps, mapID) {
+        let prevPoints = [];
+        let points = steps
+          .filter((step) => step.map_id === mapID)
+          .flatMap((step) => {
+            let newPoints = step.points.split(",").map(Number);
+            if (
+              newPoints &&
+              newPoints.length > 1 &&
+              prevPoints.slice(-2).join() === newPoints.slice(0, 2).join()
+            ) {
+              newPoints.splice(0, 2);
+            }
+            prevPoints = newPoints;
+            return newPoints;
+          });
+        return points;
+      }
+
+      function stepsToShape(steps, mapID) {
+        let prevPoints = [];
+        let shape = steps
+          .filter((step) => step.map_id === mapID)
+          .flatMap((step) => {
+            let newPoints = step.points.split(",").map(Number);
+            if (
+              newPoints &&
+              newPoints.length > 1 &&
+              prevPoints.slice(-2).join() === newPoints.slice(0, 2).join()
+            ) {
+              newPoints.splice(0, 2);
+            }
+            prevPoints = newPoints;
+            return newPoints;
+          });
+        shape = shape.join(", ");
+        return "M " + shape;
+      }
+
+      function generateRouteOverlays({ floorID, directions }) {
+        const polylinePoints = stepsToPolygonPoints(directions.steps, floorID);
+        const fullPathShape = stepsToShape(directions.steps, floorID);
+
+        const overlays = [
+          // full route highlight
+          {
+            type: "polyline",
+            points: polylinePoints,
+            stroke: "yellow",
+            strokeOpacity: ".5",
+            strokeWidth: 8,
+            strokeLineJoin: "round",
+            strokeLineCap: "round",
+          },
+
+          // full route animatation
+          {
+            type: "path",
+            id: "mypath",
+            shape: fullPathShape,
+            stroke: "blue",
+            strokeOpacity: ".5",
+            strokeDasharray: "50",
+            strokeDashoffset: "250",
+            animate: {
+              attributeName: "stroke-dashoffset",
+              from: "250",
+              to: "50",
+              dur: "2s",
+              repeatCount: "indefinite",
+            },
+          },
+        ];
+        return overlays;
+      }
+
+      // React (Preact) App
+      const App = (props) => {
+        const mapContainerRef = React.useRef(null);
+        const meridianMapRef = React.useRef(null);
+
+        const floorID = "5928450816475136";
+        const locationID = "5402771045744640";
+
+        const startPlacemarkID = "5928450816475136_5368476738519040";
+        const endPlacemarkID = "5928450816475136_5927650140618752";
+
+        const [api, setApi] = React.useState(null);
+        const [directions, setDirections] = React.useState(null);
+
+        // API init
+        React.useEffect(() => {
+          const api = new MeridianSDK.API({
+            environment: "devCloud",
+            token:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0IjoxNjQzNzU2Mjg1LCJ2YWx1ZSI6ImQzZDUxNGM2NzhhZjNkYjg5NTRjZTE5ZDFlNDNmYmFlMjIzNThkMjAifQ.lqqeYKKBTI5mdAJ_xh813vM4CtMh9vwRWr-ST0sMVFA",
+          });
+
+          setApi(api);
+        }, []);
+
+        // Map init
+        React.useEffect(() => {
+          if (mapContainerRef.current && api) {
+            meridianMapRef.current = MeridianSDK.createMap(
+              mapContainerRef.current,
+              {
+                api,
+                locationID: locationID,
+                floorID,
+                height: "100%",
+                showFloorsControl: false,
+                showSearchControl: false,
+              }
+            );
+          }
+        }, [mapContainerRef, api]);
+
+        function updateMap({ overlays }) {
+          const meridianMap = meridianMapRef.current;
+          if (meridianMap) {
+            meridianMap.update({
+              overlays: overlays,
+            });
+          } else {
+            console.info("!meridianMap");
+          }
+        }
+
+        function fetchDirections({ meridianMap }) {
+          api
+            .getDirections({
+              locationID: locationID,
+              startFloorID: floorID,
+              startPlacemarkID: startPlacemarkID,
+              endPlacemarkID: endPlacemarkID,
+            })
+            .then((result) => {
+              const route = result.routes[0];
+              setDirections(route);
+              displayRoute({ directions: route });
+            })
+            .catch((err) => {
+              console.info("Directions API error", err);
+            });
+        }
+
+        function displayRoute({ directions }) {
+          if (directions) {
+            const overlays = generateRouteOverlays({
+              floorID: floorID,
+              directions: directions,
+            });
+            updateMap({
+              overlays,
+            });
+          } else {
+            console.info("displayRoute() - NO directions stepavailable");
+          }
+        }
+
+        function RouteActions() {
+          return (
+            <div
+              style={{
+                marginTop: 20,
+                display: Boolean(directions) ? "none" : "block",
+              }}
+            >
+              <button
+                class="directions-button"
+                onclick={() => {
+                  fetchDirections(meridianMapRef.current);
+                }}
+              >
+                Get Directions
+              </button>
+            </div>
+          );
+        }
+
+        function DirectionsText() {
+          if (Boolean(directions)) {
+            if (directions) {
+              return (
+                <div
+                  style={{
+                    padding: 10,
+                    minHeight: 80,
+                    display: "flex",
+                  }}
+                >
+                  <div>
+                    <img src="directions-arrived.png" height="80px" />
+                  </div>
+                  <div style={{ paddingLeft: 10 }}>
+                    <div
+                      style={{ color: "#ccc", paddingLeft: 5, paddingTop: 20 }}
+                    >
+                      Follow the route to your destination.
+                    </div>
+                  </div>
+                </div>
+              );
+            } else {
+              return undefined;
+            }
+          } else {
+            return undefined;
+          }
+        }
+
+        function DirectionsDestination() {
+          return (
+            <div
+              style={{
+                lineHeight: "1.5em",
+                fontSize: 14,
+                marginBottom: 20,
+                color: "#CCC",
+              }}
+            >
+              <strong>From:</strong> Customer Service (Second Floor)
+              <br />
+              <strong>To:</strong> Help Kiosk (Second Floor)
+            </div>
+          );
+        }
+
+        return (
+          <div>
+            <div class="directions-overlay">
+              <h3 style={{ fontWeight: "normal" }}>Directions Overview</h3>
+              <DirectionsDestination />
+              <DirectionsText />
+              <RouteActions />
+            </div>
+            <main class="map" id="meridian-map" ref={mapContainerRef}></main>
+          </div>
+        );
+      };
+      preact.render(<App />, document.getElementById("preact-root"));
+    </script>
+  </body>
+</html>

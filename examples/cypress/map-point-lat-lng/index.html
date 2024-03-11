@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Map Point to Lat/Lng | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .map {
+        max-width: 800px;
+        margin: auto;
+        border: 1px solid #ccc;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="map" id="meridian-map"></div>
+    <script src="../../meridian-sdk.js"></script>
+    <script type="module">
+      import { mockAPI } from "../utils/mock-api.js";
+
+      const locationID = "5198682008846336";
+      const floorID = "5755685136498688";
+
+      const api = mockAPI;
+      const meridianMap = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          api: mockAPI,
+          locationID: locationID,
+          floorID: floorID,
+          overlays: [],
+          annotations: [
+            {
+              type: "point",
+              x: 0,
+              y: 0,
+            },
+          ],
+        }
+      );
+      const floorData = await await api.fetchFloorData(locationID, floorID);
+
+      const xyToLatLng = MeridianSDK.mapPointToLatLng(floorData, {
+        x: 5269.126531688274,
+        y: 3824.493588695426,
+      });
+
+      console.log(xyToLatLng);
+
+      const latLngToXy = MeridianSDK.latLngToMapPoint(floorData, xyToLatLng);
+
+      setTimeout(() => {
+        meridianMap.update({
+          annotations: [
+            {
+              type: "point",
+              x: latLngToXy.x,
+              y: latLngToXy.y,
+              size: 32,
+              backgroundColor: "red",
+              backgroundImage: MeridianSDK.placemarkIconURL("generic"),
+              title: "test",
+            },
+          ],
+        });
+      }, 100);
+
+      Object.assign(window, { meridianMap });
+    </script>
+  </body>
+</html>

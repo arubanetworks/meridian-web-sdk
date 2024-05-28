@@ -12,7 +12,7 @@ language: node_js
 os: linux
 dist: focal
 node_js:
-  - 18
+  - 20
 cache:
   npm: true
 before_install:

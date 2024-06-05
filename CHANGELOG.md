@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- CI, deploy update "on" value for node_js to 20
 - Security Audit and Dependency Updates
 
 ## [1.22.1] - 2024-03-11

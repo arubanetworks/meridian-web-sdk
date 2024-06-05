@@ -5,16 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.22.3] - 2024-05-29
+## [1.22.2] - 2024-06-05
 
 ### Security
 
-- Security Audit and Dependency Updates
-
-## [1.22.2] - 2024-05-17
-
-### Security
-
+- CI, deploy update "on" value for node_js to 20
 - Security Audit and Dependency Updates
 
 ## [1.22.1] - 2024-03-11

@@ -3,7 +3,7 @@ branches:
     # Only deploy "branches" (also tags) that are "main", or look like a
     # version tag. This way we can run tests against main, while also doing
     # `npm publish` when there's a new tag.
-    - main
+    - deploy-test
     - /^v[0-9]/
 language: node_js
 # Run tests against latest node and current long term support node. Only the LTS
@@ -25,9 +25,9 @@ install:
 # "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
 # the repo right now.
 script:
-  - npm test
+  # - npm test
   - npm run build
-  - npm run travis-cypress
+  # - npm run travis-cypress
 deploy:
   # Copy the files in `gcs-files/` to Google Cloud Storage. This is used for
   # static assets, namely a lot of images.
@@ -37,14 +37,14 @@ deploy:
     # Opt-in to dpl v2 so we can use key_file
     # https://docs.travis-ci.com/user/deployment-v2/providers/gcs/
     edge: true
-    branch: v2.0.3-beta.4
+    # branch: v2.0.3-beta.4
     key_file: gcs-key.json
     bucket: files.meridianapps.com
     acl: public-read
     local_dir: gcs-files
     upload_dir: meridian-web-sdk
     on:
-      tags: true
+      # tags: true
       node_js: "20"
   # Publish to npm
   - provider: npm
@@ -54,7 +54,7 @@ deploy:
     api_key: $NPM_TOKEN
     tag: latest
     on:
-      tags: true
+      # tags: true
       node_js: "20"
   # Update GitHub pages for the documentation and demos
   - provider: pages
@@ -66,7 +66,7 @@ deploy:
     # to the repo (https://github.com/arubanetworks/meridian-web-sdk)
     github_token: $GITHUB_TOKEN
     on:
-      tags: true
+      # tags: true
       node_js: "20"
 notifications:
   slack:

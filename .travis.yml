@@ -45,6 +45,7 @@ deploy:
     upload_dir: meridian-web-sdk
     on:
       # tags: true
+      branch: deploy-test
       node_js: "20"
   # Publish to npm
   - provider: npm
@@ -55,6 +56,7 @@ deploy:
     tag: latest
     on:
       # tags: true
+      branch: deploy-test
       node_js: "20"
   # Update GitHub pages for the documentation and demos
   - provider: pages
@@ -67,6 +69,7 @@ deploy:
     github_token: $GITHUB_TOKEN
     on:
       # tags: true
+      branch: deploy-test
       node_js: "20"
 notifications:
   slack:

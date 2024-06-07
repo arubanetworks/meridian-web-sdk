@@ -37,7 +37,7 @@ deploy:
     # Opt-in to dpl v2 so we can use key_file
     # https://docs.travis-ci.com/user/deployment-v2/providers/gcs/
     edge: true
-    # branch: v2.0.3-beta.4
+    branch: v2.0.3-beta.4
     key_file: gcs-key.json
     bucket: files.meridianapps.com
     acl: public-read

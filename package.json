@@ -39,7 +39,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.groupby": "^4.6.9",
     "@types/lodash.throttle": "^4.1.9",
-    "@types/ws": "^8.5.10",
+    "@types/ws": "^8.5.11",
     "axios": "^1.7.2",
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",
@@ -47,7 +47,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.groupby": "^4.6.0",
     "lodash.throttle": "^4.1.1",
-    "preact": "^10.22.0",
+    "preact": "^10.22.1",
     "prop-types": "^15.8.1",
     "reconnecting-websocket": "^4.4.0"
   },

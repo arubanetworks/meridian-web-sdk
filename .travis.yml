@@ -16,8 +16,8 @@ node_js:
 cache:
   npm: true
 before_install:
-  - npm i -g npm@9.8.1
-  - rvm install 3.0.0
+  # - npm i -g npm@9.8.1
+  # - rvm install 3.0.0
   # Decrypt Google Cloud Storage credentials
   - openssl aes-256-cbc -K $encrypted_9888058ce616_key -iv $encrypted_9888058ce616_iv -in gcs-key.json.enc -out gcs-key.json -d
 install:
@@ -36,8 +36,8 @@ deploy:
     skip_cleanup: true
     # Opt-in to dpl v2 so we can use key_file
     # https://docs.travis-ci.com/user/deployment-v2/providers/gcs/
-    edge: true
-    branch: v2.0.3-beta.4
+    edge:
+      branch: release_20240617
     key_file: gcs-key.json
     bucket: files.meridianapps.com
     acl: public-read
@@ -45,7 +45,6 @@ deploy:
     upload_dir: meridian-web-sdk
     on:
       tags: true
-      node_js: "20"
   # Publish to npm
   - provider: npm
     cleanup: false
@@ -55,7 +54,6 @@ deploy:
     tag: latest
     on:
       tags: true
-      node_js: "20"
   # Update GitHub pages for the documentation and demos
   - provider: pages
     cleanup: false
@@ -67,7 +65,6 @@ deploy:
     github_token: $GITHUB_TOKEN
     on:
       tags: true
-      node_js: "20"
 notifications:
   slack:
     secure: GbrgufadOx658Sd0JZirSSRELPio4D4cKu3jBq1VUl5IDZObQlVO2of1Yz2hL/RghCkXt2OmwXyW9AFheawfvaItqi12heJ1nOySQMYgUswD1GsBiIKm6ClnSjqLgf+Rut8VErqoM8N/M1EBPW420M4S9JPhJAs7gBzCUzM1PnYO3wO8GD+hi93cPjvtw+roAZvqTdhXuIMrGI1qN0NkItWv5O67qkOsXFpF5JRWP8tyU/m5mOoerc1+NIjjc6qjTZtsjHAMolkK/iobEqEDJZgM/izJmSNyJO8KXu8x6EE5bylnv41a4twcw46D6cSsGLjrvHM4AdC1lZyVeplKFDbpWUknYTwg4LywNVPmYAzJF0KOQt9ifIvM/rk7RNRnesevmNCUahKKxZQ7LemneLiRn3RdPkPGCqKdUBBiOdpHoJcrwCKgeSa3Y+BXFNIzVnvzLCCL2cqNeF0/icBGbOhRFMmbsONKNndm8QVwXLL/TUO7z+DwvBGirreEUv38sEcTF/moM+PVNHP21qkvNbZuazDXVpL8XbBctn2Vl8ICcxy/lOW1k7XP/KA6FiKErV4lDV9VaKdLwI7qsCzCzSvPlhQykG6poEby+hDxeytKqnK/2E9yQjy6WpOs0H/54u94Zstxdt7U08Kj5U/gDRHE10zcSJP+4ZgNpIB8eEE=

@@ -17,7 +17,6 @@ cache:
   npm: true
 before_install:
   # - npm i -g npm@9.8.1
-  # - rvm install 3.0.0
   # Decrypt Google Cloud Storage credentials
   - openssl aes-256-cbc -K $encrypted_9888058ce616_key -iv $encrypted_9888058ce616_iv -in gcs-key.json.enc -out gcs-key.json -d
 install:
@@ -32,10 +31,9 @@ deploy:
   # Copy the files in `gcs-files/` to Google Cloud Storage. This is used for
   # static assets, namely a lot of images.
   - provider: gcs
-    cleanup: false
-    skip_cleanup: true
-    # Opt-in to dpl v2 so we can use key_file
-    # https://docs.travis-ci.com/user/deployment-v2/providers/gcs/
+    # Opting in to dpl v2 (edge) which will be released soon
+    # Branch is specified because the main branch is failing.
+    # https://docs.travis-ci.com/user/deployment-v2
     edge:
       branch: release_20240617
     key_file: gcs-key.json
@@ -47,22 +45,28 @@ deploy:
       tags: true
   # Publish to npm
   - provider: npm
-    cleanup: false
-    skip_cleanup: true
+    # Opting in to dpl v2 (edge) which will be released soon
+    # Branch is specified because the main branch is failing.
+    # https://docs.travis-ci.com/user/deployment-v2
+    edge:
+      branch: release_20240617
     email: $NPM_EMAIL
-    api_key: $NPM_TOKEN
+    api_token: $NPM_TOKEN
     tag: latest
     on:
       tags: true
   # Update GitHub pages for the documentation and demos
-  - provider: pages
-    cleanup: false
-    skip_cleanup: true
+  - provider: pages:git
+    # Opting in to dpl v2 (edge) which will be released soon
+    # Branch is specified because the main branch is failing.
+    # https://docs.travis-ci.com/user/deployment-v2
+    edge:
+      branch: release_20240617
     local_dir: docs
     # This is a Personal Access Token with the permission `repo_public`
     # (https://github.com/settings/tokens) for a user with read+write permission
     # to the repo (https://github.com/arubanetworks/meridian-web-sdk)
-    github_token: $GITHUB_TOKEN
+    token: $GITHUB_TOKEN
     on:
       tags: true
 notifications:

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Security
+
+- Security Audit and Dependency Updates
+
 ### Changed
 
 - Updated travis config to use dpl V2 which will become the default soon.

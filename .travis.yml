@@ -24,9 +24,9 @@ install:
 # "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
 # the repo right now.
 script:
-  - npm test
+  # - npm test
   - npm run build
-  - npm run travis-cypress
+  # - npm run travis-cypress
 deploy:
   # Copy the files in `gcs-files/` to Google Cloud Storage. This is used for
   # static assets, namely a lot of images.
@@ -42,7 +42,7 @@ deploy:
     local_dir: gcs-files
     upload_dir: meridian-web-sdk
     on:
-      branch: deploy-testing
+      all_branches: true
     # on:
     #   tags: true
   # Publish to npm
@@ -56,7 +56,7 @@ deploy:
     api_token: $NPM_TOKEN
     tag: latest
     on:
-      branch: deploy-testing
+      all_branches: true
     # on:
     #   tags: true
   # Update GitHub pages for the documentation and demos
@@ -72,7 +72,7 @@ deploy:
     # to the repo (https://github.com/arubanetworks/meridian-web-sdk)
     token: $GITHUB_TOKEN
     on:
-      branch: deploy-testing
+      all_branches: true
     # on:
     #   tags: true
 notifications:

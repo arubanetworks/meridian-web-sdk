@@ -41,6 +41,8 @@ deploy:
     acl: public-read
     local_dir: gcs-files
     upload_dir: meridian-web-sdk
+    on:
+      all_branches: true
     # on:
     #   tags: true
   # Publish to npm
@@ -53,6 +55,8 @@ deploy:
     email: $NPM_EMAIL
     api_token: $NPM_TOKEN
     tag: latest
+    on:
+      all_branches: true
     # on:
     #   tags: true
   # Update GitHub pages for the documentation and demos
@@ -67,6 +71,8 @@ deploy:
     # (https://github.com/settings/tokens) for a user with read+write permission
     # to the repo (https://github.com/arubanetworks/meridian-web-sdk)
     token: $GITHUB_TOKEN
+    on:
+      all_branches: true
     # on:
     #   tags: true
 notifications:

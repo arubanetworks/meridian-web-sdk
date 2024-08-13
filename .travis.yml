@@ -14,7 +14,7 @@ dist: focal
 node_js:
   - 20
 cache:
-  npm: true
+  npm: false
 before_install:
   # - npm i -g npm@9.8.1
   # Decrypt Google Cloud Storage credentials

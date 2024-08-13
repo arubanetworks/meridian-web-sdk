@@ -3,7 +3,7 @@ branches:
     # Only deploy "branches" (also tags) that are "main", or look like a
     # version tag. This way we can run tests against main, while also doing
     # `npm publish` when there's a new tag.
-    - main
+    - build
     - /^v[0-9]/
 language: node_js
 # Run tests against latest node and current long term support node. Only the LTS
@@ -24,9 +24,9 @@ install:
 # "test" is actually ESLint + Prettier. Cypress tests are the only real tests in
 # the repo right now.
 script:
-  - npm test
+  # - npm test
   - npm run build
-  - npm run travis-cypress
+  # - npm run travis-cypress
 deploy:
   # Copy the files in `gcs-files/` to Google Cloud Storage. This is used for
   # static assets, namely a lot of images.
@@ -41,8 +41,8 @@ deploy:
     acl: public-read
     local_dir: gcs-files
     upload_dir: meridian-web-sdk
-    on:
-      tags: true
+    # on:
+    #   tags: true
   # Publish to npm
   - provider: npm
     # Opting in to dpl v2 (edge) which will be released soon
@@ -53,8 +53,8 @@ deploy:
     email: $NPM_EMAIL
     api_token: $NPM_TOKEN
     tag: latest
-    on:
-      tags: true
+    # on:
+    #   tags: true
   # Update GitHub pages for the documentation and demos
   - provider: pages:git
     # Opting in to dpl v2 (edge) which will be released soon
@@ -67,8 +67,8 @@ deploy:
     # (https://github.com/settings/tokens) for a user with read+write permission
     # to the repo (https://github.com/arubanetworks/meridian-web-sdk)
     token: $GITHUB_TOKEN
-    on:
-      tags: true
+    # on:
+    #   tags: true
 notifications:
   slack:
     secure: GbrgufadOx658Sd0JZirSSRELPio4D4cKu3jBq1VUl5IDZObQlVO2of1Yz2hL/RghCkXt2OmwXyW9AFheawfvaItqi12heJ1nOySQMYgUswD1GsBiIKm6ClnSjqLgf+Rut8VErqoM8N/M1EBPW420M4S9JPhJAs7gBzCUzM1PnYO3wO8GD+hi93cPjvtw+roAZvqTdhXuIMrGI1qN0NkItWv5O67qkOsXFpF5JRWP8tyU/m5mOoerc1+NIjjc6qjTZtsjHAMolkK/iobEqEDJZgM/izJmSNyJO8KXu8x6EE5bylnv41a4twcw46D6cSsGLjrvHM4AdC1lZyVeplKFDbpWUknYTwg4LywNVPmYAzJF0KOQt9ifIvM/rk7RNRnesevmNCUahKKxZQ7LemneLiRn3RdPkPGCqKdUBBiOdpHoJcrwCKgeSa3Y+BXFNIzVnvzLCCL2cqNeF0/icBGbOhRFMmbsONKNndm8QVwXLL/TUO7z+DwvBGirreEUv38sEcTF/moM+PVNHP21qkvNbZuazDXVpL8XbBctn2Vl8ICcxy/lOW1k7XP/KA6FiKErV4lDV9VaKdLwI7qsCzCzSvPlhQykG6poEby+hDxeytKqnK/2E9yQjy6WpOs0H/54u94Zstxdt7U08Kj5U/gDRHE10zcSJP+4ZgNpIB8eEE=

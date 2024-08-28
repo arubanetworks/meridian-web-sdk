@@ -1,10 +1,3 @@
-branches:
-  only:
-    # Only deploy "branches" (also tags) that are "main", or look like a
-    # version tag. This way we can run tests against main, while also doing
-    # `npm publish` when there's a new tag.
-    - main
-    - /^v[0-9]/
 language: node_js
 # Run tests against latest node and current long term support node. Only the LTS
 # job is used for `npm publish`, since we don't want to publish the package

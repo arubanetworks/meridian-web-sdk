@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated travis config to use dpl V2 which will become the default soon.
+- Remove Meridian Watermark
 
 ## [1.22.3] - 2024-06-23
 

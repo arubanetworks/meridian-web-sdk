@@ -27,7 +27,6 @@ import { css, cx } from "./style";
 import TagLayer from "./TagLayer";
 import AssetListOverlay from "./AssetListOverlay";
 import { asyncClientCall, isEnvOptions, logError } from "./util";
-import Watermark from "./Watermark";
 import {
   API,
   CreateMapOptions,
@@ -864,7 +863,6 @@ class MapComponent extends Component<MapComponentProps, MapComponentState> {
           this.mapContainerRef.current = ref;
         }}
       >
-        <Watermark />
         <ZoomControls onZoomIn={this.zoomIn} onZoomOut={this.zoomOut} />
         {this.renderErrorOverlay()}
         {this.renderDetailsOverlay()}

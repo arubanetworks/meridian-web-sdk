@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Map Point to Lat/Lng | Meridian Web SDK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- NOTE: none of the scripts or CSS files included in the <head> are SDK dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/highlightjs@9.10.0/highlight.pack.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+    <link rel="stylesheet" href="../shared.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/highlightjs@9.10.0/styles/atom-one-dark.css"
+    />
+    <script type="module" src="../shared.js"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+
+      .map {
+        max-width: 1000px;
+        margin: auto;
+        border: 1px solid #ccc;
+      }
+
+      .controls {
+        max-width: 960px;
+        background: hsl(210, 50%, 98%);
+        color: hsl(210, 80%, 30%);
+        border: 1px solid hsl(210, 30%, 80%);
+        padding: 20px;
+        margin: 20px auto;
+      }
+
+      .code-container {
+        max-width: 740px;
+        padding: 20px;
+        margin: 20px auto;
+        color: black;
+        background-color: white;
+        font-size: 90%;
+      }
+
+      .indent {
+        margin-left: 20px;
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="map" id="meridian-map"></div>
+    <div class="controls-container">
+      <div class="controls">
+        <span>
+          First fetch your floor data: <br />
+          <p class="code-container">
+            <code>
+              const floorData = await api.fetchFloorData(locationID, floorID);
+            </code>
+            <br />
+          </p>
+        </span>
+        <span>
+          Adding an annotation: <br /><br />
+          <span class="indent"
+            >Convert your x and y points to latitude and longitude. In this
+            example you can view the latitude and longitude in the
+            console.</span
+          >
+          <p class="code-container">
+            <code>
+              const xyToLatLng = MeridianSDK.mapPointToLatLng(floorData, {x:
+              5269.126531688274, y: 3824.493588695426});
+            </code>
+          </p>
+        </span>
+        <span>
+          To confirm we have generated the proper latitude and longitute, we
+          will convert our lat/lng to screen X and Y points that we can create
+          an annotation for and update the map with an annotation: <br />
+          <p class="code-container">
+            <code>
+              const latLngToXy = MeridianSDK.latLngToMapPoint(floorData,
+              xyToLatLng);
+            </code>
+            <br />
+            <br />
+            <code>
+              meridianMap.update({<br />
+              <code class="indent">
+                annotations: [ <br />
+                <code class="indent">
+                  { <br />
+                  <code class="indent">
+                    type: "point",<br />
+                    x: latLngToXy.x,<br />
+                    y: latLngToXy.y,<br />
+                    size: 32,<br />
+                    backgroundColor: "red",<br />
+                    backgroundImage: MeridianSDK.placemarkIconURL("generic")<br />
+                  </code>
+                  },<br />
+                </code>
+                ],<br />
+              </code>
+              });
+            </code>
+          </p>
+        </span>
+      </div>
+    </div>
+    <script src="../meridian-sdk.js"></script>
+    <script type="module" id="the-code">
+      const api = new MeridianSDK.API({
+        environment: "production",
+        token: "6c09d265b1413fc768f4e08447ea95c8923a9c78",
+      });
+
+      const locationID = "5198682008846336";
+      const floorID = "5755685136498688";
+      const meridianMap = MeridianSDK.createMap(
+        document.getElementById("meridian-map"),
+        {
+          api,
+          locationID: locationID,
+          floorID: floorID,
+          overlays: [],
+          annotations: [
+            {
+              type: "point",
+              x: 0,
+              y: 0,
+            },
+          ],
+        }
+      );
+
+      const floorData = await api.fetchFloorData(locationID, floorID);
+      const xyToLatLng = MeridianSDK.mapPointToLatLng(floorData, {
+        x: 5269.126531688274,
+        y: 3824.493588695426,
+      });
+      const latLngToXy = MeridianSDK.latLngToMapPoint(floorData, xyToLatLng);
+
+      console.log("MeridianSDK.mapPointToLatLng output: ", xyToLatLng);
+
+      meridianMap.update({
+        annotations: [
+          {
+            type: "point",
+            x: latLngToXy.x,
+            y: latLngToXy.y,
+            size: 32,
+            backgroundColor: "red",
+            backgroundImage: MeridianSDK.placemarkIconURL("generic"),
+          },
+        ],
+      });
+    </script>
+  </body>
+</html>

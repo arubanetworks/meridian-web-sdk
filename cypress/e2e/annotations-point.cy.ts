@@ -8,7 +8,6 @@ function nthAnnotationTitle(n: number) {
 }
 
 describe("Annotations: Point", () => {
-  // eslint-disable-next-line jest/no-disabled-tests
   it.skip("should render points", () => {
     cy.visit("/cypress/annotation-point");
 

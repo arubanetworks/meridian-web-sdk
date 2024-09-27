@@ -34,17 +34,7 @@ deploy:
     upload_dir: meridian-web-sdk
     on:
       tags: true
-  # Publish to npm
-  - provider: npm
-    # Opting in to dpl v2 (edge) which will be released soon
-    # https://docs.travis-ci.com/user/deployment-v2
-    edge: true
-    email: $NPM_EMAIL
-    api_token: $NPM_TOKEN
-    tag: latest
-    on:
-      tags: true
-  # Update GitHub pages for the documentation and demos
+    # Update GitHub pages for the documentation and demos
   - provider: pages:git
     # Opting in to dpl v2 (edge) which will be released soon
     # https://docs.travis-ci.com/user/deployment-v2
@@ -54,6 +44,16 @@ deploy:
     # (https://github.com/settings/tokens) for a user with read+write permission
     # to the repo (https://github.com/arubanetworks/meridian-web-sdk)
     token: $GITHUB_TOKEN
+    on:
+      tags: true
+  # Publish to npm
+  - provider: npm
+    # Opting in to dpl v2 (edge) which will be released soon
+    # https://docs.travis-ci.com/user/deployment-v2
+    edge: true
+    email: $NPM_EMAIL
+    api_token: $NPM_TOKEN
+    tag: latest
     on:
       tags: true
 notifications:

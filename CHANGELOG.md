@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Security Audit and Dependency Updates
 
+### Changed
+
+- Demos, removed experimental lat/lng to point demo (point not accurate)
+
 ## [1.22.3] - 2024-09-03
 
 ### Security

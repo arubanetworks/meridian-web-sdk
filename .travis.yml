@@ -10,6 +10,21 @@ cache:
   npm: true
 before_install:
   - npm i -g npm@9.8.1
+  - curl https://pyenv.run | bash
+  - export PATH="$HOME/.pyenv/bin:$HOME/.pyenv/shims:$HOME/.pyenv/plugins/pyenv-virtualenv/bin:$PATH"
+  - eval "$(pyenv init -)"
+  - eval "$(pyenv virtualenv-init -)"
+ 
+  # Install required build dependencies for Python
+  - sudo apt-get update
+  - sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
+    libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
+    libncurses-dev xz-utils tk-dev libffi-dev liblzma-dev git
+ 
+  # Install Python 3.14 (or fallback to 3.13 if 3.14 fails)
+  - pyenv install 3.14.0 || pyenv install 3.13.0
+  - pyenv global 3.14.0 || pyenv global 3.13.0
+  - python --version
   # Decrypt Google Cloud Storage credentials
   - openssl aes-256-cbc -K $encrypted_9888058ce616_key -iv $encrypted_9888058ce616_iv -in gcs-key.json.enc -out gcs-key.json -d
 install:
@@ -20,6 +35,13 @@ script:
   - npm test
   - npm run build
   - npm run travis-cypress
+
+# before_deploy:
+#   # Download and install Google Cloud SDK using Python 3.14
+#   - curl -L https://dl.google.com/dl/cloudsdk/channels/rapid/google-cloud-sdk.tar.gz | tar xz -C ~
+#   - CLOUDSDK_PYTHON=$(which python) ~/google-cloud-sdk/install.sh --quiet --path-update false --usage-reporting false --command-completion false
+#   - source ~/google-cloud-sdk/path.bash.inc
+
 deploy:
   # Copy the files in `gcs-files/` to Google Cloud Storage. This is used for
   # static assets, namely a lot of images.

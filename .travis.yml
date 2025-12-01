@@ -16,9 +16,7 @@ before_install:
  
   # Install required build dependencies for Python
   - sudo apt-get update
-  - sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
-    libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
-    libncurses-dev xz-utils tk-dev libffi-dev liblzma-dev git
+  - sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses-dev xz-utils tk-dev libffi-dev liblzma-dev git
  
   # Install Python 3.14 (or fallback to 3.13 if 3.14 fails)
   - pyenv install 3.14.0 || pyenv install 3.13.0

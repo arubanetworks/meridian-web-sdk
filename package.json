@@ -1,7 +1,7 @@
 {
   "name": "@meridian/web-sdk",
   "private": false,
-  "version": "1.23.1",
+  "version": "1.23.2",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
   "main": "./dist/web-sdk.js",
   "types": "./dist/src/web-sdk.d.ts",
@@ -40,7 +40,7 @@
     "@types/lodash.groupby": "^4.6.9",
     "@types/lodash.throttle": "^4.1.9",
     "@types/ws": "^8.18.1",
-    "axios": "^1.7.9",
+    "axios": "^1.13.2",
     "d3-selection": "^3.0.0",
     "d3-transition": "^3.0.1",
     "d3-zoom": "^3.0.0",

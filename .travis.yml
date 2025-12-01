@@ -10,7 +10,6 @@ cache:
   npm: true
 before_install:
   - npm i -g npm@9.8.1
-  - curl https://pyenv.run | bash
   - export PATH="$HOME/.pyenv/bin:$HOME/.pyenv/shims:$HOME/.pyenv/plugins/pyenv-virtualenv/bin:$PATH"
   - eval "$(pyenv init -)"
   - eval "$(pyenv virtualenv-init -)"

@@ -368,6 +368,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     match(toSafeString(placemark.custom_3)) ||
     match(toSafeString(placemark.custom_4)) ||
     match(toSafeString(placemark.id)) ||
+    match(toSafeString(placemark.color)) ||
     match(toSafeString(placemark.description))
   );
 })

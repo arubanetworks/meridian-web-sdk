@@ -343,15 +343,35 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       if (placemark.type === "exclusion_area") {
         return false;
       }
+       console.log("placemarks", placemarks);
       if (placemarkOptions.showHiddenPlacemarks !== true) {
         return !placemark.hide_on_map;
       }
       return true;
     })
-    // Remove placemarks that don't match the local search terms
-    .filter((placemark: PlacemarkData) => {
-      return match(placemark.name || "") || match(placemark.type_name || "");
-    })
+// Remove placemarks that don't match the local search terms
+.filter((placemark: PlacemarkData) => {
+  const s = (v: any) =>
+    v === null || v === undefined ? "" : String(v);
+
+  return (
+    match(s(placemark.name)) ||
+    match(s(placemark.type_name)) ||
+    match(s(placemark.keywords)) ||
+    match(s(placemark.x)) ||
+    match(s(placemark.y)) ||
+    match(s(placemark.map)) ||
+    match(s(placemark.type_category)) ||
+    match(s(placemark.custom_1)) ||
+    match(s(placemark.custom_2)) ||
+    match(s(placemark.custom_3)) ||
+    match(s(placemark.custom_4)) ||
+    match(s(placemark.id)) ||
+    match(s(placemark.description))
+  );
+})
+
+
     // Sort by name
     .sort((a: PlacemarkData, b: PlacemarkData) => {
       if (a.name < b.name) {

@@ -350,23 +350,23 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
     })
 // Remove placemarks that don't match the local search terms
 .filter((placemark: PlacemarkData) => {
-  const s = (v: any) =>
-    v === null || v === undefined ? "" : String(v);
+  const toSafeString = (value: any) =>
+    value === null || value === undefined ? "" : String(value);
 
   return (
-    match(s(placemark.name)) ||
-    match(s(placemark.type_name)) ||
-    match(s(placemark.keywords)) ||
-    match(s(placemark.x)) ||
-    match(s(placemark.y)) ||
-    match(s(placemark.map)) ||
-    match(s(placemark.type_category)) ||
-    match(s(placemark.custom_1)) ||
-    match(s(placemark.custom_2)) ||
-    match(s(placemark.custom_3)) ||
-    match(s(placemark.custom_4)) ||
-    match(s(placemark.id)) ||
-    match(s(placemark.description))
+    match(toSafeString(placemark.name)) ||
+    match(toSafeString(placemark.type_name)) ||
+    match(toSafeString(placemark.keywords)) ||
+    match(toSafeString(placemark.x)) ||
+    match(toSafeString(placemark.y)) ||
+    match(toSafeString(placemark.map)) ||
+    match(toSafeString(placemark.type_category)) ||
+    match(toSafeString(placemark.custom_1)) ||
+    match(toSafeString(placemark.custom_2)) ||
+    match(toSafeString(placemark.custom_3)) ||
+    match(toSafeString(placemark.custom_4)) ||
+    match(toSafeString(placemark.id)) ||
+    match(toSafeString(placemark.description))
   );
 })
 

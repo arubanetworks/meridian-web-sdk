@@ -348,6 +348,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       }
       return true;
     })
+    
 // Remove placemarks that don't match the local search terms
 .filter((placemark: PlacemarkData) => {
   const toSafeString = (value: any) =>
@@ -356,6 +357,7 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
   return (
     match(toSafeString(placemark.name)) ||
     match(toSafeString(placemark.type_name)) ||
+    match(toSafeString(placemark.type)) ||
     match(toSafeString(placemark.keywords)) ||
     match(toSafeString(placemark.x)) ||
     match(toSafeString(placemark.y)) ||

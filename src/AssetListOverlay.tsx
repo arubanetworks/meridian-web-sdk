@@ -343,7 +343,6 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       if (placemark.type === "exclusion_area") {
         return false;
       }
-       console.log("placemarks", placemarks);
       if (placemarkOptions.showHiddenPlacemarks !== true) {
         return !placemark.hide_on_map;
       }

@@ -5,11 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.24.0] - 2025-12-08
+
+- MRC-3287 Web SDK keyword search not working
+
 ## [1.23.2] - 2025-12-03
 
 ### Fixed vulnerability
 
-- MRC-3282 [FE] Fix vulnerabilities issue identified in the web SDK dependencies
+- MRC-3282 Fix vulnerabilities issue identified in the web SDK dependencies
 
 ## [1.23.1] - 2025-04-08
 

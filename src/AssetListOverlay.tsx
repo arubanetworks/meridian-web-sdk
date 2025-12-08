@@ -348,10 +348,32 @@ function PlacemarkResults(props: PlacemarkResultsProps) {
       }
       return true;
     })
-    // Remove placemarks that don't match the local search terms
-    .filter((placemark: PlacemarkData) => {
-      return match(placemark.name || "") || match(placemark.type_name || "");
-    })
+    
+// Remove placemarks that don't match the local search terms
+.filter((placemark: PlacemarkData) => {
+  const toSafeString = (value: any) =>
+    value === null || value === undefined ? "" : String(value);
+
+  return (
+    match(toSafeString(placemark.name)) ||
+    match(toSafeString(placemark.type_name)) ||
+    match(toSafeString(placemark.type)) ||
+    match(toSafeString(placemark.keywords)) ||
+    match(toSafeString(placemark.x)) ||
+    match(toSafeString(placemark.y)) ||
+    match(toSafeString(placemark.map)) ||
+    match(toSafeString(placemark.type_category)) ||
+    match(toSafeString(placemark.custom_1)) ||
+    match(toSafeString(placemark.custom_2)) ||
+    match(toSafeString(placemark.custom_3)) ||
+    match(toSafeString(placemark.custom_4)) ||
+    match(toSafeString(placemark.id)) ||
+    match(toSafeString(placemark.color)) ||
+    match(toSafeString(placemark.description))
+  );
+})
+
+
     // Sort by name
     .sort((a: PlacemarkData, b: PlacemarkData) => {
       if (a.name < b.name) {

@@ -688,6 +688,12 @@ export type CustomAnnotation = CustomAnnotationPoint;
 export interface CreateMapOptions {
   /** See {@link restrictedPanZoom}. */
   shouldMapPanZoom?: (event: any) => boolean;
+  /**
+   * URL that receives Meridian analytics events. Analytics is disabled unless
+    * this is provided. Use a backend proxy when the endpoint requires a secret,
+    * because values included in a browser URL are publicly visible.
+   */
+  analyticsEndpoint?: string;
   /** Width of the map (e.g. "100%" or "300px"). */
   width?: string;
   /** Height of the map (e.g. "100%" or "200px") */
@@ -892,6 +898,7 @@ export function createMap(
     sendAnalyticsCodeEvent({
       action: "map.update",
       locationID: options.locationID,
+      analyticsEndpoint: options.analyticsEndpoint,
       onTagsUpdate: Boolean(options.onTagsUpdate),
       tagsFilter: Boolean(options.tags && options.tags.filter),
       placemarksFilter: Boolean(
@@ -918,6 +925,7 @@ export function createMap(
   sendAnalyticsCodeEvent({
     action: "createMap",
     locationID: options.locationID,
+    analyticsEndpoint: options.analyticsEndpoint,
     onTagsUpdate: Boolean(options.onTagsUpdate),
     tagsFilter: Boolean(options.tags && options.tags.filter),
     placemarksFilter: Boolean(options.placemarks && options.placemarks.filter),

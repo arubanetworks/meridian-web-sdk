@@ -35,7 +35,7 @@ export async function sendAnalyticsCodeEvent(
     placemarksFilter = false,
     internalUpdate = false,
   } = options;
-  // Analytics is opt-in; consumers must provide an endpoint they control.
+  // Opt-in; analyticsEndpoint should point to your own server, never at GA with a secret in the URL.
   if (!analyticsEndpoint) {
     return;
   }

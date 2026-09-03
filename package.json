@@ -1,7 +1,7 @@
 {
   "name": "@meridian/web-sdk",
   "private": false,
-  "version": "1.24.0",
+  "version": "1.25.0",
   "description": "Web SDK for showing Aruba Meridian maps, tags, and more",
   "main": "./dist/web-sdk.js",
   "types": "./dist/src/web-sdk.d.ts",
@@ -56,7 +56,7 @@
     "@types/webpack-env": "^1.18.8",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "cypress": "^13.14.2",
+    "cypress": "^16.0.0",
     "declaration-bundler-webpack-plugin": "^1.0.3",
     "eslint": "^8.56.0",
     "eslint-config-preact": "^1.5.0",

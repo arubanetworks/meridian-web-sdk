@@ -12,6 +12,7 @@ const screenRes = `${screen.width * pixelRatio}x${screen.height * pixelRatio}`;
 interface SendAnalyticsCodeEventOptions {
   action: string;
   locationID: string;
+  analyticsEndpoint?: string;
   onTagsUpdate?: boolean;
   tagsFilter?: boolean;
   placemarksFilter?: boolean;
@@ -28,11 +29,16 @@ export async function sendAnalyticsCodeEvent(
   const {
     action,
     locationID,
+    analyticsEndpoint,
     onTagsUpdate = false,
     tagsFilter = false,
     placemarksFilter = false,
     internalUpdate = false,
   } = options;
+  // Opt-in; analyticsEndpoint should point to your own server, never at GA with a secret in the URL.
+  if (!analyticsEndpoint) {
+    return;
+  }
   const params = {
     session_id: locationID, // Needed to show in realtime reports
     v: "1", // GA version
@@ -56,24 +62,18 @@ export async function sendAnalyticsCodeEvent(
     z: Math.random().toString(36).substring(7), // Cache Buster (per google)
   };
 
-  const measurement_id = `G-GCT86YZLFE`;
-  const api_secret = `1v79k_rPSLyvvcHpzSDqFQ`;
-
-  fetch(
-    `https://www.google-analytics.com/mp/collect?measurement_id=${measurement_id}&api_secret=${api_secret}`,
-    {
-      method: "POST",
-      body: JSON.stringify({
-        client_id: locationID,
-        events: [
-          {
-            name: "page_event",
-            params: {
-              ...params,
-            },
+  fetch(analyticsEndpoint, {
+    method: "POST",
+    body: JSON.stringify({
+      client_id: locationID,
+      events: [
+        {
+          name: "page_event",
+          params: {
+            ...params,
           },
-        ],
-      }),
-    }
-  );
+        },
+      ],
+    }),
+  });
 }

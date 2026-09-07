@@ -16,9 +16,32 @@ Please read the [documentation][] for an installation and API guide.
 
 We have several [examples][] of how to use the SDK.
 
+
 [examples]: https://arubanetworks.github.io/meridian-web-sdk/examples
 [download]: https://docs.meridianapps.com/hc/en-us/articles/360039669854-SDK-Downloads
 [documentation]: https://arubanetworks.github.io/meridian-web-sdk/
+
+
+## Analytics
+
+Analytics is disabled by default. To receive Meridian map events, provide an
+`analyticsEndpoint` when creating the map:
+
+```js
+const map = MeridianSDK.createMap(mapElement, {
+	api,
+	locationID: "<location ID>",
+	floorID: "<floor ID>",
+	analyticsEndpoint: "https://your-service.example.com/meridian-analytics",
+});
+
+
+The endpoint receives a `POST` request containing Google Analytics Measurement
+Protocol-compatible event data. Use an endpoint you control to add any required
+measurement ID or API secret server-side. Do not put a Google Analytics API
+secret in `analyticsEndpoint`, because browser users can see it.
+
+
 
 ## License
 
